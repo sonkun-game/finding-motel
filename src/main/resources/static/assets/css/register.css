@@ -1,0 +1,72 @@
+.login,
+.image {
+    min-height: 100vh;
+}
+
+.bg-image {
+    background-image: url('https://daihoc.fpt.edu.vn/media/2018/01/F1-2.png');
+    background-size: cover;
+    background-position: center center;
+}
+
+.display-4 {
+    text-align: center;
+    margin-bottom: 70px !important;
+    font-family: serif !important;
+    font-size: 2.5em !important;
+}
+
+.mt-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.btn-fb {
+    background-color: #4267b2 !important;
+}
+
+.btn-gm {
+    background-color: #EA4335 !important;
+}
+
+.form-group {
+    display: flex !important;
+}
+
+.register-label {
+    width: 30%;
+    float: left;
+}
+
+.register-input {
+    width: 70%;
+    float: left;
+}
+
+.register-input-phone {
+    width: 40%;
+    float: left;
+}
+
+.register-btn-phone {
+    width: 30%;
+    float: right;
+}
+
+.btn-primary {
+    height: 90%;
+    background: #dca73a;
+    display: block;
+    margin: auto;
+    border: medium none;
+    border-radius: 3px;
+}
+
+.form-check-inline {
+    display: flex;
+    margin: auto;
+}
+
+.form-check-label {
+    font-weight: bold;
+    font-size: 18px;
+}

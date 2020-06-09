@@ -6021,6 +6021,10 @@ h6 {
     margin-left: 10px;
 }
 
+.forgot-pass{
+    text-decoration: underline;
+}
+
 .genric-btn.default {
     color: #415094;
     background: #f9f9ff;

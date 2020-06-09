@@ -70,3 +70,7 @@
     font-weight: bold;
     font-size: 18px;
 }
+
+.btn-confirm{
+    width: 50% !important;
+}

@@ -19,4 +19,8 @@ public class HomeController {
     public String getRegister(Model model){
         return "register";
     }
+    @GetMapping("/dang-ki-with-gg")
+    public String getRegisterwithgg(Model model){
+        return "register-social";
+    }
 }

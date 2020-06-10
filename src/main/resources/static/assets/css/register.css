@@ -48,8 +48,9 @@
 }
 
 .register-btn-phone {
-    width: 30%;
+    width: 20%;
     float: right;
+    margin-left: 10%;
 }
 
 .btn-primary {
@@ -73,4 +74,11 @@
 
 .btn-confirm{
     width: 50% !important;
+    display: block !important;
+    margin: auto !important;
+}
+
+.btn-otp{
+    float: right !important;
+    padding: 20px 10px !important;
 }

@@ -13,7 +13,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/","/trang-chu", "/assets/**", "/custom-assets/**")
+                .antMatchers("/","/trang-chu", "/assets/**", "/custom-assets/**", "/dang-nhap", "/custom-assets/**", "/dang-ki")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

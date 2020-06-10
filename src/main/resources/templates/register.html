@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet" href="assets/css/register.css">
+    <title>Đăng Kí</title>
+</head>
+<body>
+<main>
+    <header th:replace="layout :: header"></header>
+    <div class="container-fluid">
+        <div class="row no-gutter">
+            <!-- The image half -->
+            <div class="col-md-6 d-none d-md-flex bg-image ">
+                <!-- <img class="bg-image" src="assets/img/hero/F4.jpg" /> -->
+            </div>
+
+
+            <!-- The content half -->
+            <div class="col-md-6 bg-light">
+                <div class="login d-flex align-items-center py-5">
+
+                    <!-- Demo content-->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10  mx-auto">
+                                <h3 class="display-4">ĐĂNG KÝ</h3>
+                                <form>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Tên đăng nhập: </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input id=" inputEmail " type="email " class="form-control rounded-pill border-0 shadow-sm px-4 ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Tên hiển thị: </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input id=" inputEmail " type="email " class="form-control rounded-pill border-0 shadow-sm px-4 ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Số điện thoại: </p>
+                                        </div>
+                                        <div class="register-input-phone">
+                                            <input id=" inputEmail " type="number " class="form-control rounded-pill border-0 shadow-sm px-4 ">
+                                        </div>
+                                        <div class="register-btn-phone">
+                                            <button type="submit" class="btn-primary">Mã xác nhận</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Mã xác nhận: </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input id=" inputEmail " type="number " class="form-control rounded-pill border-0 shadow-sm px-4 ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Mật khẩu: </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input id="inputPassword" type="password" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Xác nhận mật khẩu: </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input id="inputPassword" type="password" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Vai trò: </p>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio">Chủ trọ
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio">Người thuê
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit " class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">Xác Nhận</button>
+                                    <div class="text-center d-flex justify-content-between mt-4 ">
+                                        <p style="margin: auto; ">Hoặc
+                                        </p>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-6 ">
+                                            <button type="submit " class="btn btn-primary btn-block btn-fb ">Facebook
+                                            </button>
+                                        </div>
+                                        <div class="col-6 ">
+                                            <button type="submit " class="btn btn-primary btn-block btn-gm ">Gmail
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="text-center d-flex justify-content-between mt-4 ">
+
+                                        <p style="margin: auto; ">Quay lại trang <a href="login.html ">Đăng Nhập</a></p>
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End -->
+
+                </div>
+            </div>
+            <!-- End -->
+
+        </div>
+    </div>
+
+
+</main>
+    <footer th:replace="layout :: footer"></footer>
+    <div th:replace="layout :: js-fragment"></div>
+</body>
+</html>

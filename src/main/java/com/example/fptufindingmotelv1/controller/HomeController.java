@@ -15,8 +15,4 @@ public class HomeController {
     public String getLogin(Model model){
         return "login";
     }
-    @GetMapping("/change")
-    public String getChangePass(Model model){
-        return "change-pass";
-    }
 }

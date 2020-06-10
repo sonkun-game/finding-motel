@@ -32,7 +32,7 @@
                         <!-- logo -->
                         <div class="col-xl-2 col-lg-2">
                             <div class="logo">
-                                <a href="index.html"><img src="assets/img/hero/logo.png" alt=""></a>
+                                <a th:href="@{/}"><img src="assets/img/hero/logo.png" alt=""></a>
                             </div>
                         </div>
                         <div class="col-xl-8 col-lg-8">
@@ -40,16 +40,16 @@
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a href="index.html">TRANG CHỦ</a></li>
-                                        <li><a href="about.html">PHÒNG TRỌ</a></li>
-                                        <li><a href="services.html">NHÀ NGUYÊN CĂN</a></li>
-                                        <li><a href="blog.html">CĂN HỘ</a>
+                                        <li><a th:href="@{/}">TRANG CHỦ</a></li>
+                                        <li><a href="#">PHÒNG TRỌ</a></li>
+                                        <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
+                                        <li><a href="#">CĂN HỘ</a>
                                         </li>
-                                        <li><a href="blog.html">HƯỚNG DẪN</a>
+                                        <li><a href="#">HƯỚNG DẪN</a>
                                         <li><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
-                                                <li><a href="role.html">Đăng Ký</a></li>
+                                                <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                     </ul>

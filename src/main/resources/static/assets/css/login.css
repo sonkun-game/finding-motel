@@ -93,3 +93,9 @@ body {
 .btn-gm {
     background-color: #EA4335 !important;
 }
+.btn-login{
+    width: 45% !important;
+    display: block !important;
+    margin: auto !important;
+
+}

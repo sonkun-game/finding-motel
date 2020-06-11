@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="layout :: head"></div>
-    <link rel="stylesheet" href="assets/css/register.css">
+    <link rel="stylesheet" th:href="@{/assets/css/register.css}">
     <title>Đăng Kí</title>
 </head>
 <body>
@@ -39,7 +39,7 @@
                                             <p>Tên hiển thị: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input id=" inputEmail " type="email " class="form-control rounded-pill border-0 shadow-sm px-4 ">
+                                            <input id=" inputEmail " type="email " th:value="${user.displayName}" class="form-control rounded-pill border-0 shadow-sm px-4 ">
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">

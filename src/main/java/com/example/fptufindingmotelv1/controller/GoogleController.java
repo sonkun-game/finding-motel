@@ -36,17 +36,17 @@ public class GoogleController {
     public String google(@RequestParam("code") String code) throws IOException {
         //String accessToken = googleService.getGoogleAccessToken(code);
         String accessToken = googleUtils.getToken(code);
-        return "redirect:/google-profile/"+accessToken;
+        return "redirect:/google-profile?accessToken="+accessToken;
     }
 
-    @GetMapping(value = "/google-profile/{accessToken:.+}")
-    public String googleProfile(@PathVariable String accessToken, Model model) throws IOException {
+    @GetMapping(value = "/google-profile")
+    public String googleProfile(@RequestParam String accessToken, Model model) throws IOException {
 //        Person person = googleService.getGoogleUserProfile(accessToken);
         GooglePojo googlePojo = googleUtils.getUserInfo(accessToken);
         User user = new User();
         user.setGgAccount(googlePojo.getId());
         user.setDisplayName(googlePojo.getName());
         model.addAttribute("user", user);
-        return "test-google-login";
+        return "register-social";
     }
 }

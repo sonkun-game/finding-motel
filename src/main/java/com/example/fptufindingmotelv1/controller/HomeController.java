@@ -15,8 +15,4 @@ public class HomeController {
     public String getLogin(Model model){
         return "login";
     }
-    @GetMapping("/dang-ki")
-    public String getRegister(Model model){
-        return "register";
-    }
 }

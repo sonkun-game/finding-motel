@@ -120,6 +120,13 @@
             <artifactId>fluent-hc</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.restfb/restfb -->
+        <dependency>
+            <groupId>com.restfb</groupId>
+            <artifactId>restfb</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
         <!--TruongNQ - END-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

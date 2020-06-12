@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "ROLE")
-public class Role implements Serializable {
+public class RoleModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -24,5 +24,5 @@ public class Role implements Serializable {
     private String instructionDesc;
 
     @OneToMany(mappedBy = "role")
-    private List<User> users;
+    private List<UserModel> users;
 }

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name = "USER")
-public class User implements Serializable {
+@Table(name = "[USER]")
+public class UserModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -17,7 +17,7 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
-    private Role role;
+    private RoleModel role;
 
     @Column(name = "FB_ACCOUNT")
     private String fbAccount;

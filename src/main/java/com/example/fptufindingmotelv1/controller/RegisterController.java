@@ -1,11 +1,17 @@
 package com.example.fptufindingmotelv1.controller;
 
+import com.example.fptufindingmotelv1.service.register.RegisterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class RegisterController {
+
+    @Autowired
+    private RegisterService registerService;
+
     @RequestMapping(value = "/dang-ki", method = RequestMethod.GET)
     public String getRegister() {
         return "register";
@@ -29,6 +35,12 @@ public class RegisterController {
 
     public Boolean getAnUser(String userName) {
         return false;
+    }
+
+    @ResponseBody
+    @PostMapping("/api/get-otp")
+    public char[] getOTP(@RequestParam int otpLength){
+        return registerService.generateOTP(otpLength);
     }
 }
 

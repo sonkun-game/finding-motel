@@ -26,6 +26,28 @@ var registVue = new Vue({
         },
         validRegister() {
 
+        },
+        sendOTP(){
+            this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
+                "ApiKey=A64092B4036FCBE98DC11D133598BA&SecretKey=4EB8AA82ED932ADD24FB776E928BFE&SmsType=8";
+            this.smsSendUrl += "&Phone="+this.phone;//get from screen
+            this.smsSendUrl += "&Content=Ma OTP cua ban la: "+this.otpCode;//get from screen
+            fetch(this.smsSendUrl,{
+                method : 'GET'
+            }).then(response => response.json())
+                .then((data) => {
+                    this.smsResponse = data;
+                })
+        },
+        getOTP(){
+            fetch("http://localhost:8081/api/get-otp?otpLength=6",{
+                method : 'POST'
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    this.otp = data;
+                    this.sendOTP();
+                })
         }
     }
 })

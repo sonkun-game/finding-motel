@@ -14,17 +14,10 @@ public class HomeController {
     public String getHomepage(Model model){
         return "index";
     }
-
     @GetMapping("/dang-nhap")
     public String getLogin(Model model){
         return "login";
     }
-
-    @GetMapping("/dang-ki")
-    public String getRegister(Model model){
-        return "register";
-    }
-
     @GetMapping("/dang-ki-with-gg")
     public String getRegisterwithgg(Model model){
         return "register-social";

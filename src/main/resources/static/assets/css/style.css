@@ -6036,6 +6036,10 @@ h6 {
     background: #fff;
 }
 
+.ti-user{
+    float: right !important;
+}
+
 .genric-btn.default-border {
     border: 1px solid #f9f9ff;
     background: #fff;

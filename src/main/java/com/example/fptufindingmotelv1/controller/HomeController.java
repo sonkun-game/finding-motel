@@ -23,4 +23,12 @@ public class HomeController {
     public String getRegisterwithgg(Model model){
         return "register-social";
     }
+    @GetMapping("/forgot")
+    public String getForgot(Model model){
+        return "forgot";
+    }
+    @GetMapping("/resetpassword")
+    public String getResetpassword(Model model){
+        return "reset-password";
+    }
 }

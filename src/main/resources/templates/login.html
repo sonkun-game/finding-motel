@@ -31,7 +31,7 @@
                                             <input id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                         </div>
                                         <div class="custom-control custom-checkbox mb-3">
-                                            <a class="forgot-pass" href="#">Quên mật khẩu? </a>
+                                            <a class="forgot-pass" th:href="@{forgot}">Quên mật khẩu? </a>
                                         </div>
                                         <button v-on:click="loginButtonClickEvent()" class="btn  btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-login">Đăng Nhập</button>
 
@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="text-center d-flex justify-content-between mt-4">
 
-                                        <p style="margin: auto;">Bạn chưa có tài khoản ? <a href="role.html">Đăng ký ngay</a></p>
+                                        <p style="margin: auto;">Bạn chưa có tài khoản ? <a th:href="@{dang-ki}">Đăng ký ngay</a></p>
 
                                     </div>
                                 </div>

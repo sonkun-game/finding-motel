@@ -17,21 +17,35 @@ public class HomeController {
         return "index";
     }
     @GetMapping("/dang-nhap")
+
     public String getLogin(Model model){
         return "login";
     }
+    
     @GetMapping("/dang-ki-with-gg")
-    public String getRegisterwithgg(Model model){
+    public String getRegisterWithGg(Model model){
         UserModel userModel = new UserModel();
         userModel.setDisplayName("truong");
         model.addAttribute("userModel", userModel);
+
         return "register-social";
     }
 
     @ResponseBody
     @GetMapping("/renter")
     public Principal getPrincipal (Principal principal) throws LazyInitializationException {
-
         return principal;
+    }
+    @GetMapping("/forgot")
+    public String getForgot(Model model){
+        return "forgot";
+    }
+    @GetMapping("/reset-password")
+    public String getResetPassword(Model model){
+        return "reset-password";
+    }
+    @GetMapping("/profile-landlord")
+    public String getProfileLandlord(Model model){
+        return "profile-landlord";
     }
 }

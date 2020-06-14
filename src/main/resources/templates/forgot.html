@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet" href="assets/css/forgot.css">
+    <meta charset="UTF-8">
+    <title>Lấy lại mật khẩu</title>
+</head>
+<body>
+    <header th:replace="layout :: header"></header>
+    <main>
+        <div class="container-fluid ">
+            <div class="forgot-area">
+                <div class="form">
+
+                    <div class="shadow p-3 mb-5 bg-white rounded">
+                        <div class=" p-3 mb-5 bg-white rounded form-title">
+                            <a th:href="@{dang-nhap}" class="icon"><i class="fas fa-arrow-left"></i></a>
+<!--                            <i class="fas fa-arrow-left"></i>-->
+                            <div class="form-header">
+                                <div class="title uppercase">Đặt lại mật khẩu</div>
+                            </div>
+                        </div>
+                            <input id="phone" class="tel-phone" type="tel" placeholder="Số điện thoại" maxlength="10" required />
+                            <button type="submit" class="btn-otp uppercase">Gửi Mã</button>
+                            <input id="otp" class="otp-field" type="tel" placeholder="Nhập mã xác nhận" maxlength="6" required/>
+                            <button type="submit" class="btn-continous uppercase">Tiếp tục</button>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="layout :: footer"></footer>
+    <div th:replace="layout :: js-fragment"></div>
+</body>
+</html>

@@ -1,11 +1,12 @@
 package com.example.fptufindingmotelv1.service.register;
 
+import com.example.fptufindingmotelv1.repository.UserModelRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
 @Service
-public class RegisterServiceImpl implements RegisterService{
+public class RegisterServiceImpl implements RegisterService {
     @Override
     public char[] generateOTP(int length) {
         char[] otp = new char[length];

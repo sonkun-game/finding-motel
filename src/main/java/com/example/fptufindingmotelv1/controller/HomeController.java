@@ -31,4 +31,8 @@ public class HomeController {
     public String getResetpassword(Model model){
         return "reset-password";
     }
+    @GetMapping("/profile-landlord")
+    public String getProfileLandlord(Model model){
+        return "profile-landlord";
+    }
 }

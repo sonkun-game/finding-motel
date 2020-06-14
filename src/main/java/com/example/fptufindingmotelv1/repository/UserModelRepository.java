@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserModelRepository extends JpaRepository<UserModel, String> {
     UserModel findByGgAccount(String ggAccount);
     UserModel findByFbAccount(String fbAccount);
+    UserModel findByUsername(String username);
 }

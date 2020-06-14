@@ -1,3 +1,4 @@
+import cookies from 'https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js'
 var registVue = new Vue({
     el: "#registerForm",
     data: {
@@ -25,7 +26,6 @@ var registVue = new Vue({
             }
         },
         validRegister() {
-
         },
         sendOTP(){
             this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
@@ -50,4 +50,5 @@ var registVue = new Vue({
                 })
         }
     }
+
 })

@@ -1,5 +1,7 @@
 package com.example.fptufindingmotelv1.controller;
 
+import com.example.fptufindingmotelv1.model.UserModel;
+import org.hibernate.LazyInitializationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +22,16 @@ public class HomeController {
     }
     @GetMapping("/dang-ki-with-gg")
     public String getRegisterwithgg(Model model){
+        UserModel userModel = new UserModel();
+        userModel.setDisplayName("truong");
+        model.addAttribute("userModel", userModel);
         return "register-social";
     }
 
     @ResponseBody
     @GetMapping("/renter")
-    public Principal getPrincipal(Principal principal){
+    public Principal getPrincipal (Principal principal) throws LazyInitializationException {
+
         return principal;
     }
 }

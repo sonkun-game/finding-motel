@@ -9,18 +9,18 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <!-- CSS here -->
-    <link rel="stylesheet" th:href="@{assets/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{assets/css/fontawesome-all.min.css}">
-    <link rel="stylesheet" th:href="@{assets/css/slicknav.css}">
-    <link rel="stylesheet" th:href="@{assets/css/themify-icons.css}">
-    <link rel="stylesheet" th:href="@{assets/css/nice-select.css}">
-    <link rel="stylesheet" th:href="@{assets/css/style.css}">
-    <link rel="stylesheet" th:href="@{assets/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/fontawesome-all.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/slicknav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/themify-icons.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/nice-select.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/responsive.css}">
 </head>
 <body>
     <header th:fragment="header">
         <!-- Header Start -->
-        <div class="header-area header-sticky">
+        <div id="header" class="header-area header-sticky">
             <div class="main-header ">
                 <div class="container">
                     <div class="row align-items-center">
@@ -143,6 +143,9 @@
         <!-- Jquery Plugins, main Jquery -->
         <script th:src="@{/assets/js/plugins.js}"></script>
         <script th:src="@{/assets/js/main.js}"></script>
+        <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+        <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
     </div>
 </body>
 </html>

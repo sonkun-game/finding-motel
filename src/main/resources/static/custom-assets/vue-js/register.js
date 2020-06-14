@@ -1,3 +1,4 @@
+import cookies from 'https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js'
 var registVue = new Vue({
     el: "#registerForm",
     data: {

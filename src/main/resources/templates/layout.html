@@ -9,18 +9,18 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <!-- CSS here -->
-    <link rel="stylesheet" th:href="@{assets/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{assets/css/fontawesome-all.min.css}">
-    <link rel="stylesheet" th:href="@{assets/css/slicknav.css}">
-    <link rel="stylesheet" th:href="@{assets/css/themify-icons.css}">
-    <link rel="stylesheet" th:href="@{assets/css/nice-select.css}">
-    <link rel="stylesheet" th:href="@{assets/css/style.css}">
-    <link rel="stylesheet" th:href="@{assets/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/fontawesome-all.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/slicknav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/themify-icons.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/nice-select.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{assets/css/responsive.css}">
 </head>
 <body>
     <header th:fragment="header">
         <!-- Header Start -->
-        <div class="header-area header-sticky">
+        <div id="header" class="header-area header-sticky">
             <div class="main-header ">
                 <div class="container">
                     <div class="row align-items-center">
@@ -30,7 +30,7 @@
                                 <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
                             </div>
                         </div>
-                        <div class="col-xl-8 col-lg-8">
+                        <div class="col-xl-10 col-lg-10">
                             <!-- main-menu -->
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
@@ -38,8 +38,7 @@
                                         <li><a th:href="@{/}">TRANG CHỦ</a></li>
                                         <li><a href="#">PHÒNG TRỌ</a></li>
                                         <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
-                                        <li><a href="#">CĂN HỘ</a>
-                                        </li>
+                                        <li><a href="#">CĂN HỘ</a></li>
                                         <li><a href="#">HƯỚNG DẪN</a>
                                         <li><i class="ti-user"></i>
                                             <ul class="submenu">
@@ -47,17 +46,50 @@
                                                 <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
+                                        <!-- DROPDOWN LANDLORD -->
+<!--                                        <li><i class="ti-user"> </i>-->
+<!--                                            <ul class="submenu">-->
+<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
+<!--                                                <li><a th:href="">Quản lý bài đăng</a></li>-->
+<!--                                                <li><a th:href="">Đăng tin</a>-->
+<!--                                                <li><a th:href="">Nạp tiền</a>-->
+<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+
+
+                                        <!-- DROPDOWN RENTER -->
+<!--                                        <li><i class="ti-user"> </i>-->
+<!--                                            <ul class="submenu">-->
+<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
+<!--                                                <li><a th:href="">Quản lý request</a></li>-->
+<!--                                                <li><a th:href="">Wishlist</a>-->
+<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+
+
+                                        <!-- DROPDOWN ADMIN -->
+<!--                                        <li><i class="ti-user"> </i>-->
+<!--                                            <ul class="submenu">-->
+<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
+<!--                                                <li><a th:href="">Quản lý bài đăng</a></li>-->
+<!--                                                <li><a th:href="">Quản lý người dùng</a>-->
+<!--                                                <li><a th:href="">Danh sách report</a>-->
+<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+
                                     </ul>
                                 </nav>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-2">
-                            <!-- header-btn -->
-                            <div class="header-btn">
-                                <a href="#" class="btn btn1 d-none d-lg-block ">ĐĂNG TIN</a>
-                            </div>
-
-                        </div>
+<!--                        <div class="col-xl-2 col-lg-2">-->
+<!--                            &lt;!&ndash; header-btn &ndash;&gt;-->
+<!--                            <div class="header-btn">-->
+<!--                                <a href="#" class="btn btn1 d-none d-lg-block ">ĐĂNG TIN</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
@@ -143,6 +175,9 @@
         <!-- Jquery Plugins, main Jquery -->
         <script th:src="@{/assets/js/plugins.js}"></script>
         <script th:src="@{/assets/js/main.js}"></script>
+        <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+        <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
     </div>
 </body>
 </html>

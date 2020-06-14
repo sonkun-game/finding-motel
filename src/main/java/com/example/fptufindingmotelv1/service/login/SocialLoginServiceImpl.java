@@ -1,5 +1,6 @@
 package com.example.fptufindingmotelv1.service.login;
 
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.GooglePojo;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -72,15 +73,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
 
     @Override
     public UserDetails buildUser(UserModel userModel) {
-        final boolean enabled = true;
-        final boolean accountNonExpired = true;
-        final boolean credentialsNonExpired = true;
-        final boolean accountNonLocked = true;
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userModel.getRole().getRoleName()));
-        UserDetails userDetail = new User(userModel.getUsername(),
-                "", enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        return userDetail;
+        return new CustomUserDetails(userModel);
     }
 
     @Override

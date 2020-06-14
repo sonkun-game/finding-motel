@@ -551,6 +551,10 @@ label {
     padding-top: 1.5%;
 }
 
+.header-area{
+    box-shadow:  0 0 10px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
 
 /* Sticky*/
 
@@ -2458,6 +2462,7 @@ label {
 }
 
 .main-header {
+
     position: relative;
     z-index: 3;
 }
@@ -2466,6 +2471,7 @@ label {
     display: inline-block;
     position: relative;
     z-index: 1;
+
 }
 
 .main-header .main-menu ul li a {
@@ -2481,6 +2487,7 @@ label {
     -o-transition: all 0.3s ease-out 0s;
     transition: all 0.3s ease-out 0s;
     font-family: 'Lato', sans-serif;
+
 }
 
 .main-header .main-menu ul li:hover>a {
@@ -6034,6 +6041,10 @@ h6 {
 .genric-btn.default:hover {
     border: 1px solid #f9f9ff;
     background: #fff;
+}
+
+.ti-user{
+    float: right !important;
 }
 
 .genric-btn.default-border {

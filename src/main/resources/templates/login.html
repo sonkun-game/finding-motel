@@ -20,24 +20,21 @@
                     <div class="login d-flex align-items-center py-5">
 
                         <!-- Demo content-->
-                        <div class="container">
+                        <div id="login-form" class="container">
                             <div class="row">
                                 <div class="col-lg-10 col-xl-7 mx-auto">
                                     <h3 class="display-4">ĐĂNG NHẬP</h3>
-                                    <form>
                                         <div class="form-group mb-3">
-                                            <input id="inputEmail" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
+                                            <input id="inputEmail" v-model="username" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input id="inputPassword" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                            <input id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                         </div>
                                         <div class="custom-control custom-checkbox mb-3">
-                                            <a class="forgot-pass" href="#">Quên mật khẩu? </a>
+                                            <a class="forgot-pass" th:href="@{forgot}">Quên mật khẩu? </a>
                                         </div>
-                                        <button type="submit" class="btn  btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-login">Đăng Nhập</button>
+                                        <button v-on:click="loginButtonClickEvent()" class="btn  btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-login">Đăng Nhập</button>
 
-
-                                    </form>
                                     <div class="text-center d-flex justify-content-between mt-4">
                                         <p style="margin: auto;">Hoặc
                                         </p>
@@ -54,7 +51,7 @@
                                     </div>
                                     <div class="text-center d-flex justify-content-between mt-4">
 
-                                        <p style="margin: auto;">Bạn chưa có tài khoản ? <a href="role.html">Đăng ký ngay</a></p>
+                                        <p style="margin: auto;">Bạn chưa có tài khoản ? <a th:href="@{dang-ki}">Đăng ký ngay</a></p>
 
                                     </div>
                                 </div>
@@ -74,5 +71,8 @@
     </main>
     <footer th:replace="layout :: footer"></footer>
     <div th:replace="layout :: js-fragment"></div>
+    <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+    <script type="text/javascript" th:src="@{/custom-assets/vue-js/login.js}"></script>
 </body>
 </html>

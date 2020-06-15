@@ -49,7 +49,7 @@ public class GoogleController {
             userModel = new UserModel();
             userModel.setGgAccount(googlePojo.getId());
             userModel.setDisplayName(googlePojo.getName());
-            model.addAttribute("user", userModel);
+            model.addAttribute("userModel", userModel);
             return "register-social";
         }else {
             UserDetails userDetails = socialLoginService.buildUser(userModel);

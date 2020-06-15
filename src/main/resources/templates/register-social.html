@@ -79,6 +79,9 @@
                                         </div>
                                     </div>
 
+                                    <input type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.fbAccount}">
+                                    <input type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
+
                                     <button type="submit " class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">Xác Nhận</button>
 
                                 </form>
@@ -94,5 +97,8 @@
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+<script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
+        src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
 </body>
 </html>

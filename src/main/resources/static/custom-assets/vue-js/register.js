@@ -4,7 +4,6 @@ var registVue = new Vue({
         //flag
         matchPwd: true,
         matchOTP: true,
-        noError: true,
         existedPhone: false,
         existedUsername: false,
         //message
@@ -18,7 +17,7 @@ var registVue = new Vue({
         otpCode: null,
         role: null,
         //response
-        otp: null,
+        otp: 123,
         //request
         registerModel: {},
         //class css
@@ -28,16 +27,10 @@ var registVue = new Vue({
     },
     methods: {
         checkMatchPwd: function (e) {
-            if (this.password === this.confirmPassword) {
-                this.matchPwd = true;
-            } else {
-                this.matchPwd = false;
-            }
-            return this.matchPwd;
+            return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd  = false;
         },
         checkOTP() {
-            this.otp === this.otpCode ? this.matchOTP = true : this.matchOT = false;
-            return this.matchOTP;
+            return this.otp == this.otpCode ? this.matchOTP = true : this.matchOT = false;
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {
@@ -58,9 +51,11 @@ var registVue = new Vue({
                 this.existedUsername = false;
             }
 
+            return this.existedUsername;
+
         },
         isExistPhone() {
-            if (this.phone != null && this.phone.length !== 0) {
+            if (this.phone != null && this.phone.length != 0) {
                 fetch("http://localhost:8081/isExistPhone", {
                     method: 'POST',
                     headers: {
@@ -77,7 +72,7 @@ var registVue = new Vue({
             } else {
                 this.existedPhone = false;
             }
-
+            return this.existedPhone;
         },
         validRegister: function () {
             let registerModel = {
@@ -89,7 +84,7 @@ var registVue = new Vue({
                 "password": this.password,
                 "displayName": this.displayName,
             };
-            if (this.checkMatchPwd() && this.checkOTP()) {
+            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone() ) {
                 fetch("http://localhost:8081/validRegister", {
                     method: 'POST',
                     headers: {
@@ -102,9 +97,6 @@ var registVue = new Vue({
                         if (data.code == '0') {
                             localStorage.setItem("registedUsername", this.username);
                             window.location.href = "/dang-nhap";
-                        } else {
-                            this.noError = false;
-                            this.message = data.message;
                         }
                     }).catch(error => {
                     console.log(error);

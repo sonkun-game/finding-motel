@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.service.register;
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.model.RoleModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
@@ -42,27 +43,32 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public UserModel save(UserDTO userDTO) {
         UserModel userModel = new UserModel();
+        RoleModel roleModel = roleRepository.getOne(Long.parseLong(userDTO.getRole().trim()));
         userModel.setUsername(userDTO.getUsername());
         userModel.setDisplayName(userDTO.getDisplayName());
         userModel.setFbAccount(userDTO.getFbAccount());
         userModel.setGgAccount(userDTO.getGgAccount());
         userModel.setPhoneNumber(userDTO.getPhoneNumber());
-        userModel.setRole(roleRepository.getOne(Long.parseLong(userDTO.getRole().trim())));
+        userModel.setRole(roleModel);
         userModel.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        System.err.println(userModel);
-        UserModel registedModel = userRepository.save(userModel);
-        if (registedModel != null ) {
-            if (registedModel.getRole().getId() == 1) {
+
+        if ( userModel.getRole() != null && !userModel.getRole().toString().isEmpty()) {
+            if (userModel.getRole().getId() == 1) {
                 RenterModel renterModel = new RenterModel();
                 renterModel.setCareer("Hoc sinh");
                 renterModel.setGender(true);
                 renterRepository.save(renterModel);
-            } else if(registedModel.getRole().getId() == 2) {
+                return renterModel;
+            } else if(userModel.getRole().getId() == 2) {
                 LandlordModel landlordModel = new LandlordModel();
                 landlordModel.setAmount(0);
                 landlordRepository.save(landlordModel);
+                return landlordModel;
+            } else {
+                userRepository.save(userModel);
+                return userModel;
             }
         }
-        return registedModel;
+        return null;
     }
 }

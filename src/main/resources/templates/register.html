@@ -26,12 +26,18 @@
                             <div class="col-lg-10  mx-auto">
                                 <h3 class="display-4">ĐĂNG KÝ</h3>
                                 <form id="registerForm">
+                                    <div class="">
+                                        <p v-bind:class="{invisible : !existedUsername}" class="errorText">Username đã
+                                            tồn tại!</p>
+                                    </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
                                             <p>Tên đăng nhập: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input v-model="userName" id="userName" name="userName" type="email " class="form-control rounded-pill border-0 shadow-sm px-4 " required>
+                                            <input @focusout="isExistUsername" v-model="username" id="userName"
+                                                   name="userName" type="email "
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -39,18 +45,27 @@
                                             <p>Tên hiển thị: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input v-model="displayName" id="displayName" name="displayName" type="email " class="form-control rounded-pill border-0 shadow-sm px-4 " required>
+                                            <input v-model="displayName" id="displayName" name="displayName"
+                                                   type="email "
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
+                                    </div>
+                                    <div class="">
+                                        <p v-bind:class="{invisible : !existedPhone}" class="errorText">Số điện
+                                            thoại đã tồn tại!</p>
                                     </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
                                             <p>Số điện thoại: </p>
                                         </div>
                                         <div class="register-input-phone">
-                                            <input v-model="phone" id="phone" name="phone" type="tel" class="form-control rounded-pill border-0 shadow-sm px-4" maxlength="10" required>
+                                            <input @focusout="isExistPhone" v-model="phone" id="phone" name="phone"
+                                                   type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="10" required>
                                         </div>
                                         <div class="register-btn-phone">
-                                            <button type="submit" class="btn-primary">Mã xác nhận</button>
+                                            <button v-on:click="getOTP()" type="button" class="btn-primary">Mã xác nhận
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -58,7 +73,9 @@
                                             <p>Mã xác nhận: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number" class="form-control rounded-pill border-0 shadow-sm px-4" maxlength="6" required>
+                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="6" required>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -66,16 +83,23 @@
                                             <p>Mật khẩu: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input v-model="password" id="password" name="password" type="password" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                            <input v-model="password" id="password" name="password" type="password"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                         </div>
                                     </div>
-                                    <p v-bind:class="{invisible : matchPwd, errorText : !matchPwd}">Lỗi rồi!</p>
+                                    <div class="">
+                                        <p v-bind:class="{invisible : matchPwd, errorText : !matchPwd}">Password không
+                                            trùng!</p>
+                                    </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
                                             <p>Xác nhận mật khẩu: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input v-on:input="checkMatchPwd(this)" v-bind:class="{border_error : !matchPwd}" v-model="confirmPassword" id="confirmPassword" name="confirmPassword" type="password" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                            <input @focusout="checkMatchPwd"
+                                                   v-bind:class="{border_error : !matchPwd}" v-model="confirmPassword"
+                                                   id="confirmPassword" name="confirmPassword" type="password"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -84,30 +108,40 @@
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input v-model="role" type="radio" class="form-check-input" name="role" value="1" required>Chủ trọ
+                                                <input v-model="role" type="radio" class="form-check-input" name="role"
+                                                       value="1" required>Chủ trọ
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input v-model="role" type="radio" class="form-check-input" name="role" value="2" required>Người thuê
+                                                <input v-model="role" type="radio" class="form-check-input" name="role"
+                                                       value="2" required>Người thuê
                                             </label>
                                         </div>
                                     </div>
 
 
-                                    <button v-on:click="validRegister()" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">Xác Nhận</button>
+                                    <button v-on:click.prevent="validRegister()"
+                                            type="submit"
+                                            class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">
+                                        Xác Nhận
+                                    </button>
                                     <div class="text-center d-flex justify-content-between mt-4 ">
                                         <p style="margin: auto; ">Hoặc
                                         </p>
                                     </div>
                                     <div class="row ">
                                         <div class="col-6 ">
-                                            <button type="submit " class="btn btn-primary btn-block btn-fb ">Facebook
-                                            </button>
+                                            <a th:href="@{facebook-login}">
+                                                <button type="button" class="btn btn-primary btn-block btn-fb"> Facebook
+                                                </button>
+                                            </a>
                                         </div>
                                         <div class="col-6 ">
-                                            <button type="submit " class="btn btn-primary btn-block btn-gm ">Gmail
-                                            </button>
+                                            <a th:href="@{google-login}">
+                                                <button type="button" class="btn btn-primary btn-block btn-gm">Gmail
+                                                </button>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="text-center d-flex justify-content-between mt-4 ">
@@ -131,11 +165,12 @@
 
 
 </main>
-    <footer th:replace="layout :: footer"></footer>
-    <div th:replace="layout :: js-fragment"></div>
+<footer th:replace="layout :: footer"></footer>
+<div th:replace="layout :: js-fragment"></div>
 </body>
 <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+<script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
+        src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/register.js}"></script>
 
 </html>

@@ -1,5 +1,7 @@
 package com.example.fptufindingmotelv1.model;
 
+import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.repository.RoleRepository;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -34,5 +36,4 @@ public class UserModel implements Serializable {
 
     @Column(name = "DISPLAY_NAME")
     private String displayName;
-
 }

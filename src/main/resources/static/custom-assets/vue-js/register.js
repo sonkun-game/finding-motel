@@ -1,11 +1,14 @@
-import cookies from 'https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js'
 var registVue = new Vue({
     el: "#registerForm",
     data: {
         //flag
         matchPwd: true,
+        matchOTP: true,
+        noError: true,
+        //message
+        message: null,
         //parameter
-        userName: null,
+        username: null,
         displayName: null,
         password: null,
         confirmPassword: null,
@@ -15,24 +18,13 @@ var registVue = new Vue({
         //response
         otp: null,
         //request
-        registerModel: [],
+        registerModel: {},
         //class css
         invisible: 'invisible',
         border_error: 'border_error',
         errorText: 'errorText',
     },
     methods: {
-        addRegisterModel: function () {
-            this.registerModel = [];
-            this.registerModel.push({
-                username: this.userName,
-                displayName: this.displayName,
-                password: this.password,
-                phone: this.phone,
-                role: this.role,
-            });
-            console.log(this.registerModel);
-        },
         checkMatchPwd: function (e) {
             if (this.password.match(this.confirmPassword)) {
                 this.matchPwd = true;
@@ -41,32 +33,47 @@ var registVue = new Vue({
             }
             return this.matchPwd;
         },
-        validRegister() {
-            if (this.userName === null ||
-                this.displayName === null ||
-                this.password === null ||
-                this.confirmPassword === null ||
-                this.phone === null ||
-                this.otpCode === null ||
-                this.role === null) {
-                alert("Some field null, Check again!");
-            } else if (this.checkMatchPwd) {
-                this.addRegisterModel();
-                fetch("/validRegister", {
+        checkOTP() {
+            this.otp.match(this.otpCode) ? this.matchOTP = true : this.matchOT = false;
+            return this.matchOTP;
+        },
+        validRegister: function () {
+            let registerModel = {
+                "username": this.username,
+                "role": this.role,
+                "fbAccount": "",
+                "ggAccount": "",
+                "phoneNumber": this.phone,
+                "password": this.password,
+                "displayName": this.displayName,
+            };
+            if (this.checkOTP() && this.checkMatchPwd()) {
+                fetch("http://localhost:8081/validRegister", {
                     method: 'POST',
-                    body: this.registerModel,
-                })
-                    .then(response => response.json())
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registerModel)
+                }).then(response => response.json())
                     .then((data) => {
                         console.log(data);
-                    })
+                        if (data.code.match('0')) {
+                            localStorage.setItem("registedUsername", this.username);
+                            window.location.href = "/dang-nhap";
+                        } else {
+                            this.noError = false;
+                            this.message = data.message;
+                        }
+                    }).catch(error => {
+                    console.log(error);
+                })
             }
         },
         sendOTP() {
             this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
-                "ApiKey=A64092B4036FCBE98DC11D133598BA&SecretKey=4EB8AA82ED932ADD24FB776E928BFE&SmsType=8";
+                "ApiKey=A64092B4036FCBE98DC11D133598BA&SecretKey=4EB8AA82ED932ADD24FB776E928BFE&SmsType=2&Brandname=Verify";
             this.smsSendUrl += "&Phone=" + this.phone;//get from screen
-            this.smsSendUrl += "&Content=Ma OTP cua ban la: " + this.otpCode;//get from screen
+            this.smsSendUrl += "&Content=Ma OTP cua ban la: " + this.otp;//get from screen
             fetch(this.smsSendUrl, {
                 method: 'GET'
             }).then(response => response.json())
@@ -75,7 +82,7 @@ var registVue = new Vue({
                 })
         },
         getOTP() {
-            fetch("/api/get-otp", {
+            fetch("/api/get-otp?otpLength=6", {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -85,7 +92,5 @@ var registVue = new Vue({
                 })
         }
     },
-    computed: {
-
-    }
+    computed: {}
 })

@@ -3,9 +3,24 @@
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" th:href="@{custom-assets/css/login.css}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Đăng Nhập</title>
 </head>
 <body>
+    <div id="loading-wrapper">
+        <div id="preloader-active">
+            <div v-show="!isHidden" class="preloader d-flex align-items-center justify-content-center">
+                <div class="preloader-inner position-relative">
+                    <div class="preloader-circle"></div>
+                    <div class="preloader-img pere-text">
+                        <strong>Đăng Nhập</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header th:replace="layout :: header"></header>
     <main>
         <div class="container-fluid">
@@ -23,7 +38,12 @@
                         <div id="login-form" class="container">
                             <div class="row">
                                 <div class="col-lg-10 col-xl-7 mx-auto">
-                                    <h3 class="display-4">ĐĂNG NHẬP</h3>
+                                    <h3 class="login-title display-4">ĐĂNG NHẬP</h3>
+                                        <div class="msg-notification" v-cloak>
+                                            <span v-if="showMsg">
+                                                Tên đăng nhập hoặc mật khẩu không chính xác
+                                            </span>
+                                        </div>
                                         <div class="form-group mb-3">
                                             <input id="inputEmail" v-model="username" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
@@ -70,9 +90,10 @@
         <!-- </main> -->
     </main>
     <footer th:replace="layout :: footer"></footer>
-    <div th:replace="layout :: js-fragment"></div>
-    <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+
     <script type="text/javascript" th:src="@{/custom-assets/vue-js/login.js}"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+    <div th:replace="layout :: js-fragment"></div>
+
 </body>
 </html>

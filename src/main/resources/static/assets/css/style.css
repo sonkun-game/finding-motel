@@ -2010,6 +2010,7 @@ label {
     -o-transition: .6s;
     transition: .6s;
     margin: 0 auto;
+    opacity: 0.8;
 }
 
 .preloader .preloader-circle {
@@ -7040,4 +7041,11 @@ h6 {
 
 .switch-wrap {
     margin-bottom: 10px;
+}
+.hidden{
+    display: none;
+}
+
+[v-cloak] {
+    display: none;
 }

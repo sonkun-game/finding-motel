@@ -1,7 +1,7 @@
 package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.UserModelRepository;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.SocialLoginService;
 import com.restfb.types.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @Controller
 public class FacebookController {
     @Autowired
-    private UserModelRepository userModelRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private SocialLoginService socialLoginService;
@@ -43,7 +43,7 @@ public class FacebookController {
     @GetMapping(value = "/facebook-profile")
     public String facebookProfile(@RequestParam String accessToken, HttpServletRequest request, Model model) throws IOException {
         User fbUser = socialLoginService.getFbUserInfo(accessToken);
-        UserModel userModel = userModelRepository.findByFbAccount(fbUser.getId());
+        UserModel userModel = userRepository.findByFbAccount(fbUser.getId());
         if(userModel == null){
             userModel = new UserModel();
             userModel.setFbAccount(fbUser.getId());

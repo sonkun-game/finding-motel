@@ -27,7 +27,7 @@ var registVue = new Vue({
     },
     methods: {
         checkMatchPwd: function (e) {
-            return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd  = false;
+            return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
         checkOTP() {
             return this.otp == this.otpCode ? this.matchOTP = true : this.matchOT = false;
@@ -84,7 +84,7 @@ var registVue = new Vue({
                 "password": this.password,
                 "displayName": this.displayName,
             };
-            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone() ) {
+            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone()) {
                 console.log(JSON.stringify(registerModel));
                 fetch("https://localhost:8081/validRegister", {
                     method: 'POST',
@@ -135,5 +135,9 @@ var registVue = new Vue({
             }
         }
     },
-    computed: {}
+    computed: {
+        fillDataForm() {
+
+        }
+    }
 })

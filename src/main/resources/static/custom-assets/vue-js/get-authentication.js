@@ -7,7 +7,7 @@ var vueInstance = new Vue({
     },
     methods: {
         logout(){
-            fetch("http://localhost:8081/api-logout",{
+            fetch("https://localhost:8081/api-logout",{
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ var vueInstance = new Vue({
         //     return
         // }
         let accessToken = this.$cookies.get("access_token")
-        fetch("http://localhost:8081/api-get-authentication",{
+        fetch("https://localhost:8081/api-get-authentication",{
             method : 'POST',
             headers: {
                 'Content-Type': 'application/json',

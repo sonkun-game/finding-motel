@@ -42,7 +42,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     @Override
     public String googleLogin() {
         OAuth2Parameters parameters = new OAuth2Parameters();
-        parameters.setRedirectUri("http://localhost:8081/google");
+        parameters.setRedirectUri("https://localhost:8081/google");
         parameters.setScope("profile email openid");
         return createGoogleConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
     }
@@ -79,7 +79,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     @Override
     public String facebookLogin() {
         OAuth2Parameters parameters = new OAuth2Parameters();
-        parameters.setRedirectUri("http://localhost:8081/facebook");
+        parameters.setRedirectUri("https://localhost:8081/facebook");
         parameters.setScope("public_profile,email");
         return createFacebookConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
     }

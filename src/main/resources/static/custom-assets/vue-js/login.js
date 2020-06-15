@@ -14,7 +14,7 @@ var loginInstance = new Vue({
             }
             loadingInstance.isHidden = false
             document.body.setAttribute("class", "loading-hidden-screen")
-            fetch("http://localhost:8081/api-login",{
+            fetch("https://localhost:8081/api-login",{
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json',

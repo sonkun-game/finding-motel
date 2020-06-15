@@ -4,7 +4,10 @@ import com.example.fptufindingmotelv1.dto.LoginDTO;
 import com.example.fptufindingmotelv1.dto.LoginRequestDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.model.RoleModel;
 import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
@@ -37,6 +40,9 @@ public class LoginController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    RenterRepository renterRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -109,13 +115,16 @@ public class LoginController {
     public void insertUser() {
         // Khi chương trình chạy
         // Insert vào csdl một user.
-        UserModel user = new UserModel();
-        user.setUsername("truongnqse05461");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setPhoneNumber("0929730706");
-        user.setRole(roleRepository.getOne(1L));
-        userRepository.save(user);
-        System.out.println(user);
+        RenterModel renterModel = new RenterModel();
+        renterModel.setUsername("truongnqse05461");
+        RoleModel roleModel = roleRepository.getOne(2L);
+        renterModel.setRole(roleModel);
+        renterModel.setPassword(passwordEncoder.encode("123"));
+        renterModel.setPhoneNumber("0929730706");
+        renterModel.setDisplayName("NQT");
+        renterModel.setGender(true);
+        renterModel.setCareer("Sinh Viên");
+        renterRepository.save(renterModel);
     }
 
 }

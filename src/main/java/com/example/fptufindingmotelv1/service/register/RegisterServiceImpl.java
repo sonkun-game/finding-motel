@@ -9,6 +9,7 @@ import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
+import com.restfb.types.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,8 +43,45 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public UserModel save(UserDTO userDTO) {
-        UserModel userModel = new UserModel();
         RoleModel roleModel = roleRepository.getOne(Long.parseLong(userDTO.getRole().trim()));
+//        userModel.setUsername(userDTO.getUsername());
+//        userModel.setDisplayName(userDTO.getDisplayName());
+//        userModel.setFbAccount(userDTO.getFbAccount());
+//        userModel.setGgAccount(userDTO.getGgAccount());
+//        userModel.setPhoneNumber(userDTO.getPhoneNumber());
+//        userModel.setRole(roleModel);
+//        userModel.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        UserModel userModel;
+        if ( roleModel != null && roleModel.getId() != null) {
+            if (roleModel.getId() == 1) {
+                userModel = passParamToUser(userDTO, roleModel);
+
+                if(userModel instanceof RenterModel){
+                    ((RenterModel) userModel).setCareer("Hoc sinh");
+                    ((RenterModel) userModel).setGender(true);
+                }
+                renterRepository.save((RenterModel)userModel);
+                return userModel;
+
+            } else if(roleModel.getId() == 2) {
+                userModel = passParamToUser(userDTO, roleModel);
+
+                if(userModel instanceof LandlordModel){
+                    ((LandlordModel) userModel).setAmount(0);
+                }
+                landlordRepository.save((LandlordModel) userModel);
+                return userModel;
+            }
+        }
+        return null;
+    }
+    public UserModel passParamToUser(UserDTO userDTO, RoleModel roleModel){
+        UserModel userModel;
+        if(roleModel.getId() == 1){
+            userModel = new RenterModel();
+        }else{
+            userModel = new LandlordModel();
+        }
         userModel.setUsername(userDTO.getUsername());
         userModel.setDisplayName(userDTO.getDisplayName());
         userModel.setFbAccount(userDTO.getFbAccount());
@@ -51,24 +89,6 @@ public class RegisterServiceImpl implements RegisterService {
         userModel.setPhoneNumber(userDTO.getPhoneNumber());
         userModel.setRole(roleModel);
         userModel.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
-        if ( userModel.getRole() != null && !userModel.getRole().toString().isEmpty()) {
-            if (userModel.getRole().getId() == 1) {
-                RenterModel renterModel = new RenterModel();
-                renterModel.setCareer("Hoc sinh");
-                renterModel.setGender(true);
-                renterRepository.save(renterModel);
-                return renterModel;
-            } else if(userModel.getRole().getId() == 2) {
-                LandlordModel landlordModel = new LandlordModel();
-                landlordModel.setAmount(0);
-                landlordRepository.save(landlordModel);
-                return landlordModel;
-            } else {
-                userRepository.save(userModel);
-                return userModel;
-            }
-        }
-        return null;
+        return userModel;
     }
 }

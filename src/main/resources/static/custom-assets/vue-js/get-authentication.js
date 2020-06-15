@@ -17,7 +17,7 @@ var vueInstance = new Vue({
                     console.log(data)
                     if(data != null && data.code === "msg001"){
                         this.$cookies.remove("access_token")
-                        window.location.href = "http://localhost:8081/"
+                        window.location.href = "https://localhost:8081/"
                     }
                 }).catch(error => {
                 console.log(error);

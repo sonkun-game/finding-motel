@@ -28,7 +28,7 @@ var loginInstance = new Vue({
                         localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                         this.$cookies.set("access_token", data.accessToken)
                         console.log(this.$cookies.get("access_token"))
-                        window.location.href = "http://localhost:8081/"
+                        window.location.href = "https://localhost:8081/"
                     }else if(data.msgCode === "msg001"){
                         this.showMsg = true
                         loadingInstance.isHidden = true

@@ -14,7 +14,7 @@
                 <div class="preloader-inner position-relative">
                     <div class="preloader-circle"></div>
                     <div class="preloader-img pere-text">
-                        <strong>Đăng Nhập</b>
+                        <b>Đăng Nhập</b>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                                             </span>
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input id="inputEmail" v-model="username" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
+                                            <input v-on:load="fillRegistedUsername" id="inputUsername" v-model:="username" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                         <div class="form-group mb-3">
                                             <input id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">

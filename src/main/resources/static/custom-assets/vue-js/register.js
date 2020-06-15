@@ -27,14 +27,14 @@ var registVue = new Vue({
     },
     methods: {
         checkMatchPwd: function (e) {
-            return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd  = false;
+            return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
         checkOTP() {
             return this.otp == this.otpCode ? this.matchOTP = true : this.matchOT = false;
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {
-                fetch("http://localhost:8081/isExistUsername", {
+                fetch("https://localhost:8081/isExistUsername", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ var registVue = new Vue({
         },
         isExistPhone() {
             if (this.phone != null && this.phone.length != 0) {
-                fetch("http://localhost:8081/isExistPhone", {
+                fetch("https://localhost:8081/isExistPhone", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -84,8 +84,9 @@ var registVue = new Vue({
                 "password": this.password,
                 "displayName": this.displayName,
             };
-            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone() ) {
-                fetch("http://localhost:8081/validRegister", {
+            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone()) {
+                console.log(JSON.stringify(registerModel));
+                fetch("https://localhost:8081/validRegister", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -134,5 +135,9 @@ var registVue = new Vue({
             }
         }
     },
-    computed: {}
+    computed: {
+        fillDataForm() {
+
+        }
+    }
 })

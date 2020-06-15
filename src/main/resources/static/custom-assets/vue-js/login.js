@@ -1,9 +1,10 @@
-new Vue({
+var loginInstance = new Vue({
     el: '#login-form',
     data: {
         username: "",
         password: "",
-        userInfo: {}
+        userInfo: {},
+        showMsg: false,
     },
     methods: {
         loginButtonClickEvent(){
@@ -11,6 +12,8 @@ new Vue({
                 "username": this.username,
                 "password": this.password
             }
+            loadingInstance.isHidden = false
+            document.body.setAttribute("class", "loading-hidden-screen")
             fetch("http://localhost:8081/api-login",{
                 method : 'POST',
                 headers: {
@@ -19,14 +22,29 @@ new Vue({
                 body : JSON.stringify(userInfo)
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data)
-                    localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
-                    this.$cookies.set("access_token", data.accessToken)
-                    console.log(this.$cookies.get("access_token"))
-                    window.location.href = "http://localhost:8081/"
+                    if(data.msgCode === "msg000"){
+                        this.showMsg = false
+                        console.log(data)
+                        localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                        this.$cookies.set("access_token", data.accessToken)
+                        console.log(this.$cookies.get("access_token"))
+                        window.location.href = "http://localhost:8081/"
+                    }else if(data.msgCode === "msg001"){
+                        this.showMsg = true
+                        loadingInstance.isHidden = true
+                        document.body.removeAttribute("class")
+                    }
+
                 }).catch(error => {
                     console.log(error);
             })
         }
     }
+})
+var loadingInstance = new Vue({
+    el: '#loading-wrapper',
+    data: {
+        isHidden: true
+    },
+
 })

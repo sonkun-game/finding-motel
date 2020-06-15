@@ -48,4 +48,9 @@ public class HomeController {
     public String getProfileLandlord(Model model){
         return "profile-landlord";
     }
+
+    @GetMapping("/loader")
+    public String getLoader(Model model){
+        return "loader";
+    }
 }

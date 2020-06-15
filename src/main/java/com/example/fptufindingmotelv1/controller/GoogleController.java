@@ -2,7 +2,7 @@ package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.model.GooglePojo;
 import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.UserModelRepository;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.SocialLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class GoogleController {
 
     @Autowired
-    private UserModelRepository userModelRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private SocialLoginService socialLoginService;
@@ -44,7 +44,7 @@ public class GoogleController {
     @GetMapping(value = "/google-profile")
     public String googleProfile(@RequestParam String accessToken, HttpServletRequest request, Model model) throws IOException {
         GooglePojo googlePojo = socialLoginService.getGgUserInfo(accessToken);
-        UserModel userModel = userModelRepository.findByGgAccount(googlePojo.getId());
+        UserModel userModel = userRepository.findByGgAccount(googlePojo.getId());
         if(userModel == null){
             userModel = new UserModel();
             userModel.setGgAccount(googlePojo.getId());

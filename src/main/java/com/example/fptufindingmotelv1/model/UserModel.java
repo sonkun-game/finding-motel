@@ -8,6 +8,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "[USER]")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class UserModel implements Serializable {
     private static final long serialVersionUID = 1L;
 

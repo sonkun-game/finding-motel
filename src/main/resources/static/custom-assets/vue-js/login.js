@@ -1,7 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // here is the Vue code
-
-    var loginInstance = new Vue({
+var loginInstance = new Vue({
         el: '#login-form',
         data: {
             username: "",
@@ -44,19 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         },
-        computed: {
-            fillRegistedUsername() {
-                document.addEventListener("DOMContentLoaded", () => {
-                    var registedUsername = localStorage.getItem("registedUsername") + "";
-                    if (typeof (registedUsername) !== 'undefined' && registedUsername !== null && registedUsername.length > 0) {
-                        this.username = registedUsername;
-                    }
-                });
-
+        mounted() {
+            let registedUsername = localStorage.getItem("registedUsername");
+            if(typeof(registedUsername) != 'undefined' && registedUsername != null && registedUsername.length > 0)
+            {
+                this.username = registedUsername;
             }
         }
+
     })
-});
+;
 
 var loadingInstance = new Vue({
     el: '#loading-wrapper',

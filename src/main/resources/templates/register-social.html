@@ -96,8 +96,8 @@
                                         </div>
                                     </div>
 
-                                    <input type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.fbAccount}">
-                                    <input type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
+                                    <input v-model="fbAccount" type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.fbAccount}">
+                                    <input v-model="ggAccount" type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
 
                                     <button v-on:click.prevent="validRegister()"
                                             type="submit"
@@ -119,8 +119,8 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 </body>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/register.js}"></script>
 <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
         src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
-<script type="text/javascript" th:src="@{/custom-assets/vue-js/register.js}"></script>
 </html>

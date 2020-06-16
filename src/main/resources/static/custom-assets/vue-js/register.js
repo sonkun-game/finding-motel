@@ -16,6 +16,8 @@ var registVue = new Vue({
         phone: null,
         otpCode: null,
         role: null,
+        ggAccount : null,
+        fbAccount : null,
         //response
         otp: 123,
         //request

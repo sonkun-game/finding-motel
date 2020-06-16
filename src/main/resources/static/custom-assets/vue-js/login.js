@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fillRegisteredUsername() {
                 let registeredUsername = localStorage.getItem("registeredUsername");
                 if (typeof (registeredUsername) !== 'undefined' && registeredUsername != null && registeredUsername.length > 0) {
+                    this.username = registeredUsername;
                     return registeredUsername;
                 }else{
                     return "";

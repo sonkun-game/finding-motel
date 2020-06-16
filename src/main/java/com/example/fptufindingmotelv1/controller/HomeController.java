@@ -57,10 +57,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/dang-nhap")
-    public String getLogin(Model model){
-        return "login";
-    }
 
     @GetMapping("/dang-ki-with-gg")
     public String getRegisterwithgg(Model model){

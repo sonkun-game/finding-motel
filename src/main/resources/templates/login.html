@@ -9,13 +9,24 @@
 </head>
 <body>
     <div id="loading-wrapper">
-        <div v-show="!isHidden" id="preloader-active">
+        <div v-show="!isHidden" id="loader-login">
             <div class="preloader d-flex align-items-center justify-content-center">
                 <div class="preloader-inner position-relative">
                     <div class="preloader-circle"></div>
                     <div class="preloader-img pere-text">
                         <b>Đăng Nhập</b>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>FFM</b>
                 </div>
             </div>
         </div>
@@ -45,10 +56,10 @@
                                             </span>
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input id="inputUsername" v-model="username" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
+                                            <input v-bind:value="fillRegisteredUsername" id="inputUsername" @input="handleInputUsername($event.target.value)" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                            <input id="inputPassword" @input="handleInputPwd($event.target.value)" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                         </div>
                                         <div class="custom-control custom-checkbox mb-3">
                                             <a class="forgot-pass" th:href="@{forgot}">Quên mật khẩu? </a>

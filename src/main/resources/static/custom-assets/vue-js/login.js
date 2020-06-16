@@ -1,4 +1,7 @@
-var loginInstance = new Vue({
+document.addEventListener("DOMContentLoaded", () => {
+    // here is the Vue code
+
+    var loginInstance = new Vue({
         el: '#login-form',
         data: {
             username: "",
@@ -7,6 +10,12 @@ var loginInstance = new Vue({
             showMsg: false,
         },
         methods: {
+            handleInputUsername(value){
+                this.username = value;
+            },
+            handleInputPwd(value){
+                this.password = value;
+            },
             loginButtonClickEvent() {
                 let userInfo = {
                     "username": this.username,
@@ -41,16 +50,19 @@ var loginInstance = new Vue({
             }
 
         },
-        mounted() {
-            let registedUsername = localStorage.getItem("registedUsername");
-            if(typeof(registedUsername) != 'undefined' && registedUsername != null && registedUsername.length > 0)
-            {
-                this.username = registedUsername;
+        computed: {
+            fillRegisteredUsername() {
+                let registeredUsername = localStorage.getItem("registeredUsername");
+                if (typeof (registeredUsername) !== 'undefined' && registeredUsername != null && registeredUsername.length > 0) {
+                    this.username = registeredUsername;
+                    return registeredUsername;
+                }else{
+                    return "";
+                }
             }
         }
-
     })
-;
+});
 
 var loadingInstance = new Vue({
     el: '#loading-wrapper',

@@ -26,6 +26,8 @@ var registVue = new Vue({
         invisible: 'invisible',
         border_error: 'border_error',
         errorText: 'errorText',
+        fbAccount: "",
+        ggAccount: ""
     },
     methods: {
         checkMatchPwd: function (e) {
@@ -98,7 +100,7 @@ var registVue = new Vue({
                     .then((data) => {
                         console.log(data);
                         if (data.code == '0') {
-                            localStorage.setItem("registedUsername", this.username);
+                            localStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         }
                     }).catch(error => {

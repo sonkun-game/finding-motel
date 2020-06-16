@@ -49,6 +49,7 @@ public class FacebookController {
             userModel.setFbAccount(fbUser.getId());
             userModel.setDisplayName(fbUser.getName());
             model.addAttribute("userModel", userModel);
+            System.err.println(userModel);
             return "register-social";
         }else {
             UserDetails userDetails = socialLoginService.buildUser(userModel);

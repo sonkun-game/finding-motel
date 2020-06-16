@@ -44,13 +44,6 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public UserModel save(UserDTO userDTO) {
         RoleModel roleModel = roleRepository.getOne(Long.parseLong(userDTO.getRole().trim()));
-//        userModel.setUsername(userDTO.getUsername());
-//        userModel.setDisplayName(userDTO.getDisplayName());
-//        userModel.setFbAccount(userDTO.getFbAccount());
-//        userModel.setGgAccount(userDTO.getGgAccount());
-//        userModel.setPhoneNumber(userDTO.getPhoneNumber());
-//        userModel.setRole(roleModel);
-//        userModel.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         UserModel userModel;
         if ( roleModel != null && roleModel.getId() != null) {
             if (roleModel.getId() == 1) {

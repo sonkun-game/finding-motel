@@ -1,4 +1,4 @@
-package com.example.fptufindingmotelv1.controller;
+package com.example.fptufindingmotelv1.controller.register;
 
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.repository.UserRepository;

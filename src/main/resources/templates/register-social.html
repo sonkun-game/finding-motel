@@ -106,8 +106,8 @@
                                         </div>
                                     </div>
 
-                                    <input  type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.getFbAccount()}">
-                                    <input type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
+                                    <input v-model="fbAccount" type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.fbAccount}">
+                                    <input v-model="ggAccount" type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
 
                                     <button v-on:click.prevent="validRegister()"
                                             type="submit"

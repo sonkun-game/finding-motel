@@ -26,10 +26,22 @@ var registVue = new Vue({
         invisible: 'invisible',
         border_error: 'border_error',
         errorText: 'errorText',
-        fbAccount: "",
-        ggAccount: ""
+    },
+    beforeMount() {
+        if (document.getElementById('fbAccount').value.length != 0) {
+            this.fbAccount = document.getElementById('fbAccount').value;
+        }
+        if(document.getElementById('ggAccount').value.length != 0) {
+            this.ggAccount = document.getElementById('ggAccount').value;
+        }
     },
     methods: {
+        handleInputUsername(value){
+            this.username = value;
+        },
+        handleInputPwd(value){
+            this.password = value;
+        },
         checkMatchPwd: function (e) {
             return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
@@ -82,8 +94,8 @@ var registVue = new Vue({
             let registerModel = {
                 "username": this.username,
                 "role": this.role,
-                "fbAccount": "",
-                "ggAccount": "",
+                "fbAccount": this.fbAccount,
+                "ggAccount": this.ggAccount,
                 "phoneNumber": this.phone,
                 "password": this.password,
                 "displayName": this.displayName,

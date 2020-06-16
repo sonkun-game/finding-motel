@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
             showMsg: false,
         },
         methods: {
+            handleInputUsername(value){
+                this.username = value;
+            },
+            handleInputPwd(value){
+                this.password = value;
+            },
             loginButtonClickEvent() {
                 let userInfo = {
                     "username": this.username,
@@ -45,14 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         },
         computed: {
-            fillRegistedUsername() {
-                document.addEventListener("DOMContentLoaded", () => {
-                    var registedUsername = localStorage.getItem("registedUsername") + "";
-                    if (typeof (registedUsername) !== 'undefined' && registedUsername !== null && registedUsername.length > 0) {
-                        this.username = registedUsername;
-                    }
-                });
-
+            fillRegisteredUsername() {
+                let registeredUsername = localStorage.getItem("registeredUsername");
+                if (typeof (registeredUsername) !== 'undefined' && registeredUsername != null && registeredUsername.length > 0) {
+                    return registeredUsername;
+                }else{
+                    return "";
+                }
             }
         }
     })

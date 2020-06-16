@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content form">
+    <div class="row">
+        <form name="myform" action="#" th:action="@{/user/save}" th:object="${user}"
+              method="POST" onsubmit="return validateform()">
+<!--            <p id="msg" name="msg" style="color: red" th:text="${msg}" > </p>-->
+            <input id="user" name="user" type="hidden" th:field="*{username}" />
+            <input id="role" name="role" type="hidden" th:field="*{role.id}" />
+            <input id="phone" name="phone" type="hidden" th:field="*{phoneNumber}" />
+<!--            <input id="old" name="old" type="hidden" th:field="*{password}" />-->
+            <div class="form-group">
+                <label>Old Password</label>
+                <input id="oldpass"  name="oldpass"  type="text" class="form-control"  />
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input id="pass"  name="pass" type="text" class="form-control"
+                       th:field="*{password}" />
+            </div>
+            <div class="form-group">
+                <label>Re-Password</label>
+                <input id="repass"  name="repass"  type="text" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div><!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+<script>
+    function validateform() {
+        var old= document.myform.old.value;
+        var oldpass= document.myform.oldpass.value;
+        var password = document.myform.pass.value;
+        var repass= document.myform.repass.value;
+
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters long.");
+            return false;
+        } else if(password != repass){
+            alert("Password and Re-Password must be same.");
+            return false;
+        }
+    }
+</script>
+</html>

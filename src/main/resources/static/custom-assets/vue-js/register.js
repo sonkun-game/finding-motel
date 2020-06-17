@@ -28,13 +28,16 @@ var registVue = new Vue({
         errorText: 'errorText',
     },
     beforeMount() {
-        if (document.getElementById('fbAccount').value.length != 0) {
+        if (document.getElementById('fbAccount') != null
+            && document.getElementById('fbAccount').value.length != 0) {
             this.fbAccount = document.getElementById('fbAccount').value;
         }
-        if (document.getElementById('ggAccount').value.length != 0) {
+        if (document.getElementById('ggAccount') != null
+            && document.getElementById('ggAccount').value.length != 0) {
             this.ggAccount = document.getElementById('ggAccount').value;
         }
-        if (document.getElementById('displayName').value.length != 0) {
+        if (document.getElementById('displayName') != null
+            && document.getElementById('displayName').value.length != 0) {
             this.displayName = document.getElementById('displayName').value;
         }
     },
@@ -53,7 +56,7 @@ var registVue = new Vue({
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {
-                fetch("https://localhost:8081/isExistUsername", {
+                fetch("https://localhost:8081/check-existed-username", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +64,6 @@ var registVue = new Vue({
                     body: this.username,
                 }).then(response => response.json())
                     .then((data) => {
-                        console.log("username :" + data);
                         this.existedUsername = data;
                     }).catch(error => {
                     console.log(error);
@@ -75,7 +77,7 @@ var registVue = new Vue({
         },
         isExistPhone() {
             if (this.phone != null && this.phone.length != 0) {
-                fetch("https://localhost:8081/isExistPhone", {
+                fetch("https://localhost:8081/check-existed-phone", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -83,7 +85,6 @@ var registVue = new Vue({
                     body: this.phone,
                 }).then(response => response.json())
                     .then((data) => {
-                        console.log("phone :" + data);
                         this.existedPhone = data;
                     }).catch(error => {
                     console.log(error);
@@ -105,7 +106,7 @@ var registVue = new Vue({
             };
             if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone()) {
                 console.log(JSON.stringify(registerModel));
-                fetch("https://localhost:8081/validRegister", {
+                fetch("https://localhost:8081/register", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

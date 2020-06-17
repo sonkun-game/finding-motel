@@ -25,8 +25,8 @@ public class RegisterController {
     }
 
     @ResponseBody
-    @PostMapping("/validRegister")
-    public String validateRegister(Model model, @RequestBody UserDTO userDTO) {
+    @PostMapping("/register")
+    public String register(Model model, @RequestBody UserDTO userDTO) {
         JSONObject registerMsg = new JSONObject();
         UserModel userModel = registerService.save(userDTO);
         if (userModel != null) {
@@ -45,13 +45,13 @@ public class RegisterController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/isExistUsername", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/check-existed-username", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean isExistUsername(@RequestBody String username) {
         return userRepository.existsByUsername(username);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/isExistPhone", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/check-existed-phone", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean isExistPhone(@RequestBody String phone) {
         return userRepository.existsByPhoneNumber(phone);
     }

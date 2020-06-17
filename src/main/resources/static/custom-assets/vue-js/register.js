@@ -47,12 +47,6 @@ var registVue = new Vue({
         }
     },
     methods: {
-        handleInputUsername(value) {
-            this.username = value;
-        },
-        handleInputPwd(value) {
-            this.password = value;
-        },
         checkMatchPwd: function (e) {
             return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
@@ -124,10 +118,13 @@ var registVue = new Vue({
                             localStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
+                            let accessToken = this.$route.query.accessToken
+                            this.$cookies.set("access_token", accessToken)
                             window.location.href = this.$route.fullPath;
-                        } else if ('003') {
+                        } else if (data.code == '003') {
+                            let accessToken = this.$route.query.accessToken
+                            this.$cookies.set("access_token", accessToken)
                             window.location.href = this.$route.fullPath;
-
                         }
                     }).catch(error => {
                     console.log(error);

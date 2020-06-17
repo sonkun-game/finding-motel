@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,7 +18,7 @@ public class AdminController {
     private AdminService adminService;
 
     @ResponseBody
-    @RequestMapping(value = "/ban-landlord")
+    @RequestMapping(value = "/ban-landlord", method = RequestMethod.GET)
     public ArrayList<LandlordModel> banLandlord(@RequestParam(value = "username") String username, Model model) {
         ArrayList<LandlordModel> landlords = null;
         if (username != null && username.length() > 0) {

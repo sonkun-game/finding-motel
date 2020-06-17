@@ -195,7 +195,6 @@ tbody{
 .search-area{
     width: 100%;
     height: 5px;
-    background-color: red;
 }
 select{
     display: block !important;

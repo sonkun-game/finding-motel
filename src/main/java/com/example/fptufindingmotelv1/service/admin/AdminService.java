@@ -19,11 +19,11 @@ public interface AdminService {
 
     public ArrayList<PostModel> getListPost();
 
-    public PostModel getPostDetail(String id);
+    public PostModel getPostDetail(Long id);
 
     public ArrayList<PostModel> searchPost();
 
-    public PostModel deletePost(String id);
+    public PostModel deletePost(Long id);
 
     public ArrayList<ReportModel> getListReport();
 

@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,5 +37,12 @@ public class AdminController {
             landlords = adminService.unbanLandlord(username);
         }
         return landlords;
+    }
+
+    @RequestMapping(value = "/get-report", method = RequestMethod.GET)
+    public String unbanLandlord(Model model) {
+        ArrayList<ReportModel> reports = adminService.getListReport();
+        model.addAttribute("listReport", reports);
+        return "";
     }
 }

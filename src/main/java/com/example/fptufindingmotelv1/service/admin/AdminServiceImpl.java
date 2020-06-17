@@ -6,6 +6,7 @@ import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PostModelRepository;
+import com.example.fptufindingmotelv1.repository.ReportRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     LandlordRepository landlordRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
 
 
     @Override
@@ -95,12 +99,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ArrayList<PostModel> getListPost() {
-        return null;
+        return (ArrayList<PostModel>) postModelRepository.findAll();
     }
 
     @Override
-    public PostModel getPostDetail(String id) {
-        return null;
+    public PostModel getPostDetail(Long id) {
+        return postModelRepository.findByPostId(id);
     }
 
     @Override
@@ -109,12 +113,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PostModel deletePost(String id) {
-        return null;
+    public PostModel deletePost(Long id) {
+        return postModelRepository.deleteByPostId(id);
     }
 
     @Override
     public ArrayList<ReportModel> getListReport() {
-        return null;
+        return (ArrayList<ReportModel>) reportRepository.findAll();
     }
 }

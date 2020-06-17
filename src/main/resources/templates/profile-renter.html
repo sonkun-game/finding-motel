@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
+    <meta charset="UTF-8">
+    <title>Quản lý tài khoản</title>
+</head>
+<body>
+<header th:replace="layout :: header"></header>
+
+<main>
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-3 sidebar-left">
+                    <div class="avatar">
+                        <i class="ti-user profile-avatar"></i>
+                        <p class="display-name">Trần Văn Mỹ</p>
+                    </div>
+                    <div class="information" id="myInfo">
+                        <button  class="button-information active">Thông tin tài khoản</button>
+                        <button  class="button-information">Quản lý yêu cầu</button>
+                        <button  class="button-information">Danh sách yêu thích</button>
+                        <button  class="button-information">Đăng xuất</button>
+                    </div>
+                </div>
+                <!-- Thông tin tài khoản -->
+<!--                <div class="col-9 sidebar-right">-->
+<!--                    <div class="title">-->
+<!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
+<!--                    </div>-->
+<!--                    <div class="information-detail">-->
+<!--                        <div class="detail">-->
+<!--                            <p class="label">Tên đăng nhập:</p>-->
+<!--                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Trần Văn Mỹ" disabled/>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Tên hiển thị:</p>-->
+<!--                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Mật khẩu:</p>-->
+<!--                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
+<!--                            <button type="submit" class="change">Thay đổi</button>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Ngày sinh:</p>-->
+<!--                            <input id="birthdate" class="textfiled rounded-pill border-0 shadow-sm" type="date" disabled/>-->
+<!--                        </div>-->
+<!--                        -->
+<!--                        <div class="detail-3">-->
+<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <!-- Quản lý yêu cầu -->
+
+                <div class="col-9 sidebar-right">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên phòng trọ</th>
+                                <th scope="col">Phòng</th>
+                                <th scope="col">Ngày</th>
+                                <th scope="col">Tình trạng</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Phòng trọ 1</td>
+                                <td>R1</td>
+                                <td>14-6-2020</td>
+                                <td>Đang yêu cầu</td>
+                                <td>
+                                    <button class="table-button">Hủy</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Phòng trọ 2</td>
+                                <td>R2</td>
+                                <td>15-6-2020</td>
+                                <td>Đang yêu cầu</td>
+                                <td>
+                                    <button class="table-button">Hủy</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Phòng trọ 3</td>
+                                <td>R3</td>
+                                <td>16-6-2020</td>
+                                <td>Đang yêu cầu</td>
+                                <td>
+                                    <button class="table-button">Hủy</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Danh sách yêu thích -->
+<!--                    <div class="col-9 sidebar-right">-->
+<!--                        <div class="title">-->
+<!--                            <h1 class="title-name uppercase">Danh sách yêu thích</h1>-->
+<!--                        </div>-->
+<!--                        <div class="information-detail">-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room1.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room2.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room3.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room4.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room5.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="post-wishlist">-->
+<!--                                <div class="img-post-wishlist">-->
+<!--                                    <img src="assets/img/rooms/room6.jpg" alt=""/>-->
+<!--                                </div>-->
+<!--                                <div class="title-post-wishlist">-->
+<!--                                    <h3><a href="rooms.html">Tên Phòng Trọ</a></h3>-->
+<!--                                    <div class="per-night">-->
+<!--                                        <span> 1.500.000 vnđ <span>/ tháng</span></span>-->
+<!--                                    </div>-->
+<!--                                    <i class="fas  fa-times-circle"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                <!-- Lịch sử nạp tiền -->
+<!--                <div class="col-9 sidebar-right">-->
+<!--                    <div class="title">-->
+<!--                        <h1 class="title-name uppercase">lịch sử nạp tiền</h1>-->
+<!--                    </div>-->
+<!--                    <div class="information-detail">-->
+<!--                        <table class="table">-->
+<!--                            <thead class="thead-light">-->
+<!--                            <tr>-->
+<!--                                <th scope="col">STT</th>-->
+<!--                                <th scope="col">Tên bài đăng</th>-->
+<!--                                <th scope="col">Ngày đăng</th>-->
+<!--                                <th scope="col">Ngày hết hạn</th>-->
+<!--                                <th scope="col">Tình trạng</th>-->
+<!--                                <th scope="col">Tác vụ</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">1</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>Còn trống</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-edit"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                    <i class="fas fa-eye-slash"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">2</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>Còn trống</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-edit"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                    <i class="fas fa-eye-slash"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">3</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>Còn trống</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-edit"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                    <i class="fas fa-eye-slash"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="layout :: footer"></footer>
+<div th:replace="layout :: js-fragment"></div>
+<script th:src="@{/assets/js/vendor/active.js}"></script>
+</body>
+</html>

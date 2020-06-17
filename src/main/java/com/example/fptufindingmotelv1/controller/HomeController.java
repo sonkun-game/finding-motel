@@ -57,15 +57,4 @@ public class HomeController {
         return "index";
     }
 
-
-    @GetMapping("/dang-ki-with-gg")
-    public String getRegisterwithgg(Model model){
-        return "register-social";
-    }
-
-    @ResponseBody
-    @GetMapping("/renter")
-    public Principal getPrincipal(Principal principal){
-        return principal;
-    }
 }

@@ -1,9 +1,9 @@
-package com.example.fptufindingmotelv1.controller;
+package com.example.fptufindingmotelv1.controller.login;
 
-import com.example.fptufindingmotelv1.model.GooglePojo;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.SocialLoginService;
+import com.restfb.types.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,37 +19,37 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
-public class GoogleController {
-
+public class FacebookController {
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private SocialLoginService socialLoginService;
 
-    @GetMapping(value = "/google-login")
-    public RedirectView googleLogin(){
+    @GetMapping(value = "/facebook-login")
+    public RedirectView facebookLogin(){
         RedirectView redirectView = new RedirectView();
-        String url = socialLoginService.googleLogin();
+        String url = socialLoginService.facebookLogin();
         redirectView.setUrl(url);
         return redirectView;
     }
 
-    @GetMapping(value = "/google")
-    public String google(@RequestParam("code") String code) throws IOException {
-        String accessToken = socialLoginService.getGoogleToken(code);
-        return "redirect:/google-profile?accessToken="+accessToken;
+    @GetMapping(value = "/facebook")
+    public String facebook(@RequestParam("code") String code) throws IOException {
+        String accessToken = socialLoginService.getFacebookToken(code);
+        return "redirect:/facebook-profile?accessToken="+accessToken;
     }
 
-    @GetMapping(value = "/google-profile")
-    public String googleProfile(@RequestParam String accessToken, HttpServletRequest request, Model model) throws IOException {
-        GooglePojo googlePojo = socialLoginService.getGgUserInfo(accessToken);
-        UserModel userModel = userRepository.findByGgAccount(googlePojo.getId());
+    @GetMapping(value = "/facebook-profile")
+    public String facebookProfile(@RequestParam String accessToken, HttpServletRequest request, Model model) throws IOException {
+        User fbUser = socialLoginService.getFbUserInfo(accessToken);
+        UserModel userModel = userRepository.findByFbAccount(fbUser.getId());
         if(userModel == null){
             userModel = new UserModel();
-            userModel.setGgAccount(googlePojo.getId());
-            userModel.setDisplayName(googlePojo.getName());
+            userModel.setFbAccount(fbUser.getId());
+            userModel.setDisplayName(fbUser.getName());
             model.addAttribute("userModel", userModel);
+            System.err.println(userModel);
             return "register-social";
         }else {
             UserDetails userDetails = socialLoginService.buildUser(userModel);

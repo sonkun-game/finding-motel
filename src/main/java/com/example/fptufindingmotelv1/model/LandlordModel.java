@@ -21,6 +21,5 @@ public class LandlordModel extends UserModel implements Serializable {
     private float amount;
 
     @Column(name = "UNBAN_DATE")
-    @DateTimeFormat
     private Date unbanDate;
 }

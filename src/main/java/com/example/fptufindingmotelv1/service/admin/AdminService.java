@@ -15,6 +15,7 @@ public interface AdminService {
     public ArrayList<UserModel> searchUser();
 
     public ArrayList<LandlordModel> banLandlord(String username);
+    public ArrayList<LandlordModel> unbanLandlord(String username);
 
     public ArrayList<PostModel> getListPost();
 

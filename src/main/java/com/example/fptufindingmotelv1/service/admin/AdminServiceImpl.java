@@ -10,9 +10,17 @@ import com.example.fptufindingmotelv1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.logging.Logger;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -43,17 +51,46 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ArrayList<LandlordModel> banLandlord(String username) {
-        LandlordModel landlord = landlordRepository.findByUsername(username);
-        Date date = landlord.getUnbanDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, 14);
-        date = calendar.getTime();
-        System.err.println(date);
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
-//        String dateWithSeconds = simpleDateFormat.format(date);
 
-        return (ArrayList<LandlordModel>) landlordRepository.findAll();
+        try {
+            LandlordModel landlord = landlordRepository.findByUsername(username);
+            if (landlord == null) {
+                return null;
+            } else {
+                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
+                dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Ho_Chi_Minh")));
+
+                String currentDate = dateFormat.format(new Date());
+                Date date = dateFormat.parse(currentDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.DAY_OF_MONTH, 14);
+
+                landlord.setUnbanDate(calendar.getTime());
+                landlordRepository.save(landlord);
+                return (ArrayList<LandlordModel>) landlordRepository.findAll();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<LandlordModel> unbanLandlord(String username) {
+        try {
+            LandlordModel landlord = landlordRepository.findByUsername(username);
+            if (landlord == null) {
+                return null;
+            } else {
+                landlord.setUnbanDate(null);
+                landlordRepository.save(landlord);
+                return (ArrayList<LandlordModel>) landlordRepository.findAll();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

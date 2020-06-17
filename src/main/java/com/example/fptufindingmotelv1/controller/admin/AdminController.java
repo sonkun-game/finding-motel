@@ -27,4 +27,14 @@ public class AdminController {
         }
         return landlords;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/unban-landlord", method = RequestMethod.GET)
+    public ArrayList<LandlordModel> unbanLandlord(@RequestParam(value = "username") String username, Model model) {
+        ArrayList<LandlordModel> landlords = null;
+        if (username != null && username.length() > 0) {
+            landlords = adminService.unbanLandlord(username);
+        }
+        return landlords;
+    }
 }

@@ -2029,8 +2029,22 @@ label {
     color: #dca73a;
 }
 
-.per-night span{
-    color: #dca73a;
+.login-icon{
+    background-color: white;
+    margin: -7px 0px;
+    width: auto;
+    height: 30px;
+    padding: 2px 15px 5px 15px;
+    border: 1px solid #CFCFCF;
+    border-radius: 5px;
+}
+
+.login-icon:hover{
+    background-color: #dca73a;
+}
+
+.fa-user{
+    font-size: 1.3em !important;
 }
 
 .preloader .preloader-circle {
@@ -2608,8 +2622,8 @@ label {
     }
 }
 
-.slider-area .h1-slider-caption h2 {
-    font-size: 66px;
+.slider-area .h1-slider-caption h1 {
+    font-size: 60px;
     color: #fff;
     font-weight: 700;
     text-transform: uppercase;
@@ -2619,19 +2633,19 @@ label {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .slider-area .h1-slider-caption h2 {
+    .slider-area .h1-slider-caption h1 {
         font-size: 51px;
     }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
-    .slider-area .h1-slider-caption h2 {
+    .slider-area .h1-slider-caption h1{
         font-size: 34px;
     }
 }
 
 @media (max-width: 767px) {
-    .slider-area .h1-slider-caption h2{
+    .slider-area .h1-slider-caption h1{
         font-size: 27px;
         margin-bottom: 13px;
     }
@@ -6066,6 +6080,8 @@ h6 {
 
 .ti-user{
     float: right !important;
+    font-size: 20px !important;
+    /*font-family: "Lato", serif !important;*/
 }
 
 .genric-btn.default-border {

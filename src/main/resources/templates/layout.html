@@ -57,14 +57,14 @@
                                         <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
                                         <li><a href="#">CĂN HỘ</a></li>
                                         <li><a href="#">HƯỚNG DẪN</a>
-                                        <li v-if="authenticationNum === 0"><i class="ti-user"></i>
+                                        <li v-if="authenticationNum === 0" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
                                                 <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN LANDLORD -->
-                                        <li v-else-if="authenticationNum === 2"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 2" class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
@@ -76,23 +76,23 @@
 
 
                                         <!-- DROPDOWN RENTER -->
-                                        <li v-else-if="authenticationNum === 1"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 1" class="login-icon"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
-                                                <li><a th:href="@{/}">Quản lý request</a></li>
-                                                <li><a th:href="@{/}">Wishlist</a>
+                                                <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
+                                                <li><a th:href="@{/}">Danh sách yêu thích</a>
                                                 <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
                                             </ul>
                                         </li>
 
 
                                         <!-- DROPDOWN ADMIN -->
-                                        <li v-else><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
                                                 <li><a th:href="@{/}">Quản lý người dùng</a>
-                                                <li><a th:href="@{/}">Danh sách report</a>
+                                                <li><a th:href="@{/}">Danh sách báo cáo</a>
                                                 <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
                                             </ul>
                                         </li>
@@ -101,12 +101,7 @@
                                 </nav>
                             </div>
                         </div>
-<!--                        <div class="col-xl-2 col-lg-2">-->
-<!--                            &lt;!&ndash; header-btn &ndash;&gt;-->
-<!--                            <div class="header-btn">-->
-<!--                                <a href="#" class="btn btn1 d-none d-lg-block ">ĐĂNG TIN</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
+
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>

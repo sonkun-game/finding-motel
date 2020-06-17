@@ -180,8 +180,27 @@
     font-size: 1.5em;
 }
 
+.thead-light{
+    font-size: 14px;
+}
 
+tbody{
+    font-size: 12px;
+}
 
 .fa-times-circle:hover{
     color: #dca73a;
+}
+
+.search-area{
+    width: 100%;
+    height: 5px;
+    background-color: red;
+}
+select{
+    display: block !important;
+}
+
+.nice-select{
+    display: none !important;
 }

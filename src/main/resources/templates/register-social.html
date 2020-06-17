@@ -55,7 +55,7 @@
                                             <p>Tên hiển thị: </p>
                                         </div>
                                         <div class="register-input">
-                                            <input th:value="${userModel.displayName}" id="displayName" name="displayName"
+                                            <input v-model="displayName" th:value="${userModel.displayName}" id="displayName" name="displayName"
                                                    type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
@@ -106,8 +106,8 @@
                                         </div>
                                     </div>
 
-                                    <input  type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.getFbAccount()}">
-                                    <input type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
+                                    <input v-model="fbAccount" type="hidden" id="fbAccount" name="fbAccount" th:value="${userModel.fbAccount}">
+                                    <input v-model="ggAccount" type="hidden" id="ggAccount" name="ggAccount" th:value="${userModel.ggAccount}">
 
                                     <button v-on:click.prevent="validRegister()"
                                             type="submit"

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import com.example.fptufindingmotelv1.model.UserModel;
 
 @Controller
 public class RegisterController {
@@ -27,9 +28,18 @@ public class RegisterController {
     @PostMapping("/validRegister")
     public String validateRegister(Model model, @RequestBody UserDTO userDTO) {
         JSONObject registerMsg = new JSONObject();
-        if (registerService.save(userDTO).getUsername() != null) {
-            registerMsg.put("code", "0");
-            registerMsg.put("message", "Register success!");
+        UserModel userModel = registerService.save(userDTO);
+        if (userModel != null) {
+            if (userModel.getFbAccount() != null && userModel.getFbAccount().length() != 0) {
+                registerMsg.put("code", "003");
+                registerMsg.put("message", "Register by Facebook success!");
+            } else if (userModel.getGgAccount() != null && userModel.getGgAccount().length() != 0) {
+                registerMsg.put("code", "002");
+                registerMsg.put("message", "Register by Google success!");
+            } else {
+                registerMsg.put("code", "001");
+                registerMsg.put("message", "Register success!");
+            }
         }
         return registerMsg.toJSONString();
     }

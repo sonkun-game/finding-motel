@@ -16,6 +16,8 @@ var registVue = new Vue({
         phone: null,
         otpCode: null,
         role: null,
+        ggAccount: null,
+        fbAccount: null,
         //response
         otp: 123,
         //request
@@ -24,10 +26,25 @@ var registVue = new Vue({
         invisible: 'invisible',
         border_error: 'border_error',
         errorText: 'errorText',
-        fbAccount: "",
-        ggAccount: ""
+    },
+    beforeMount() {
+        if (document.getElementById('fbAccount').value.length != 0) {
+            this.fbAccount = document.getElementById('fbAccount').value;
+        }
+        if (document.getElementById('ggAccount').value.length != 0) {
+            this.ggAccount = document.getElementById('ggAccount').value;
+        }
+        if (document.getElementById('displayName').value.length != 0) {
+            this.displayName = document.getElementById('displayName').value;
+        }
     },
     methods: {
+        handleInputUsername(value) {
+            this.username = value;
+        },
+        handleInputPwd(value) {
+            this.password = value;
+        },
         checkMatchPwd: function (e) {
             return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
@@ -80,8 +97,8 @@ var registVue = new Vue({
             let registerModel = {
                 "username": this.username,
                 "role": this.role,
-                "fbAccount": "",
-                "ggAccount": "",
+                "fbAccount": this.fbAccount,
+                "ggAccount": this.ggAccount,
                 "phoneNumber": this.phone,
                 "password": this.password,
                 "displayName": this.displayName,
@@ -97,9 +114,13 @@ var registVue = new Vue({
                 }).then(response => response.json())
                     .then((data) => {
                         console.log(data);
-                        if (data.code == '0') {
+                        if (data.code == '001') {
                             localStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
+                        } else if (data.code == '002') {
+                            window.location.href = "/google-login";
+                        } else if ('003') {
+                            window.location.href = "/facebook-login";
                         }
                     }).catch(error => {
                     console.log(error);

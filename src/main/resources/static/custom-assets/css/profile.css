@@ -62,8 +62,9 @@
 }
 
 .title-name{
-    font-size: 32px !important;
+    font-size: 30px !important;
     margin: 10px auto !important;
+    font-weight: bold !important;
 }
 
 .container-fluid{
@@ -194,8 +195,40 @@ tbody{
 
 .search-area{
     width: 100%;
-    height: 5px;
+    height: auto;
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
+    margin-top: 30px;
+    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 }
+.row-search{
+    margin: 10px auto;
+}
+
+.filter-area{
+    font-family: "Lato", sans-serif;
+}
+
+.form-dropdown{
+    font-size: 12px;
+}
+
+.title-filter-area{
+    font-size: 14px;
+}
+
+.btn-search{
+    display: block;
+    margin: 10px auto;
+    border-radius: 4px;
+    height: 30px;
+    width: 60%;
+    background-color: #dca73a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
 select{
     display: block !important;
 }

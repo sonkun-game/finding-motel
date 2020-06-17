@@ -2022,9 +2022,14 @@ label {
     position: absolute !important;
     top: 13px;
     right: 30px;
+    color: whitesmoke;
 }
 .fa-heart:hover{
-    color: red;
+    color: #dca73a;
+}
+
+.per-night span{
+    color: #dca73a;
 }
 
 .preloader .preloader-circle {
@@ -2602,7 +2607,7 @@ label {
     }
 }
 
-.slider-area .h1-slider-caption h1 {
+.slider-area .h1-slider-caption h2 {
     font-size: 66px;
     color: #fff;
     font-weight: 700;
@@ -2613,19 +2618,19 @@ label {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .slider-area .h1-slider-caption h1 {
+    .slider-area .h1-slider-caption h2 {
         font-size: 51px;
     }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
-    .slider-area .h1-slider-caption h1 {
+    .slider-area .h1-slider-caption h2 {
         font-size: 34px;
     }
 }
 
 @media (max-width: 767px) {
-    .slider-area .h1-slider-caption h1 {
+    .slider-area .h1-slider-caption h2{
         font-size: 27px;
         margin-bottom: 13px;
     }
@@ -3363,7 +3368,7 @@ label {
 }
 
 .single-room .room-caption .per-night span {
-    color: #112e41;
+    color: #dca73a;
     font-size: 18px;
     font-weight: 600;
 }

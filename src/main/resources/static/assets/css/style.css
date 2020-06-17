@@ -2012,6 +2012,21 @@ label {
     margin: 0 auto;
 }
 
+/*.top-right-heart{*/
+/*    position: absolute;*/
+/*    top: 8px;*/
+/*    right: 16px;*/
+/*}*/
+
+.fa-heart{
+    position: absolute !important;
+    top: 13px;
+    right: 30px;
+}
+.fa-heart:hover{
+    color: red;
+}
+
 .preloader .preloader-circle {
     width: 100px;
     height: 100px;

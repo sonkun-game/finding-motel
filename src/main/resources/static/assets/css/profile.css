@@ -4,6 +4,7 @@
     color: #0c5460 !important;
 }
 .sidebar-left{
+    font-family: "Lato", sans-serif;
     height: 100%;
     border: 0.001px solid black;
 }
@@ -41,16 +42,15 @@
     background-color: #EEE5DE;
     border-radius: 7px;
     color: black;
-    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);*/
     cursor: pointer;
 }
-.button-information:hover{
-
+.active, .button-information:hover{
     color: white;
     background-color: #dca73a;
 }
 
 .display-name{
+    font-family: "Lato", sans-serif;
     color: black;
     font-size: 20px;
 }
@@ -107,6 +107,7 @@
     border: .25px solid #dca73a;
     border-radius: 3px;
     background-color: #dca73a;
+    cursor: pointer;
 }
 .change{
     width: 15%;
@@ -117,6 +118,7 @@
     border: .25px solid #dca73a;
     border-radius: 3px;
     background-color: #dca73a;
+    cursor: pointer;
 }
 
 .table-button{
@@ -129,8 +131,13 @@
 
 .fas{
     padding-left: 10px !important;
+    cursor: pointer !important;
 }
 
 .table{
     font-family: "Lato", Calibri !important;
+}
+
+.information-detail{
+    margin-top: 30px;
 }

@@ -2013,6 +2013,40 @@ label {
     opacity: 0.8;
 }
 
+/*.top-right-heart{*/
+/*    position: absolute;*/
+/*    top: 8px;*/
+/*    right: 16px;*/
+/*}*/
+
+.fa-heart{
+    position: absolute !important;
+    top: 13px;
+    right: 30px;
+    color: whitesmoke;
+}
+.fa-heart:hover{
+    color: #dca73a;
+}
+
+.login-icon{
+    background-color: white;
+    margin: -7px 0px;
+    width: auto;
+    height: 30px;
+    padding: 2px 15px 5px 15px;
+    border: 1px solid #CFCFCF;
+    border-radius: 5px;
+}
+
+.login-icon:hover{
+    background-color: #dca73a;
+}
+
+.fa-user{
+    font-size: 1.3em !important;
+}
+
 .preloader .preloader-circle {
     width: 100px;
     height: 100px;
@@ -2589,7 +2623,7 @@ label {
 }
 
 .slider-area .h1-slider-caption h1 {
-    font-size: 66px;
+    font-size: 60px;
     color: #fff;
     font-weight: 700;
     text-transform: uppercase;
@@ -2605,13 +2639,13 @@ label {
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
-    .slider-area .h1-slider-caption h1 {
+    .slider-area .h1-slider-caption h1{
         font-size: 34px;
     }
 }
 
 @media (max-width: 767px) {
-    .slider-area .h1-slider-caption h1 {
+    .slider-area .h1-slider-caption h1{
         font-size: 27px;
         margin-bottom: 13px;
     }
@@ -3349,7 +3383,7 @@ label {
 }
 
 .single-room .room-caption .per-night span {
-    color: #112e41;
+    color: #dca73a;
     font-size: 18px;
     font-weight: 600;
 }
@@ -6046,6 +6080,8 @@ h6 {
 
 .ti-user{
     float: right !important;
+    font-size: 20px !important;
+    /*font-family: "Lato", serif !important;*/
 }
 
 .genric-btn.default-border {

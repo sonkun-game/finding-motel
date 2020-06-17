@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
+    <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
+    <meta charset="UTF-8">
+    <title>Quản lý tài khoản</title>
+</head>
+<body>
+<header th:replace="layout :: header"></header>
+
+<main>
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-3 sidebar-left">
+                    <div class="avatar">
+                        <i class="ti-user profile-avatar"></i>
+                        <p class="display-name">Dương Thị Kim Oanh</p>
+                    </div>
+                    <div class="information" id="myInfo">
+                        <button  class="button-information active">Thông tin tài khoản</button>
+                        <button  class="button-information">Quản lý người dùng</button>
+                        <button  class="button-information">Danh sách bài đăng</button>
+                        <button  class="button-information">Báo cáo</button>
+                        <button  class="button-information">Đăng xuất</button>
+                    </div>
+                </div>
+                <!-- Thông tin tài khoản -->
+<!--                <div class="col-9 sidebar-right">-->
+<!--                    <div class="title">-->
+<!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
+<!--                    </div>-->
+<!--                    <div class="information-detail">-->
+<!--                        <div class="detail">-->
+<!--                            <p class="label">Tên đăng nhập:</p>-->
+<!--                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Admin" disabled/>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Tên hiển thị:</p>-->
+<!--                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Mật khẩu:</p>-->
+<!--                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
+<!--                            <button type="submit" class="change">Thay đổi</button>-->
+<!--                        </div>-->
+
+<!--                        <div class="detail-3">-->
+<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <!-- Quản lý người dùng -->
+
+                    <div class="col-9 sidebar-right">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Quản lý người dùng</h1>
+                        </div>
+                        <div class="search-area">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Vai trò:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="0">Tất cả</option>
+                                                    <option value="1">Chủ trọ</option>
+                                                    <option value="2">NGười thuê</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="information-detail">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên đăng nhập</th>
+                                    <th scope="col">Tên hiển thị</th>
+                                    <th scope="col">Vai trò</th>
+                                    <th scope="col">Tác vụ</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a id="myBtn">User 1</a></td>
+                                    <td>tran van a</td>
+                                    <td>chủ trọ</td>
+                                    <td>
+                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-ban"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="#">User 2</a></td>
+                                    <td>tran van b</td>
+                                    <td>chủ trọ</td>
+                                    <td>
+                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-ban"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td><a href="#">User 3</a></td>
+                                    <td>tran van v</td>
+                                    <td>người thuê</td>
+                                    <td>
+                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-ban"></i>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                <!-- Quản lý bài đăng -->
+<!--                <div class="col-9 sidebar-right">-->
+<!--                    <div class="title">-->
+<!--                        <h1 class="title-name uppercase">Quản lý bài đăng</h1>-->
+<!--                    </div>-->
+<!--                    -->
+<!--                    <div class="information-detail">-->
+<!--                        <table class="table">-->
+<!--                            <thead class="thead-light">-->
+<!--                            <tr>-->
+<!--                                <th scope="col">STT</th>-->
+<!--                                <th scope="col">Tên phòng trọ</th>-->
+<!--                                <th scope="col">Phòng</th>-->
+<!--                                <th scope="col">Giá</th>-->
+<!--                                <th scope="col">Loại phòng</th>-->
+<!--                                <th scope="col">Diện tích</th>-->
+<!--                                <th scope="col">Khoảng cách</th>-->
+<!--                                <th scope="col">Ngày đăng</th>-->
+<!--                                <th scope="col">Ngày hết hạn</th>-->
+<!--                                <th scope="col">Tác vụ</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">1</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>R1</td>-->
+<!--                                <td>Phòng trọ</td>-->
+<!--                                <td>1.500.000</td>-->
+<!--                                <td>20&sup2</td>-->
+<!--                                <td>1 km</td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-eye"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">1</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>R1</td>-->
+<!--                                <td>Phòng trọ</td>-->
+<!--                                <td>1.500.000</td>-->
+<!--                                <td>20&sup2</td>-->
+<!--                                <td>1 km</td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-eye"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <th scope="row">1</th>-->
+<!--                                <td><a href="#">abc-xyz</a></td>-->
+<!--                                <td>R1</td>-->
+<!--                                <td>Phòng trọ</td>-->
+<!--                                <td>1.500.000</td>-->
+<!--                                <td>20&sup2</td>-->
+<!--                                <td>1 km</td>-->
+<!--                                <td>14-6-2020</td>-->
+<!--                                <td>14-9-2020</td>-->
+<!--                                <td>-->
+<!--                                    <i class="fas fa-eye"></i>-->
+<!--                                    <i class="fas fa-trash-alt"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <!-- Báo cáo -->
+                <!--                <div class="col-9 sidebar-right">-->
+                <!--                    <div class="title">-->
+                <!--                        <h1 class="title-name uppercase">Danh sách báo cáo</h1>-->
+                <!--                    </div>-->
+                <!--                    <div class="information-detail">-->
+                <!--                        <table class="table">-->
+                <!--                            <thead class="thead-light">-->
+                <!--                            <tr>-->
+                <!--                                <th scope="col">STT</th>-->
+                <!--                                <th scope="col">Tên bài đăng</th>-->
+                <!--                                <th scope="col">Ngày đăng</th>-->
+                <!--                                <th scope="col">Ngày hết hạn</th>-->
+                <!--                                <th scope="col">Tình trạng</th>-->
+                <!--                                <th scope="col">Tác vụ</th>-->
+                <!--                            </tr>-->
+                <!--                            </thead>-->
+                <!--                            <tbody>-->
+                <!--                            <tr>-->
+                <!--                                <th scope="row">1</th>-->
+                <!--                                <td><a href="#">abc-xyz</a></td>-->
+                <!--                                <td>14-6-2020</td>-->
+                <!--                                <td>14-9-2020</td>-->
+                <!--                                <td>Còn trống</td>-->
+                <!--                                <td>-->
+                <!--                                    <i class="fas fa-edit"></i>-->
+                <!--                                    <i class="fas fa-trash-alt"></i>-->
+                <!--                                    <i class="fas fa-eye-slash"></i>-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                            <tr>-->
+                <!--                                <th scope="row">2</th>-->
+                <!--                                <td><a href="#">abc-xyz</a></td>-->
+                <!--                                <td>14-6-2020</td>-->
+                <!--                                <td>14-9-2020</td>-->
+                <!--                                <td>Còn trống</td>-->
+                <!--                                <td>-->
+                <!--                                    <i class="fas fa-edit"></i>-->
+                <!--                                    <i class="fas fa-trash-alt"></i>-->
+                <!--                                    <i class="fas fa-eye-slash"></i>-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                            <tr>-->
+                <!--                                <th scope="row">3</th>-->
+                <!--                                <td><a href="#">abc-xyz</a></td>-->
+                <!--                                <td>14-6-2020</td>-->
+                <!--                                <td>14-9-2020</td>-->
+                <!--                                <td>Còn trống</td>-->
+                <!--                                <td>-->
+                <!--                                    <i class="fas fa-edit"></i>-->
+                <!--                                    <i class="fas fa-trash-alt"></i>-->
+                <!--                                    <i class="fas fa-eye-slash"></i>-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                            </tbody>-->
+                <!--                        </table>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+
+            </div>
+        </div>
+
+    </div>
+</main>
+<footer th:replace="layout :: footer"></footer>
+<div th:replace="layout :: js-fragment"></div>
+<!--<div id="myModal" class="modal">-->
+<!--    &lt;!&ndash; Modal content &ndash;&gt;-->
+<!--    <div class="modal-content">-->
+<!--        <div class="modal-header">-->
+<!--            <span class="close">&times;</span>-->
+<!--            <h2>Modal Header</h2>-->
+<!--        </div>-->
+<!--        <div class="modal-body">-->
+<!--            <p>Some text in the Modal Body</p>-->
+<!--            <p>Some other text...</p>-->
+<!--        </div>-->
+<!--        <div class="modal-footer">-->
+<!--            <h3>Modal Footer</h3>-->
+<!--        </div>-->
+<!--    </div>-->
+
+</div>
+<script th:src="@{/assets/js/vendor/modal.js}"></script>
+</body>
+</html>

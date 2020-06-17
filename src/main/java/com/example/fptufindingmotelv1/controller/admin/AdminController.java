@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
+import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,13 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @RequestMapping(value = "/get-all-user", method = RequestMethod.GET)
+    public String getAllUser(Model model) {
+        ArrayList<UserModel> users = adminService.getListUser();
+        model.addAttribute("listUser", users);
+        return "";
+    }
 
     @ResponseBody
     @RequestMapping(value = "/ban-landlord", method = RequestMethod.GET)
@@ -40,7 +48,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/get-report", method = RequestMethod.GET)
-    public String unbanLandlord(Model model) {
+    public String getReport(Model model) {
         ArrayList<ReportModel> reports = adminService.getListReport();
         model.addAttribute("listReport", reports);
         return "";

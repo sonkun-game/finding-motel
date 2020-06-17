@@ -1,4 +1,9 @@
+var router = new VueRouter({
+    mode: 'history',
+    routes: []
+});
 var registVue = new Vue({
+    router,
     el: "#registerForm",
     data: {
         //flag
@@ -118,9 +123,10 @@ var registVue = new Vue({
                             localStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
-                            window.location.href = "/google-login";
+                            window.location.href = this.$route.fullPath;
                         } else if ('003') {
-                            window.location.href = "/facebook-login";
+                            window.location.href = this.$route.fullPath;
+
                         }
                     }).catch(error => {
                     console.log(error);

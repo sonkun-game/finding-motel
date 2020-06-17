@@ -16,8 +16,25 @@
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/nice-select.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/loader.css}">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+
 </head>
 <body>
+    <div th:fragment="loader">
+        <div id="preloader-active">
+            <div class="preloader d-flex align-items-center justify-content-center">
+                <div class="preloader-inner position-relative">
+                    <div class="preloader-circle"></div>
+                    <div class="preloader-img pere-text">
+                        <b>FFM</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <header th:fragment="header">
         <!-- Header Start -->
         <div id="header" class="header-area header-sticky">
@@ -40,45 +57,45 @@
                                         <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
                                         <li><a href="#">CĂN HỘ</a></li>
                                         <li><a href="#">HƯỚNG DẪN</a>
-                                        <li><i class="ti-user"></i>
+                                        <li v-if="authenticationNum === 0"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
                                                 <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN LANDLORD -->
-<!--                                        <li><i class="ti-user"> </i>-->
-<!--                                            <ul class="submenu">-->
-<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
-<!--                                                <li><a th:href="">Quản lý bài đăng</a></li>-->
-<!--                                                <li><a th:href="">Đăng tin</a>-->
-<!--                                                <li><a th:href="">Nạp tiền</a>-->
-<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
-<!--                                            </ul>-->
-<!--                                        </li>-->
+                                        <li v-else-if="authenticationNum === 2"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                            <ul class="submenu">
+                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
+                                                <li><a th:href="@{/}">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/}">Đăng tin</a>
+                                                <li><a th:href="@{/}">Nạp tiền</a>
+                                                <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
+                                            </ul>
+                                        </li>
 
 
                                         <!-- DROPDOWN RENTER -->
-<!--                                        <li><i class="ti-user"> </i>-->
-<!--                                            <ul class="submenu">-->
-<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
-<!--                                                <li><a th:href="">Quản lý yêu cầu</a></li>-->
-<!--                                                <li><a th:href="">Danh sách yêu thích</a>-->
-<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
-<!--                                            </ul>-->
-<!--                                        </li>-->
+                                        <li v-else-if="authenticationNum === 1"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                            <ul class="submenu">
+                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
+                                                <li><a th:href="@{/}">Quản lý request</a></li>
+                                                <li><a th:href="@{/}">Wishlist</a>
+                                                <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
+                                            </ul>
+                                        </li>
 
 
                                         <!-- DROPDOWN ADMIN -->
-<!--                                        <li><i class="ti-user"> </i>-->
-<!--                                            <ul class="submenu">-->
-<!--                                                <li><a th:href="">Thông tin tài khoản</a>-->
-<!--                                                <li><a th:href="">Quản lý bài đăng</a></li>-->
-<!--                                                <li><a th:href="">Quản lý người dùng</a>-->
-<!--                                                <li><a th:href="">Danh sách báo cáo</a>-->
-<!--                                                <li><a th:href="">Đăng xuất</a></li>-->
-<!--                                            </ul>-->
-<!--                                        </li>-->
+                                        <li v-else><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                            <ul class="submenu">
+                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
+                                                <li><a th:href="@{/}">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/}">Quản lý người dùng</a>
+                                                <li><a th:href="@{/}">Danh sách report</a>
+                                                <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
+                                            </ul>
+                                        </li>
 
                                     </ul>
                                 </nav>
@@ -175,8 +192,7 @@
         <!-- Jquery Plugins, main Jquery -->
         <script th:src="@{/assets/js/plugins.js}"></script>
         <script th:src="@{/assets/js/main.js}"></script>
-        <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+
         <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
     </div>
 </body>

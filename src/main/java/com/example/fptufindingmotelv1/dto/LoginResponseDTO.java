@@ -9,4 +9,6 @@ public class LoginResponseDTO {
     @JsonProperty("userInfo")
     private LoginDTO loginDTO;
     private String accessToken;
+    private String message;
+    private String msgCode;
 }

@@ -64,6 +64,17 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(114, 61, 190, .25);
 } */
 
+.msg-notification{
+    padding: 12px 0;
+}
+.msg-notification span{
+    font-size: 12px;
+    color: #ecba02;
+}
+#login-form .login-title{
+    margin-bottom: 30px !important;
+}
+
 .login,
 .image {
     min-height: 100vh;

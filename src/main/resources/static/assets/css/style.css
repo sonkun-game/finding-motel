@@ -376,7 +376,7 @@ label {
     letter-spacing: 1px;
     line-height: 0;
     margin-bottom: 0;
-    padding: 25px 39px;
+    padding: 25px;
     text-align: center;
     text-transform: capitalize;
     touch-action: manipulation;
@@ -2010,6 +2010,7 @@ label {
     -o-transition: .6s;
     transition: .6s;
     margin: 0 auto;
+    opacity: 0.8;
 }
 
 /*.top-right-heart{*/
@@ -7060,4 +7061,11 @@ h6 {
 
 .switch-wrap {
     margin-bottom: 10px;
+}
+.hidden{
+    display: none;
+}
+
+[v-cloak] {
+    display: none;
 }

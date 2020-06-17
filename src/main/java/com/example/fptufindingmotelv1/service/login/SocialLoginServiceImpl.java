@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Version;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +45,8 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     @Override
     public String googleLogin() {
         OAuth2Parameters parameters = new OAuth2Parameters();
-        parameters.setRedirectUri("http://localhost:8081/google");
-        parameters.setScope("profile email openid");
+        parameters.setRedirectUri(env.getProperty("google.redirect.uri"));
+        parameters.setScope(env.getProperty("google.app.scope"));
         return createGoogleConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
     }
 
@@ -63,12 +66,20 @@ public class SocialLoginServiceImpl implements SocialLoginService {
 
     @Override
     public GooglePojo getGgUserInfo(String accessToken) throws IOException {
-        String link = env.getProperty("google.link.get.user_info") + accessToken;
-        String response = Request.Get(link).execute().returnContent().asString();
-        ObjectMapper mapper = new ObjectMapper();
-        GooglePojo googlePojo = mapper.readValue(response, GooglePojo.class);
-        System.out.println(googlePojo);
-        return googlePojo;
+        try {
+            String link = env.getProperty("google.link.get.user_info") + accessToken;
+            String response = Request.Get(link).execute().returnContent().asString();
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObjectResponse = (JSONObject) parser.parse(response);
+            GooglePojo googlePojo = new GooglePojo();
+            googlePojo.setId((String)jsonObjectResponse.get("id"));
+            googlePojo.setName((String)jsonObjectResponse.get("name"));
+            System.out.println(googlePojo);
+            return googlePojo;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -79,8 +90,8 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     @Override
     public String facebookLogin() {
         OAuth2Parameters parameters = new OAuth2Parameters();
-        parameters.setRedirectUri("http://localhost:8081/facebook");
-        parameters.setScope("public_profile,email");
+        parameters.setRedirectUri(env.getProperty("facebook.redirect.uri"));
+        parameters.setScope(env.getProperty("facebook.app.scope"));
         return createFacebookConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
     }
 

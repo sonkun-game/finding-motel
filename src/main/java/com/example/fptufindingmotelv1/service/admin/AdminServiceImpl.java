@@ -8,12 +8,14 @@ import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PostModelRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AdminServiceImpl implements  AdminService{
+@Service
+public class AdminServiceImpl implements AdminService {
     @Autowired
     PostModelRepository postModelRepository;
 

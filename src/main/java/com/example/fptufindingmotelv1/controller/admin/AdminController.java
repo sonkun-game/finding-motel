@@ -15,6 +15,7 @@ import java.util.ArrayList;
 @Controller
 public class AdminController {
 
+    @Autowired
     private AdminService adminService;
 
     @ResponseBody

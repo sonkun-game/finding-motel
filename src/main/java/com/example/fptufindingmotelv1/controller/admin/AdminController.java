@@ -20,6 +20,11 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @RequestMapping(value = "/admin-profile")
+    public String adminProfile(Model model) {
+        return "profile-admin";
+    }
+
     @RequestMapping(value = "/get-all-user", method = RequestMethod.GET)
     public String getAllUser(Model model) {
         ArrayList<UserModel> users = adminService.getListUser();

@@ -104,7 +104,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public PostModel getPostDetail(Long id) {
-        return postModelRepository.findByPostId(id);
+        return postModelRepository.getOne(id);
     }
 
     @Override
@@ -113,8 +113,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PostModel deletePost(Long id) {
-        return postModelRepository.deleteByPostId(id);
+    public void deletePost(Long id) {
+         postModelRepository.deleteById(id);
     }
 
     @Override

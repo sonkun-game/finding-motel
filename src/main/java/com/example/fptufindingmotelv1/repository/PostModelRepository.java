@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostModelRepository extends JpaRepository<PostModel,Long> {
     //Page<PostModel> findAllByOrderByCreateDate(Pageable pageable);
-    PostModel findByPostId(Long id);
-    PostModel deleteByPostId(Long id);
 }

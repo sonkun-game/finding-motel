@@ -23,7 +23,7 @@ public interface AdminService {
 
     public ArrayList<PostModel> searchPost();
 
-    public PostModel deletePost(Long id);
+    public void deletePost(Long id);
 
     public ArrayList<ReportModel> getListReport();
 

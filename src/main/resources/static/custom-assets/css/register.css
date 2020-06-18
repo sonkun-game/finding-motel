@@ -43,13 +43,24 @@
 }
 
 .register-input-phone {
-    width: 40%;
+    width: 50%;
     float: left;
 }
 
 .register-btn-phone {
-    width: 30%;
+    width: 20%;
     float: right;
+}
+
+.btn-primary-otp {
+    float: right;
+    height: 90%;
+    background: #dca73a;
+    display: block;
+    margin: auto;
+    border: medium none;
+    border-radius: 3px;
+    color: white;
 }
 
 .btn-primary {
@@ -59,6 +70,9 @@
     margin: auto;
     border: medium none;
     border-radius: 3px;
+}
+.btn-primary-otp:hover{
+    background: #dca73a !important;
 }
 
 .form-check-inline {
@@ -73,6 +87,12 @@
 
 .btn-confirm{
     width: 50% !important;
+    height: 90%;
+    background: #dca73a;
+    display: block;
+    margin: auto;
+    border: medium none;
+    border-radius: 3px;
 }
 
 .btn-confirm{

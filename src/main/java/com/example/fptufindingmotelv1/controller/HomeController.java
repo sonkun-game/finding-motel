@@ -45,17 +45,19 @@ public class HomeController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(Model model, HttpServletRequest request,
                          RedirectAttributes redirect,
-                         @RequestParam(name = "page") Optional<Integer> page,
-                         @RequestParam(name = "pageSize")  Optional<Integer> size,
+                         @RequestParam(name = "page"/*, required = false, defaultValue = "0"*/) Optional<Integer> page,
+                         @RequestParam(name = "pageSize"/*, required = false, defaultValue = "6"*/)  Optional<Integer> size,
                          @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort){
 
+        //request.getSession().setAttribute("postlist", null);
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by("createDate").ascending();
         }
-        int evalPageSize = size.orElse(INITIAL_PAGE_SIZE);
-        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
+        int evalPageSize = size.orElse(INITIAL_PAGE_SIZE);
+
+        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
         Page<PostModel> postlist =  postModelRepository.findAll(pageable);
         model.addAttribute("posts",postlist);
@@ -80,4 +82,28 @@ public class HomeController {
         return "wishlist";
     }
 
+    @GetMapping("/forgot")
+    public String getForgot(Model model){
+        return "forgot";
+    }
+    @GetMapping("/reset-password")
+    public String getResetPassword(Model model){
+        return "reset-password";
+    }
+    @GetMapping("/profile-landlord")
+    public String getProfileLandlord(Model model){
+        return "profile-landlord";
+    }
+    @GetMapping("/profile-renter")
+    public String getProfileRenter(Model model){
+        return "profile-renter";
+    }
+    @GetMapping("/profile-admin")
+    public String getProfileAdmin(Model model){
+        return "profile-admin";
+    }
+    @GetMapping("/post-detail")
+    public String getPostDetail(Model model){
+        return "post-detail";
+    }
 }

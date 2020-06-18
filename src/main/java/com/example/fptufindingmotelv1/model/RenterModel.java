@@ -3,11 +3,10 @@ package com.example.fptufindingmotelv1.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,4 +23,7 @@ public class RenterModel extends UserModel implements Serializable {
 
     @Column(name = "DOB")
     private Date dob;
+
+    @ManyToMany(mappedBy = "renters")
+    private List<PostModel> posts;
 }

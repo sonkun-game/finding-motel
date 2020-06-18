@@ -1,14 +1,22 @@
 package com.example.fptufindingmotelv1.controller;
 
+import com.example.fptufindingmotelv1.dto.LoginDTO;
+import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PagerModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.repository.PostModelRepository;
+import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
+import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,22 +39,23 @@ public class HomeController {
     @Autowired
     PostModelRepository postModelRepository;
 
+    @Autowired
+    RenterService renterService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(Model model, HttpServletRequest request,
                          RedirectAttributes redirect,
-                         @RequestParam(name = "page"/*, required = false, defaultValue = "0"*/) Optional<Integer> page,
-                         @RequestParam(name = "pageSize"/*, required = false, defaultValue = "6"*/)  Optional<Integer> size,
+                         @RequestParam(name = "page") Optional<Integer> page,
+                         @RequestParam(name = "pageSize")  Optional<Integer> size,
                          @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort){
 
-        //request.getSession().setAttribute("postlist", null);
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by("createDate").ascending();
         }
-
         int evalPageSize = size.orElse(INITIAL_PAGE_SIZE);
-
         int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
         Page<PostModel> postlist =  postModelRepository.findAll(pageable);
         model.addAttribute("posts",postlist);
@@ -55,6 +64,20 @@ public class HomeController {
         model.addAttribute("pageSizes", PAGE_SIZES);
         model.addAttribute("pager", pager);
         return "index";
+    }
+
+    @GetMapping(value = "/view")
+    public String getWishlist(String username,Model model){
+        LoginResponseDTO responseDTO = new LoginResponseDTO();
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
+            model.addAttribute("renter",renterService.findOne(userDetails.getUserModel().getUsername()));
+
+        }
+
+        return "wishlist";
     }
 
 }

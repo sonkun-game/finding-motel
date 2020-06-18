@@ -52,4 +52,11 @@ public class PostModel implements Serializable {
 
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "WISHLIST",
+            joinColumns = @JoinColumn(name = "POST_ID"),
+            inverseJoinColumns = @JoinColumn(name = "RENTER_ID")
+    )
+    private List<RenterModel> renters;
 }

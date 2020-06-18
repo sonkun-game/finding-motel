@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/paging.css}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+</head>
+<body>
+<header th:replace="layout :: header"></header>
+<main>
+    <!-- slider Area Start-->
+    <div class="slider-area ">
+        <!-- Cover -->
+        <!-- <div class="slider-active dot-style"> -->
+        <div class="single-slider hero-overly slider-height d-flex align-items-center" data-background="assets/img/hero/F1.jpg">
+            <div class="container">
+                <div class="row justify-content-center text-center">
+                    <div class="col-xl-9">
+                        <div class="h1-slider-caption">
+                            <h1 data-animation="fadeInUp" data-delay=".4s">top motel in the hola</h1>
+                            <h3 data-animation="fadeInDown" data-delay=".4s">Finding Motel</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- slider Area End-->
+
+    <!-- Booking Room End-->
+    <section class="room-area">
+        <div class="container" >
+            <div class="row justify-content-center">
+                <div class="col-xl-8">
+                    <!--font-back-tittle  -->
+                    <div class="font-back-tittle mb-45">
+                        <div class="archivment-front">
+                            <h3>Danh sách yêu thích</h3>
+                            <p>Tìm trọ FPTU là website cho phép tìm phòng trọ, đăng tin </br> phòng trọ dành cho chủ trọ và sinh viên đại học FPT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:object="${renter}">
+                <div class="col-xl-4 col-lg-6 col-md-6" th:each="post, state : ${renter.posts}">
+                    <!-- Single Room -->
+                    <div class="single-room mb-50" >
+                        <div class="room-img">
+                            <a href="rooms.html"><img th:each="image:${post.images}" th:src="@{${image.url}}" alt=""></a>
+                        </div>
+                        <div class="room-caption">
+                            <h3><a href="rooms.html" th:utext="${post.description}"></a></h3>
+                            <div class="per-night">
+                                <span th:utext="${post.price}" ></span><span>  vnđ </span><span>/ tháng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--<div class="row">
+                <div th:if="${posts.totalPages != 1}"
+                     class="form-group col-md-11 pagination-centered">
+                    <ul class="pagination">
+                        <li th:class="${posts.number == 0} ? disabled"><a
+                                class="pageLink"
+                                th:href="@{/(pageSize=${selectedPageSize}, page=1)}">First</a>
+                        </li>
+                        <li th:class="${posts.number == 0} ? disabled"><a
+                                class="pageLink"
+                                th:href="@{/(pageSize=${selectedPageSize}, page=${posts.number})}">&larr;</a>
+                        </li>
+                        <li
+                                th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'"
+                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                            <a class="pageLink"
+                               th:href="@{/(pageSize=${selectedPageSize}, page=${page})}"
+                               th:text="${page}"></a>
+                        </li>
+                        <li
+                                th:class="${posts.number + 1 == posts.totalPages} ? disabled">
+                            <a class="pageLink"
+                               th:href="@{/(pageSize=${selectedPageSize}, page=${posts.number + 2})}">&rarr;</a>
+                        </li>
+                        <li
+                                th:class="${posts.number + 1 == posts.totalPages} ? disabled">
+                            <a class="pageLink"
+                               th:href="@{/(pageSize=${selectedPageSize}, page=${posts.totalPages})}">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>-->
+
+        </div>
+
+    </section>
+</main>
+<footer th:replace="layout :: footer"></footer>
+<div th:replace="layout :: js-fragment"></div>
+</body>
+</html>

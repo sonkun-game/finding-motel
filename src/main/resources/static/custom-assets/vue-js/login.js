@@ -62,12 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     })
+    var loadingInstance = new Vue({
+        el: '#loading-wrapper',
+        data: {
+            isHidden: true
+        },
+
+    })
 });
 
-var loadingInstance = new Vue({
-    el: '#loading-wrapper',
-    data: {
-        isHidden: true
-    },
-
-})

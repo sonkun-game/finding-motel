@@ -69,21 +69,19 @@ public class LoginController {
     @ResponseBody
     @PostMapping(value = "/api-logout")
     public JSONObject logout(HttpServletRequest request, HttpServletResponse response){
+        JSONObject jsonObject = new JSONObject();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            jsonObject.put("message", "Log out successfully");
+            jsonObject.put("code", "msg001");
+            return jsonObject;
+        }else {
+            jsonObject.put("message", "Authentication is not exist");
+            jsonObject.put("code", "msg002");
+            return jsonObject;
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", "Log out successfully");
-        jsonObject.put("code", "msg001");
-        return jsonObject;
-    }
 
-
-    @ResponseBody
-    @GetMapping("/api-test-renter")
-    public String testRenter(){
-        return "Renter access accepted";
     }
 
     @ResponseBody
@@ -98,11 +96,6 @@ public class LoginController {
         return responseDTO;
     }
 
-    @ResponseBody
-    @GetMapping("/api-test-landlord")
-    public String testLandlord(){
-        return "Landlord access accepted";
-    }
 
 
 }

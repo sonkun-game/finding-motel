@@ -30,32 +30,31 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/get-all-user")
-    public ArrayList<UserDTO> getAllUser(Model model) {
+    public ArrayList<UserDTO> getAllUser() {
         return adminService.getListUser();
     }
 
     @ResponseBody
     @RequestMapping(value = "/ban-landlord")
-    public ArrayList<LandlordModel> banLandlord(@RequestParam(value = "username") String username, Model model) {
-        ArrayList<LandlordModel> landlords = null;
+    public ArrayList<UserDTO> banLandlord(@RequestParam(value = "username") String username) {
         if (username != null && username.length() > 0) {
-            landlords = adminService.banLandlord(username);
+            adminService.banLandlord(username);
         }
-        return landlords;
+        return adminService.getListUser();
     }
 
     @ResponseBody
     @RequestMapping(value = "/unban-landlord")
-    public ArrayList<LandlordModel> unbanLandlord(@RequestParam(value = "username") String username, Model model) {
-        ArrayList<LandlordModel> landlords = null;
+    public ArrayList<UserDTO> unbanLandlord(@RequestParam(value = "username") String username) {
         if (username != null && username.length() > 0) {
-            landlords = adminService.unbanLandlord(username);
+            adminService.unbanLandlord(username);
+            getAllUser();
         }
-        return landlords;
+        return adminService.getListUser();
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-report", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-report")
     public ArrayList<ReportResponseDTO> getReport() {
         ArrayList<ReportResponseDTO> reports = adminService.getListReport();
         return reports;

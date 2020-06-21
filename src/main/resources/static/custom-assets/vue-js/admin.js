@@ -16,9 +16,19 @@ var admin = new Vue({
         postSquare : {},
         postDistance : {},
         postStatus : {},
-
+        isBannedUser : false,
     },
     methods: {
+        filterUserByRole(roleId, listData){
+            if (roleId == 0) return;
+            let rawList = [];
+            for (var item of listData) {
+                if (item.role == roleId) {
+                    rawList.push(item);
+                }
+            }
+            this.listUser = rawList;
+        },
         getListUser() {
             //
             this.isReportMgmt = false;
@@ -32,6 +42,7 @@ var admin = new Vue({
                 .then((data) => {
                     // if(data.status == 200){
                     this.listUser = data;
+                    this.filterUserByRole(document.getElementById("roleFilterCb").value, this.listUser);
                     // } else {
                     // window.location.href = "/error";
                     // }
@@ -49,7 +60,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
-                    this.getListReport();
+                    this.listUser = data;
                     // } else {
                     //     window.location.href = "/error";
                     // }
@@ -66,7 +77,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
-                    this.getListReport();
+                    this.listUser = data;
                     // } else {
                     //     window.location.href = "/error";
                     // }

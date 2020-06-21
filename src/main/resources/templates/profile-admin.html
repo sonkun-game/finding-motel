@@ -70,7 +70,7 @@
                                         </div>
                                         <div class="form-dropdown">
                                             <form action="#">
-                                                <select>
+                                                <select id="roleFilterCb" v-on:change="getListUser()">
                                                     <option selected value="0">Tất cả</option>
                                                     <option value="1">Chủ trọ</option>
                                                     <option value="2">NGười thuê</option>
@@ -94,13 +94,16 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="user in listUser">
-                                    <th scope="row">user.index</th>
+                                    <th scope="row">{{listUser.indexOf(user) + 1}}</th>
                                     <td><a id="myBtn">{{user.username}}</a></td>
                                     <td>{{user.displayName}}</td>
                                     <td>{{user.role.roleName}}</td>
                                     <td>
                                         <i class="fas fa-eye"></i>
-                                        <i @click="banLanlord(user.username)" class="fas fa-ban"></i>
+                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate != null}" @click="banLanlord(user.username)" class="fas fa-lock">
+                                            {{user.role.unBanDate}}
+                                        </i>
+                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate == null}" @click="unbanLanlord(user.username)" class="fas fa-unlock"></i>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -127,7 +130,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="report in listReport">
-                                    <th scope="row">{{report.index}}</th>
+                                    <th scope="row">{{listReport.indexOf(report) + 1}}</th>
                                     <td><a v-bind:href="'/report-detail?id=' + report.id">{{report.postTitle}}</a></td>
                                     <td>{{report.landlordName}}</td>
                                     <td>{{report.reportDate}}</td>
@@ -278,7 +281,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="post in listPost">
-                                    <th scope="row">{{post.index}}</th>
+                                    <th scope="row">{{listPost.indexOf(post) + 1}}</th>
                                     <td><a v-bind:href='"get-post-detail?postId=" + post.id'>{{post.title}}</a></td>
                                     <td>{{post.typeName}}</td>
                                     <td>{{post.price}}</td>

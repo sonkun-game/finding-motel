@@ -221,8 +221,8 @@
             <div class="detail-2">
                 <p class="label">Số điện thoại:</p>
                 <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                <button onclick="modal_phone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
-                <div id="myModal_phone" class="modal">
+                <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
+                <div id="my-modal-phone" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
                         <div class="modal-header">
@@ -274,7 +274,7 @@
             </div>
             <div class="detail-3">
                 <button v-on:click="saveUserInfo()" class="save">Lưu thay đổi</button>
-                <div id="myModal_save" class="modal">
+                <div id="my-modal-notification" class="modal">
                     <div class="message">
                         <div class="modal-body">
                             <i class="fas fa-check"></i>

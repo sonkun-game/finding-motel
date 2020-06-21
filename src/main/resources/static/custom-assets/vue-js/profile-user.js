@@ -35,12 +35,25 @@ var profileInstance = new Vue({
             })
         },
         showNotifyModal(){
-            let modal_save = document.getElementById("myModal_save")
+            let modal_save = document.getElementById("my-modal-notification")
             modal_save.style.display = "block";
-
+            setTimeout(() => modal_save.style.display = "none", 2000);
             window.onclick = function(event) {
                 if (event.target == modal_save) {
                     modal_save.style.display = "block";
+                }
+            }
+        },
+        showModalChangePhone(){
+            let modal_phone = document.getElementById("my-modal-phone");
+            let span_phone = modal_phone.getElementsByClassName("close")[0];
+            modal_phone.style.display = "block";
+            span_phone.onclick = function() {
+                modal_phone.style.display = "none";
+            }
+            window.onclick = function(event) {
+                if (event.target == modal_phone) {
+                    modal_phone.style.display = "block";
                 }
             }
         }

@@ -60,7 +60,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
-                    this.listUser = data;
+                    this.getListUser();
                     // } else {
                     //     window.location.href = "/error";
                     // }
@@ -77,7 +77,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
-                    this.listUser = data;
+                    this.getListUser()
                     // } else {
                     //     window.location.href = "/error";
                     // }

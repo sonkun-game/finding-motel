@@ -162,7 +162,8 @@
                     <div class="single-room mb-50" >
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
-                            <i class="fa fa-2x fa-heart"></i>
+<!--                            <i class="fa fa-2x fa-heart full"></i>-->
+                            <i class="far fa-2x fa-heart"></i>
                         </div>
                         <div class="room-caption">
                             <h3><a href="rooms.html" th:utext="${post.description}"></a></h3>

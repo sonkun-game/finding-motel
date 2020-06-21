@@ -2025,8 +2025,23 @@ label {
     right: 30px;
     color: whitesmoke;
 }
+
+.full{
+    position: absolute !important;
+    top: 13px;
+    right: 30px;
+    color: #ff3737;
+}
+
+.full:hover{
+    transform: scale(1.1);
+    -webkit-transition: transform 0.5s ease-in-out;
+}
+
 .fa-heart:hover{
-    color: #dca73a;
+    transform: scale(1.1);
+    -webkit-transition: transform 0.5s ease-in-out;
+    color: #ff3737;
 }
 
 .login-icon{
@@ -3408,6 +3423,10 @@ label {
 .font-back-tittle .archivment-front {
     position: relative;
     /* z-index: 9; */
+}
+
+.archivment-front p{
+    font-style: italic;
 }
 
 .font-back-tittle .archivment-front h3 {
@@ -5300,18 +5319,18 @@ li {
 }
 
 p {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 30px;
-    color: #909092;
+    color: black;
     margin-bottom: 13px;
     font-family: "Noto Serif", serif;
 }
 
 label {
-    color: #7e7e7e;
+    color: black;
     cursor: default;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 400;
 }
 

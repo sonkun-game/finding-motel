@@ -3,6 +3,7 @@
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
+    <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
     <meta charset="UTF-8">
     <title>Chi tiết bài đăng</title>
 </head>
@@ -42,6 +43,7 @@
                             </div>
                             <div class="title-right">
                                 <i class="far fa-2x fa-heart icon-heart"></i>
+<!--                                <i class="fa fa-2x fa-heart full"></i>-->
                             </div>
                         </div>
                         <div class="detail">
@@ -65,7 +67,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="description">
+                        <div class="description-information">
                             <h4 class="font-weight-bold">Thông tin chi tiết</h4>
                             <p>
                                 Tôi Tên Khôi là chính chủ Miếng đất thửa 505 Mặt tiền đường Bùi Thị Điệt, Xã Nhuận Đức, Huyện Củ Chi (ngay ngã 3 Nhuận Đức, Bùi Thị Điệt)</br>
@@ -81,6 +83,37 @@
                             </p>
                         </div>
                     </div>
+                    <div class="share">
+                        <div class="title-share">
+                            <h4 class="font-weight-bold">Chia sẻ </h4>
+                        </div>
+                        <div class="btn-share">
+                            <button class="btn-share-fb" type="button">Chia Sẻ Facebook</button>
+                        </div>
+                    </div>
+                    <div class="report">
+                        <div class="title-report">
+                            <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo cáo với chúng tôi.</p>
+                            <button class="btn-report" type="button" id="myBtn">Báo Cáo Bài Viết</button>
+                            <div id="myModal" class="modal">
+                                <!-- Modal content -->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2>Báo Cáo Bài Viết</h2>
+                                        <span class="close">&times;</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4 class="font-weight-normal">Nội dung</h4>
+                                        <textarea></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn-default">Xác Nhận</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="sidebar-right-information">
                     <div class="information">
@@ -89,17 +122,30 @@
                         </div>
                         <div class="name-landlord">
                             <label>Duong Thi Kim Oanh</label>
-                            <div class="contact">
-                                <label class="phonenumber">Liên hệ: 0905000888</label>
+                            <div class="create-date">
+                                <label>Ngày đăng: 21-06-2020</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="room-number">
+                        <h4 class="font-weight-normal">Chọn phòng:</h4>
+                        <div class="select-room">
+                            <select name="room" id="rooms">
+                                <option value="room1">room1</option>
+                                <option value="room2">room2</option>
+                                <option value="room3">room3</option>
+                                <option value="room4">room4</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="sent-request">
+                        <button class="btn btn-danger">Gửi Yêu Cầu</button>
                     </div>
-                    <div class="share-facebook">
-                        <button class="btn-share">Chia sẻ lên facebook</button>
-                    </div>
-                    <div class="report">
-                        <button class="btn-report">Báo cáo bài đăng</button>
+
+                    <div class="contact">
+                        <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
+                        <h3>0905.000.888</h3>
                     </div>
                 </div>
             </div>
@@ -111,6 +157,7 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 <script th:src="@{/assets/js/main.js}"></script>
+<script th:src="@{/assets/js/vendor/modal.js}"></script>
 <script type="text/javascript" th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>

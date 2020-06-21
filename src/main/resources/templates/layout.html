@@ -64,7 +64,11 @@
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN LANDLORD -->
-                                        <li v-else-if="authenticationNum === 2" class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 2" class="login-icon">
+                                             <i v-cloak class="ti-user">
+                                                 <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
+
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
@@ -76,7 +80,10 @@
 
 
                                         <!-- DROPDOWN RENTER -->
-                                        <li v-else-if="authenticationNum === 1" class="login-icon"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 1" class="login-icon">
+                                            <i class="ti-user" v-cloak>
+                                                <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
@@ -87,7 +94,10 @@
 
 
                                         <!-- DROPDOWN ADMIN -->
-                                        <li v-else class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else class="login-icon">
+                                            <i v-cloak class="ti-user">
+                                                <span class="display-name-dropdown"> {{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>

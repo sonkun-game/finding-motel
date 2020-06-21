@@ -2045,13 +2045,28 @@ label {
 }
 
 .login-icon{
+    display: flex;
     background-color: white;
     margin: -7px 0px;
     width: auto;
     height: 30px;
-    padding: 2px 15px 5px 15px;
+    padding: 5px 10px 5px 10px;
     border: 1px solid #CFCFCF;
     border-radius: 5px;
+}
+
+.ti-user{
+    float: left !important;
+}
+
+.display-name-dropdown{
+    font-size: 16px;
+    font-family: "Lato", sans-serif;
+    white-space: nowrap;
+    width: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 5px 5px 5px 10px;
 }
 
 .login-icon:hover{
@@ -6097,11 +6112,7 @@ h6 {
     background: #fff;
 }
 
-.ti-user{
-    float: right !important;
-    font-size: 20px !important;
-    /*font-family: "Lato", serif !important;*/
-}
+
 
 .genric-btn.default-border {
     border: 1px solid #f9f9ff;

@@ -64,7 +64,11 @@
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN LANDLORD -->
-                                        <li v-else-if="authenticationNum === 2" class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 2" class="login-icon">
+                                             <i v-cloak class="ti-user">
+                                                 <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
+
                                             <ul class="submenu">
                                                 <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
@@ -76,7 +80,10 @@
 
 
                                         <!-- DROPDOWN RENTER -->
-                                        <li v-else-if="authenticationNum === 1" class="login-icon"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else-if="authenticationNum === 1" class="login-icon">
+                                            <i class="ti-user" v-cloak>
+                                                <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
@@ -87,7 +94,10 @@
 
 
                                         <!-- DROPDOWN ADMIN -->
-                                        <li v-else class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
+                                        <li v-else class="login-icon">
+                                            <i v-cloak class="ti-user">
+                                                <span class="display-name-dropdown"> {{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
+                                            </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
@@ -211,7 +221,33 @@
             <div class="detail-2">
                 <p class="label">Số điện thoại:</p>
                 <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                <button type="submit" class="change">Thay đổi</button>
+                <button onclick="modal_phone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
+                <div id="myModal_phone" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Thay đổi số điện thoại</h2>
+                            <span class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="change-phone-area">
+                                <div class="phone-number">
+                                    <h4 class="title-phone">Số điện thoại: </h4>
+                                    <input type="tel" class="change-phone rounded-pill border-0 shadow-sm px-4" />
+                                    <button class="btn-default-otp">Gửi mã xác nhận</button>
+
+                                </div>
+                                <div class="confirm-otp">
+                                    <h4 class="title-confirm-otp">Mã xác nhận: </h4>
+                                    <input type="tel" class="confirm-otp-phone rounded-pill border-0 shadow-sm px-4" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-default">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div v-if="userInfo.role == 'RENTER'" class="detail-2">
                 <p class="label">Ngày sinh:</p>

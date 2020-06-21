@@ -4,6 +4,7 @@
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
     <title>Quản lý tài khoản</title>
 </head>
 <body>
@@ -23,11 +24,14 @@
                         <button  class="button-information">Đổi mật khẩu</button>
                         <button  class="button-information">Quản lý yêu cầu</button>
                         <button  class="button-information">Danh sách yêu thích</button>
+                        <button  class="button-information">Đổi mật khẩu</button>
                         <button  class="button-information">Đăng xuất</button>
                     </div>
                 </div>
                 <!-- Thông tin tài khoản -->
                 <div th:replace="layout :: profile-user"></div>
+
+
 
                 <!-- Quản lý yêu cầu -->
 
@@ -164,62 +168,28 @@
 <!--                        </div>-->
 <!--                    </div>-->
 
-                <!-- Lịch sử nạp tiền -->
+                <!-- Đổi mật khẩu -->
 <!--                <div class="col-9 sidebar-right">-->
 <!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">lịch sử nạp tiền</h1>-->
+<!--                        <h1 class="title-name uppercase">đổi mật khẩu</h1>-->
 <!--                    </div>-->
 <!--                    <div class="information-detail">-->
-<!--                        <table class="table">-->
-<!--                            <thead class="thead-light">-->
-<!--                            <tr>-->
-<!--                                <th scope="col">STT</th>-->
-<!--                                <th scope="col">Tên bài đăng</th>-->
-<!--                                <th scope="col">Ngày đăng</th>-->
-<!--                                <th scope="col">Ngày hết hạn</th>-->
-<!--                                <th scope="col">Tình trạng</th>-->
-<!--                                <th scope="col">Tác vụ</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">2</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">3</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
+<!--                        <div class="detail">-->
+<!--                            <p class="label">Mật khẩu cũ:</p>-->
+<!--                            <input id="oldpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Mật khẩu mới:</p>-->
+<!--                            <input id="newpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Nhập lại mật khẩu:</p>-->
+<!--                            <input id="repassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />-->
+<!--                        </div>-->
+
+<!--                        <div class="detail-3">-->
+<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
+<!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
             </div>
@@ -231,5 +201,6 @@
 <div th:replace="layout :: js-fragment"></div>
 <script th:src="@{/assets/js/vendor/active.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
+<script th:src="@{/assets/js/vendor/modal.js}"></script>
 </body>
 </html>

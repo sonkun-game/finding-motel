@@ -19,6 +19,61 @@ var admin = new Vue({
 
     },
     methods: {
+        getListUser() {
+            //
+            this.isReportMgmt = false;
+            this.isPostMgmt = false;
+            this.isUserMgmt = true;
+            this.isAdminProfile = false;
+            //
+            fetch("https://localhost:8081/get-all-user", {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    // if(data.status == 200){
+                    this.listUser = data;
+                    // } else {
+                    // window.location.href = "/error";
+                    // }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        banLanlord(username) {
+            fetch("https://localhost:8081/ban-landlord?username=" + username, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then((data) => {
+                    // if(data.status == 200){
+                    this.getListReport();
+                    // } else {
+                    //     window.location.href = "/error";
+                    // }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        unbanLanlord(username) {
+            fetch("https://localhost:8081/unban-landlord?username=" + username, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then((data) => {
+                    // if(data.status == 200){
+                    this.getListReport();
+                    // } else {
+                    //     window.location.href = "/error";
+                    // }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         getListReport() {
             //
             this.isReportMgmt = true;
@@ -27,7 +82,7 @@ var admin = new Vue({
             this.isAdminProfile = false;
             //
             fetch("https://localhost:8081/get-report", {
-                method: 'GET',
+                method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
@@ -42,7 +97,6 @@ var admin = new Vue({
         },
 
         deleteReport(id) {
-            let reportId = id;
             fetch("https://localhost:8081/delete-report?reportId=" + id, {
                 method: 'POST',
                 headers: {
@@ -68,7 +122,7 @@ var admin = new Vue({
             this.isAdminProfile = false;
             //
             fetch("https://localhost:8081/get-post", {
-                method: 'GET',
+                method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
                     // if(data.status == 200){
@@ -83,7 +137,6 @@ var admin = new Vue({
         },
 
         deletePost(id) {
-            let reportId = id;
             fetch("https://localhost:8081/delete-post?postId=" + id, {
                 method: 'POST',
                 headers: {

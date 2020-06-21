@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
@@ -28,11 +29,9 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-all-user", method = RequestMethod.GET)
-    public ArrayList<UserModel> getAllUser(Model model) {
-        ArrayList<UserModel> users = adminService.getListUser();
-        model.addAttribute("listUser", users);
-        return users;
+    @RequestMapping(value = "/get-all-user")
+    public ArrayList<UserDTO> getAllUser(Model model) {
+        return adminService.getListUser();
     }
 
     @ResponseBody

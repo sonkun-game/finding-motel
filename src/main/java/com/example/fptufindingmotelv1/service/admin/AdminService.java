@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
@@ -9,7 +10,7 @@ import com.example.fptufindingmotelv1.model.UserModel;
 import java.util.ArrayList;
 
 public interface AdminService {
-    public ArrayList<UserModel> getListUser();
+    public ArrayList<UserDTO> getListUser();
 
     public UserModel getUserDetail(String username);
 

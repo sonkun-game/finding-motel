@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
@@ -44,8 +45,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<UserModel> getListUser() {
-        return (ArrayList<UserModel>) userRepository.findAll();
+    public ArrayList<UserDTO> getListUser() {
+        try {
+            ArrayList<UserDTO> users = new ArrayList<>();
+            for (UserModel user : userRepository.findAll()) {
+                UserDTO userDTO = new UserDTO(user);
+                users.add(userDTO);
+            }
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -60,7 +71,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ArrayList<LandlordModel> banLandlord(String username) {
-
         try {
             LandlordModel landlord = landlordRepository.findByUsername(username);
             if (landlord == null) {
@@ -75,7 +85,7 @@ public class AdminServiceImpl implements AdminService {
                 calendar.setTime(date);
                 calendar.add(Calendar.DAY_OF_MONTH, 14);
 
-                landlord.setUnbanDate(calendar.getTime());
+                landlord.setUnBanDate(calendar.getTime());
                 landlordRepository.save(landlord);
                 return (ArrayList<LandlordModel>) landlordRepository.findAll();
             }
@@ -93,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
             if (landlord == null) {
                 return null;
             } else {
-                landlord.setUnbanDate(null);
+                landlord.setUnBanDate(null);
                 landlordRepository.save(landlord);
                 return (ArrayList<LandlordModel>) landlordRepository.findAll();
             }

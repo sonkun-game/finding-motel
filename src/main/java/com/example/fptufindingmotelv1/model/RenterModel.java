@@ -1,14 +1,18 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "RENTER")
 public class RenterModel extends UserModel implements Serializable {
@@ -23,4 +27,7 @@ public class RenterModel extends UserModel implements Serializable {
     @Column(name = "DOB")
     @Temporal(TemporalType.DATE)
     private Date dob;
+
+    @OneToMany(mappedBy = "renterReport")
+    private List<ReportModel> reports;
 }

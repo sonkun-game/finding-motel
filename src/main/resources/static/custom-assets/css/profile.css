@@ -273,3 +273,6 @@ select{
     margin: 4px 22px;
 }
 
+.invisible {
+    display: none !important;
+}

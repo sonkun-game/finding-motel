@@ -20,10 +20,10 @@
                         <p class="display-name">Dương Thị Kim Oanh</p>
                     </div>
                     <div class="information" id="myInfoMenu">
-                        <button v-bind:id="{active : isAdminProfile}" class="button-information">Thông tin tài khoản</button>
-                        <button v-bind:id="{active : isUserMgmt}" @click="getListUser()" class="button-information">Quản lý người dùng</button>
-                        <button v-bind:id="{active : isPostMgmt}" @click="getListPost()" class="button-information">Danh sách bài đăng</button>
-                        <button v-bind:id="{active : isReportMgmt}" @click="getListReport()" class="button-information">Báo cáo
+                        <button v-bind:class="{active : isAdminProfile}" class="button-information">Thông tin tài khoản</button>
+                        <button v-bind:class="{active : isUserMgmt}" @click="getListUser()" class="button-information">Quản lý người dùng</button>
+                        <button v-bind:class="{active : isPostMgmt}" @click="getListPost()" class="button-information">Danh sách bài đăng</button>
+                        <button v-bind:class="{active : isReportMgmt}" @click="getListReport()" class="button-information">Báo cáo
                         </button>
                         <button class="button-information">Đăng xuất</button>
                     </div>

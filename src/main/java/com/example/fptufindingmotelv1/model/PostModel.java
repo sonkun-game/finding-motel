@@ -1,6 +1,6 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "POST")
 public class PostModel implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -47,9 +50,23 @@ public class PostModel implements Serializable {
     @Column(name = "EXPIRE_DATE", nullable = false)
     private Date expireDate;
 
-    @Column(name = "IS_VISIBLE  ", nullable = false)
+    @Column(name = "IS_VISIBLE", nullable = false)
     private boolean isVisible;
 
-    @OneToMany(mappedBy = "post")
+    @Column(name = "TITLE", nullable = false)
+    private String title;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<ImageModel> images;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postReport")
+    private List<ReportModel> reports;
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
 }

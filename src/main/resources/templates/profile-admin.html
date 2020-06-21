@@ -13,351 +13,314 @@
 <main>
     <div class="container-fluid">
         <div class="container">
-            <div class="row">
+            <div id="pageContent" class="row">
                 <div class="col-3 sidebar-left">
                     <div class="avatar">
                         <i class="ti-user profile-avatar"></i>
                         <p class="display-name">Dương Thị Kim Oanh</p>
                     </div>
-                    <div class="information" id="myInfo">
-                        <button  class="button-information active">Thông tin tài khoản</button>
-                        <button  class="button-information">Quản lý người dùng</button>
-                        <button  class="button-information">Danh sách bài đăng</button>
-                        <button  class="button-information">Báo cáo</button>
-                        <button  class="button-information">Đăng xuất</button>
+                    <div class="information" id="myInfoMenu">
+                        <button class="button-information active">Thông tin tài khoản</button>
+                        <button @click="getListUser()" class="button-information">Quản lý người dùng</button>
+                        <button @click="getListPost()" class="button-information">Danh sách bài đăng</button>
+                        <button @click="getListReport()" class="button-information">Báo cáo
+                        </button>
+                        <button class="button-information">Đăng xuất</button>
                     </div>
                 </div>
                 <!-- Thông tin tài khoản -->
-<!--                <div class="col-9 sidebar-right">-->
-<!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
-<!--                    </div>-->
-<!--                    <div class="information-detail">-->
-<!--                        <div class="detail">-->
-<!--                            <p class="label">Tên đăng nhập:</p>-->
-<!--                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Admin" disabled/>-->
-<!--                        </div>-->
-<!--                        <div class="detail-2">-->
-<!--                            <p class="label">Tên hiển thị:</p>-->
-<!--                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
-<!--                        </div>-->
-<!--                        <div class="detail-2">-->
-<!--                            <p class="label">Mật khẩu:</p>-->
-<!--                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
-<!--                            <button type="submit" class="change">Thay đổi</button>-->
-<!--                        </div>-->
+                <!--                <div class="col-9 sidebar-right">-->
+                <!--                    <div class="title">-->
+                <!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
+                <!--                    </div>-->
+                <!--                    <div class="information-detail">-->
+                <!--                        <div class="detail">-->
+                <!--                            <p class="label">Tên đăng nhập:</p>-->
+                <!--                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Admin" disabled/>-->
+                <!--                        </div>-->
+                <!--                        <div class="detail-2">-->
+                <!--                            <p class="label">Tên hiển thị:</p>-->
+                <!--                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
+                <!--                        </div>-->
+                <!--                        <div class="detail-2">-->
+                <!--                            <p class="label">Mật khẩu:</p>-->
+                <!--                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
+                <!--                            <button type="submit" class="change">Thay đổi</button>-->
+                <!--                        </div>-->
 
-<!--                        <div class="detail-3">-->
-<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                        <div class="detail-3">-->
+                <!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
                 <!-- Quản lý người dùng -->
 
-<!--                    <div class="col-9 sidebar-right">-->
-<!--                        <div class="title">-->
-<!--                            <h1 class="title-name uppercase">Quản lý người dùng</h1>-->
-<!--                        </div>-->
-<!--                        <div class="search-area">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col">-->
-<!--                                    <div class="filter-area">-->
-<!--                                        <div class="title-filter-area">-->
-<!--                                            <span>Vai trò:</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="form-dropdown">-->
-<!--                                            <form action="#">-->
-<!--                                                <select>-->
-<!--                                                    <option value="0">Tất cả</option>-->
-<!--                                                    <option value="1">Chủ trọ</option>-->
-<!--                                                    <option value="2">NGười thuê</option>-->
-<!--                                                </select>-->
-<!--                                            </form>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="information-detail">-->
-<!--                            <table class="table">-->
-<!--                                <thead class="thead-light">-->
-<!--                                <tr>-->
-<!--                                    <th scope="col">STT</th>-->
-<!--                                    <th scope="col">Tên đăng nhập</th>-->
-<!--                                    <th scope="col">Tên hiển thị</th>-->
-<!--                                    <th scope="col">Vai trò</th>-->
-<!--                                    <th scope="col">Tác vụ</th>-->
-<!--                                </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                <tr>-->
-<!--                                    <th scope="row">1</th>-->
-<!--                                    <td><a id="myBtn">User 1</a></td>-->
-<!--                                    <td>tran van a</td>-->
-<!--                                    <td>chủ trọ</td>-->
-<!--                                    <td>-->
-<!--                                        <i class="fas fa-eye"></i>-->
-<!--                                        <i class="fas fa-trash-alt"></i>-->
-<!--                                        <i class="fas fa-ban"></i>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                <tr>-->
-<!--                                    <th scope="row">2</th>-->
-<!--                                    <td><a href="#">User 2</a></td>-->
-<!--                                    <td>tran van b</td>-->
-<!--                                    <td>chủ trọ</td>-->
-<!--                                    <td>-->
-<!--                                        <i class="fas fa-eye"></i>-->
-<!--                                        <i class="fas fa-trash-alt"></i>-->
-<!--                                        <i class="fas fa-ban"></i>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                <tr>-->
-<!--                                    <th scope="row">3</th>-->
-<!--                                    <td><a href="#">User 3</a></td>-->
-<!--                                    <td>tran van v</td>-->
-<!--                                    <td>người thuê</td>-->
-<!--                                    <td>-->
-<!--                                        <i class="fas fa-eye"></i>-->
-<!--                                        <i class="fas fa-trash-alt"></i>-->
-<!--                                        <i class="fas fa-ban"></i>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                </tbody>-->
-<!--                            </table>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <!--                    <div class="col-9 sidebar-right">-->
+                <!--                        <div class="title">-->
+                <!--                            <h1 class="title-name uppercase">Quản lý người dùng</h1>-->
+                <!--                        </div>-->
+                <!--                        <div class="search-area">-->
+                <!--                            <div class="row">-->
+                <!--                                <div class="col">-->
+                <!--                                    <div class="filter-area">-->
+                <!--                                        <div class="title-filter-area">-->
+                <!--                                            <span>Vai trò:</span>-->
+                <!--                                        </div>-->
+                <!--                                        <div class="form-dropdown">-->
+                <!--                                            <form action="#">-->
+                <!--                                                <select>-->
+                <!--                                                    <option value="0">Tất cả</option>-->
+                <!--                                                    <option value="1">Chủ trọ</option>-->
+                <!--                                                    <option value="2">NGười thuê</option>-->
+                <!--                                                </select>-->
+                <!--                                            </form>-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="information-detail">-->
+                <!--                            <table class="table">-->
+                <!--                                <thead class="thead-light">-->
+                <!--                                <tr>-->
+                <!--                                    <th scope="col">STT</th>-->
+                <!--                                    <th scope="col">Tên đăng nhập</th>-->
+                <!--                                    <th scope="col">Tên hiển thị</th>-->
+                <!--                                    <th scope="col">Vai trò</th>-->
+                <!--                                    <th scope="col">Tác vụ</th>-->
+                <!--                                </tr>-->
+                <!--                                </thead>-->
+                <!--                                <tbody>-->
+                <!--                                <tr>-->
+                <!--                                    <th scope="row">1</th>-->
+                <!--                                    <td><a id="myBtn">User 1</a></td>-->
+                <!--                                    <td>tran van a</td>-->
+                <!--                                    <td>chủ trọ</td>-->
+                <!--                                    <td>-->
+                <!--                                        <i class="fas fa-eye"></i>-->
+                <!--                                        <i class="fas fa-trash-alt"></i>-->
+                <!--                                        <i class="fas fa-ban"></i>-->
+                <!--                                    </td>-->
+                <!--                                </tr>-->
+                <!--                                <tr>-->
+                <!--                                    <th scope="row">2</th>-->
+                <!--                                    <td><a href="#">User 2</a></td>-->
+                <!--                                    <td>tran van b</td>-->
+                <!--                                    <td>chủ trọ</td>-->
+                <!--                                    <td>-->
+                <!--                                        <i class="fas fa-eye"></i>-->
+                <!--                                        <i class="fas fa-trash-alt"></i>-->
+                <!--                                        <i class="fas fa-ban"></i>-->
+                <!--                                    </td>-->
+                <!--                                </tr>-->
+                <!--                                <tr>-->
+                <!--                                    <th scope="row">3</th>-->
+                <!--                                    <td><a href="#">User 3</a></td>-->
+                <!--                                    <td>tran van v</td>-->
+                <!--                                    <td>người thuê</td>-->
+                <!--                                    <td>-->
+                <!--                                        <i class="fas fa-eye"></i>-->
+                <!--                                        <i class="fas fa-trash-alt"></i>-->
+                <!--                                        <i class="fas fa-ban"></i>-->
+                <!--                                    </td>-->
+                <!--                                </tr>-->
+                <!--                                </tbody>-->
+                <!--                            </table>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
 
-                <!-- Quản lý bài đăng -->
-<!--                <div class="col-9 sidebar-right">-->
-<!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">Quản lý bài đăng</h1>-->
-<!--                    </div>-->
-<!--                    <div class="search-area">-->
-<!--                        <div class="row row-search">-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <span>Loại phòng:</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-dropdown">-->
-<!--                                        <form action="#">-->
-<!--                                            <select>-->
-<!--                                                <option value="0">Tất cả</option>-->
-<!--                                                <option value="1">Phòng trọ</option>-->
-<!--                                                <option value="2">Căn hộ</option>-->
-<!--                                                <option value="3">Nhà nguyên căn</option>-->
-<!--                                            </select>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <span>Giá:</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-dropdown">-->
-<!--                                        <form action="#">-->
-<!--                                            <select>-->
-<!--                                                <option value="1">Tất cả</option>-->
-<!--                                                <option value="2">Dưới 1 triệu</option>-->
-<!--                                                <option value="3">1 triệu - 1.5 triệu</option>-->
-<!--                                                <option value="4"> 1.5 triệu - 2 triệu</option>-->
-<!--                                                <option value="5">2 triệu - 2.5 triệu</option>-->
-<!--                                                <option value="6">2.5 triệu - 3 triệu</option>-->
-<!--                                                <option value="7">3 triệu - 3.5 triệu</option>-->
-<!--                                                <option value="8">3.5 triệu - 4 triệu</option>-->
-<!--                                                <option value="9">4 triệu - 4.5 triệu</option>-->
-<!--                                                <option value="10">4.5 triệu - 5 triệu</option>-->
-<!--                                                <option value="11">Trên 5 triệu</option>-->
-<!--                                            </select>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <span>Diện tích:</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-dropdown">-->
-<!--                                        <form action="#">-->
-<!--                                            <select>-->
-<!--                                                <option value="1">Tất cả</option>-->
-<!--                                                <option value="2">Dưới 20m&sup2</option>-->
-<!--                                                <option value="3">20m&sup2 - 30m&sup2</option>-->
-<!--                                                <option value="4">30m&sup2 - 40m&sup2</option>-->
-<!--                                                <option value="5">40m&sup2 - 50m&sup2</option>-->
-<!--                                                <option value="6">50m&sup2 - 60m&sup2</option>-->
-<!--                                                <option value="7">60m&sup2 - 70m&sup2</option>-->
-<!--                                                <option value="8">70m&sup2 - 80m&sup2</option>-->
-<!--                                                <option value="9">80m&sup2 - 90m&sup2</option>-->
-<!--                                                <option value="10">90m&sup2 - 100m&sup2</option>-->
-<!--                                                <option value="11">Trên 100m&sup2</option>-->
-<!--                                            </select>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <span>Khoảng cách:</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-dropdown">-->
-<!--                                        <form action="#">-->
-<!--                                            <select>-->
-<!--                                                <option value="1">Tất cả</option>-->
-<!--                                                <option value="2">Dưới 1 km</option>-->
-<!--                                                <option value="3">1 km - 2 km</option>-->
-<!--                                                <option value="4">2 km - 3 km</option>-->
-<!--                                                <option value="5"> 3 km - 4 km</option>-->
-<!--                                                <option value="6">4 km - 5 km</option>-->
-<!--                                                <option value="7">Trên 5 km</option>-->
-<!--                                            </select>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <span>Trạng thái:</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-dropdown">-->
-<!--                                        <form action="#">-->
-<!--                                            <select>-->
-<!--                                                <option value="1">Tất cả</option>-->
-<!--                                                <option value="2">Ẩn</option>-->
-<!--                                                <option value="3">Hiện</option>-->
-<!--                                            </select>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="col">-->
-<!--                                <div class="filter-area">-->
-<!--                                    <div class="title-filter-area">-->
-<!--                                        <button class="btn-search">Tìm kiếm</button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="information-detail">-->
-<!--                        <table class="table">-->
-<!--                            <thead class="thead-light">-->
-<!--                            <tr>-->
-<!--                                <th scope="col">STT</th>-->
-<!--                                <th scope="col">Tên phòng trọ</th>-->
-<!--                                <th scope="col">Loại phòng</th>-->
-<!--                                <th scope="col">Giá</th>-->
-<!--                                <th scope="col">Diện tích</th>-->
-<!--                                <th scope="col">Khoảng cách</th>-->
-<!--                                <th scope="col">Ngày đăng</th>-->
-<!--                                <th scope="col">Ngày hết hạn</th>-->
-<!--                                <th scope="col">Trạng thái</th>-->
-<!--                                <th scope="col">Tác vụ</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>Phòng trọ</td>-->
-<!--                                <td>1.500.000</td>-->
-<!--                                <td>20m&sup2</td>-->
-<!--                                <td>1 km</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Hiện</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-eye"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>Phòng trọ</td>-->
-<!--                                <td>1.500.000</td>-->
-<!--                                <td>20m&sup2</td>-->
-<!--                                <td>1 km</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Hiện</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-eye"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>Phòng trọ</td>-->
-<!--                                <td>1.500.000</td>-->
-<!--                                <td>20m&sup2</td>-->
-<!--                                <td>1 km</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Ẩn</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-eye"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </div>-->
 
-                <!-- Báo cáo -->
-                <div class="col-9 sidebar-right">
-                    <div class="title">
-                        <h1 class="title-name uppercase">Danh sách báo cáo</h1>
+                <div id="dataTable" class="col-9 sidebar-right">
+                    <!-- Báo cáo -->
+                    <div id="reportTable" v-bind:class="{invisible : !isReportMgmt}">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Danh sách báo cáo</h1>
+                        </div>
+                        <div class="information-detail">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên bài đăng</th>
+                                    <th scope="col">Chủ trọ</th>
+                                    <th scope="col">Ngày đăng</th>
+                                    <th scope="col">Chi tiết</th>
+                                    <th scope="col">Tác vụ</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="report in listReport">
+                                    <th scope="row">{{report.index}}</th>
+                                    <td><a v-bind:href="'/report-detail?id=' + report.id">{{report.postTitle}}</a></td>
+                                    <td>{{report.landlordName}}</td>
+                                    <td>{{report.reportDate}}</td>
+                                    <td>{{report.content}}</td>
+                                    <td>
+                                        <i class="fas fa-edit"></i>
+                                        <i @click="deleteReport(report.id)" class="fas fa-trash-alt"> </i>
+                                        <i class="fas fa-eye-slash"> </i>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="information-detail">
-                        <table class="table">
-                            <thead class="thead-light">
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Tên bài đăng</th>
-                                <th scope="col">Chủ trọ</th>
-                                <th scope="col">Ngày đăng</th>
-                                <th scope="col">Chi tiết</th>
-                                <th scope="col">Tác vụ</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td><a href="#">abc-xyz</a></td>
-                                <td>truongnq</td>
-                                <td>14-9-2020</td>
-                                <td>spam</td>
-                                <td>
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                    <i class="fas fa-eye-slash"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td><a href="#">abc-xyzđá dsadasd dsad asd sadas dá đá dsad asd asdas dasdas dsad </a></td>
-                                <td>mytv</td>
-                                <td>14-9-2020</td>
-                                <td>phòng không giống bài đăngdsadasdasdasdadasda dsadadas dsadasdsad sad ádczmxcnz x,mcnzx,mcnz,xmcn,z mxnc,zmxn ,zmxncc,m xznc,mzxnc</td>
-                                <td>
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                    <i class="fas fa-eye-slash"></i>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+
+                    <!--Quản lý bài đăng -->
+                    <div id="postTable" v-bind:class="{invisible: !isPostMgmt}">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Quản lý bài đăng</h1>
+                        </div>
+                        <div class="search-area">
+                            <div class="row row-search">
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Loại phòng:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="0">Tất cả</option>
+                                                    <option value="1">Phòng trọ</option>
+                                                    <option value="2">Căn hộ</option>
+                                                    <option value="3">Nhà nguyên căn</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Giá:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="1">Tất cả</option>
+                                                    <option value="2">Dưới 1 triệu</option>
+                                                    <option value="3">1 triệu - 1.5 triệu</option>
+                                                    <option value="4"> 1.5 triệu - 2 triệu</option>
+                                                    <option value="5">2 triệu - 2.5 triệu</option>
+                                                    <option value="6">2.5 triệu - 3 triệu</option>
+                                                    <option value="7">3 triệu - 3.5 triệu</option>
+                                                    <option value="8">3.5 triệu - 4 triệu</option>
+                                                    <option value="9">4 triệu - 4.5 triệu</option>
+                                                    <option value="10">4.5 triệu - 5 triệu</option>
+                                                    <option value="11">Trên 5 triệu</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Diện tích:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="1">Tất cả</option>
+                                                    <option value="2">Dưới 20m&sup2</option>
+                                                    <option value="3">20m&sup2 - 30m&sup2</option>
+                                                    <option value="4">30m&sup2 - 40m&sup2</option>
+                                                    <option value="5">40m&sup2 - 50m&sup2</option>
+                                                    <option value="6">50m&sup2 - 60m&sup2</option>
+                                                    <option value="7">60m&sup2 - 70m&sup2</option>
+                                                    <option value="8">70m&sup2 - 80m&sup2</option>
+                                                    <option value="9">80m&sup2 - 90m&sup2</option>
+                                                    <option value="10">90m&sup2 - 100m&sup2</option>
+                                                    <option value="11">Trên 100m&sup2</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Khoảng cách:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="1">Tất cả</option>
+                                                    <option value="2">Dưới 1 km</option>
+                                                    <option value="3">1 km - 2 km</option>
+                                                    <option value="4">2 km - 3 km</option>
+                                                    <option value="5"> 3 km - 4 km</option>
+                                                    <option value="6">4 km - 5 km</option>
+                                                    <option value="7">Trên 5 km</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <span>Trạng thái:</span>
+                                        </div>
+                                        <div class="form-dropdown">
+                                            <form action="#">
+                                                <select>
+                                                    <option value="1">Tất cả</option>
+                                                    <option value="2">Ẩn</option>
+                                                    <option value="3">Hiện</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
+                                            <button class="btn-search">Tìm kiếm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="information-detail">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên phòng trọ</th>
+                                    <th scope="col">Loại phòng</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Diện tích</th>
+                                    <th scope="col">Khoảng cách</th>
+                                    <th scope="col">Ngày đăng</th>
+                                    <th scope="col">Ngày hết hạn</th>
+                                    <th scope="col">Trạng thái</th>
+                                    <th scope="col">Tác vụ</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="post in listPost">
+                                    <th scope="row">{{post.index}}</th>
+                                    <td><a v-bind:href='"get-post-detail?postId=" + post.id'>{{post.title}}</a></td>
+                                    <td>{{post.typeName}}</td>
+                                    <td>{{post.price}}</td>
+                                    <td>{{post.square}}&sup2</td>
+                                    <td>{{post.distance}} km</td>
+                                    <td>{{post.createDate}}</td>
+                                    <td>{{post.expireDate}}</td>
+                                    <td>{{post.displayStatus}}</td>
+                                    <td>
+                                        <i class="fas fa-eye"></i>
+                                        <i @click="deletePost(post.id)" class="fas fa-trash-alt"></i>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
@@ -384,6 +347,13 @@
 <!--    </div>-->
 
 </div>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/admin.js}"></script>
 <script th:src="@{/assets/js/vendor/modal.js}"></script>
+<script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
+        src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+<script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
+
+<div th:replace="layout :: js-fragment"></div>
 </body>
 </html>

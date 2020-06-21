@@ -1,27 +1,23 @@
 package com.example.fptufindingmotelv1.service.admin;
 
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.LandlordRepository;
-import com.example.fptufindingmotelv1.repository.PostModelRepository;
-import com.example.fptufindingmotelv1.repository.ReportRepository;
-import com.example.fptufindingmotelv1.repository.UserRepository;
+import com.example.fptufindingmotelv1.repository.*;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -35,8 +31,17 @@ public class AdminServiceImpl implements AdminService {
     LandlordRepository landlordRepository;
 
     @Autowired
+    RenterRepository renterRepository;
+
+    @Autowired
     ReportRepository reportRepository;
 
+    protected JSONObject getResponeMessage(String code, String msg) {
+        JSONObject responeMsg = new JSONObject();
+        responeMsg.put("code", code);
+        responeMsg.put("message", msg);
+        return responeMsg;
+    }
 
     @Override
     public ArrayList<UserModel> getListUser() {
@@ -76,6 +81,7 @@ public class AdminServiceImpl implements AdminService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
         return null;
     }
@@ -98,13 +104,23 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<PostModel> getListPost() {
-        return (ArrayList<PostModel>) postModelRepository.findAll();
+    public ArrayList<PostResponseDTO> getListPost() {
+        try {
+            ArrayList<PostResponseDTO> posts = new ArrayList<>();
+            for (PostModel post : postModelRepository.findAll()) {
+                PostResponseDTO postResponseDTO = new PostResponseDTO(post);
+                posts.add(postResponseDTO);
+            }
+            return posts;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public PostModel getPostDetail(Long id) {
-        return postModelRepository.getOne(id);
+    public PostResponseDTO getPostDetail(Long id) {
+        return new PostResponseDTO(postModelRepository.getOne(id));
     }
 
     @Override
@@ -114,11 +130,30 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deletePost(Long id) {
-         postModelRepository.deleteById(id);
+//        PostModel post = postModelRepository.getOne(id);
+//        post.get
+//        renterRepository.
+//        postModelRepository.deleteById(id);
     }
 
     @Override
-    public ArrayList<ReportModel> getListReport() {
-        return (ArrayList<ReportModel>) reportRepository.findAll();
+    public ArrayList<ReportResponseDTO> getListReport() {
+        try {
+            ArrayList<ReportResponseDTO> requestDTOs = new ArrayList<>();
+            for (ReportModel report : reportRepository.findAll()) {
+                ReportResponseDTO reportRequest = new ReportResponseDTO(report);
+                requestDTOs.add(reportRequest);
+            }
+            return requestDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    @Override
+    public void deleteReport(Long id) {
+        reportRepository.deleteById(id);
     }
 }

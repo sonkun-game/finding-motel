@@ -1,14 +1,19 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.Data;
+import com.restfb.types.Post;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "REPORT")
-public class ReportModel {
+public class ReportModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -16,14 +21,16 @@ public class ReportModel {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "RENTER_ID")
-    private String renterId;
+    @ManyToOne
+    @JoinColumn(name = "RENTER_ID")
+    private RenterModel renterReport;
 
-    @Column(name = "POST_ID")
-    private Long postID;
+    @ManyToOne
+    @JoinColumn(name = "POST_ID")
+    private PostModel postReport;
 
     @Column(name = "[CONTENT]")
-    private Long content;
+    private String content;
 
     @Column(name = "REPORT_DATE")
     private Date reportDate;

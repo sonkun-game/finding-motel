@@ -236,3 +236,7 @@ select{
 .nice-select{
     display: none !important;
 }
+
+.invisible {
+    display: none !important;
+}

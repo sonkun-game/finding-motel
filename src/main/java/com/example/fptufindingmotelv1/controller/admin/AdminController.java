@@ -1,7 +1,9 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.ReportModel;
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +27,16 @@ public class AdminController {
         return "profile-admin";
     }
 
+    @ResponseBody
     @RequestMapping(value = "/get-all-user", method = RequestMethod.GET)
-    public String getAllUser(Model model) {
+    public ArrayList<UserModel> getAllUser(Model model) {
         ArrayList<UserModel> users = adminService.getListUser();
         model.addAttribute("listUser", users);
-        return "";
+        return users;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/ban-landlord", method = RequestMethod.GET)
+    @RequestMapping(value = "/ban-landlord")
     public ArrayList<LandlordModel> banLandlord(@RequestParam(value = "username") String username, Model model) {
         ArrayList<LandlordModel> landlords = null;
         if (username != null && username.length() > 0) {
@@ -43,7 +46,7 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/unban-landlord", method = RequestMethod.GET)
+    @RequestMapping(value = "/unban-landlord")
     public ArrayList<LandlordModel> unbanLandlord(@RequestParam(value = "username") String username, Model model) {
         ArrayList<LandlordModel> landlords = null;
         if (username != null && username.length() > 0) {
@@ -52,10 +55,31 @@ public class AdminController {
         return landlords;
     }
 
+    @ResponseBody
     @RequestMapping(value = "/get-report", method = RequestMethod.GET)
-    public String getReport(Model model) {
-        ArrayList<ReportModel> reports = adminService.getListReport();
-        model.addAttribute("listReport", reports);
-        return "";
+    public ArrayList<ReportResponseDTO> getReport() {
+        ArrayList<ReportResponseDTO> reports = adminService.getListReport();
+        return reports;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete-report")
+    public void deleteReport(@RequestParam(value = "reportId") String reportId) {
+        adminService.deleteReport(Long.parseLong(reportId));
+        getReport();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get-post")
+    public ArrayList<PostResponseDTO> getPost() {
+        ArrayList<PostResponseDTO> posts = adminService.getListPost();
+        return posts;
+    }
+
+    @RequestMapping(value = "/delete-post")
+    public void deletePost(@RequestParam(value = "postId") String postId) {
+        adminService.deletePost(Long.parseLong(postId));
     }
 }
+
+

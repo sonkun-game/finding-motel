@@ -5310,7 +5310,7 @@ p {
 
 label {
     color: #7e7e7e;
-    cursor: pointer;
+    cursor: default;
     font-size: 14px;
     font-weight: 400;
 }

@@ -3,10 +3,25 @@
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" href="custom-assets/css/register.css">
+    <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Đăng KÝ</title>
 </head>
 <body>
 <main>
+
+    <div id="loading-wrapper">
+        <div v-show="!isHidden" id="loader-login">
+            <div class="preloader d-flex align-items-center justify-content-center">
+                <div class="preloader-inner position-relative">
+                    <div class="preloader-circle"></div>
+                    <div class="preloader-img pere-text">
+                        <b>Đăng Nhập</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <!--    inlude loading screen-->
     <div th:replace="layout :: loader"></div>
 
@@ -114,13 +129,13 @@
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
                                                 <input v-model="role" type="radio" class="form-check-input" name="role"
-                                                       value="1" required>Chủ trọ
+                                                       value="2" required>Chủ trọ
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
                                                 <input v-model="role" type="radio" class="form-check-input" name="role"
-                                                       value="2" required>Người thuê
+                                                       value="1" required>Người thuê
                                             </label>
                                         </div>
                                     </div>
@@ -173,7 +188,7 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 
-<script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
 <script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
         src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
 <script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>

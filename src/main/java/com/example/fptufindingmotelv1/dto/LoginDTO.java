@@ -31,4 +31,7 @@ public class LoginDTO {
         this.password = userModel.getPassword();
         this.displayName = userModel.getDisplayName();
     }
+
+    public LoginDTO() {
+    }
 }

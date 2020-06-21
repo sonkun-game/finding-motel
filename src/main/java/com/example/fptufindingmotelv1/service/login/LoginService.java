@@ -1,5 +1,7 @@
 package com.example.fptufindingmotelv1.service.login;
 
+import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
+
 public interface LoginService {
-    boolean validateUser(String username, String password);
+    LoginResponseDTO validateUser(String username, String password);
 }

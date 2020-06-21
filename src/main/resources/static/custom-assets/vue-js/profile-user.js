@@ -26,15 +26,26 @@ var profileInstance = new Vue({
                         localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
                         authenticationInstance.userInfo = this.userInfo
                         basicInfoInstance.userInfo = this.userInfo
-                        alert("save successfully")
+                        this.showNotifyModal()
                     }else if(data != null && data.msgCode == "sys999"){
                         alert("failed")
                     }
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        showNotifyModal(){
+            let modal_save = document.getElementById("myModal_save")
+            modal_save.style.display = "block";
+
+            window.onclick = function(event) {
+                if (event.target == modal_save) {
+                    modal_save.style.display = "block";
+                }
+            }
         }
     }
+
 
 })
 var basicInfoInstance = new Vue({

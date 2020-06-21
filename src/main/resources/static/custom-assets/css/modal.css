@@ -93,3 +93,39 @@ textarea{
     height: 30vh;
     font-family: "Lato", sans-serif;
 }
+
+.message{
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 400px;
+    height: 200px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+.fa-check{
+    font-size: 50px;
+    color: #dca73a;
+    font-weight: bold;
+    height: 80px;
+    width: 80px;
+    border: 2px solid #dca73a;
+    text-align: center;
+    padding-top: 13px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    margin: 30px 0 0 145px;
+
+}
+
+.message-update{
+    margin: 16px 86px;
+    font-size: 20px;
+    font-family: "Lato", sans-serif;
+}

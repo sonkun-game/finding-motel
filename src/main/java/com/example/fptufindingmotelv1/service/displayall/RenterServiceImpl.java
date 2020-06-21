@@ -1,5 +1,6 @@
 package com.example.fptufindingmotelv1.service.displayall;
 
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ public class RenterServiceImpl implements RenterService{
     RenterRepository renterRepository;
     @Override
     public RenterModel findOne(String username) {
-        return renterRepository.getOne(username);
+        return renterRepository.findByUsername(username);
     }
+
 }

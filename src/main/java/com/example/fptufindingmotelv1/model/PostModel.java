@@ -1,5 +1,6 @@
 package com.example.fptufindingmotelv1.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "POST")
+
 public class PostModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -50,13 +52,14 @@ public class PostModel implements Serializable {
     @Column(name = "IS_VISIBLE  ", nullable = false)
     private boolean isVisible;
 
+    @Column(name = "TITLE", nullable = false)
+    private String title;
+
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "WISHLIST",
-            joinColumns = @JoinColumn(name = "POST_ID"),
-            inverseJoinColumns = @JoinColumn(name = "RENTER_ID")
-    )
+
+    @ManyToMany(mappedBy = "posts")
     private List<RenterModel> renters;
+
 }

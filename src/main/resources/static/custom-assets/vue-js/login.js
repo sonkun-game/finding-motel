@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
             password: "",
             userInfo: {},
             showMsg: false,
+            message: "",
         },
         methods: {
             handleInputUsername(value){
@@ -31,14 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify(userInfo)
                 }).then(response => response.json())
                     .then((data) => {
-                        if (data.msgCode === "msg000") {
+                        if (data.msgCode === "login000") {
                             this.showMsg = false
                             console.log(data)
                             localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             this.$cookies.set("access_token", data.accessToken)
                             console.log(this.$cookies.get("access_token"))
                             window.location.href = "https://localhost:8081/"
-                        } else if (data.msgCode === "msg001") {
+                        } else {
+                            this.message = data.message
                             this.showMsg = true
                             loadingInstance.isHidden = true
                             document.body.removeAttribute("class")
@@ -47,8 +49,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).catch(error => {
                     console.log(error);
                 })
-            }
+            },
+            isExistUsername() {
+                if (this.username != null && this.username.length !== 0) {
+                    fetch("https://localhost:8081/check-existed-username", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: this.username,
+                    }).then(response => response.json())
+                        .then((data) => {
+                            this.existedUsername = data;
+                        }).catch(error => {
+                        console.log(error);
+                    })
+                } else {
+                    this.existedUsername = false;
+                }
 
+                return this.existedUsername;
+
+            },
         },
         computed: {
             fillRegisteredUsername() {

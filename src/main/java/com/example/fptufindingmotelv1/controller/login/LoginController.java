@@ -47,11 +47,9 @@ public class LoginController {
     @ResponseBody
     @PostMapping(value = "/api-login")
     public LoginResponseDTO login(@RequestBody LoginRequestDTO loginRequestDTO){
-        LoginResponseDTO responseDTO = new LoginResponseDTO();
-        boolean isValidUser = loginService.validateUser(loginRequestDTO.getUsername(),
+        LoginResponseDTO responseDTO = loginService.validateUser(loginRequestDTO.getUsername(),
                 loginRequestDTO.getPassword());
-        if(!isValidUser){
-            responseDTO.setMsgCode("msg001");
+        if(!responseDTO.getMsgCode().equals("login000")){
             return responseDTO;
         }
         Authentication authentication = authenticationManager.authenticate(
@@ -62,7 +60,6 @@ public class LoginController {
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         responseDTO.setAccessToken(token);
         responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
-        responseDTO.setMsgCode("msg000");
         return responseDTO;
     }
 

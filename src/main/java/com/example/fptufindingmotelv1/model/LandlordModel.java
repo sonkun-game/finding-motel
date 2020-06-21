@@ -3,10 +3,9 @@ package com.example.fptufindingmotelv1.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "LANDLORD")
@@ -17,4 +16,8 @@ public class LandlordModel extends UserModel implements Serializable {
 
     @Column(name = "AMOUNT")
     private float amount;
+
+    @Column(name = "UNBAN_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date unBanDate;
 }

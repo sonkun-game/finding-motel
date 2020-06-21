@@ -49,7 +49,7 @@ var registerVue = new Vue({
             return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
         checkOTP() {
-            return this.otp == this.otpCode ? this.matchOTP = true : this.matchOT = false;
+            return this.otp == this.otpCode ? this.matchOTP = true : this.matchOTP = false;
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {

@@ -56,18 +56,8 @@ public class HomeController {
         model.addAttribute("pager", pager);
         return "index";
     }
-    @GetMapping("/forgot")
-    public String getForgot(Model model){
-        return "forgot";
-    }
-    @GetMapping("/reset-password")
-    public String getResetPassword(Model model){
-        return "reset-password";
-    }
-    @GetMapping("/profile-landlord")
-    public String getProfileLandlord(Model model){
-        return "profile-landlord";
-    }
+
+
     @GetMapping("/profile-renter")
     public String getProfileRenter(Model model){
         return "profile-renter";

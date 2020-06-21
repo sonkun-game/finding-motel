@@ -3,7 +3,7 @@
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
-    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Quản lý tài khoản</title>
 </head>
 <body>
@@ -14,13 +14,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-3 sidebar-left">
-                    <div class="avatar">
+                    <div id="basic-user-info" class="avatar">
                         <i class="ti-user profile-avatar"></i>
-                        <p class="display-name">Ngô Quang Trường</p>
-                        <p class="display-name">Số dư: 100,00 vnđ</p>
+                        <p v-text="userInfo.displayName" class="display-name"></p>
+                        <p class="display-name" v-cloak>Số dư: {{userInfo.amount}} vnđ</p>
                     </div>
                     <div class="information" id="myInfo">
                         <button  class="button-information active">Thông tin tài khoản</button>
+                        <button  class="button-information">Đổi mật khẩu</button>
                         <button  class="button-information">Quản lý bài đăng</button>
                         <button  class="button-information">Xử lý yêu cầu thuê trọ</button>
                         <button  class="button-information">Lịch sử nạp tiền</button>
@@ -30,34 +31,35 @@
                     </div>
                 </div>
                 <!-- Thông tin tài khoản -->
-                <div class="col-9 sidebar-right">
-                    <div class="title">
-                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>
-                    </div>
-                    <div class="information-detail">
-                        <div class="detail">
-                            <p class="label">Tên đăng nhập:</p>
-                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Ngô Quang Trường" disabled/>
-                        </div>
-                        <div class="detail-2">
-                            <p class="label">Tên hiển thị:</p>
-                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
-                        </div>
-                        <div class="detail-2">
-                            <p class="label">Số điện thoại:</p>
-                            <input id="phone" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" value="0774831849" disabled/>
-                            <button type="submit" class="change">Thay đổi</button>
-                        </div>
-                        <div class="detail-2">
-                            <p class="label">Mật khẩu:</p>
-                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>
-                            <button type="submit" class="change">Thay đổi</button>
-                        </div>
-                        <div class="detail-3">
-                            <button type="submit" class="save">Lưu thay đổi</button>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="layout :: profile-user"></div>
+<!--                <div id="profile-user-form" class="col-9 sidebar-right">-->
+<!--                    <div class="title">-->
+<!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
+<!--                    </div>-->
+<!--                    <div class="information-detail">-->
+<!--                        <div class="detail">-->
+<!--                            <p class="label">Tên đăng nhập:</p>-->
+<!--                            <input id="username" v-model="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Ngô Quang Trường" disabled/>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Tên hiển thị:</p>-->
+<!--                            <input id="display-name" v-model="inputDisplayName" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Số điện thoại:</p>-->
+<!--                            <input id="phone" v-model="phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" value="0774831849" disabled/>-->
+<!--                            <button type="submit" class="change">Thay đổi</button>-->
+<!--                        </div>-->
+<!--                        <div class="detail-2">-->
+<!--                            <p class="label">Mật khẩu:</p>-->
+<!--                            <input id="password" v-model="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
+<!--                            <button type="submit" class="change">Thay đổi</button>-->
+<!--                        </div>-->
+<!--                        <div class="detail-3">-->
+<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <!-- Xử lý yêu cầu thuê trọ -->
 
@@ -240,6 +242,8 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+
 <script th:src="@{/assets/js/vendor/active.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 </body>
 </html>

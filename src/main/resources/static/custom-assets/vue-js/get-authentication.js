@@ -1,4 +1,4 @@
-var vueInstance = new Vue({
+var authenticationInstance = new Vue({
     el: '#header',
     data: {
         userInfo: {},

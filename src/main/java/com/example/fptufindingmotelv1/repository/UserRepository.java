@@ -7,6 +7,7 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
     UserModel findByGgAccount(String ggAccount);
     UserModel findByFbAccount(String fbAccount);
     UserModel findByUsername(String username);
+    UserModel findByPhoneNumber(String phoneNumber);
 
     Boolean existsByUsername(String username);
     Boolean existsByPhoneNumber(String phone);

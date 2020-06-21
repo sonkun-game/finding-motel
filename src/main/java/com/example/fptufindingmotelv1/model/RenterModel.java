@@ -3,9 +3,7 @@ package com.example.fptufindingmotelv1.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,5 +21,6 @@ public class RenterModel extends UserModel implements Serializable {
     private String career;
 
     @Column(name = "DOB")
+    @Temporal(TemporalType.DATE)
     private Date dob;
 }

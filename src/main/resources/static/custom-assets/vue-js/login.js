@@ -11,12 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
             message: "",
         },
         methods: {
-            handleInputUsername(value){
-                this.username = value;
-            },
-            handleInputPwd(value){
-                this.password = value;
-            },
             loginButtonClickEvent() {
                 let userInfo = {
                     "username": this.username,
@@ -49,27 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).catch(error => {
                     console.log(error);
                 })
-            },
-            isExistUsername() {
-                if (this.username != null && this.username.length !== 0) {
-                    fetch("https://localhost:8081/check-existed-username", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: this.username,
-                    }).then(response => response.json())
-                        .then((data) => {
-                            this.existedUsername = data;
-                        }).catch(error => {
-                        console.log(error);
-                    })
-                } else {
-                    this.existedUsername = false;
-                }
-
-                return this.existedUsername;
-
             },
         },
         computed: {

@@ -1,10 +1,13 @@
 package com.example.fptufindingmotelv1.dto;
 
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoleModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import lombok.Data;
 
 import javax.persistence.Column;
+import java.util.Date;
 
 @Data
 public class LoginDTO {
@@ -22,6 +25,16 @@ public class LoginDTO {
 
     private String displayName;
 
+    private float amount;
+
+    private Date unBanDate;
+
+    private boolean gender;
+
+    private String career;
+
+    private Date dob;
+
     public LoginDTO(UserModel userModel) {
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();
@@ -30,6 +43,14 @@ public class LoginDTO {
         this.phoneNumber = userModel.getPhoneNumber();
         this.password = userModel.getPassword();
         this.displayName = userModel.getDisplayName();
+        if(userModel instanceof LandlordModel){
+            this.amount = ((LandlordModel) userModel).getAmount();
+            this.unBanDate = ((LandlordModel) userModel).getUnBanDate();
+        }else if(userModel instanceof RenterModel){
+            this.career = ((RenterModel) userModel).getCareer();
+            this.dob = ((RenterModel) userModel).getDob();
+            this.gender = ((RenterModel) userModel).isGender();
+        }
     }
 
     public LoginDTO() {

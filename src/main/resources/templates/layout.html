@@ -66,7 +66,7 @@
                                         <!-- DROPDOWN LANDLORD -->
                                         <li v-else-if="authenticationNum === 2" class="login-icon"><i v-cloak class="ti-user"> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
                                             <ul class="submenu">
-                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
+                                                <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý bài đăng</a></li>
                                                 <li><a th:href="@{/}">Đăng tin</a>
                                                 <li><a th:href="@{/}">Nạp tiền</a>
@@ -78,7 +78,7 @@
                                         <!-- DROPDOWN RENTER -->
                                         <li v-else-if="authenticationNum === 1" class="login-icon"><i class="ti-user" v-cloak> {{userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </i>
                                             <ul class="submenu">
-                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
+                                                <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
                                                 <li><a th:href="@{/}">Danh sách yêu thích</a>
                                                 <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
@@ -194,6 +194,52 @@
                 src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
         <script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
         <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
+    </div>
+    <div th:fragment="profile-user" id="profile-user-form" class="col-9 sidebar-right">
+        <div class="title">
+            <h1 class="title-name uppercase">Thông tin tài khoản</h1>
+        </div>
+        <div class="information-detail">
+            <div class="detail">
+                <p class="label">Tên đăng nhập:</p>
+                <input id="username" v-model="userInfo.username" class="textfiled rounded-pill border-0 shadow-sm" type="text" disabled/>
+            </div>
+            <div class="detail-2">
+                <p class="label">Tên hiển thị:</p>
+                <input id="display-name" v-model="userInfo.displayName" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
+            </div>
+            <div class="detail-2">
+                <p class="label">Số điện thoại:</p>
+                <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
+                <button type="submit" class="change">Thay đổi</button>
+            </div>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
+                <p class="label">Ngày sinh:</p>
+                <input id="birthdate" v-model="userInfo.dob" class="textfiled rounded-pill border-0 shadow-sm" type="date" />
+            </div>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
+                <p class="label">Nghề nghiệp:</p>
+                <input id="career" v-model="userInfo.career" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
+            </div>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
+                <p class="label">Giới tính:</p>
+                <div class="form-check-inline">
+                    <label class="radio-container">Nam
+                        <input v-model="gender" type="radio" name="gender" value="1">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="radio-container">Nữ
+                        <input v-model="gender" type="radio" name="gender" value="0">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="detail-3">
+                <button v-on:click="saveUserInfo()" class="save">Lưu thay đổi</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -17,42 +17,6 @@ function modal_report() {
     }
 }
 
-function modal_phone() {
-    var modal_phone = document.getElementById("myModal_phone");
-    var btn_phone = document.getElementById("myBtn-phone");
-    var span_phone = document.getElementsByClassName("close")[0];
-    btn_phone.onclick = function() {
-        modal_phone.style.display = "block";
-    }
-    span_phone.onclick = function() {
-        modal_phone.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal_phone) {
-            modal_phone.style.display = "block";
-        }
-    }
-
-}
-
-function modal_delete() {
-    var modal_delete = document.getElementById("myModal_delete");
-    var icon_delete = document.getElementById("myIcon");
-    var btn_cancel = document.getElementById("btn-cancel");
-    var btn_confirm = document.getElementById("btn-confirm");
-    var span_delete = document.getElementsByClassName("close")[0];
-    icon_delete.onclick = function() {
-        modal_delete.style.display = "block";
-    }
-    span_delete.onclick = function() {
-        modal_delete.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal_delete) {
-            modal_delete.style.display = "block";
-        }
-    }
-}
 // // Get the modal
 // var modal = document.getElementById("myModal");
 //

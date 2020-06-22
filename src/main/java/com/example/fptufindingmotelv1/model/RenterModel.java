@@ -30,4 +30,12 @@ public class RenterModel extends UserModel implements Serializable {
 
     @OneToMany(mappedBy = "renterReport")
     private List<ReportModel> reports;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "WISHLIST",
+            joinColumns = @JoinColumn(name = "RENTER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "POST_ID")
+    )
+    private List<PostModel> posts;
+
 }

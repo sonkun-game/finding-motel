@@ -1,29 +1,26 @@
 package com.example.fptufindingmotelv1.controller;
-
+import com.example.fptufindingmotelv1.dto.PostDTO;
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PagerModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.repository.PostModelRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
+import com.example.fptufindingmotelv1.service.displayall.RenterService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 @Controller
 public class HomeController {
-    private static final int BUTTONS_TO_SHOW = 3;
-    private static final int INITIAL_PAGE = 0;
-    private static final int INITIAL_PAGE_SIZE = 6;
-    private static final int[] PAGE_SIZES = { 6, 12};
 
     @Autowired
     PostService postService;
@@ -31,41 +28,54 @@ public class HomeController {
     @Autowired
     PostModelRepository postModelRepository;
 
+    @Autowired
+    RenterService renterService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getHomepage(Model model, HttpServletRequest request,
-                         RedirectAttributes redirect,
-                         @RequestParam(name = "page"/*, required = false, defaultValue = "0"*/) Optional<Integer> page,
-                         @RequestParam(name = "pageSize"/*, required = false, defaultValue = "6"*/)  Optional<Integer> size,
+    public String getHomepage(Model model,
+                         @RequestParam(name = "page") Optional<Integer> page,
+                         @RequestParam(name = "pageSize")  Optional<Integer> size,
                          @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort){
 
-        //request.getSession().setAttribute("postlist", null);
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by("createDate").ascending();
         }
-
-        int evalPageSize = size.orElse(INITIAL_PAGE_SIZE);
-
-        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+        int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
+        int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
-        Page<PostModel> postlist =  postModelRepository.findAll(pageable);
-        model.addAttribute("posts",postlist);
-        PagerModel pager = new PagerModel(postlist.getTotalPages(),postlist.getNumber(),BUTTONS_TO_SHOW);
+        Page<PostModel> postList =  postModelRepository.findAll(pageable);
+
+        List<PostDTO> postDTOs= new ArrayList<>();
+        PostDTO postDTO= null;
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            RenterModel renter =renterService.findOne(userDetails.getUserModel().getUsername());
+            for(int j=0;j<postList.getSize();j++){
+                postDTO=new PostDTO(postList.getContent().get(j));
+                if(renter.getPosts().contains(postList.getContent().get(j))){
+                    postDTO.setColor("color: red");
+                }else {
+                    postDTO.setColor("color: white");
+                }
+                postDTOs.add(postDTO);
+            }
+        }else{
+            for (int i=0;i<postList.getSize();i++){
+                postDTO = new PostDTO(postList.getContent().get(i));
+                postDTOs.add(postDTO);
+            }
+        }
+        Page<PostDTO> listDTO = new PageImpl<>(postDTOs);
+        model.addAttribute("posts",listDTO);
+        PagerModel pager = new PagerModel(listDTO.getTotalPages(),listDTO.getNumber(),Constant.BUTTONS_TO_SHOW);
         model.addAttribute("selectedPageSize", evalPageSize);
-        model.addAttribute("pageSizes", PAGE_SIZES);
+        model.addAttribute("pageSizes", Constant.PAGE_SIZES);
         model.addAttribute("pager", pager);
         return "index";
     }
 
-
-    @GetMapping("/profile-renter")
-    public String getProfileRenter(Model model){
-        return "profile-renter";
-    }
-    @GetMapping("/profile-admin")
-    public String getProfileAdmin(Model model){
-        return "profile-admin";
-    }
     @GetMapping("/post-detail")
     public String getPostDetail(Model model){
         return "post-detail";

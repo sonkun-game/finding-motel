@@ -6,7 +6,7 @@
 .sidebar-left{
     font-family: "Lato", sans-serif;
     height: 100%;
-    border: 0.001px solid #CFCFCF;
+    border: 0.1px solid #CFCFCF;
 }
 
 .sidebar-right{
@@ -83,6 +83,7 @@
 }
 
 .textfiled{
+    font-family: "Lato", sans-serif;
     width: 60%;
     border-radius: 6px;
     border: .5px solid;
@@ -91,8 +92,10 @@
     background-color: white;
 }
 .label{
+    font-family: "Lato", sans-serif;
     width: 20%;
     color: black;
+    font-size: inherit;
 }
 
 .detail-3{
@@ -111,6 +114,7 @@
     cursor: pointer;
 }
 .change{
+
     width: 15%;
     height: 30px;
     display: block;
@@ -121,6 +125,7 @@
     background-color: #dca73a;
     cursor: pointer;
 }
+
 
 .table-button{
     border: .5px solid #dca73a;

@@ -16,7 +16,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/nice-select.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/responsive.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/loader.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/layout.css}">
+    <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
@@ -65,7 +66,7 @@
                                         </li>
                                         <!-- DROPDOWN LANDLORD -->
                                         <li v-else-if="authenticationNum === 2" class="login-icon">
-                                             <i v-cloak class="ti-user">
+                                             <i v-cloak class="ti-user ti-user-header overflow-dots">
                                                  <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
                                             </i>
 
@@ -81,13 +82,13 @@
 
                                         <!-- DROPDOWN RENTER -->
                                         <li v-else-if="authenticationNum === 1" class="login-icon">
-                                            <i class="ti-user" v-cloak>
+                                            <i class="ti-user ti-user-header overflow-dots" v-cloak>
                                                 <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
                                             </i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
                                                 <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
-                                                <li><a th:href="@{/}">Danh sách yêu thích</a>
+                                                <li><a th:href="@{/view}">Danh sách yêu thích</a>
                                                 <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
                                             </ul>
                                         </li>
@@ -95,7 +96,7 @@
 
                                         <!-- DROPDOWN ADMIN -->
                                         <li v-else class="login-icon">
-                                            <i v-cloak class="ti-user">
+                                            <i v-cloak class="ti-user ti-user-header overflow-dots">
                                                 <span class="display-name-dropdown"> {{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
                                             </i>
                                             <ul class="submenu">
@@ -221,30 +222,35 @@
             <div class="detail-2">
                 <p class="label">Số điện thoại:</p>
                 <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                <button onclick="modal_phone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
-                <div id="myModal_phone" class="modal">
+                <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
+                <div id="my-modal-phone" class="modal">
                     <!-- Modal content -->
-                    <div class="modal-content">
+                    <div id="forgot-pwd-form" class="modal-content">
                         <div class="modal-header">
                             <h2>Thay đổi số điện thoại</h2>
                             <span class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <div class="change-phone-area">
+                                <div class="msg-notification">
+                                <span v-if="showMsg"  v-cloak>
+                                    {{message}}
+                                </span>
+                                </div>
                                 <div class="phone-number">
                                     <h4 class="title-phone">Số điện thoại: </h4>
-                                    <input type="tel" class="change-phone rounded-pill border-0 shadow-sm px-4" />
-                                    <button class="btn-default-otp">Gửi mã xác nhận</button>
+                                    <input @focusout="checkExistPhone()" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm px-4" />
+                                    <button v-on:click="getOTP()" class="btn-default-otp">Gửi mã xác nhận</button>
 
                                 </div>
                                 <div class="confirm-otp">
                                     <h4 class="title-confirm-otp">Mã xác nhận: </h4>
-                                    <input type="tel" class="confirm-otp-phone rounded-pill border-0 shadow-sm px-4" />
+                                    <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm px-4" />
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn-default">Xác Nhận</button>
+                            <button v-on:click="checkOTP()" class="btn-default">Xác Nhận</button>
                         </div>
                     </div>
                 </div>
@@ -274,7 +280,7 @@
             </div>
             <div class="detail-3">
                 <button v-on:click="saveUserInfo()" class="save">Lưu thay đổi</button>
-                <div id="myModal_save" class="modal">
+                <div id="my-modal-notification" class="modal">
                     <div class="message">
                         <div class="modal-body">
                             <i class="fas fa-check"></i>
@@ -284,6 +290,18 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:fragment="user-task" class="information" id="user-task">
+        <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information">Thông tin tài khoản</button>
+        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information">Đổi mật khẩu</button>
+        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-if="userInfo.role == 'RENTER'" class="button-information">Quản lý yêu cầu</button>
+        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-if="userInfo.role == 'RENTER'" class="button-information">Danh sách yêu thích</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Xử lý yêu cầu thuê trọ</button>
+        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử nạp tiền</button>
+        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử thanh toán</button>
+        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Nạp tiền vào tài khoản</button>
+        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" class="button-information">Đăng xuất</button>
     </div>
 </body>
 </html>

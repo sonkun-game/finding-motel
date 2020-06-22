@@ -156,32 +156,32 @@
                     </div>
                 </div>
             </div>
-            <div class="row" >
+            <div class="row" id="row">
                 <div class="col-xl-4 col-lg-6 col-md-6" th:each="post, state : ${posts}">
                     <!-- Single Room -->
                     <div class="single-room mb-50" >
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
-<!--                            <i class="fa fa-2x fa-heart full"></i>-->
-                            <i class="far fa-2x fa-heart"></i>
+
+                            <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart" v-on:click="addWishlist"
+                               th:text="${post.id}">
+                            </i>
                         </div>
                         <div class="room-caption">
                             <h3><a href="rooms.html" th:utext="${post.description}"></a></h3>
                             <div class="per-night">
-                                <span th:utext="${post.price}" ></span><span>  vnđ </span><span>/ tháng</span>
+                                <span th:utext="${post.price}" ></span><span> vnđ </span><span>/ tháng</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <nav th:if="${posts.totalPages != 1}" class="form-group col-md-11 pagination-centered">
                 <ul class="pagination">
                     <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                        <a class="page-link"th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
+                        <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
                     </li>
-
                 </ul>
             </nav>
 
@@ -189,7 +189,9 @@
 
     </section>
 </main>
+
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/add-wishlish.js}"></script>
 </body>
 </html>

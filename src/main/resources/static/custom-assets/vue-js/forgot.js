@@ -35,7 +35,6 @@ var forgotInstance = new Vue({
                 this.showMsg = false
                 this.stepScreen = 2
             }
-            return this.otpCode == this.inputOtp ? this.matchOTP = true : this.matchOTP = false;
         },
         sendOTP() {
             this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +

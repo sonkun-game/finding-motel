@@ -55,4 +55,7 @@ public class UserDTO {
             this.amount = ((LandlordModel) userModel).getAmount();
         }
     }
+
+    public UserDTO() {
+    }
 }

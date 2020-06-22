@@ -35,6 +35,8 @@ public class LoginDTO {
 
     private Date dob;
 
+    private String newPassword;
+
     public LoginDTO(UserModel userModel) {
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();

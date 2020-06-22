@@ -23,7 +23,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @RequestMapping(value = "/admin-profile")
+    @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
         return "profile-admin";
     }

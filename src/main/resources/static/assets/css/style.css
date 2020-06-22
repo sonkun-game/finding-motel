@@ -2046,7 +2046,8 @@ label {
 
 .login-icon{
     display: flex;
-    background-color: white;
+    background-color: #dca73a;
+    color: white;
     margin: -7px 0px;
     width: auto;
     height: 30px;
@@ -2054,6 +2055,8 @@ label {
     border: 1px solid #CFCFCF;
     border-radius: 5px;
 }
+
+
 
 .ti-user{
     float: left !important;
@@ -2069,9 +2072,6 @@ label {
     margin: 5px 5px 5px 10px;
 }
 
-.login-icon:hover{
-    background-color: #dca73a;
-}
 
 .fa-user{
     font-size: 1.3em !important;

@@ -225,6 +225,7 @@ var profileInstance = new Vue({
             }
 
         }
+
     }
 
 

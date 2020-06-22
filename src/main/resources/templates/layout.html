@@ -24,6 +24,14 @@
 
 </head>
 <body>
+    <div th:fragment="notification" id="my-modal-notification" class="modal">
+        <div class="message">
+            <div class="modal-body">
+                <i class="fas fa-check"></i>
+                <label class="message-update">Cập Nhật Thành Công</label>
+            </div>
+        </div>
+    </div>
     <div th:fragment="loader">
         <div id="preloader-active">
             <div class="preloader d-flex align-items-center justify-content-center">
@@ -206,7 +214,9 @@
         <script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
         <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
     </div>
-    <div th:fragment="profile-user" id="profile-user-form" class="col-9 sidebar-right">
+
+<!--    Profile-user-->
+    <div th:fragment="profile-user" id="profile-user-form" v-if="task == 0">
         <div class="title">
             <h1 class="title-name uppercase">Thông tin tài khoản</h1>
         </div>
@@ -280,14 +290,6 @@
             </div>
             <div class="detail-3">
                 <button v-on:click="saveUserInfo()" class="save">Lưu thay đổi</button>
-                <div id="my-modal-notification" class="modal">
-                    <div class="message">
-                        <div class="modal-body">
-                            <i class="fas fa-check"></i>
-                            <label class="message-update">Cập Nhật Thành Công</label>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -302,6 +304,36 @@
         <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử thanh toán</button>
         <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Nạp tiền vào tài khoản</button>
         <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" class="button-information">Đăng xuất</button>
+    </div>
+
+<!--    Change Password Tab-->
+    <div th:fragment="change-password" v-else-if="task == 1" id="change-pass">
+        <div class="title">
+            <h1 class="title-name uppercase">đổi mật khẩu</h1>
+        </div>
+        <div class="information-detail">
+            <div class="msg-notification">
+                <span v-show="showMsg"  v-cloak>
+                    {{message}}
+                </span>
+            </div>
+            <div class="detail">
+                <p class="label">Mật khẩu cũ:</p>
+                <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+            </div>
+            <div class="detail-2">
+                <p class="label">Mật khẩu mới:</p>
+                <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+            </div>
+            <div class="detail-2">
+                <p class="label">Nhập lại mật khẩu:</p>
+                <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+            </div>
+
+            <div class="detail-3">
+                <button v-on:click="changePassword()" class="save">Lưu thay đổi</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>

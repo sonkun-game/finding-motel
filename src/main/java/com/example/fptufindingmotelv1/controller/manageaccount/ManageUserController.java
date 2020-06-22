@@ -35,7 +35,7 @@ public class ManageUserController {
                 return "profile-admin";
             }
         }
-        return "index";
+        return "redirect:/";
     }
 
     @ResponseBody
@@ -64,5 +64,11 @@ public class ManageUserController {
             response.put("message", "System Error");
         }
         return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-change-password")
+    public JSONObject savePassword(@RequestBody LoginDTO request){
+        return manageUserService.savePassword(request);
     }
 }

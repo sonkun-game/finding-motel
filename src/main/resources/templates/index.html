@@ -162,7 +162,9 @@
                     <div class="single-room mb-50" >
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
-                            <i th:id="${post.id}"  class="fa fa-2x fa-heart" v-on:click="addWishlist"></i>
+                            <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart" v-on:click="addWishlist"
+                               th:text="${post.id}">
+                            </i>
                         </div>
                         <div class="room-caption">
                             <h3><a href="rooms.html" th:utext="${post.description}"></a></h3>
@@ -177,9 +179,8 @@
             <nav th:if="${posts.totalPages != 1}" class="form-group col-md-11 pagination-centered">
                 <ul class="pagination">
                     <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                        <a class="page-link"th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
+                        <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
                     </li>
-
                 </ul>
             </nav>
 

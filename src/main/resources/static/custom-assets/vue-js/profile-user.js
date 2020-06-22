@@ -44,6 +44,7 @@ var profileInstance = new Vue({
                 }
             }
         }
+
     }
 
 

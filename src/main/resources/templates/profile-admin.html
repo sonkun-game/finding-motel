@@ -292,9 +292,26 @@
                                     <td>{{post.displayStatus}}</td>
                                     <td>
                                         <i class="fas fa-eye"></i>
-                                        <i @click="deletePost(post.id)" class="fas fa-trash-alt"></i>
+                                        <i @click="modal_delete()" class="fas fa-trash-alt" id="myIcon"></i>
+
                                     </td>
                                 </tr>
+                                <div id="myModal_delete" class="modal">
+                                    <!-- Modal content -->
+                                    <div class="message-confirm">
+                                        <div class="modal-header">
+                                            <h2>Xác Nhận</h2>
+                                            <span class="close">&times;</span>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label>Bạn có muốn xóa bài viết không ?</label>
+                                            <div class="group-btn">
+                                                <button class="btn-default-cancel" id="btn-cancel">Hủy bỏ</button>
+                                                <button class="btn-default-cancel" id="btn-confirm">Đồng ý</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 </tbody>
                             </table>
                         </div>

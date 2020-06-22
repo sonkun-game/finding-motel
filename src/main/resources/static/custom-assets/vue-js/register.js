@@ -82,7 +82,7 @@ var registerVue = new Vue({
                     body: this.phone,
                 }).then(response => response.json())
                     .then((data) => {
-                        this.existedPhone = data;
+                        this.existedPhone = data
                     }).catch(error => {
                     console.log(error);
                 })

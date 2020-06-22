@@ -30,8 +30,8 @@ var profileInstance = new Vue({
                 .then((data) => {
                     if(data != null && data.msgCode == "user000"){
                         localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
-                        authenticationInstance.userInfo = this.userInfo
-                        basicInfoInstance.userInfo = this.userInfo
+                        authenticationInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+                        basicInfoInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
                         this.showNotifyModal()
                     }else if(data != null && data.msgCode == "sys999"){
                         alert("failed")

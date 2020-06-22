@@ -7,6 +7,7 @@ import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
 import com.example.fptufindingmotelv1.service.login.LoginService;
 import net.minidev.json.JSONObject;
@@ -38,6 +39,9 @@ public class LoginController {
 
     @Autowired
     LoginService loginService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("/dang-nhap")
     public String getLogin(Model model){
@@ -91,7 +95,8 @@ public class LoginController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
+            UserModel userModel = userRepository.findByUsername(userDetails.getUsername());
+            responseDTO.setLoginDTO(new LoginDTO(userModel));
         }
         return responseDTO;
     }

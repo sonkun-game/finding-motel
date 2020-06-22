@@ -35,7 +35,7 @@ public class ManageUserController {
                 return "profile-admin";
             }
         }
-        return "error";
+        return "index";
     }
 
     @ResponseBody

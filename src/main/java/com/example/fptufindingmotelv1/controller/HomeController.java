@@ -68,8 +68,9 @@ public class HomeController {
             }
         }
         Page<PostDTO> listDTO = new PageImpl<>(postDTOs);
+
         model.addAttribute("posts",listDTO);
-        PagerModel pager = new PagerModel(listDTO.getTotalPages(),listDTO.getNumber(),Constant.BUTTONS_TO_SHOW);
+        PagerModel pager = new PagerModel(listDTO.getTotalPages(),postList.getNumber(),Constant.BUTTONS_TO_SHOW);
         model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pageSizes", Constant.PAGE_SIZES);
         model.addAttribute("pager", pager);

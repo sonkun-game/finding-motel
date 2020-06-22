@@ -2,7 +2,7 @@ var router = new VueRouter({
     mode: 'history',
     routes: []
 });
-var registVue = new Vue({
+var registerVue = new Vue({
     router,
     el: "#registerForm",
     data: {
@@ -32,26 +32,24 @@ var registVue = new Vue({
         border_error: 'border_error',
         errorText: 'errorText',
     },
-    beforeMount() {
-        if (document.getElementById('fbAccount') != null
-            && document.getElementById('fbAccount').value.length != 0) {
-            this.fbAccount = document.getElementById('fbAccount').value;
+    created(){
+        let code = this.$route.query.code
+        let url = this.$route.fullPath + ""
+        if((code != null || code != undefined) && url.includes("google")){
+            let apiUrl = "https://localhost:8081/api-get-google-login?code="+code
+            this.getLogin(apiUrl, "google")
+        }else if((code != null || code != undefined) && url.includes("facebook")){
+            let apiUrl = "https://localhost:8081/api-get-facebook-login?code="+code
+            this.getLogin(apiUrl, "facebook")
         }
-        if (document.getElementById('ggAccount') != null
-            && document.getElementById('ggAccount').value.length != 0) {
-            this.ggAccount = document.getElementById('ggAccount').value;
-        }
-        if (document.getElementById('displayName') != null
-            && document.getElementById('displayName').value.length != 0) {
-            this.displayName = document.getElementById('displayName').value;
-        }
+
     },
     methods: {
         checkMatchPwd: function (e) {
             return this.password == this.confirmPassword ? this.matchPwd = true : this.matchPwd = false;
         },
         checkOTP() {
-            return this.otp == this.otpCode ? this.matchOTP = true : this.matchOT = false;
+            return this.otp == this.otpCode ? this.matchOTP = true : this.matchOTP = false;
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {
@@ -105,6 +103,8 @@ var registVue = new Vue({
             };
             if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone()) {
                 console.log(JSON.stringify(registerModel));
+                loadingInstance.isHidden = false
+                document.body.setAttribute("class", "loading-hidden-screen")
                 fetch("https://localhost:8081/register", {
                     method: 'POST',
                     headers: {
@@ -118,13 +118,13 @@ var registVue = new Vue({
                             localStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
-                            let accessToken = this.$route.query.accessToken
-                            this.$cookies.set("access_token", accessToken)
-                            window.location.href = this.$route.fullPath;
+                            let accessToken = localStorage.getItem("accessToken")
+                            let apiUrl = "https://localhost:8081/api-get-google-profile?accessToken="+accessToken
+                            this.getLogin(apiUrl, "google")
                         } else if (data.code == '003') {
-                            let accessToken = this.$route.query.accessToken
-                            this.$cookies.set("access_token", accessToken)
-                            window.location.href = this.$route.fullPath;
+                            let accessToken = localStorage.getItem("accessToken")
+                            let apiUrl = "https://localhost:8081/api-get-facebook-profile?accessToken="+accessToken
+                            this.getLogin(apiUrl, "facebook")
                         }
                     }).catch(error => {
                     console.log(error);
@@ -160,6 +160,36 @@ var registVue = new Vue({
                     alert("Hãy nhập số điện thoại chính xác!");
                 }
             }
+        },
+        getLogin(url, tokenProvider){
+            fetch(url,{
+                method : 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data)
+                    if(data != null && data.msgCode === "msg003"){
+                        localStorage.setItem("newSocialUser", data.user)
+                        localStorage.setItem("accessToken", data.accessToken)
+                        this.displayName = data.user.displayName
+                        if(tokenProvider == "google"){
+                            this.ggAccount = data.user.ggAccount
+                        }else{
+                            this.fbAccount = data.user.fbAccount
+                        }
+                        preloaderInstance.isShowLoader = false
+
+                    }else if (data != null && data.msgCode === "msg004"){
+                        localStorage.removeItem("accessToken")
+                        this.$cookies.set("access_token", data.accessToken)
+                        this.$cookies.set("token_provider", tokenProvider)
+                        window.location.href = "https://localhost:8081/"
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         }
     },
     computed: {
@@ -167,4 +197,18 @@ var registVue = new Vue({
 
         }
     }
+});
+var loadingInstance = new Vue({
+    el: '#loading-wrapper',
+    data: {
+        isHidden: true
+    },
+
+});
+var preloaderInstance = new Vue({
+    el: '#preloader-register-social',
+    data: {
+        isShowLoader: true,
+    },
+
 })

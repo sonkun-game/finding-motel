@@ -96,16 +96,16 @@
                                         <div class="select-itms">
                                             <select name="select" id="select3">
                                                 <option value="1">Tất cả</option>
-                                                <option value="2">Dưới 20 m2</option>
-                                                <option value="3">20 m2 - 30 m2</option>
-                                                <option value="4">30 m2 - 40 m2</option>
-                                                <option value="5">40 m2 - 50 m2</option>
-                                                <option value="6">50 m2 - 60 m2</option>
-                                                <option value="7">60 m2 - 70 m2</option>
-                                                <option value="8">70 m2 - 80 m2</option>
-                                                <option value="9">80 m2 - 90 m2</option>
-                                                <option value="10">90 m2 - 100 m2</option>
-                                                <option value="11">Trên 100 m2</option>
+                                                <option value="2">Dưới 20m&sup2</option>
+                                                <option value="3">20m&sup2 - 30m&sup2</option>
+                                                <option value="4">30m&sup2 - 40m&sup2</option>
+                                                <option value="5">40m&sup2 - 50m&sup2</option>
+                                                <option value="6">50m&sup2 - 60m&sup2</option>
+                                                <option value="7">60m&sup2 - 70m&sup2</option>
+                                                <option value="8">70m&sup2 - 80m&sup2</option>
+                                                <option value="9">80m&sup2 - 90m&sup2</option>
+                                                <option value="10">90m&sup2 - 100m&sup2</option>
+                                                <option value="11">Trên 100m&sup2</option>
                                             </select>
                                         </div>
                                     </form>
@@ -162,7 +162,8 @@
                     <div class="single-room mb-50" >
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
-                            <i th:id="${post.id}"  class="fa fa-2x fa-heart" v-on:click="addWishlist"
+
+                            <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart" v-on:click="addWishlist"
                                th:text="${post.id}">
                             </i>
                         </div>
@@ -192,10 +193,5 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/add-wishlish.js}"></script>
-<script>
-    function checkHeart() {
-
-    }
-</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-var vueInstance = new Vue({
+var authenticationInstance = new Vue({
     el: '#header',
     data: {
         userInfo: {},
@@ -17,6 +17,7 @@ var vueInstance = new Vue({
                     console.log(data)
                     if(data != null && data.code === "msg001"){
                         this.$cookies.remove("access_token")
+                        this.$cookies.remove("token_provider")
                         window.location.href = "https://localhost:8081/"
                     }
                 }).catch(error => {
@@ -37,11 +38,13 @@ var vueInstance = new Vue({
         //     return
         // }
         let accessToken = this.$cookies.get("access_token")
+        let tokenProvider = this.$cookies.get("token_provider")
         fetch("https://localhost:8081/api-get-authentication",{
             method : 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
+                'Authorization': 'Bearer ' + accessToken,
+                'Token-Provider': tokenProvider
             }
         }).then(response => response.json())
             .then((data) => {

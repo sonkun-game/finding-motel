@@ -4,6 +4,10 @@ import com.example.fptufindingmotelv1.dto.LoginDTO;
 import com.example.fptufindingmotelv1.dto.LoginRequestDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
 import com.example.fptufindingmotelv1.service.login.LoginService;
 import net.minidev.json.JSONObject;
@@ -36,6 +40,9 @@ public class LoginController {
     @Autowired
     LoginService loginService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/dang-nhap")
     public String getLogin(Model model){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
@@ -47,11 +54,9 @@ public class LoginController {
     @ResponseBody
     @PostMapping(value = "/api-login")
     public LoginResponseDTO login(@RequestBody LoginRequestDTO loginRequestDTO){
-        LoginResponseDTO responseDTO = new LoginResponseDTO();
-        boolean isValidUser = loginService.validateUser(loginRequestDTO.getUsername(),
+        LoginResponseDTO responseDTO = loginService.validateUser(loginRequestDTO.getUsername(),
                 loginRequestDTO.getPassword());
-        if(!isValidUser){
-            responseDTO.setMsgCode("msg001");
+        if(!responseDTO.getMsgCode().equals("login000")){
             return responseDTO;
         }
         Authentication authentication = authenticationManager.authenticate(
@@ -62,28 +67,25 @@ public class LoginController {
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         responseDTO.setAccessToken(token);
         responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
-        responseDTO.setMsgCode("msg000");
         return responseDTO;
     }
 
     @ResponseBody
     @PostMapping(value = "/api-logout")
     public JSONObject logout(HttpServletRequest request, HttpServletResponse response){
+        JSONObject jsonObject = new JSONObject();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            jsonObject.put("message", "Log out successfully");
+            jsonObject.put("code", "msg001");
+            return jsonObject;
+        }else {
+            jsonObject.put("message", "Authentication is not exist");
+            jsonObject.put("code", "msg002");
+            return jsonObject;
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", "Log out successfully");
-        jsonObject.put("code", "msg001");
-        return jsonObject;
-    }
 
-
-    @ResponseBody
-    @GetMapping("/api-test-renter")
-    public String testRenter(){
-        return "Renter access accepted";
     }
 
     @ResponseBody
@@ -93,16 +95,12 @@ public class LoginController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
+            UserModel userModel = userRepository.findByUsername(userDetails.getUsername());
+            responseDTO.setLoginDTO(new LoginDTO(userModel));
         }
         return responseDTO;
     }
 
-    @ResponseBody
-    @GetMapping("/api-test-landlord")
-    public String testLandlord(){
-        return "Landlord access accepted";
-    }
 
 
 }

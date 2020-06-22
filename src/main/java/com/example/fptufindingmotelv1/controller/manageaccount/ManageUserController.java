@@ -51,4 +51,18 @@ public class ManageUserController {
         }
         return response;
     }
+
+    @ResponseBody
+    @PostMapping("/api-change-phone-number")
+    public JSONObject savePhoneNumber(@RequestBody LoginDTO request){
+        JSONObject response = new JSONObject();
+        if(manageUserService.savePhone(request)){
+            response.put("msgCode", "user000");
+            response.put("message", "Change phone successfully");
+        }else {
+            response.put("msgCode", "sys999");
+            response.put("message", "System Error");
+        }
+        return response;
+    }
 }

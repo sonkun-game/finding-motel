@@ -7,6 +7,10 @@
     <title>Quản lý tài khoản</title>
 </head>
 <body>
+<!--    inlude loading screen-->
+<div th:replace="layout :: loader"></div>
+
+<!--    include header-->
 <header th:replace="layout :: header"></header>
 
 <main>
@@ -16,21 +20,38 @@
                 <div class="col-3 sidebar-left">
                     <div class="avatar" id="basic-user-info">
                         <i class="ti-user profile-avatar"></i>
-                        <p class="display-name" v-text="userInfo.displayName"></p>
+                        <p class="display-name overflow-dots" v-text="userInfo.displayName"></p>
                     </div>
-                    <div class="information" id="myInfo">
-                        <button  class="button-information active">Thông tin tài khoản</button>
-                        <button  class="button-information">Đổi mật khẩu</button>
-                        <button  class="button-information">Quản lý yêu cầu</button>
-                        <button  class="button-information">Danh sách yêu thích</button>
-                        <button  class="button-information">Đổi mật khẩu</button>
-                        <button  class="button-information">Đăng xuất</button>
-                    </div>
+                    <div th:replace="layout :: user-task"></div>
                 </div>
                 <!-- Thông tin tài khoản -->
-                <div th:replace="layout :: profile-user"></div>
+                <div v-if="userTaskInstance.task == 0" th:replace="layout :: profile-user"></div>
 
 
+                <!-- Đổi mật khẩu -->
+                <div v-if="userTaskInstance.task == 1" class="col-9 sidebar-right" id="change-pass">
+                    <div class="title">
+                        <h1 class="title-name uppercase">đổi mật khẩu</h1>
+                    </div>
+                    <div class="information-detail">
+                        <div class="detail">
+                            <p class="label">Mật khẩu cũ:</p>
+                            <input id="oldpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+                        </div>
+                        <div class="detail-2">
+                            <p class="label">Mật khẩu mới:</p>
+                            <input id="newpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                        </div>
+                        <div class="detail-2">
+                            <p class="label">Nhập lại mật khẩu:</p>
+                            <input id="repassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                        </div>
+
+                        <div class="detail-3">
+                            <button type="submit" class="save">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Quản lý yêu cầu -->
 
@@ -167,30 +188,6 @@
 <!--                        </div>-->
 <!--                    </div>-->
 
-                <!-- Đổi mật khẩu -->
-<!--                <div class="col-9 sidebar-right">-->
-<!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">đổi mật khẩu</h1>-->
-<!--                    </div>-->
-<!--                    <div class="information-detail">-->
-<!--                        <div class="detail">-->
-<!--                            <p class="label">Mật khẩu cũ:</p>-->
-<!--                            <input id="oldpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>-->
-<!--                        </div>-->
-<!--                        <div class="detail-2">-->
-<!--                            <p class="label">Mật khẩu mới:</p>-->
-<!--                            <input id="newpassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />-->
-<!--                        </div>-->
-<!--                        <div class="detail-2">-->
-<!--                            <p class="label">Nhập lại mật khẩu:</p>-->
-<!--                            <input id="repassword" class="textfiled rounded-pill border-0 shadow-sm" type="password" />-->
-<!--                        </div>-->
-
-<!--                        <div class="detail-3">-->
-<!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
             </div>
         </div>
     </div>

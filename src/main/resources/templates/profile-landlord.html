@@ -7,6 +7,10 @@
     <title>Quản lý tài khoản</title>
 </head>
 <body>
+<!--    inlude loading screen-->
+<div th:replace="layout :: loader"></div>
+
+<!--    include header-->
 <header th:replace="layout :: header"></header>
 
     <main>
@@ -16,22 +20,14 @@
                 <div class="col-3 sidebar-left">
                     <div id="basic-user-info" class="avatar">
                         <i class="ti-user profile-avatar"></i>
-                        <p v-text="userInfo.displayName" class="display-name"></p>
+                        <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>
                         <p class="display-name" v-cloak>Số dư: {{userInfo.amount}} vnđ</p>
                     </div>
-                    <div class="information" id="myInfo">
-                        <button  class="button-information active">Thông tin tài khoản</button>
-                        <button  class="button-information">Đổi mật khẩu</button>
-                        <button  class="button-information">Quản lý bài đăng</button>
-                        <button  class="button-information">Xử lý yêu cầu thuê trọ</button>
-                        <button  class="button-information">Lịch sử nạp tiền</button>
-                        <button  class="button-information">Lịch sử thanh toán</button>
-                        <button  class="button-information">Nạp tiền vào tài khoản</button>
-                        <button  class="button-information">Đăng xuất</button>
-                    </div>
+                    <div th:replace="layout :: user-task"></div>
                 </div>
                 <!-- Thông tin tài khoản -->
                 <div th:replace="layout :: profile-user"></div>
+
 <!--                <div id="profile-user-form" class="col-9 sidebar-right">-->
 <!--                    <div class="title">-->
 <!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->

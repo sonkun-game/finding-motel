@@ -79,3 +79,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .radio-container input:checked ~ .checkmark:after{
     display:block;
 }
+.overflow-dots{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ti-user-header{
+    max-width: 175px;
+    height: 22px;
+}
+.display-name{
+    max-width: 220px;
+}
+
+button{
+    font-family: "Lato", sans-serif;
+}
+label{
+    font-family: "Lato", sans-serif;
+}

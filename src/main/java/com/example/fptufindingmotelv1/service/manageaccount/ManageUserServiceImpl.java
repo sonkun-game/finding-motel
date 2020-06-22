@@ -30,4 +30,17 @@ public class ManageUserServiceImpl implements ManageUserService{
         }
         return false;
     }
+
+    @Override
+    public boolean savePhone(LoginDTO request) {
+        try {
+            UserModel userModel = userRepository.findByUsername(request.getUsername());
+            userModel.setPhoneNumber(request.getPhoneNumber());
+            userRepository.save(userModel);
+            return true;
+        }catch (Exception exception){
+            System.err.println(exception);
+        }
+        return false;
+    }
 }

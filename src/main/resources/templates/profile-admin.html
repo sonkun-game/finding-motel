@@ -407,7 +407,7 @@
                                 <input :value="userDetail.roleName" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div class="infor-modal">
+                            <div v-if="userDetail.role == '2'" class="infor-modal">
                                 <p class="left-modal">Tài khoản:</p>
                                 <input :value="userDetail.amount" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
@@ -423,21 +423,6 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>phòng 1</td>
-                                        <td>20-06-2020</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>phòng 1</td>
-                                        <td>20-06-2020</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>phòng 1</td>
-                                        <td>20-06-2020</td>
-                                    </tr>
                                     <tr>
                                         <td>1</td>
                                         <td>phòng 1</td>

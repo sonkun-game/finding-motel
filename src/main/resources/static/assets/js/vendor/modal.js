@@ -11,7 +11,7 @@ function modal_report() {
         modal.style.display = "none";
     }
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target.id == modal) {
             modal.style.display = "block";
         }
     }
@@ -52,7 +52,6 @@ function modal_view() {
         }
     }
 }
-
 
 // // Get the modal
 // var modal = document.getElementById("myModal");

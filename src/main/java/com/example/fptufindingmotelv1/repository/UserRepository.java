@@ -17,5 +17,6 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
     Boolean existsByGgAccount(String ggAccount);
     Boolean existsByFbAccount(String fbAccount);
 
-    ArrayList<UserModel> findByUsernameContains(String username);
+    @Query("select u from UserModel u where u.username like %:username% or u.displayName like %:username%")
+    ArrayList<UserModel> findByUsernameOrDisplayName(String username);
 }

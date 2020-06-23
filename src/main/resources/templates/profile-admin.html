@@ -157,6 +157,40 @@
                                     <td>{{report.reportDate}}</td>
                                     <td>{{report.content}}</td>
                                     <td>
+                                        <i class="fas fa-eye" onclick="modal_viewReport()" id="myIcon_viewReport"></i>
+                                        <div id="myModal_viewReport" class="modal">
+                                            <!-- Modal content -->
+                                            <div class="view-information">
+                                                <div class="modal-header">
+                                                    <h2>Chi tiết báo cáo</h2>
+                                                    <span class="close">&times;</span>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên bài đăng:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên chủ trọ:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Ngày báo cáo:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div  class="infor-modal-table">
+                                                        <p class="left-modal">Nội dung báo cáo:</p>
+                                                        <textarea></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn-hover btn-default">Xác Nhận</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <i @click="showModalConfirmDelete(report.id, 'report')"
                                            class="fas fa-trash-alt"> </i>
                                     </td>
@@ -353,10 +387,10 @@
                         <div class="modal-body">
                             <label id="modalBanContent"></label>
                             <div class="group-btn">
-                                <button @click="yesNoConfirmBanClick($event)" value="0" class="btn-default-cancel">Hủy
+                                <button @click="yesNoConfirmBanClick($event)" value="0" class="btn-hover btn-default-cancel">Hủy
                                     bỏ
                                 </button>
-                                <button @click="yesNoConfirmBanClick($event)" value="1" class="btn-default-cancel">Đồng
+                                <button @click="yesNoConfirmBanClick($event)" value="1" class="btn-hover btn-default-cancel">Đồng
                                     ý
                                 </button>
                             </div>
@@ -448,10 +482,14 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn-default">Xác Nhận</button>
+                            <button class="btn-hover btn-default">Xác Nhận</button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal report-->
+
+
 
             </div>
         </div>

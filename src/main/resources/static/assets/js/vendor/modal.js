@@ -34,6 +34,23 @@ function modal_view() {
     }
 }
 
+function modal_viewReport() {
+    var modal = document.getElementById("myModal_viewReport");
+    var icon = document.getElementById("myIcon_viewReport");
+    var span = document.getElementsByClassName("close")[0];
+    icon.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "block";
+        }
+    }
+}
+
 function modal_delete() {
     var modal_delete = document.getElementById("myModal_delete");
     var icon_delete = document.getElementById("myIcon");

@@ -65,8 +65,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<UserModel> searchUser() {
-        return null;
+    public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username) {
+        ArrayList<UserDTO> users = new ArrayList<>();
+        for (UserModel user : userRepository.findByUsernameContains(username)) {
+            UserDTO userDTO = new UserDTO(user);
+            users.add(userDTO);
+        }
+        return users;
     }
 
     @Override

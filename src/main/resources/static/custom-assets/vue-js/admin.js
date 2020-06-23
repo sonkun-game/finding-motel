@@ -11,15 +11,83 @@ var admin = new Vue({
         listPost: [],
         listUser: [],
         //request parameter
-        postType : {},
-        postPrice : {},
-        postSquare : {},
-        postDistance : {},
-        postStatus : {},
-        isBannedUser : false,
+        postType: {},
+        postPrice: {},
+        postSquare: {},
+        postDistance: {},
+        postStatus: {},
+        isBannedUser: false,
+        //modal form
+        modalBanId: {},
+        modalDelId: {},
+        modalDelDataType: {},
+        modalBanDataType: {},
+        modalConfirmClick: {},
+        modalData: [],
+        //user detail form
+        userDetail: [],
     },
     methods: {
-        filterUserByRole(roleId, listData){
+        showModalUserDetail(userId) {
+            for (var user of this.listUser) {
+                if (user.username == userId) {
+                    this.userDetail = user;
+                    document.getElementById("modalUserDetail").style.display = 'block';
+                    break;
+                }
+            }
+
+            window.onclick = function (event) {
+                if (event.target.id.toString().includes('closeModal')) {
+                    document.getElementById("modalUserDetail").style.display = "none";
+                }
+            }
+        },
+        yesNoConfirmDelClick(event) {
+            document.getElementById("modalDelete").style.display = 'none';
+            this.modalConfirmClick = event.target.value;
+            if (this.modalConfirmClick != null && this.modalConfirmClick.length > 0 && this.modalConfirmClick == '1') {
+                if (this.modalDelDataType == 'report') {
+                    this.deleteReport(this.modalDelId);
+                } else if (this.modalDelDataType == 'post') {
+                    this.deletePost(this.modalDelId);
+                }
+            }
+
+        },
+        showModalConfirmDelete(id, dataType) {
+            this.modalDelId = id;
+            this.modalDelDataType = dataType;
+            if (this.modalDelDataType == 'report') {
+                document.getElementById("modalDelContent").innerHTML = 'Bạn có muốn xóa báo cáo này không?';
+            } else if (this.modalDelDataType == 'post') {
+                document.getElementById("modalDelContent").innerHTML = 'Bạn có muốn xóa bài viết này không?';
+            }
+            document.getElementById("modalDelete").style.display = 'block';
+        },
+        yesNoConfirmBanClick(event) {
+            document.getElementById("modalBan").style.display = 'none';
+            this.modalConfirmClick = event.target.value;
+            if (this.modalConfirmClick != null && this.modalConfirmClick.length > 0 && this.modalConfirmClick == '1') {
+                if (this.modalBanDataType == 'ban') {
+                    this.banLanlord(this.modalBanId);
+                } else if (this.modalBanDataType == 'unban') {
+                    this.unbanLanlord(this.modalBanId);
+                }
+            }
+
+        },
+        showModalConfirmBan(id, dataType) {
+            this.modalBanId = id;
+            this.modalBanDataType = dataType;
+            if (this.modalBanDataType == 'ban') {
+                document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
+            } else if (this.modalBanDataType == 'unban') {
+                document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa tài khoản này không?';
+            }
+            document.getElementById("modalBan").style.display = 'block';
+        },
+        filterUserByRole(roleId, listData) {
             if (roleId == 0) return;
             let rawList = [];
             for (var item of listData) {
@@ -28,6 +96,23 @@ var admin = new Vue({
                 }
             }
             this.listUser = rawList;
+        },
+        getUserById() {
+            let username = document.getElementById("searchUserTxt").value;
+            fetch("https://localhost:8081/get-user-by-id?username=" + username, {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    // if(data.status == 200){
+                    this.listUser = data;
+                    this.filterUserByRole(document.getElementById("roleFilterCb").value, this.listUser);
+                    // } else {
+                    // window.location.href = "/error";
+                    // }
+
+                }).catch(error => {
+                console.log(error);
+            })
         },
         getListUser() {
             //
@@ -115,11 +200,11 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.getListReport();
-                    // } else {
-                    //     window.location.href = "/error";
-                    // }
+                    if (data.code == '000') {
+                        this.getListReport();
+                    } else {
+                        window.location.href = "/error";
+                    }
                 }).catch(error => {
                 console.log(error);
             })

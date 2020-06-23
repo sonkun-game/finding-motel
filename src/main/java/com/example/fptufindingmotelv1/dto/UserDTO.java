@@ -41,10 +41,11 @@ public class UserDTO {
     public UserDTO(UserModel userModel) {
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getId().toString();
-        this.roleName = userModel.getRole().getRoleName();
+        this.roleName = userModel.getRole().getInstructionDesc();
         this.fbAccount = userModel.getFbAccount();
         this.ggAccount = userModel.getGgAccount();
         this.phoneNumber = userModel.getPhoneNumber();
+        this.displayName = userModel.getDisplayName();
         if (userModel instanceof RenterModel) {
             this.genderDisplay = ((RenterModel) userModel).isGender() ? "Nam" : "Nữ";
             this.gender = ((RenterModel) userModel).isGender();

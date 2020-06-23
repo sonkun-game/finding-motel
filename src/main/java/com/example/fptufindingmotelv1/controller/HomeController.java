@@ -75,9 +75,4 @@ public class HomeController {
         model.addAttribute("pager", pager);
         return "index";
     }
-
-    @GetMapping("/post-detail")
-    public String getPostDetail(Model model){
-        return "post-detail";
-    }
 }

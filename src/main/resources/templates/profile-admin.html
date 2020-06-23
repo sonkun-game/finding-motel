@@ -61,7 +61,7 @@
                         <div class="title">
                             <h1 class="title-name uppercase">Quản lý người dùng</h1>
                         </div>
-                        <div class="search-area">
+                        <div class="choose-role">
                             <div class="row">
                                 <div class="col">
                                     <div class="filter-area">
@@ -73,11 +73,20 @@
                                                 <select id="roleFilterCb" v-on:change="getListUser()">
                                                     <option selected value="0">Tất cả</option>
                                                     <option value="1">Chủ trọ</option>
-                                                    <option value="2">NGười thuê</option>
+                                                    <option value="2">Người thuê</option>
                                                 </select>
                                             </form>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col">
+                                    <div class="search-container">
+                                        <form action="#">
+                                            <input type="text" placeholder="Tìm kiếm..." name="search">
+                                            <button type="submit"><i class="fa fa-search"></i></button>
+                                        </form>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -99,13 +108,91 @@
                                     <td>{{user.displayName}}</td>
                                     <td>{{user.role.roleName}}</td>
                                     <td>
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye" onclick="modal_view()" id="myIcon-view"></i>
+                                        <div id="myModal_view" class="modal">
+                                            <!-- Modal content -->
+                                            <div class="view-information">
+                                                <div class="modal-header">
+                                                    <h2>Thông tin người dùng</h2>
+                                                    <span class="close">&times;</span>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên đăng nhập:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="aaaaa" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên hiển thị:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="Le Quang huy" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Số điện thoại:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="0909090909" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Ngày sinh:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="05-01-1998" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Nghề nghiệp:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="Sinh viên" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Giới tính:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="Nam" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Vai trò:</p>
+                                                        <input  class="right-modal rounded-pill border-0 shadow-sm" type="text" value="Chủ trọ" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal-table">
+                                                        <p class="left-modal">Danh sách bài đăng:</p>
+                                                        <table class="table">
+                                                            <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col">STT</th>
+                                                                <th scope="col">Tên bài đăng</th>
+                                                                <th scope="col">Ngày đăng</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>phòng 1</td>
+                                                                <td>20-06-2020</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>phòng 1</td>
+                                                                <td>20-06-2020</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>phòng 1</td>
+                                                                <td>20-06-2020</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>phòng 1</td>
+                                                                <td>20-06-2020</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn-default">Xác Nhận</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate != null}" @click="banLanlord(user.username)" class="fas fa-lock">
                                             {{user.role.unBanDate}}
                                         </i>
                                         <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate == null}" @click="unbanLanlord(user.username)" class="fas fa-unlock"></i>
                                     </td>
                                 </tr>
+                                <!-- Modal icon view infor -->
+
                                 </tbody>
                             </table>
                         </div>
@@ -291,11 +378,13 @@
                                     <td>{{post.expireDate}}</td>
                                     <td>{{post.displayStatus}}</td>
                                     <td>
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye" ></i>
                                         <i @click="modal_delete()" class="fas fa-trash-alt" id="myIcon"></i>
 
                                     </td>
                                 </tr>
+
+                                <!-- Modal icon delete -->
                                 <div id="myModal_delete" class="modal">
                                     <!-- Modal content -->
                                     <div class="message-confirm">
@@ -312,6 +401,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 </tbody>
                             </table>
                         </div>

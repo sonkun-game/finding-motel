@@ -46,30 +46,30 @@ public class HomeController {
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
         Page<PostModel> postList =  postModelRepository.findAll(pageable);
 
-        List<PostDTO> postDTOs= new ArrayList<>();
-        PostDTO postDTO= null;
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            RenterModel renter =renterService.findOne(userDetails.getUserModel().getUsername());
-            for(int j=0;j<postList.getSize();j++){
-                postDTO=new PostDTO(postList.getContent().get(j));
-                if(renter.getPosts().contains(postList.getContent().get(j))){
-                    postDTO.setColor("color: red");
-                }else {
-                    postDTO.setColor("color: white");
-                }
-                postDTOs.add(postDTO);
-            }
-        }else{
-            for (int i=0;i<postList.getSize();i++){
-                postDTO = new PostDTO(postList.getContent().get(i));
-                postDTOs.add(postDTO);
-            }
-        }
-        Page<PostDTO> listDTO = new PageImpl<>(postDTOs);
-        model.addAttribute("posts",listDTO);
-        PagerModel pager = new PagerModel(listDTO.getTotalPages(),listDTO.getNumber(),Constant.BUTTONS_TO_SHOW);
+//        List<PostDTO> postDTOs= new ArrayList<>();
+//        PostDTO postDTO= null;
+//        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+//            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+//                    .getAuthentication().getPrincipal();
+//            RenterModel renter =renterService.findOne(userDetails.getUserModel().getUsername());
+//            for(int j=0;j<postList.getSize();j++){
+//                postDTO=new PostDTO(postList.getContent().get(j));
+//                if(renter.getPosts().contains(postList.getContent().get(j))){
+//                    postDTO.setColor("color: red");
+//                }else {
+//                    postDTO.setColor("color: white");
+//                }
+//                postDTOs.add(postDTO);
+//            }
+//        }else{
+//            for (int i=0;i<postList.getSize();i++){
+//                postDTO = new PostDTO(postList.getContent().get(i));
+//                postDTOs.add(postDTO);
+//            }
+//        }
+//        Page<PostDTO> listDTO = new PageImpl<>(postDTOs);
+        model.addAttribute("posts",postList);
+        PagerModel pager = new PagerModel(postList.getTotalPages(),postList.getNumber(),Constant.BUTTONS_TO_SHOW);
         model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pageSizes", Constant.PAGE_SIZES);
         model.addAttribute("pager", pager);

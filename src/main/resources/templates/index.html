@@ -163,8 +163,7 @@
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
 
-                            <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart" v-on:click="addWishlist"
-                               th:text="${post.id}">
+                            <i th:id="${post.id}" class="fa fa-2x fa-heart" v-on:click="addWishlist">
                             </i>
                         </div>
                         <div class="room-caption">

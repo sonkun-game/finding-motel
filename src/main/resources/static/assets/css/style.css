@@ -2056,7 +2056,10 @@ label {
     border-radius: 5px;
 }
 
-
+.login-icon:hover{
+    background: #f1b233;
+    color: #fff;
+}
 
 .ti-user{
     float: left !important;

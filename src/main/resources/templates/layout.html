@@ -240,7 +240,7 @@
             <div class="detail-2">
                 <p class="label">Số điện thoại:</p>
                 <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="change">Thay đổi</button>
+                <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="btn-hover change">Thay đổi</button>
                 <div id="my-modal-phone" class="modal">
                     <!-- Modal content -->
                     <div id="forgot-pwd-form" class="modal-content">
@@ -258,7 +258,7 @@
                                 <div class="phone-number">
                                     <h4 class="title-phone">Số điện thoại: </h4>
                                     <input @focusout="checkExistPhone()" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm px-4" />
-                                    <button v-on:click="getOTP()" class="btn-default-otp">Gửi mã xác nhận</button>
+                                    <button v-on:click="getOTP()" class="btn-hover btn-default-otp">Gửi mã xác nhận</button>
 
                                 </div>
                                 <div class="confirm-otp">
@@ -268,7 +268,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click="checkOTP()" class="btn-default">Xác Nhận</button>
+                            <button v-on:click="checkOTP()" class="btn-hover btn-default">Xác Nhận</button>
                         </div>
                     </div>
                 </div>
@@ -297,7 +297,7 @@
                 </div>
             </div>
             <div class="detail-3">
-                <button v-on:click="saveUserInfo()" class="save">Lưu thay đổi</button>
+                <button v-on:click="saveUserInfo()" class="btn-hover save">Lưu thay đổi</button>
             </div>
         </div>
     </div>
@@ -339,7 +339,7 @@
             </div>
 
             <div class="detail-3">
-                <button v-on:click="changePassword()" class="save">Lưu thay đổi</button>
+                <button v-on:click="changePassword()" class="btn-hover save">Lưu thay đổi</button>
             </div>
         </div>
     </div>

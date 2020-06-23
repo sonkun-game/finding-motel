@@ -82,7 +82,7 @@
 
 .btn-default{
     margin: 10px 0px;
-    border: 1px solid #f11414c4;
+    border: 1px solid #dca73a;
     border-radius: 4px;
     cursor: pointer;
     background-color: #f11414c4;
@@ -131,7 +131,7 @@ textarea{
     margin: auto;
     padding: 0;
     border: 1px solid #888;
-    width: 30%;
+    width: 40%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;

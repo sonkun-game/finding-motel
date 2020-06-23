@@ -126,6 +126,10 @@
     cursor: pointer;
 }
 
+.btn-hover:hover{
+    background: #f1b233;
+    color: #fff;
+}
 
 .table-button{
     border: .5px solid #dca73a;

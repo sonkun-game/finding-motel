@@ -1,5 +1,5 @@
 var admin = new Vue({
-    el: '#pageContent',
+    el: '#dataTable',
     data: {
         //flag
         isReportMgmt: false,
@@ -26,6 +26,25 @@ var admin = new Vue({
         modalData: [],
         //user detail form
         userDetail: [],
+        task : 0,
+    },
+    beforeMount(){
+        this.task = localStorage.getItem("task")
+    },
+    mounted(){
+        if(this.task == 9){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListUser()
+        }else if(this.task == 10){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListPost()
+        }else if(this.task == 11){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListReport()
+        }
     },
     methods: {
         showModalUserDetail(userId) {

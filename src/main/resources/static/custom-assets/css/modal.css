@@ -206,3 +206,6 @@ textarea{
     padding-left: 10px;
     margin-top: 0px !important;
 }
+#my-modal-notification{
+    z-index: 99999!important;
+}

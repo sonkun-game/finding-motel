@@ -14,7 +14,7 @@ public interface AdminService {
 
     public UserModel getUserDetail(String username);
 
-    public ArrayList<UserModel> searchUser();
+    public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username);
 
     public ArrayList<LandlordModel> banLandlord(String username);
     public ArrayList<LandlordModel> unbanLandlord(String username);

@@ -2046,13 +2046,19 @@ label {
 
 .login-icon{
     display: flex;
-    background-color: white;
+    background-color: #dca73a;
+    color: white;
     margin: -7px 0px;
     width: auto;
     height: 30px;
     padding: 5px 10px 5px 10px;
     border: 1px solid #CFCFCF;
     border-radius: 5px;
+}
+
+.login-icon:hover{
+    background: #f1b233;
+    color: #fff;
 }
 
 .ti-user{
@@ -2069,9 +2075,6 @@ label {
     margin: 5px 5px 5px 10px;
 }
 
-.login-icon:hover{
-    background-color: #dca73a;
-}
 
 .fa-user{
     font-size: 1.3em !important;

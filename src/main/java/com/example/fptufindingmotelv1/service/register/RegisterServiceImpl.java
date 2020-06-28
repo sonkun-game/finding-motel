@@ -49,10 +49,6 @@ public class RegisterServiceImpl implements RegisterService {
             if (roleModel.getId() == 1) {
                 userModel = passParamToUser(userDTO, roleModel);
 
-                if (userModel instanceof RenterModel) {
-                    ((RenterModel) userModel).setCareer("Hoc sinh");
-                    ((RenterModel) userModel).setGender(true);
-                }
                 renterRepository.save((RenterModel) userModel);
                 return userModel;
 

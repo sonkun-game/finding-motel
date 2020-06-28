@@ -108,9 +108,13 @@ var forgotInstance = new Vue({
             }
         },
         checkPassword(){
-            if(this.inputPassword == null || this.inputPassword.length == 0){
+            let message = authenticationInstance.validatePassword(this.inputPassword)
+            if(message == null){
                 this.showMsg = true
                 this.message = "Vui lòng nhập mật khẩu mới của bạn"
+            }else if(message != null && message != "valid"){
+                this.showMsg = true
+                this.message = message
             }else{
                 this.showMsg = false
             }

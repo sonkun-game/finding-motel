@@ -26,7 +26,7 @@ public class RegisterController {
 
     @ResponseBody
     @PostMapping("/register")
-    public String register(Model model, @RequestBody UserDTO userDTO) {
+    public String register(@RequestBody UserDTO userDTO) {
         JSONObject registerMsg = new JSONObject();
         UserModel userModel = registerService.save(userDTO);
         if (userModel != null) {

@@ -98,3 +98,17 @@ button{
 label{
     font-family: "Lato", sans-serif;
 }
+input, h3, a, span, b, li, h1{
+    font-family: "Lato", sans-serif!important;
+}
+p{
+    font-family: "Lato", sans-serif!important;
+    font-size: inherit;
+}
+
+.show{
+    display: block!important;
+}
+.hide{
+    display: none;
+}

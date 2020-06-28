@@ -1,5 +1,5 @@
 var profileInstance = new Vue({
-    el: '#profile-user-form',
+    el: '#user-manager-content',
     data: {
         gender: "",
         userInfo: {},
@@ -9,10 +9,15 @@ var profileInstance = new Vue({
         otpRemainCount: 5,
         message: "",
         showMsg: false,
+        task: 0,
+        oldPassword: "",
+        newPassword: "",
+        rePassword: "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
         this.gender = this.userInfo.gender ? "1" : "0";
+        this.task = localStorage.getItem("task")
     },
     mounted(){
 
@@ -167,7 +172,73 @@ var profileInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        changePassword(){
+            if (!this.showMsg){
+                this.userInfo.password = this.oldPassword
+                this.userInfo.newPassword = this.newPassword
+                fetch("/api-change-password", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.userInfo),
+                }).then(response => response.json())
+                    .then((data) => {
+                        if(data != null && data.msgCode != "user000"){
+                            this.showMsg = true
+                            this.message = data.message
+                        }else{
+                            this.showNotifyModal()
+                            setTimeout(() => {
+                                this.task = 0
+                                userTaskInstance.task = 0
+                                this.oldPassword = ""
+                                this.newPassword = ""
+                                this.rePassword = ""
+                            }, 2000);
+
+                        }
+                    }).catch(error => {
+                    console.log(error);
+                })
+            }
+        },
+        checkPassword : function(event){
+            if(event.target.id == "old-password" && this.oldPassword.length == 0){
+                this.showMsg = true
+                this.message = "Vui lòng nhập mật khẩu cũ"
+                return
+            }else if(event.target.id == "new-password"  && this.newPassword.length == 0){
+                this.showMsg = true
+                this.message = "Vui lòng nhập mật khẩu mới"
+                return
+            }else if(event.target.id == "re-password"  && this.rePassword.length == 0){
+                this.showMsg = true
+                this.message = "Vui lòng nhập lại mật khẩu mới"
+                return
+            }
+
+            if(this.newPassword.length > 0){
+                let message = authenticationInstance.validatePassword(this.newPassword)
+                if(message != "valid"){
+                    this.showMsg = true
+                    this.message = message
+                }else{
+                    if(this.newPassword == this.oldPassword){
+                        this.showMsg = true
+                        this.message = "Mật khẩu mới trùng với mật khẩu hiện tại của bạn"
+                    }else if(this.rePassword.length > 0 && this.newPassword != this.rePassword){
+                        this.showMsg = true
+                        this.message = "Mật khẩu nhập lại không khớp"
+                    }else {
+                        this.showMsg = false
+                    }
+                }
+            }
+
         }
+
     }
 
 
@@ -191,29 +262,37 @@ var userTaskInstance = new Vue({
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.task = localStorage.getItem("task")
     },
     methods: {
-        logout() {
-            authenticationInstance.logout()
-        },
         activeBtn : function (task) {
-            // var header = document.getElementById("user-task");
-            // var btns = header.getElementsByClassName("button-information");
             this.task = task
-            if(task == 9){
+            profileInstance.task = task
 
+            if(task == 12){
+                authenticationInstance.logout()
+            }else if(task == 9){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListUser()
+            }else if(task == 10){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListPost()
+            }else if(task == 11){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListReport()
+            }else if(task == 0 || task == 1){
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.remove("invisible")
             }
-            // let currentBtn = event.target
-            // currentBtn.classList.add('active')
 
-            // for (var i = 0; i < btns.length; i++) {
-            //     btns[i].addEventListener("click", function() {
-            //         var current = document.getElementsByClassName("active");
-            //         current[0].className = current[0].className.replace(" active", "");
-            //         this.className += " active";
-            //     });
-            // }
         }
     }
 
 })
+

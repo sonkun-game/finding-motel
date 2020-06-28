@@ -4,10 +4,17 @@
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
-    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Quản lý tài khoản</title>
 </head>
 <body>
+<!--    include notification modal-->
+<div th:replace="layout :: notification"></div>
+
+<!--    inlude loading screen-->
+<div th:replace="layout :: loader"></div>
+
+<!--    include header-->
 <header th:replace="layout :: header"></header>
 
 <main>
@@ -15,53 +22,29 @@
         <div class="container">
             <div id="pageContent" class="row">
                 <div class="col-3 sidebar-left">
-                    <div class="avatar">
+                    <div class="avatar" id="basic-user-info">
                         <i class="ti-user profile-avatar"></i>
-                        <p class="display-name">Dương Thị Kim Oanh</p>
+                        <p class="display-name" v-text="userInfo.displayName"></p>
                     </div>
-                    <div class="information" id="myInfoMenu">
-                        <button v-bind:class="{active : isAdminProfile}" class="button-information">Thông tin tài khoản</button>
-                        <button v-bind:class="{active : isUserMgmt}" @click="getListUser()" class="button-information">Quản lý người dùng</button>
-                        <button v-bind:class="{active : isPostMgmt}" @click="getListPost()" class="button-information">Danh sách bài đăng</button>
-                        <button v-bind:class="{active : isReportMgmt}" @click="getListReport()" class="button-information">Báo cáo
-                        </button>
-                        <button class="button-information">Đăng xuất</button>
-                    </div>
+                    <div th:replace="layout :: user-task"></div>
                 </div>
-                <!-- Thông tin tài khoản -->
-                <!--                <div class="col-9 sidebar-right">-->
-                <!--                    <div class="title">-->
-                <!--                        <h1 class="title-name uppercase">Thông tin tài khoản</h1>-->
-                <!--                    </div>-->
-                <!--                    <div class="information-detail">-->
-                <!--                        <div class="detail">-->
-                <!--                            <p class="label">Tên đăng nhập:</p>-->
-                <!--                            <input id="username" class="textfiled rounded-pill border-0 shadow-sm" type="text" value="Admin" disabled/>-->
-                <!--                        </div>-->
-                <!--                        <div class="detail-2">-->
-                <!--                            <p class="label">Tên hiển thị:</p>-->
-                <!--                            <input id="display-name" class="textfiled rounded-pill border-0 shadow-sm" type="text" />-->
-                <!--                        </div>-->
-                <!--                        <div class="detail-2">-->
-                <!--                            <p class="label">Mật khẩu:</p>-->
-                <!--                            <input id="password" class="textfiled rounded-pill border-0 shadow-sm" type="password" value="1234567890" disabled/>-->
-                <!--                            <button type="submit" class="change">Thay đổi</button>-->
-                <!--                        </div>-->
 
-                <!--                        <div class="detail-3">-->
-                <!--                            <button type="submit" class="save">Lưu thay đổi</button>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <div id="user-manager-content" class="col-9 sidebar-right">
+                    <!-- Thông tin tài khoản -->
+                    <div th:replace="layout :: profile-user"></div>
+
+                    <!-- Đổi mật khẩu -->
+                    <div th:replace="layout :: change-password"></div>
+                </div>
 
                 <div id="dataTable" class="col-9 sidebar-right">
                     <!-- Quản lý người dùng -->
 
-                    <div id="userTable" v-bind:class="{invisible : !isUserMgmt}">
+                    <div id="userTable" v-if="task == 9">
                         <div class="title">
                             <h1 class="title-name uppercase">Quản lý người dùng</h1>
                         </div>
-                        <div class="search-area">
+                        <div class="choose-role">
                             <div class="row">
                                 <div class="col">
                                     <div class="filter-area">
@@ -72,12 +55,21 @@
                                             <form action="#">
                                                 <select id="roleFilterCb" v-on:change="getListUser()">
                                                     <option selected value="0">Tất cả</option>
-                                                    <option value="1">Chủ trọ</option>
-                                                    <option value="2">NGười thuê</option>
+                                                    <option value="1">Người thuê</option>
+                                                    <option value="2">Chủ trọ</option>
                                                 </select>
                                             </form>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col">
+                                    <div class="search-container">
+                                        <form action="#">
+                                            <input @focusout="getUserById()" id="searchUserTxt" type="text" placeholder="Tìm kiếm..." name="search">
+                                            <button @click.prevent="getUserById()" type="submit"><i class="fa fa-search"></i></button>
+                                        </form>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -97,22 +89,27 @@
                                     <th scope="row">{{listUser.indexOf(user) + 1}}</th>
                                     <td><a id="myBtn">{{user.username}}</a></td>
                                     <td>{{user.displayName}}</td>
-                                    <td>{{user.role.roleName}}</td>
+                                    <td>{{user.roleName}}</td>
                                     <td>
-                                        <i class="fas fa-eye"></i>
-                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate != null}" @click="banLanlord(user.username)" class="fas fa-lock">
+                                        <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
+                                           id="myIcon-view"></i>
+                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate != null}"
+                                           @click="showModalConfirmBan(user.username, 'ban')" class="fas fa-lock">
                                             {{user.role.unBanDate}}
                                         </i>
-                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate == null}" @click="unbanLanlord(user.username)" class="fas fa-unlock"></i>
+                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate == null}"
+                                           @click="showModalConfirmBan(user.username, 'unban')"
+                                           class="fas fa-unlock"></i>
                                     </td>
                                 </tr>
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <!-- Báo cáo -->
-                    <div id="reportTable" v-bind:class="{invisible : !isReportMgmt}">
+                    <div id="reportTable" v-if="task == 11">
                         <div class="title">
                             <h1 class="title-name uppercase">Danh sách báo cáo</h1>
                         </div>
@@ -136,9 +133,42 @@
                                     <td>{{report.reportDate}}</td>
                                     <td>{{report.content}}</td>
                                     <td>
-                                        <i class="fas fa-edit"></i>
-                                        <i @click="deleteReport(report.id)" class="fas fa-trash-alt"> </i>
-                                        <i class="fas fa-eye-slash"> </i>
+                                        <i class="fas fa-eye" onclick="modal_viewReport()" id="myIcon_viewReport"></i>
+                                        <div id="myModal_viewReport" class="modal">
+                                            <!-- Modal content -->
+                                            <div class="view-information">
+                                                <div class="modal-header">
+                                                    <h2>Chi tiết báo cáo</h2>
+                                                    <span class="close">&times;</span>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên bài đăng:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Tên chủ trọ:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div class="infor-modal">
+                                                        <p class="left-modal">Ngày báo cáo:</p>
+                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                                                               type="text" disabled/>
+                                                    </div>
+                                                    <div  class="infor-modal-table">
+                                                        <p class="left-modal">Nội dung báo cáo:</p>
+                                                        <textarea></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn-hover btn-default">Xác Nhận</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <i @click="showModalConfirmDelete(report.id, 'report')"
+                                           class="fas fa-trash-alt"> </i>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -147,7 +177,7 @@
                     </div>
 
                     <!--Quản lý bài đăng -->
-                    <div id="postTable" v-bind:class="{invisible: !isPostMgmt}">
+                    <div id="postTable" v-if="task == 10">
                         <div class="title">
                             <h1 class="title-name uppercase">Quản lý bài đăng</h1>
                         </div>
@@ -292,15 +322,136 @@
                                     <td>{{post.displayStatus}}</td>
                                     <td>
                                         <i class="fas fa-eye"></i>
-                                        <i @click="deletePost(post.id)" class="fas fa-trash-alt"></i>
+                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt"
+                                           id="myIcon"></i>
+
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <!-- Modal icon delete -->
+                    <div id="modalDelete" class="modal">
+                        <!-- Modal content -->
+                        <div class="message-confirm">
+                            <div class="modal-header">
+                                <h2>Xác Nhận</h2>
+                            </div>
+                            <div class="modal-body">
+                                <label id="modalDelContent"></label>
+                                <div class="group-btn">
+                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">Hủy
+                                        bỏ
+                                    </button>
+                                    <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">Đồng
+                                        ý
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Modal icon delete -->
+                    <div id="modalBan" class="modal">
+                        <!-- Modal content -->
+                        <div class="message-confirm">
+                            <div class="modal-header">
+                                <h2>Xác Nhận</h2>
+                            </div>
+                            <div class="modal-body">
+                                <label id="modalBanContent"></label>
+                                <div class="group-btn">
+                                    <button @click="yesNoConfirmBanClick($event)" value="0" class="btn-hover btn-default-cancel">Hủy
+                                        bỏ
+                                    </button>
+                                    <button @click="yesNoConfirmBanClick($event)" value="1" class="btn-hover btn-default-cancel">Đồng
+                                        ý
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Modal user detail-->
+                    <div id="modalUserDetail" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Thông tin người dùng</h2>
+                                <span id="closeModalUserDetail" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="infor-modal">
+                                    <p class="left-modal">Tên đăng nhập:</p>
+                                    <input :value="userDetail.username" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Tên hiển thị:</p>
+                                    <input :value="userDetail.displayName" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Số điện thoại:</p>
+                                    <input :value="userDetail.phoneNumber" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                    <p class="left-modal">Ngày sinh:</p>
+                                    <input :value="userDetail.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                    <p class="left-modal">Nghề nghiệp:</p>
+                                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" value="Sinh viên" disabled/>
+                                </div>
+                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                    <p class="left-modal">Giới tính:</p>
+                                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" value="Nam" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Vai trò:</p>
+                                    <input :value="userDetail.roleName" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="userDetail.role == '2'" class="infor-modal">
+                                    <p class="left-modal">Tài khoản:</p>
+                                    <input :value="userDetail.amount" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="userDetail.role == '2'" class="infor-modal-table">
+                                    <p class="left-modal">Danh sách bài đăng:</p>
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">STT</th>
+                                            <th scope="col">Tên bài đăng</th>
+                                            <th scope="col">Ngày đăng</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>phòng 1</td>
+                                            <td>20-06-2020</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
+                <!-- Modal report-->
+
+
 
             </div>
         </div>
@@ -325,14 +476,7 @@
 <!--        </div>-->
 <!--    </div>-->
 
-</div>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/admin.js}"></script>
-<script th:src="@{/assets/js/vendor/modal.js}"></script>
-<script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
-        src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
-<script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
-
-<div th:replace="layout :: js-fragment"></div>
 </body>
 </html>

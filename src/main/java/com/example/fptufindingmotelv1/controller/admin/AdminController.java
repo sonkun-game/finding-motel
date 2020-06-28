@@ -7,13 +7,11 @@ import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -32,6 +30,12 @@ public class AdminController {
     @RequestMapping(value = "/get-all-user")
     public ArrayList<UserDTO> getAllUser() {
         return adminService.getListUser();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get-user-by-id")
+    public ArrayList<UserDTO> getUserById(@RequestParam(value = "username") String username) {
+        return adminService.searchUserByUsernameOrDisplayName(username);
     }
 
     @ResponseBody
@@ -62,9 +66,13 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/delete-report")
-    public void deleteReport(@RequestParam(value = "reportId") String reportId) {
-        adminService.deleteReport(Long.parseLong(reportId));
-        getReport();
+    public JSONObject deleteReport(@RequestParam(value = "reportId") String reportId) {
+        try {
+            adminService.deleteReport(Long.parseLong(reportId));
+            return responseMsg("000", "Success!");
+        } catch (Exception e) {
+            return responseMsg("001", "System error!");
+        }
     }
 
     @ResponseBody
@@ -74,9 +82,27 @@ public class AdminController {
         return posts;
     }
 
+    @ResponseBody
     @RequestMapping(value = "/delete-post")
-    public void deletePost(@RequestParam(value = "postId") String postId) {
-        adminService.deletePost(Long.parseLong(postId));
+    public JSONObject deletePost(@RequestParam(value = "postId") String postId) {
+        try {
+            adminService.deletePost(Long.parseLong(postId));
+            return responseMsg("000", "Success!");
+        } catch (Exception e) {
+            return responseMsg("001", "System error!");
+        }
+    }
+
+    @RequestMapping(value = "/post-detail")
+    public String getPostDetail(Model model) {
+        return "post-detail";
+    }
+
+    public JSONObject responseMsg(String code, String message) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        return msg;
     }
 }
 

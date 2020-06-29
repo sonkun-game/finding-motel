@@ -2,6 +2,8 @@ package com.example.fptufindingmotelv1.controller.wishlist;
 
 import com.example.fptufindingmotelv1.dto.LoginDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
+import com.example.fptufindingmotelv1.dto.PostDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
@@ -9,8 +11,10 @@ import com.example.fptufindingmotelv1.repository.PostModelRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class WishlistController {
@@ -69,4 +75,5 @@ public class WishlistController {
         jsonObject.put("msg","cái j");
         return jsonObject;
     }
+
 }

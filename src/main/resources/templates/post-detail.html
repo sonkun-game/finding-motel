@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -47,23 +48,23 @@
                             </div>
                         </div>
                         <div class="detail">
-                            <div class="row">
+                            <div class="row" th:object="${post}">
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/house.png">
-                                    <label>Loại phòng: phòng trọ</label>
+                                    <label th:text="${'Loại phòng: '+post.type.name}"></label>
                                 </div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/money.png">
-                                    <label>Giá: 1,500,000vnđ /tháng</label>
+                                    <span th:text="${'Giá: ' +post.price+' vnd/ tháng'}"></span>
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/square.png">
-                                    <label>Diện tích: 100m&sup2</label>
+                                    <label th:text="${'Diện tích: '+post.square+'m&sup2'}"></label>
                                 </div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/distance.png">
-                                    <label>Khoảng cách: 2km</label>
+                                    <label th:text="${'Khoảng cách: '+post.distance+' km'}"></label>
                                 </div>
                             </div>
                         </div>
@@ -162,5 +163,7 @@
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>
 <script th:src="@{/assets/js/flexslider.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-detail.js}"></script>
+
 </body>
 </html>

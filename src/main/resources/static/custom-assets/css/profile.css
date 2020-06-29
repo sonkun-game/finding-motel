@@ -12,6 +12,7 @@
 .sidebar-right{
     height: 100%;
     width: 100%;
+    padding-left: 70px;
 }
 
 .avatar{
@@ -33,397 +34,398 @@
     margin-bottom: 30px;
 }
 
+.logo-button{
+    width: 9%;
+    margin-right: 10px;
+    float: left;
+}
+
 .button-information{
-    width: 70%;
-    height: 40px;
-    display: block;
-    margin: 3px auto;
-    border: 0px solid black;
-    background-color: #EEE5DE;
-    border-radius: 7px;
-    color: black;
-    cursor: pointer;
+width: 100%;
+height: 40px;
+display: block;
+margin: 3px auto;
+border: 0px solid black;
+background-color: #EEE5DE;
+border-radius: 7px;
+color: black;
+cursor: pointer;
+text-align: inherit;
 }
 .active, .button-information:hover{
-    color: white;
-    background-color: #dca73a;
+color: white;
+background-color: #dca73a;
 }
 
 .display-name{
-    font-family: "Lato", sans-serif;
-    color: black;
-    font-size: 20px;
+font-family: "Lato", sans-serif;
+color: black;
+font-size: 20px;
 }
 
 .title{
-    width: 100%;
-    display: grid;
-    align-content: center;
+width: 100%;
+display: grid;
+align-content: center;
 }
 
 .title-name{
-    font-size: 30px !important;
-    margin: 10px auto !important;
-    font-weight: bold !important;
+font-size: 30px !important;
+margin: 10px auto !important;
+font-weight: bold !important;
 }
 
 .container-fluid{
-    margin-top: 70px;
-    margin-bottom: 70px;
+margin-top: 50px;
+margin-bottom: 50px;
 }
 
 .detail{
-    margin-top: 50px;
-    display: flex;
+display: flex;
 }
 
 .detail-2{
-    margin-top: 10px;
-    display: flex;
+margin-top: 10px;
+display: flex;
 }
 
 .textfiled{
-    font-family: "Lato", sans-serif;
-    width: 60%;
-    border-radius: 6px;
-    border: .5px solid;
-    height: 30px;
-    padding-left: 10px;
-    background-color: white;
+font-family: "Lato", sans-serif;
+width: 60%;
+border-radius: 6px;
+border: .5px solid;
+height: 30px;
+padding-left: 10px;
+background-color: white;
 }
 .label{
-    font-family: "Lato", sans-serif;
-    width: 20%;
-    color: black;
-    font-size: inherit;
+font-family: "Lato", sans-serif;
+width: 20%;
+color: black;
+font-size: inherit;
 }
 
 .detail-3{
-    width: 80%;
+width: 80%;
 }
 
 .save{
-    width: 20%;
-    height: 40px;
-    margin-top: 50px;
-    float: right;
-    color: white;
-    border: .25px solid #dca73a;
-    border-radius: 3px;
-    background-color: #dca73a;
-    cursor: pointer;
+width: 20%;
+height: 40px;
+margin-top: 50px;
+float: right;
+color: white;
+border: .25px solid #dca73a;
+border-radius: 3px;
+background-color: #dca73a;
+cursor: pointer;
 }
 .change{
 
-    width: 15%;
-    height: 30px;
-    display: block;
-    margin: 0px auto;
-    color: white;
-    border: .25px solid #dca73a;
-    border-radius: 3px;
-    background-color: #dca73a;
-    cursor: pointer;
+width: 15%;
+height: 30px;
+display: block;
+margin: 0px auto;
+color: white;
+border: .25px solid #dca73a;
+border-radius: 3px;
+background-color: #dca73a;
+cursor: pointer;
 }
 
 .btn-hover:hover{
-    background: #f1b233;
-    color: #fff;
+background: #f1b233;
+color: #fff;
 }
 
 .table-button{
-    border: .5px solid #dca73a;
-    color: white;
-    border-radius: 3px;
-    background-color: #dca73a;
-    cursor: pointer;
+border: .5px solid #dca73a;
+color: white;
+border-radius: 3px;
+background-color: #dca73a;
+cursor: pointer;
 }
 
 .fas{
-    padding-left: 10px !important;
-    cursor: pointer !important;
+padding-left: 10px !important;
+cursor: pointer !important;
 }
 
 .table{
-    font-family: "Lato", Calibri !important;
+font-family: "Lato", Calibri !important;
 }
 
 .information-detail{
-    margin-top: 30px;
+margin-top: 30px;
 }
 
 .post-wishlist{
-    position: relative;
-    display: flex;
-    width: 80%;
-    height: 150px;
-    margin: 20px auto;
-    border: 1px solid #CFCFCF;
+position: relative;
+display: flex;
+width: 80%;
+height: 150px;
+margin: 20px auto;
+border: 1px solid #CFCFCF;
 }
 
 
 .img-post-wishlist{
-    height: 100%;
-    max-height: 150px;
-    max-width: 150px;
+height: 100%;
+max-height: 150px;
+max-width: 150px;
 
 }
 
 .img-post-wishlist img{
-    max-width: 150px;
-    max-height: 150px;
-    width: auto;
-    height: auto;
-    display: block;
+max-width: 150px;
+max-height: 150px;
+width: auto;
+height: auto;
+display: block;
 }
 
 .title-post-wishlist{
-    margin-left: 30px;
-    width: 100%;
+margin-left: 30px;
+width: 100%;
 }
 
 .fa-times-circle{
-    position: absolute !important;
-    top: 7px;
-    right: 12px;
-    color: #9C9C9C;
-    font-size: 1.5em;
+position: absolute !important;
+top: 7px;
+right: 12px;
+color: #9C9C9C;
+font-size: 1.5em;
 }
 
 .thead-light{
-    font-size: 14px;
+font-size: 14px;
 }
 
 tbody{
-    font-size: 12px;
+font-size: 12px;
 }
 
 .fa-times-circle:hover{
-    color: #dca73a;
+color: #dca73a;
 }
 
 .search-area{
-    width: 100%;
-    height: auto;
-    border: 1px solid #CFCFCF;
-    border-radius: 4px;
-    margin-top: 30px;
-    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+width: 100%;
+height: auto;
+border: 1px solid #CFCFCF;
+border-radius: 4px;
+margin-top: 30px;
+box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
 }
 
 .choose-role{
-    width: 100%;
-    height: auto;
-    margin-top: 30px;
+width: 100%;
+height: auto;
+margin-top: 30px;
 }
 
 .row-search{
-    margin: 10px auto;
+margin: 10px auto;
 }
 
 .filter-area{
-    font-family: "Lato", sans-serif;
+font-family: "Lato", sans-serif;
 }
 
 .form-dropdown{
-    font-size: 15px;
+font-size: 15px;
 }
 
 .title-filter-area{
-    font-size: 17px;
+font-size: 17px;
 }
 
 .btn-search{
-    display: block;
-    margin: 10px auto;
-    border-radius: 4px;
-    height: 30px;
-    width: 60%;
-    background-color: #dca73a;
-    color: white;
-    border: none;
-    cursor: pointer;
+display: block;
+margin: 10px auto;
+border-radius: 4px;
+height: 30px;
+width: 60%;
+background-color: #dca73a;
+color: white;
+border: none;
+cursor: pointer;
 }
 
 select{
-    display: block !important;
+display: block !important;
 }
 
 .nice-select{
-    display: none !important;
+display: none !important;
 }
 
 .phone-number {
-    display: flex;
+display: flex;
 }
 
 .confirm-otp{
-    display: flex;
-    padding-top: 20px;
+display: flex;
+padding-top: 20px;
 }
 
 .change-phone-area{
-    margin: 50px 0;
+margin: 50px 0;
 }
 
 .title-phone{
-    margin: 4px 20px;
+margin: 4px 20px;
 }
 
 .btn-default-otp{
-    margin: 0px 20px;
-    border: 1px solid #dca73a;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #dca73a;
-    color: white;
+margin: 0px 20px;
+border: 1px solid #dca73a;
+border-radius: 4px;
+cursor: pointer;
+background-color: #dca73a;
+color: white;
 }
 
 .change-phone,
 .confirm-otp-phone{
-    height: 30px;
-    border-radius: 6px;
+height: 30px;
+border-radius: 6px;
 }
 
 .title-confirm-otp{
-    margin: 4px 22px;
+margin: 4px 22px;
 }
 
 .invisible {
-    display: none !important;
+display: none !important;
 }
 
 .search-container {
-    float: right;
+float: right;
 }
 
 input[type=text] {
-    padding: 4px;
-    margin-top: 8px;
-    font-size: 16px;
-    font-family: "Lato", sans-serif;
-    color: black;
+padding: 4px;
+margin-top: 8px;
+font-size: 16px;
+font-family: "Lato", sans-serif;
+color: black;
 }
 
 .search-container button {
-    float: right;
-    padding: 6px 10px;
-    margin-top: 8px;
-    margin-right: 16px;
-    background: #ddd;
-    font-size: 17px;
-    border: none;
-    cursor: pointer;
-    color: black;
+float: right;
+padding: 6px 10px;
+margin-top: 8px;
+margin-right: 16px;
+background: #ddd;
+font-size: 17px;
+border: none;
+cursor: pointer;
+color: black;
 }
 
 .search-container button:hover {
-    background: #ccc;
-}
-
-.container-fluid{
-    margin-top: 30px !important;
-    margin-bottom: 50px !important;
+background: #ccc;
 }
 
 .fill-information{
-    width: 100%;
-    height: auto;
-    margin: 20px 0px;
+width: 100%;
+height: auto;
+margin: 20px 0px;
 
 }
 
 .title h4{
-    font-family: "Lato", sans-serif;
+font-family: "Lato", sans-serif;
 }
 
 select{
-    display: block !important;
-    width: 200px;
-    height: 35px;
-    font-family: "Lato", sans-serif;
-    border: 1px solid #aaa;
+display: block !important;
+width: 200px;
+height: 35px;
+font-family: "Lato", sans-serif;
+border: 1px solid #aaa;
 }
 
 .nice-select{
-    display: none !important;
+display: none !important;
 }
 
 .form-input-information{
-    width: 50% ;
-    font-family: "Lato", sans-serif;
-    font-size: inherit;
-    border: 1px solid #aaa;
-    border-radius: 2px;
+width: 50% ;
+font-family: "Lato", sans-serif;
+font-size: inherit;
+border: 1px solid #aaa;
+border-radius: 2px;
 }
 
 .form-input-title-information{
-    width: 100% ;
-    font-family: "Lato", sans-serif;
-    font-size: inherit;
-    border: 1px solid #aaa;
-    border-radius: 2px;
+width: 100% ;
+font-family: "Lato", sans-serif;
+font-size: inherit;
+border: 1px solid #aaa;
+border-radius: 2px;
 }
 
 textarea{
-    width: 80%;
-    border: 1px solid #aaa;
+width: 80%;
+border: 1px solid #aaa;
 }
 
 .upload-file{
-    width: 100%;
-    height: auto;
-    border-radius: 2px;
-    border: 1px dashed #aaa;
+width: 100%;
+height: auto;
+border-radius: 2px;
+border: 1px dashed #aaa;
 }
 
 .upload-image{
-    width: 100px;
-    margin: 20px auto;
-    cursor: copy;
-    display: block;
+width: 100px;
+margin: 20px auto;
+cursor: copy;
+display: block;
 }
 
 .table-price{
-    width: 50%;
-    height: auto;
+width: 50%;
+height: auto;
 }
 
 .btn-hover:hover{
-    background: #f1b233;
-    color: #fff;
+background: #f1b233;
+color: #fff;
 }
 
 .btn-complete{
-    width:20%;
-    height: 50px;
-    background: #dca73a;
-    display: block;
-    margin: 50px auto;
-    border: medium none;
-    border-radius: 3px;
-    color: white;
+width:20%;
+height: 50px;
+background: #dca73a;
+display: block;
+margin: 50px auto;
+border: medium none;
+border-radius: 3px;
+color: white;
 }
 
 .note{
-    width: 18%;
-    height: auto;
-    top: 180px;
-    left: 1533px;
-    float: right;
-    position: fixed;
-    background-color: #fff3cd;
+width: 18%;
+height: auto;
+top: 180px;
+left: 1533px;
+float: right;
+position: fixed;
+background-color: #fff3cd;
 }
 
 .note-body{
-    padding: 1.25rem;
+padding: 1.25rem;
 }
 .note-body h4{
-    margin-bottom: .75rem;
+margin-bottom: .75rem;
 }
 
 .note-body li{
-    font-family: "Lato", sans-serif;
-    list-style-type: circle;
-    margin-left: 15px;
+font-family: "Lato", sans-serif;
+list-style-type: circle;
+margin-left: 15px;
 }

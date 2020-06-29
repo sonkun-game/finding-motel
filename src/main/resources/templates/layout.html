@@ -286,20 +286,20 @@
         </div>
     </div>
     <div th:fragment="user-task" class="information" id="user-task">
-        <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information">Thông tin tài khoản</button>
-        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information">Đổi mật khẩu</button>
-        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Đăng tin</button>
-        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information">Quản lý yêu cầu</button>
-        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information">Danh sách yêu thích</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Quản lý bài đăng</button>
-        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Xử lý yêu cầu thuê trọ</button>
-        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử nạp tiền</button>
-        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử thanh toán</button>
-        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Nạp tiền vào tài khoản</button>
-        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information">Quản lý người dùng</button>
-        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information">Danh sách bài đăng</button>
-        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information">Báo cáo</button>
-        <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information">Đăng xuất</button>
+        <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information"><img src="assets/img/logo/infor.png" class="logo-button">Thông tin tài khoản</button>
+        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">Đổi mật khẩu</button>
+        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>
+        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
+        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
+        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền</button>
+        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
+        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>
+        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
+        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Danh sách bài đăng</button>
+        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Báo cáo</button>
+        <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img src="assets/img/logo/logout.png" class="logo-button">Đăng xuất</button>
 
     </div>
 

@@ -286,11 +286,10 @@ var userTaskInstance = new Vue({
                 let profileUser = document.getElementById("user-manager-content")
                 profileUser.classList.add("invisible")
                 admin.getListReport()
-            }else if(task == 0 || task == 1){
+            }else if(task == 0 || task == 1) {
                 let profileUser = document.getElementById("user-manager-content")
                 profileUser.classList.remove("invisible")
             }
-
         }
     }
 

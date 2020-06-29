@@ -104,11 +104,6 @@ public class HomeController {
     }
 
 
-    @GetMapping("/post-new-room")
-    public String getPostNewRoom(){
-        return "post-new-room";
-    }
-
 
     @GetMapping("/post-detail")
     public String getPostDetail(Model model,@PathParam("id") String id){

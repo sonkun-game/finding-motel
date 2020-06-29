@@ -98,8 +98,8 @@ button{
 label{
     font-family: "Lato", sans-serif;
 }
-input, h3, a, span, b{
-    font-family: "Lato", sans-serif;
+input, h3, a, span, b, li, h1{
+    font-family: "Lato", sans-serif!important;
 }
 p{
     font-family: "Lato", sans-serif!important;

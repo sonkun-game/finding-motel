@@ -85,7 +85,7 @@
     border: 1px solid #dca73a;
     border-radius: 4px;
     cursor: pointer;
-    background-color: #f11414c4;
+    background-color: #dca73a;
     color: white;
 }
 
@@ -205,4 +205,7 @@ textarea{
     height: 30px;
     padding-left: 10px;
     margin-top: 0px !important;
+}
+#my-modal-notification{
+    z-index: 99999!important;
 }

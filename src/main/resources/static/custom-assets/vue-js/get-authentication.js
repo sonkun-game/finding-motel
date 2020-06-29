@@ -2,8 +2,8 @@ var authenticationInstance = new Vue({
     el: '#header',
     data: {
         userInfo: {},
-        authenticationNum: 0,
-
+        authenticated: false,
+        task: 0,
     },
     methods: {
         logout(){
@@ -23,6 +23,23 @@ var authenticationInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        validatePassword(password){
+            if(password == null || password.length == 0){
+                return null
+            }
+            let condition = {
+                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số và kí tự đặc biệt",
+                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&_-|]).{8,}$/
+            }
+            if(!condition.regex.test(password)){
+                return condition.message
+            }
+            return "valid"
+        },
+        getTaskPage(task){
+            localStorage.setItem("task", task)
+            window.location.href = "https://localhost:8081/profile-user"
         }
     },
     mounted(){
@@ -52,13 +69,7 @@ var authenticationInstance = new Vue({
                 if(data != null && data.userInfo != null){
                     this.userInfo = data.userInfo
                     localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
-                    if(this.userInfo.role == "RENTER"){
-                        this.authenticationNum = 1;
-                    }else if(this.userInfo.role == "LANDLORD"){
-                        this.authenticationNum = 2;
-                    }else{
-                        this.authenticationNum = 3;
-                    }
+                    this.authenticated = true
                 }
             }).catch(error => {
             console.log(error);

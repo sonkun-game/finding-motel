@@ -22,6 +22,7 @@ public class PostDTO {
     private boolean isVisible;
     private String title;
     private String color;
+    private String isLord;
     private List<ImageModel> images;
 
     public PostDTO(PostModel postModel) {

@@ -52,7 +52,7 @@
                     <div class="single-room mb-50" >
                         <div class="room-img">
                             <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
-                            <i th:id="${post.id}" style="color: red" class="fa fa-2x fa-heart" v-on:click="addWishlist" th:text="${post.id}"></i>
+                            <i th:id="${post.id}" style="color: red" class="fa fa-2x fa-heart" v-on:click="addWishlist"></i>
                         </div>
                         <div class="room-caption">
                             <h3><a href="rooms.html" th:utext="${post.description}"></a></h3>
@@ -104,7 +104,7 @@
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
-<script type="text/javascript" th:src="@{/custom-assets/vue-js/add-wishlish.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/add-wishlist.js}"></script>
 
 </body>
 </html>

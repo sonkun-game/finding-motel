@@ -66,53 +66,37 @@
                                         <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
                                         <li><a href="#">CĂN HỘ</a></li>
                                         <li><a href="#">HƯỚNG DẪN</a>
-                                        <li v-if="authenticationNum === 0" class="login-icon"><i class="ti-user"></i>
+                                        <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
                                                 <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
-                                        <!-- DROPDOWN LANDLORD -->
-                                        <li v-else-if="authenticationNum === 2" class="login-icon">
+                                        <!-- DROPDOWN USER -->
+                                        <li v-else class="login-icon">
                                              <i v-cloak class="ti-user ti-user-header overflow-dots">
                                                  <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
                                             </i>
 
                                             <ul class="submenu">
-                                                <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
-                                                <li><a th:href="@{/}">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/}">Đăng tin</a>
-                                                <li><a th:href="@{/}">Nạp tiền</a>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(1)">Đổi mật khẩu</a></li>
+
+                                                <!-- DROPDOWN RENTER -->
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
+                                                <li><a th:href="@{/view}" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a>
+
+                                                <!-- DROPDOWN LANDLORD -->
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/}" v-show="userInfo.role == 'LANDLORD'">Đăng tin</a>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a>
+
+
+                                                <!-- DROPDOWN ADMIN -->
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
                                                 <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
-                                            </ul>
-                                        </li>
-
-
-                                        <!-- DROPDOWN RENTER -->
-                                        <li v-else-if="authenticationNum === 1" class="login-icon">
-                                            <i class="ti-user ti-user-header overflow-dots" v-cloak>
-                                                <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
-                                            </i>
-                                            <ul class="submenu">
-                                                <li><a th:href="@{/profile-user}">Thông tin tài khoản</a>
-                                                <li><a th:href="@{/}">Quản lý yêu cầu</a></li>
-                                                <li><a th:href="@{/view}">Danh sách yêu thích</a>
-                                                <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
-                                            </ul>
-                                        </li>
-
-
-                                        <!-- DROPDOWN ADMIN -->
-                                        <li v-else class="login-icon">
-                                            <i v-cloak class="ti-user ti-user-header overflow-dots">
-                                                <span class="display-name-dropdown"> {{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
-                                            </i>
-                                            <ul class="submenu">
-                                                <li><a th:href="@{/}">Thông tin tài khoản</a>
-                                                <li><a th:href="@{/}">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/}">Quản lý người dùng</a>
-                                                <li><a th:href="@{/}">Danh sách báo cáo</a>
-                                                <li><a th:href="@{/}" v-on:click="logout()">Đăng xuất</a></li>
                                             </ul>
                                         </li>
 
@@ -304,14 +288,17 @@
     <div th:fragment="user-task" class="information" id="user-task">
         <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information">Thông tin tài khoản</button>
         <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information">Đổi mật khẩu</button>
-        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-if="userInfo.role == 'RENTER'" class="button-information">Quản lý yêu cầu</button>
-        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-if="userInfo.role == 'RENTER'" class="button-information">Danh sách yêu thích</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Quản lý bài đăng</button>
-        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Xử lý yêu cầu thuê trọ</button>
-        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử nạp tiền</button>
-        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử thanh toán</button>
-        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-if="userInfo.role == 'LANDLORD'" class="button-information">Nạp tiền vào tài khoản</button>
-        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" class="button-information">Đăng xuất</button>
+        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information">Quản lý yêu cầu</button>
+        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information">Danh sách yêu thích</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Xử lý yêu cầu thuê trọ</button>
+        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử nạp tiền</button>
+        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Lịch sử thanh toán</button>
+        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information">Nạp tiền vào tài khoản</button>
+        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information">Quản lý người dùng</button>
+        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information">Danh sách bài đăng</button>
+        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information">Báo cáo</button>
+        <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information">Đăng xuất</button>
     </div>
 
 <!--    Change Password Tab-->

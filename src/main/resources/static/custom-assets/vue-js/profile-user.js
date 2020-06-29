@@ -17,6 +17,7 @@ var profileInstance = new Vue({
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
         this.gender = this.userInfo.gender ? "1" : "0";
+        this.task = localStorage.getItem("task")
     },
     mounted(){
 
@@ -207,21 +208,33 @@ var profileInstance = new Vue({
             if(event.target.id == "old-password" && this.oldPassword.length == 0){
                 this.showMsg = true
                 this.message = "Vui lòng nhập mật khẩu cũ"
+                return
             }else if(event.target.id == "new-password"  && this.newPassword.length == 0){
                 this.showMsg = true
                 this.message = "Vui lòng nhập mật khẩu mới"
+                return
             }else if(event.target.id == "re-password"  && this.rePassword.length == 0){
                 this.showMsg = true
                 this.message = "Vui lòng nhập lại mật khẩu mới"
+                return
             }
-            if(this.newPassword.length > 0 && this.newPassword == this.oldPassword){
-                this.showMsg = true
-                this.message = "Mật khẩu mới trùng với mật khẩu hiện tại của bạn"
-            }else if(this.newPassword.length > 0 && this.rePassword.length > 0 && this.newPassword != this.rePassword){
-                this.showMsg = true
-                this.message = "Mật khẩu nhập lại không khớp"
-            }else {
-                this.showMsg = false
+
+            if(this.newPassword.length > 0){
+                let message = authenticationInstance.validatePassword(this.newPassword)
+                if(message != "valid"){
+                    this.showMsg = true
+                    this.message = message
+                }else{
+                    if(this.newPassword == this.oldPassword){
+                        this.showMsg = true
+                        this.message = "Mật khẩu mới trùng với mật khẩu hiện tại của bạn"
+                    }else if(this.rePassword.length > 0 && this.newPassword != this.rePassword){
+                        this.showMsg = true
+                        this.message = "Mật khẩu nhập lại không khớp"
+                    }else {
+                        this.showMsg = false
+                    }
+                }
             }
 
         }
@@ -249,13 +262,33 @@ var userTaskInstance = new Vue({
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.task = localStorage.getItem("task")
     },
     methods: {
         activeBtn : function (task) {
             this.task = task
             profileInstance.task = task
-            if(task == 9){
+
+            if(task == 12){
                 authenticationInstance.logout()
+            }else if(task == 9){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListUser()
+            }else if(task == 10){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListPost()
+            }else if(task == 11){
+                admin.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                admin.getListReport()
+            }else if(task == 0 || task == 1){
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.remove("invisible")
             }
 
         }

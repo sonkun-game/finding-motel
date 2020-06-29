@@ -33,6 +33,20 @@ var renterInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        removeFromWishList(postId){
+            fetch("/api-remove-from-wishlist?postId="+postId, {
+                method: 'GET',
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null){
+                        this.wishList = data
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         }
     }
 })

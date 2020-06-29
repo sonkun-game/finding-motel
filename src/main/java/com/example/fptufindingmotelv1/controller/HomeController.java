@@ -4,7 +4,7 @@ import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PagerModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
-import com.example.fptufindingmotelv1.repository.PostModelRepository;
+import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import com.example.fptufindingmotelv1.untils.Constant;
@@ -28,7 +28,7 @@ public class HomeController {
     PostService postService;
 
     @Autowired
-    PostModelRepository postModelRepository;
+    PostRepository postRepository;
 
     @Autowired
     RenterService renterService;
@@ -48,8 +48,8 @@ public class HomeController {
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
-        List<PostModel> postList =  postModelRepository.findAll();
-        Page<PostModel> postPage =  postModelRepository.findAll(pageable);
+        List<PostModel> postList =  postRepository.findAll();
+        Page<PostModel> postPage =  postRepository.findAll(pageable);
 
         // Pass PostModel List to PostDTO
         List<PostDTO> postDTOs= new ArrayList<>();

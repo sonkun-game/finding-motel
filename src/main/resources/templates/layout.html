@@ -84,7 +84,7 @@
 
                                                 <!-- DROPDOWN RENTER -->
                                                 <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
-                                                <li><a th:href="@{/view}" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a>
 
                                                 <!-- DROPDOWN LANDLORD -->
                                                 <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>

@@ -76,4 +76,20 @@ public class WishlistController {
         return jsonObject;
     }
 
+    @ResponseBody
+    @PostMapping(value = "/api-get-wishlist")
+    public List<PostDTO> getWishlist(){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            RenterModel renterModel = renterService.findOne(userDetails.getUsername());
+            List<PostDTO> response = new ArrayList<>();
+            for (PostModel post: renterModel.getPosts()) {
+                response.add(new PostDTO(post));
+            }
+            return response;
+        }
+        return null;
+    }
+
 }

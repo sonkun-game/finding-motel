@@ -289,6 +289,15 @@ var userTaskInstance = new Vue({
             }else if(task == 0 || task == 1){
                 let profileUser = document.getElementById("user-manager-content")
                 profileUser.classList.remove("invisible")
+            }else if(task == 2){
+                renterInstance.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+            }else if(task == 3){
+                renterInstance.task = task
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                renterInstance.getWishlist()
             }
 
         }

@@ -35,8 +35,188 @@
                     <!-- Đổi mật khẩu -->
                     <div th:replace="layout :: change-password"></div>
 
+                </div>
+
+                <div id="landlord-manager" class="col-9 sidebar-right">
                     <!-- Đăng tin -->
-                    <div th:replace="layout :: post-new-room"></div>
+                    <div v-if="task == 13" id="post-new-room">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Đăng tin</h1>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="container">
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Loại phòng</h4>
+                                    </div>
+                                    <div class="form-dropdown input-information">
+                                        <select class="rounded-pill border-0 shadow-sm">
+                                            <option value="1">--- Loại Phòng ---</option>
+                                            <option value="2">Phòng trọ</option>
+                                            <option value="3">Nhà nguyên căn</option>
+                                            <option value="4">Căn hộ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thông tin chi tiết</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <textarea class="rounded-pill border-0 shadow-sm"></textarea>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Giá cho thuê</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>VND</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Diện tích</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>M&sup2</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Khoảng cách (So với Đại Học FPT)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>KM</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="upload-file">
+                                            <img class="upload-image" src="assets/img/logo/upload.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thời hạn bài đăng</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="form-check-inline">
+                                            <label class="radio-container">1 tháng
+                                                <input type="radio" name="duration">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="radio-container">3 tháng
+                                                <input  type="radio" name="duration">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="radio-container">6 tháng
+                                                <input  type="radio" name="duration">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="radio-container">9 tháng
+                                                <input  type="radio" name="duration">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thông tin thanh toán</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div id="table-checkout">
+                                            <table>
+                                                <tr>
+                                                    <td>Thành tiền:</td>
+                                                    <td class="money-col">95.000 VND</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tài khoản:</td>
+                                                    <td class="money-col">100.000 VND</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số dư:</td>
+                                                    <td class="money-col">5.000 VND</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <button class="btn-hover btn-complete">Hoàn thành</button>
+                                <div class="title">
+                                    <h4>Bảng giá tham khảo</h4>
+                                </div>
+                                <div id="table-price">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">1 Tháng</th>
+                                            <th scope="col">3 Tháng</th>
+                                            <th scope="col">6 Tháng</th>
+                                            <th scope="col">9 Tháng</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">10.000vnđ</th>
+                                            <th scope="row">20.000vnđ</th>
+                                            <th scope="row">40.000vnđ</th>
+                                            <th scope="row">60.000vnđ</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="note">
+                            <div class="note-body">
+                                <h4>Lưu ý khi đăng tin</h4>
+                                <ul>
+                                    <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
+                                    <li>Tiêu đề tin không dài quá 100 kí tự.</li>
+                                    <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
+                                    <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
+                                    <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Xử lý yêu cầu thuê trọ -->
@@ -221,7 +401,7 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 
-<script th:src="@{/assets/js/vendor/active.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>
 </body>
 </html>

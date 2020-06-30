@@ -26,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${ffm.security.config.url.role-renter}")
     private String[] roleRenterUrl;
 
+    @Value("${ffm.security.config.url.role-admin}")
+    private String[] roleAdminUrl;
+
     @Value("${ffm.security.config.url.role-landlord}")
     private String[] roleLandlordUrl;
 
@@ -64,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(roleRenterUrl).access("hasRole('ROLE_RENTER')")
                 .antMatchers(roleLandlordUrl).access("hasRole('ROLE_LANDLORD')")
+                .antMatchers(roleAdminUrl).access("hasRole('ROLE_ADMIN')")
                 .anyRequest()
                 .authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

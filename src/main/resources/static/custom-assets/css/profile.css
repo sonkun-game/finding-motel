@@ -7,6 +7,7 @@
     font-family: "Lato", sans-serif;
     height: 100%;
     border: 0.1px solid #CFCFCF;
+    background-color: #e9ecef!important
 }
 
 .sidebar-right{
@@ -46,7 +47,7 @@ height: 40px;
 display: block;
 margin: 3px auto;
 border: 0px solid black;
-background-color: #EEE5DE;
+background-color: #f8f9fa;
 border-radius: 7px;
 color: black;
 cursor: pointer;
@@ -76,8 +77,9 @@ font-weight: bold !important;
 }
 
 .container-fluid{
-margin-top: 50px;
-margin-bottom: 50px;
+    background-color: #f8f9fa!important;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .detail{
@@ -305,13 +307,6 @@ display: none !important;
 float: right;
 }
 
-input[type=text] {
-padding: 4px;
-margin-top: 8px;
-font-size: 16px;
-font-family: "Lato", sans-serif;
-color: black;
-}
 
 .search-container button {
 float: right;
@@ -387,7 +382,7 @@ cursor: copy;
 display: block;
 }
 
-.table-price{
+#table-price{
 width: 50%;
 height: auto;
 }
@@ -429,4 +424,68 @@ margin-bottom: .75rem;
 font-family: "Lato", sans-serif;
 list-style-type: circle;
 margin-left: 15px;
+}
+
+input, textarea, select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    border-radius: 6px!important;
+    border: 1px solid #DDDDDD;
+    padding: 4px 10px;
+    font-size: 16px;
+    font-family: "Lato", sans-serif;
+    color: #495057;
+}
+
+
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 7px rgba(81, 203, 238, 1) !important;
+    border: .1px solid rgba(81, 203, 238, 1) !important;
+}
+.input-information{
+    margin-top: 5px;
+    display: flex;
+}
+.input-group-append{
+    border: 1px solid #DDDDDD;
+    width: 10%;
+    line-height: inherit;
+    height: 35px;
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
+    background-color: #dca73a;
+    color: white;
+}
+.half-width{
+    width: 40%!important;
+    border-radius: unset!important;
+    border-bottom-left-radius: 6px!important;
+    border-top-left-radius: 6px!important;
+    height: 34px;
+}
+.input-group-append span{
+    margin: auto;
+}
+#table-price .table th{
+    background-color: unset!important;
+    border-right: 1px solid #dee2e6;
+}
+#table-price .table{
+    border: 1px solid #dee2e6;
+}
+#table-checkout{
+    width: 50%;
+    height: auto;
+    border-radius: 2px;
+    border: 1px dashed #aaa;
+}
+#table-checkout td{
+    padding: .75rem;
+    font-family: sans-serif;
+}
+#table-checkout .money-col{
+    padding-left: 7rem!important;
 }

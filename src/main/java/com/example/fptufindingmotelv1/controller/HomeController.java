@@ -118,4 +118,22 @@ public class HomeController {
         jsonObject.put("msg","Get id success");
         return jsonObject;
     }
+
+    @ResponseBody
+    @GetMapping("/api-test-renter")
+    public String testRenter(){
+        return "Renter Access";
+    }
+
+    @ResponseBody
+    @GetMapping("/api-test-landlord")
+    public String testLandlord(){
+        return "Landlord Access";
+    }
+
+    @ResponseBody
+    @GetMapping("/api-test-admin")
+    public String testAdmin(){
+        return "Admin Access";
+    }
 }

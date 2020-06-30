@@ -18,11 +18,11 @@
                 <div class="sidebar-left-image">
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
-                            <ul class="slides">
-                                <li data-thumb="assets/img/rooms/room1.jpg">
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room1.jpg" data-imagezoom="true" class="img-responsive"> </div>
+                            <ul class="slides" th:object="${post}">
+                                <li th:each="image:*{images}" th:data-thumb="${image.url}">
+                                    <div class="thumb-image"> <img th:src="${image.url}" data-imagezoom="true" class="img-responsive"> </div>
                                 </li>
-                                <li data-thumb="assets/img/rooms/room2.jpg">
+                                <!--<li data-thumb="assets/img/rooms/room2.jpg">
                                     <div class="thumb-image"> <img src="assets/img/rooms/room2.jpg" data-imagezoom="true" class="img-responsive"> </div>
                                 </li>
                                 <li data-thumb=assets/img/rooms/room3.jpg>
@@ -33,7 +33,7 @@
                                 </li>
                                 <li data-thumb=assets/img/rooms/room5.jpg>
                                     <div class="thumb-image"> <img src="assets/img/rooms/room5.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -116,26 +116,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-right-information">
+                <div class="sidebar-right-information" th:object="${post}">
                     <div class="information">
                         <div class="icon-information">
                             <img class="avatar-information" src="assets/img/logo/user.png">
                         </div>
                         <div class="name-landlord">
-                            <label>Duong Thi Kim Oanh</label>
+                            <label th:text="${post.landlord.displayName}"></label>
                             <div class="create-date">
-                                <label>Ngày đăng: 21-06-2020</label>
+                                <label th:text="${'Ngày đăng: '+#dates.format(post.createDate, 'dd/MM/YYYY')}"></label>
                             </div>
                         </div>
                     </div>
                     <div class="room-number">
                         <h4 class="font-weight-normal">Chọn phòng:</h4>
-                        <div class="select-room">
-                            <select name="room" id="rooms">
-                                <option value="room1">room1</option>
-                                <option value="room2">room2</option>
-                                <option value="room3">room3</option>
-                                <option value="room4">room4</option>
+                        <div class="select-room" th:object="${post}">
+                            <select name="room" id="rooms" th:field="*{roomNumber}">
+                                <option th:each="i : ${#numbers.sequence(1, post.roomNumber)}" th:value="${i}" th:text="${'room'+i}">
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -146,7 +144,7 @@
 
                     <div class="contact">
                         <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
-                        <h3>0905.000.888</h3>
+                        <h3 th:text="${post.landlord.phoneNumber}"></h3>
                     </div>
                 </div>
             </div>
@@ -163,7 +161,6 @@
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>
 <script th:src="@{/assets/js/flexslider.js}"></script>
-<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-detail.js}"></script>
 
 </body>
 </html>

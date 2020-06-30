@@ -51,7 +51,7 @@
                     <!-- Single Room -->
                     <div class="single-room mb-50" >
                         <div class="room-img">
-                            <a href="rooms.html"><img th:each="image:*{post.images}" th:src="@{${image.url}}" alt=""></a>
+                            <a href="rooms.html"><img th:src="@{${post.images[0].url}}" alt=""></a>
                             <i th:id="${post.id}" style="color: red" class="fa fa-2x fa-heart" v-on:click="addWishlist"></i>
                         </div>
                         <div class="room-caption">
@@ -65,38 +65,6 @@
             </div>
 
         </div>
-            <!--<div class="row">
-                <div th:if="${posts.totalPages != 1}"
-                     class="form-group col-md-11 pagination-centered">
-                    <ul class="pagination">
-                        <li th:class="${posts.number == 0} ? disabled"><a
-                                class="pageLink"
-                                th:href="@{/(pageSize=${selectedPageSize}, page=1)}">First</a>
-                        </li>
-                        <li th:class="${posts.number == 0} ? disabled"><a
-                                class="pageLink"
-                                th:href="@{/(pageSize=${selectedPageSize}, page=${posts.number})}">&larr;</a>
-                        </li>
-                        <li
-                                th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'"
-                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                            <a class="pageLink"
-                               th:href="@{/(pageSize=${selectedPageSize}, page=${page})}"
-                               th:text="${page}"></a>
-                        </li>
-                        <li
-                                th:class="${posts.number + 1 == posts.totalPages} ? disabled">
-                            <a class="pageLink"
-                               th:href="@{/(pageSize=${selectedPageSize}, page=${posts.number + 2})}">&rarr;</a>
-                        </li>
-                        <li
-                                th:class="${posts.number + 1 == posts.totalPages} ? disabled">
-                            <a class="pageLink"
-                               th:href="@{/(pageSize=${selectedPageSize}, page=${posts.totalPages})}">Last</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>-->
 
         </div>
 

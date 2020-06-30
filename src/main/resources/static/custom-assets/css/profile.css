@@ -4,7 +4,7 @@
     color: #0c5460 !important;
 }
 .sidebar-left{
-    font-family: "Lato", sans-serif;
+    font-family: sans-serif;
     height: 100%;
     border: 0.1px solid #CFCFCF;
     background-color: #e9ecef!important
@@ -59,7 +59,7 @@ background-color: #dca73a;
 }
 
 .display-name{
-font-family: "Lato", sans-serif;
+font-family: sans-serif;
 color: black;
 font-size: 20px;
 }
@@ -92,7 +92,7 @@ display: flex;
 }
 
 .textfiled{
-font-family: "Lato", sans-serif;
+font-family: sans-serif;
 width: 60%;
 border-radius: 6px;
 border: .5px solid;
@@ -101,7 +101,7 @@ padding-left: 10px;
 background-color: white;
 }
 .label{
-font-family: "Lato", sans-serif;
+font-family:sans-serif;
 width: 20%;
 color: black;
 font-size: inherit;
@@ -154,7 +154,7 @@ cursor: pointer !important;
 }
 
 .table{
-font-family: "Lato", Calibri !important;
+font-family:  sans-serif !important;
 }
 
 .information-detail{
@@ -232,7 +232,7 @@ margin: 10px auto;
 }
 
 .filter-area{
-font-family: "Lato", sans-serif;
+font-family: sans-serif;
 }
 
 .form-dropdown{
@@ -307,7 +307,6 @@ display: none !important;
 float: right;
 }
 
-
 .search-container button {
 float: right;
 padding: 6px 10px;
@@ -332,14 +331,14 @@ margin: 20px 0px;
 }
 
 .title h4{
-font-family: "Lato", sans-serif;
+font-family:  sans-serif;
 }
 
 select{
 display: block !important;
 width: 200px;
 height: 35px;
-font-family: "Lato", sans-serif;
+font-family:  sans-serif;
 border: 1px solid #aaa;
 }
 
@@ -349,7 +348,7 @@ display: none !important;
 
 .form-input-information{
 width: 50% ;
-font-family: "Lato", sans-serif;
+font-family:  sans-serif;
 font-size: inherit;
 border: 1px solid #aaa;
 border-radius: 2px;
@@ -357,7 +356,7 @@ border-radius: 2px;
 
 .form-input-title-information{
 width: 100% ;
-font-family: "Lato", sans-serif;
+font-family: sans-serif;
 font-size: inherit;
 border: 1px solid #aaa;
 border-radius: 2px;
@@ -421,7 +420,7 @@ margin-bottom: .75rem;
 }
 
 .note-body li{
-font-family: "Lato", sans-serif;
+font-family:  sans-serif;
 list-style-type: circle;
 margin-left: 15px;
 }
@@ -436,7 +435,7 @@ input, textarea, select {
     border: 1px solid #DDDDDD;
     padding: 4px 10px;
     font-size: 16px;
-    font-family: "Lato", sans-serif;
+    font-family: sans-serif;
     color: #495057;
 }
 

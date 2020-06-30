@@ -1,28 +1,24 @@
 package com.example.fptufindingmotelv1.controller.wishlist;
 
-import com.example.fptufindingmotelv1.dto.LoginDTO;
-import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
-import com.example.fptufindingmotelv1.repository.PostModelRepository;
+import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
-import com.example.fptufindingmotelv1.untils.Constant;
+import com.example.fptufindingmotelv1.service.wishlist.WishlistService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class WishlistController {
@@ -30,7 +26,7 @@ public class WishlistController {
     PostService postService;
 
     @Autowired
-    PostModelRepository postModelRepository;
+    PostRepository postRepository;
 
     @Autowired
     RenterRepository renterRepository;
@@ -38,15 +34,8 @@ public class WishlistController {
     @Autowired
     RenterService renterService;
 
-    @GetMapping(value = "/view")
-    public String getWishlist(Model model){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            model.addAttribute("renter",renterService.findOne(userDetails.getUserModel().getUsername()));
-        }
-        return "wishlist";
-    }
+    @Autowired
+    WishlistService wishlistService;
 
     @ResponseBody
     @PostMapping(value = "/api-add-wishlist")
@@ -66,8 +55,34 @@ public class WishlistController {
             }
             renterRepository.save(renterModel);
         }
-        jsonObject.put("msg","...");
+        jsonObject.put("msg","cái j");
         return jsonObject;
     }
 
+    @ResponseBody
+    @PostMapping(value = "/api-get-wishlist")
+    public List<PostDTO> getWishlist(){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            RenterModel renterModel = renterService.findOne(userDetails.getUsername());
+            List<PostDTO> response = new ArrayList<>();
+            for (PostModel post: renterModel.getPosts()) {
+                response.add(new PostDTO(post));
+            }
+            return response;
+        }
+        return null;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/api-remove-from-wishlist")
+    public List<PostDTO> removeFromWishList(@RequestParam String postId){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            return wishlistService.removeItem(userDetails.getUsername(), Long.valueOf(postId));
+        }
+        return null;
+    }
 }

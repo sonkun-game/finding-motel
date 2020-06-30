@@ -23,7 +23,7 @@ import java.util.TimeZone;
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
-    PostModelRepository postModelRepository;
+    PostRepository postRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -122,7 +122,7 @@ public class AdminServiceImpl implements AdminService {
     public ArrayList<PostResponseDTO> getListPost() {
         try {
             ArrayList<PostResponseDTO> posts = new ArrayList<>();
-            for (PostModel post : postModelRepository.findAll()) {
+            for (PostModel post : postRepository.findAll()) {
                 PostResponseDTO postResponseDTO = new PostResponseDTO(post);
                 posts.add(postResponseDTO);
             }
@@ -135,7 +135,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public PostResponseDTO getPostDetail(Long id) {
-        return new PostResponseDTO(postModelRepository.getOne(id));
+        return new PostResponseDTO(postRepository.getOne(id));
     }
 
     @Override

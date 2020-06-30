@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PostModelRepository extends JpaRepository<PostModel,Long> {
+public interface PostRepository extends JpaRepository<PostModel,Long> {
 }

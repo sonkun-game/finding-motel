@@ -4,6 +4,7 @@ import com.example.fptufindingmotelv1.model.ImageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class PostDTO {
     private String title;
     private String color;
     private String isLord;
-    private List<ImageModel> images;
+    private List<String> images;
 
     public PostDTO(PostModel postModel) {
         this.id = postModel.getId();
@@ -38,6 +39,9 @@ public class PostDTO {
         this.expireDate = postModel.getExpireDate();
         this.isVisible = postModel.isVisible();
         this.title = postModel.getTitle();
-        this.images = postModel.getImages();
+        this.images = new ArrayList<>();
+        for (ImageModel image: postModel.getImages()) {
+            images.add(image.getUrl());
+        }
     }
 }

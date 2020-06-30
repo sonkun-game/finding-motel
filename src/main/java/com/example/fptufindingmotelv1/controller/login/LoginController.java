@@ -1,11 +1,9 @@
 package com.example.fptufindingmotelv1.controller.login;
 
-import com.example.fptufindingmotelv1.dto.LoginDTO;
 import com.example.fptufindingmotelv1.dto.LoginRequestDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
@@ -66,7 +64,7 @@ public class LoginController {
         String token = jwtTokenProvider.generateToken((CustomUserDetails)authentication.getPrincipal());
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         responseDTO.setAccessToken(token);
-        responseDTO.setLoginDTO(new LoginDTO(userDetails.getUserModel()));
+        responseDTO.setUserDTO(new UserDTO(userDetails.getUserModel()));
         return responseDTO;
     }
 
@@ -96,7 +94,7 @@ public class LoginController {
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
             UserModel userModel = userRepository.findByUsername(userDetails.getUsername());
-            responseDTO.setLoginDTO(new LoginDTO(userModel));
+            responseDTO.setUserDTO(new UserDTO(userModel));
         }
         return responseDTO;
     }

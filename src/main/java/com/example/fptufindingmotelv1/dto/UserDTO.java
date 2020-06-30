@@ -38,9 +38,11 @@ public class UserDTO {
 
     private Date dob;
 
+    private String newPassword;
+
     public UserDTO(UserModel userModel) {
         this.username = userModel.getUsername();
-        this.role = userModel.getRole().getId().toString();
+        this.role = userModel.getRole().getRoleName();
         this.roleName = userModel.getRole().getInstructionDesc();
         this.fbAccount = userModel.getFbAccount();
         this.ggAccount = userModel.getGgAccount();

@@ -1,6 +1,6 @@
 package com.example.fptufindingmotelv1.service.manageaccount;
 
-import com.example.fptufindingmotelv1.dto.LoginDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.UserRepository;
@@ -19,7 +19,7 @@ public class ManageUserServiceImpl implements ManageUserService{
     PasswordEncoder passwordEncoder;
 
     @Override
-    public boolean saveUserInfo(LoginDTO request) {
+    public boolean saveUserInfo(UserDTO request) {
         try {
             UserModel userModel = userRepository.findByUsername(request.getUsername());
             userModel.setDisplayName(request.getDisplayName());
@@ -37,7 +37,7 @@ public class ManageUserServiceImpl implements ManageUserService{
     }
 
     @Override
-    public boolean savePhone(LoginDTO request) {
+    public boolean savePhone(UserDTO request) {
         try {
             UserModel userModel = userRepository.findByUsername(request.getUsername());
             userModel.setPhoneNumber(request.getPhoneNumber());
@@ -50,7 +50,7 @@ public class ManageUserServiceImpl implements ManageUserService{
     }
 
     @Override
-    public JSONObject savePassword(LoginDTO request) {
+    public JSONObject savePassword(UserDTO request) {
         JSONObject jsonObject = new JSONObject();
         try {
             UserModel userModel = userRepository.findByUsername(request.getUsername());

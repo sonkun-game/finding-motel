@@ -1,6 +1,6 @@
 package com.example.fptufindingmotelv1.controller.manageaccount;
 
-import com.example.fptufindingmotelv1.dto.LoginDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
@@ -40,7 +40,7 @@ public class ManageUserController {
 
     @ResponseBody
     @PostMapping("/api-save-user-info")
-    public JSONObject saveUserInfo(@RequestBody LoginDTO request){
+    public JSONObject saveUserInfo(@RequestBody UserDTO request){
         JSONObject response = new JSONObject();
         if(manageUserService.saveUserInfo(request)){
             response.put("msgCode", "user000");
@@ -54,7 +54,7 @@ public class ManageUserController {
 
     @ResponseBody
     @PostMapping("/api-change-phone-number")
-    public JSONObject savePhoneNumber(@RequestBody LoginDTO request){
+    public JSONObject savePhoneNumber(@RequestBody UserDTO request){
         JSONObject response = new JSONObject();
         if(manageUserService.savePhone(request)){
             response.put("msgCode", "user000");
@@ -68,7 +68,7 @@ public class ManageUserController {
 
     @ResponseBody
     @PostMapping("/api-change-password")
-    public JSONObject savePassword(@RequestBody LoginDTO request){
+    public JSONObject savePassword(@RequestBody UserDTO request){
         return manageUserService.savePassword(request);
     }
 }

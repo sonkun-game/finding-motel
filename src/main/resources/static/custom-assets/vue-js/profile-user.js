@@ -268,28 +268,41 @@ var userTaskInstance = new Vue({
         activeBtn : function (task) {
             this.task = task
             profileInstance.task = task
+            localStorage.setItem("task", task)
 
-            if(task == 12){
-                authenticationInstance.logout()
-            }else if(task == 9){
-                admin.task = task
-                let profileUser = document.getElementById("user-manager-content")
-                profileUser.classList.add("invisible")
-                admin.getListUser()
-            }else if(task == 10){
-                admin.task = task
-                let profileUser = document.getElementById("user-manager-content")
-                profileUser.classList.add("invisible")
-                admin.getListPost()
-            }else if(task == 11){
-                admin.task = task
-                let profileUser = document.getElementById("user-manager-content")
-                profileUser.classList.add("invisible")
-                admin.getListReport()
-            }else if(task == 0 || task == 1){
+            if(task == 0 || task == 1){
                 let profileUser = document.getElementById("user-manager-content")
                 profileUser.classList.remove("invisible")
+                let renterManager = document.getElementById("renter-manager")
+                if(renterManager != null){
+                    renterInstance.task = task
+                }
+                let adminManager = document.getElementById("dataTable")
+                if(adminManager != null){
+                    admin.task = task
+                }
+            }else{
+                let profileUser = document.getElementById("user-manager-content")
+                profileUser.classList.add("invisible")
+                if(task == 12){
+                    authenticationInstance.logout()
+                }else if(task == 9){
+                    admin.task = task
+                    admin.getListUser()
+                }else if(task == 10){
+                    admin.task = task
+                    admin.getListPost()
+                }else if(task == 11){
+                    admin.task = task
+                    admin.getListReport()
+                }else if(task == 3){
+                    renterInstance.task = task
+                    renterInstance.getWishlist()
+                }else if(task == 2){
+                    renterInstance.task = task
+                }
             }
+
 
         }
     }

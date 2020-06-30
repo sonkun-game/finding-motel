@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class LoginResponseDTO {
     @JsonProperty("userInfo")
-    private LoginDTO loginDTO;
+    private UserDTO userDTO;
     private String accessToken;
     private String message;
     private String msgCode;

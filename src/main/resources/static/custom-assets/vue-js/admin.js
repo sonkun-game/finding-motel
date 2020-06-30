@@ -1,11 +1,6 @@
 var admin = new Vue({
     el: '#dataTable',
     data: {
-        //flag
-        isReportMgmt: false,
-        isPostMgmt: false,
-        isUserMgmt: false,
-        isAdminProfile: true,
         //variable
         listReport: [],
         listPost: [],
@@ -134,12 +129,7 @@ var admin = new Vue({
             })
         },
         getListUser() {
-            //
-            this.isReportMgmt = false;
-            this.isPostMgmt = false;
-            this.isUserMgmt = true;
-            this.isAdminProfile = false;
-            //
+
             fetch("https://localhost:8081/get-all-user", {
                 method: 'POST',
             }).then(response => response.json())
@@ -190,12 +180,7 @@ var admin = new Vue({
             })
         },
         getListReport() {
-            //
-            this.isReportMgmt = true;
-            this.isPostMgmt = false;
-            this.isUserMgmt = false;
-            this.isAdminProfile = false;
-            //
+
             fetch("https://localhost:8081/get-report", {
                 method: 'POST',
             }).then(response => response.json())
@@ -230,12 +215,7 @@ var admin = new Vue({
         },
 
         getListPost() {
-            //
-            this.isReportMgmt = false;
-            this.isPostMgmt = true;
-            this.isUserMgmt = false;
-            this.isAdminProfile = false;
-            //
+
             fetch("https://localhost:8081/get-post", {
                 method: 'POST',
             }).then(response => response.json())

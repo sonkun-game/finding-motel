@@ -1,6 +1,6 @@
 package com.example.fptufindingmotelv1.service.login;
 
-import com.example.fptufindingmotelv1.dto.LoginDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.GooglePojo;
 import com.example.fptufindingmotelv1.model.UserModel;
@@ -19,8 +19,6 @@ import org.apache.http.client.fluent.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class SocialLoginServiceImpl implements SocialLoginService {
@@ -107,11 +103,11 @@ public class SocialLoginServiceImpl implements SocialLoginService {
     public JSONObject getResponseLogin(String accessToken, HttpServletRequest request, UserModel userModel){
         JSONObject response = new JSONObject();
         if(userModel.getUsername() == null){
-            LoginDTO loginDTO = new LoginDTO();
-            loginDTO.setGgAccount(userModel.getGgAccount());
-            loginDTO.setFbAccount(userModel.getFbAccount());
-            loginDTO.setDisplayName(userModel.getDisplayName());
-            response.put("user", loginDTO);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setGgAccount(userModel.getGgAccount());
+            userDTO.setFbAccount(userModel.getFbAccount());
+            userDTO.setDisplayName(userModel.getDisplayName());
+            response.put("user", userDTO);
             response.put("msgCode", "msg003");
             response.put("message", "Not Registered Yet");
             response.put("accessToken", accessToken);
@@ -122,7 +118,7 @@ public class SocialLoginServiceImpl implements SocialLoginService {
                     UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            response.put("user", new LoginDTO(userModel));
+            response.put("user", new UserDTO(userModel));
             response.put("msgCode", "msg004");
             response.put("message", "Registered");
             response.put("accessToken", accessToken);

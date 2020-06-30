@@ -93,11 +93,11 @@
                                     <td>
                                         <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
                                            id="myIcon-view"></i>
-                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate != null}"
+                                        <i v-if="user.role == 'LANDLORD'" v-bind:class="{invisible: user.unBanDate != null}"
                                            @click="showModalConfirmBan(user.username, 'ban')" class="fas fa-lock">
-                                            {{user.role.unBanDate}}
+                                            {{user.unBanDate}}
                                         </i>
-                                        <i v-if="user.role == 2" v-bind:class="{invisible: user.unBanDate == null}"
+                                        <i v-if="user.role == 'LANDLORD'" v-bind:class="{invisible: user.unBanDate == null}"
                                            @click="showModalConfirmBan(user.username, 'unban')"
                                            class="fas fa-unlock"></i>
                                     </td>

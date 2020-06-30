@@ -37,16 +37,6 @@ public class WishlistController {
     @Autowired
     WishlistService wishlistService;
 
-    @GetMapping(value = "/view")
-    public String getWishlist(Model model){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            model.addAttribute("renter",renterService.findOne(userDetails.getUserModel().getUsername()));
-        }
-        return "wishlist";
-    }
-
     @ResponseBody
     @PostMapping(value = "/api-add-wishlist")
     public JSONObject addWishlist(@RequestParam(name = "id")String id, @RequestParam(name = "status")String status){

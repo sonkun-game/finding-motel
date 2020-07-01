@@ -382,7 +382,6 @@ display: block;
 }
 
 #table-price{
-width: 50%;
 height: auto;
 }
 
@@ -403,13 +402,12 @@ color: white;
 }
 
 .note{
-width: 18%;
-height: auto;
-top: 180px;
-left: 1533px;
-float: right;
-position: fixed;
+height: fit-content;
 background-color: #fff3cd;
+padding: 0!important;
+position: absolute;
+top: 790px;
+bottom: 200px;
 }
 
 .note-body{
@@ -487,4 +485,26 @@ input:focus, textarea:focus, select:focus {
 }
 #table-checkout .money-col{
     padding-left: 7rem!important;
+}
+.input-information .form-check-inline .radio-container{
+    color: #495057;
+}
+.row{
+    position: relative;
+}
+
+.list-image{
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 2px;
+    border: 1px solid #aaa;
+}
+.list-image .image-item .image{
+    height: 100px;
+}
+.list-image .image-item .image img{
+    height: 100%;
+}
+.list-image .image-item{
+    margin-right: 15px;
 }

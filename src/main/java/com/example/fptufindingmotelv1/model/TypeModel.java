@@ -8,9 +8,10 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "Type")
+@Table(name = "TYPE")
 public class TypeModel implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     @Column(name="ID",nullable = false)

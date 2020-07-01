@@ -283,6 +283,7 @@ var userTaskInstance = new Vue({
                 }
                 let landlordManager = document.getElementById("landlord-manager")
                 if(landlordManager != null){
+                    noteInstance.task = task
                     landlordInstance.task = task
                 }
             }else{
@@ -305,7 +306,9 @@ var userTaskInstance = new Vue({
                 }else if(task == 2){
                     renterInstance.task = task
                 }else if(task == 13){
+                    noteInstance.task = task
                     landlordInstance.task = task
+                    landlordInstance.getInitNewPost()
                 }
             }
 

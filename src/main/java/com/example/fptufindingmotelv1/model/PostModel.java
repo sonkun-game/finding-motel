@@ -35,7 +35,7 @@ public class PostModel implements Serializable {
     private double price;
 
     @Column(name = "DISTANCE", nullable = false)
-    private  double distance;
+    private double distance;
 
     @Column(name = "SQUARE", nullable = false)
     private double square;
@@ -67,4 +67,6 @@ public class PostModel implements Serializable {
     @ManyToMany(mappedBy = "posts")
     private List<RenterModel> renters;
 
+    @OneToMany(mappedBy = "postPayment")
+    private List<PaymentPostModel> paymentPosts;
 }

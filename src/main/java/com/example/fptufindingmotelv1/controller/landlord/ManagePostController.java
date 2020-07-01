@@ -1,29 +1,28 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
+import com.example.fptufindingmotelv1.dto.ImageDTO;
 import com.example.fptufindingmotelv1.dto.PaymentPackageDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
 import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.model.TypeModel;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ManagePostController {
@@ -68,6 +67,34 @@ public class ManagePostController {
                     .path(fileName)
                     .toUriString();
             return ResponseEntity.ok(file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-upload-image")
+    public ResponseEntity uploadFile(@RequestBody ImageDTO imageDTO) {
+        String imgBase64 = imageDTO.getImgBase64();
+        StringBuffer fileName = new StringBuffer();
+        fileName.append(UUID.randomUUID().toString().replaceAll("-", ""));
+        if (StringUtils.isEmpty(imgBase64)) {
+            return null;
+        } else if (imgBase64.indexOf("data:image/png;") != -1) {
+            imgBase64 = imgBase64.replace("data:image/png;base64,", "");
+            fileName.append(".png");
+        } else if (imgBase64.indexOf("data:image/jpeg;") != -1) {
+            imgBase64 = imgBase64.replace("data:image/jpeg;base64,", "");
+            fileName.append(".jpeg");
+        } else {
+            return null;
+        }
+        File file = new File("src/main/resources/static/assets/img/rooms/", fileName.toString());
+        byte[] fileBytes = Base64.getDecoder().decode(imgBase64);
+        try {
+            FileUtils.writeByteArrayToFile(file, fileBytes);
+            return ResponseEntity.ok("Thành công");
         } catch (IOException e) {
             e.printStackTrace();
         }

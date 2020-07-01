@@ -508,3 +508,6 @@ input:focus, textarea:focus, select:focus {
 .list-image .image-item{
     margin-right: 15px;
 }
+.list-image{
+    overflow-x: auto;
+}

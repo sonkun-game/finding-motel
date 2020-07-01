@@ -63,11 +63,9 @@
                                         <h4>Loại phòng</h4>
                                     </div>
                                     <div class="form-dropdown input-information">
-                                        <select class="rounded-pill border-0 shadow-sm">
+                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
                                             <option value="1">--- Loại Phòng ---</option>
                                             <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
-<!--                                            <option value="3">Nhà nguyên căn</option>-->
-<!--                                            <option value="4">Căn hộ</option>-->
                                         </select>
                                     </div>
                                 </div>
@@ -76,7 +74,7 @@
                                         <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
                                     </div>
                                 </div>
                                 <div class="fill-information">
@@ -84,7 +82,7 @@
                                         <h4>Thông tin chi tiết</h4>
                                     </div>
                                     <div class="input-information">
-                                        <textarea class="rounded-pill border-0 shadow-sm"></textarea>
+                                        <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
                                     </div>
                                 </div>
                                 <div class="fill-information">
@@ -92,7 +90,7 @@
                                         <h4>Giá cho thuê</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="text" v-model="price" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>VND</span>
                                         </div>
@@ -104,7 +102,7 @@
                                         <h4>Diện tích</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="text" v-model="square" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>M&sup2</span>
                                         </div>
@@ -117,7 +115,7 @@
                                         <h4>Khoảng cách (So với Đại Học FPT)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="text" v-model="distance" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>KM</span>
                                         </div>
@@ -150,7 +148,7 @@
                                         <div class="form-check-inline" v-for="package in listPaymentPackage">
                                             <label class="radio-container">
                                                 {{package.duration + ' tháng'}}
-                                                <input type="radio" name="duration">
+                                                <input v-model="duration" type="radio" name="duration" v-bind:value="package.id">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </div>

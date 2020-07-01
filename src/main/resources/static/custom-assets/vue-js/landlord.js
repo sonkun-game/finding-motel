@@ -6,6 +6,13 @@ var landlordInstance = new Vue({
         listTypePost: [],
         listPaymentPackage: [],
         uploadImages: [],
+        typeOfPost: "",
+        title: "",
+        detailInfo: "",
+        price: "",
+        square: "",
+        distance: "",
+        duration: "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -45,10 +52,7 @@ var landlordInstance = new Vue({
             }
         },
         processFile(event){
-            let formData = new FormData()
             let files = event.target.files
-
-
             for (let i = 0; i < files.length; i++) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
@@ -57,6 +61,23 @@ var landlordInstance = new Vue({
                     }else {
                         landlordInstance.uploadImages.push(e.target.result)
                     }
+                    let options = {
+                        method: 'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            'imgBase64': landlordInstance.uploadImages[0]
+                        })
+                    }
+                    //delete options.headers['Content-Type']
+                    fetch("/api-upload-image", options)
+                        .then(response => response.json())
+                        .then((data) => {
+                            console.log(data);
+                        }).catch(error => {
+                        console.log(error);
+                    })
 
                 };
                 reader.onerror = function(error) {
@@ -67,23 +88,7 @@ var landlordInstance = new Vue({
             // for (let i = 0; i < files.length; i++) {
             //     formData.append("files",files[i])
             // }
-            // let options = {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     },
-            //     body: formData
-            //
-            // }
-            // delete options.headers['Content-Type']
-            // fetch("/multi-upload", options)
-            //     .then(response => response.json())
-            //     .then((data) => {
-            //         console.log(data);
-            //         setTimeout(() => this.uploadImages = data, 5000);
-            //     }).catch(error => {
-            //     console.log(error);
-            // })
+
         }
     }
 })

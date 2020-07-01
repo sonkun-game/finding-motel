@@ -507,6 +507,7 @@ input:focus, textarea:focus, select:focus {
 }
 .list-image .image-item{
     margin-right: 15px;
+    position: relative;
 }
 .list-image{
     overflow-x: auto;
@@ -526,7 +527,12 @@ input:focus, textarea:focus, select:focus {
 }
 
 .tbl-room{
-    width: 50% !important;
+    text-align: center;
+}
+
+.table-wrapper{
+    overflow-y: auto;
+    max-height: 500px;
 }
 
 /* The switch - the box around the slider */
@@ -590,4 +596,10 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+input[type=number].hide-arrow::-webkit-inner-spin-button,
+input[type=number].hide-arrow::-webkit-outer-spin-button {
+
+    display: none;
+
 }

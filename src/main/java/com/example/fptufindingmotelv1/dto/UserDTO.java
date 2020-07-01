@@ -43,7 +43,7 @@ public class UserDTO {
     public UserDTO(UserModel userModel) {
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();
-        this.roleName = userModel.getRole().getInstructionDesc();
+        this.roleName = userModel.getRole().getDisplayName();
         this.fbAccount = userModel.getFbAccount();
         this.ggAccount = userModel.getGgAccount();
         this.phoneNumber = userModel.getPhoneNumber();

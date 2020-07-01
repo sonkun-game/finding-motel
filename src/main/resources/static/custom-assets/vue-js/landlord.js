@@ -10,9 +10,12 @@ var landlordInstance = new Vue({
         title: "",
         detailInfo: "",
         price: "",
-        square: "",
-        distance: "",
+        square: 0,
+        distance: 0,
         duration: "",
+        numberOfRoom: 0,
+        listRoom: [],
+        amountSelected: 0,
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -43,6 +46,17 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
+        generateRooms(){
+            this.listRoom = []
+            for (let i = 0; i < parseInt(this.numberOfRoom); i++) {
+                let room = {
+                    "index" : (i+1),
+                    "roomName" : "Phòng " + (i+1),
+                    "availableRoom" : true
+                }
+                this.listRoom.push(room)
+            }
+        },
         openFileDialog(){
             let inputFileElem = document.getElementById("file-browse")
             if(inputFileElem && document.createEvent){
@@ -61,23 +75,6 @@ var landlordInstance = new Vue({
                     }else {
                         landlordInstance.uploadImages.push(e.target.result)
                     }
-                    let options = {
-                        method: 'POST',
-                        headers:{
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            'imgBase64': landlordInstance.uploadImages[0]
-                        })
-                    }
-                    //delete options.headers['Content-Type']
-                    fetch("/api-upload-image", options)
-                        .then(response => response.json())
-                        .then((data) => {
-                            console.log(data);
-                        }).catch(error => {
-                        console.log(error);
-                    })
 
                 };
                 reader.onerror = function(error) {
@@ -89,6 +86,47 @@ var landlordInstance = new Vue({
             //     formData.append("files",files[i])
             // }
 
+        },
+        removeImage(image){
+            this.uploadImages.splice(this.uploadImages.indexOf(image), 1)
+        },
+        calculateCost(package){
+            this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+            this.amountSelected = package.amount
+        },
+        handleAddNewPost(){
+            let request = {
+                'typeId' : this.typeOfPost,
+                'title' : this.title,
+                'description' : this.detailInfo,
+                'price': this.price,
+                'square' : this.square,
+                'distance' : this.distance,
+                'roomNumber' : this.numberOfRoom,
+                'username' : this.userInfo.username,
+                'listRoom' : this.listRoom,
+                'listImage' : this.uploadImages,
+                'paymentPackageId' : this.duration
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            loadingInstance.isHidden = false
+            //delete options.headers['Content-Type']
+            fetch("/api-add-new-post", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'post000'){
+                        window.location.href = "/"
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         }
     }
 })
@@ -102,4 +140,11 @@ var noteInstance = new Vue({
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
         this.task = localStorage.getItem("task")
     }
+})
+var loadingInstance = new Vue({
+    el: '#loading-wrapper',
+    data: {
+        isHidden: true
+    },
+
 })

@@ -23,6 +23,6 @@ public class PaymentPackageModel implements Serializable {
     @Column(name = "DURATION")
     private int duration;
 
-    @OneToMany(mappedBy = "paymentPackage")
+    @OneToMany(mappedBy = "paymentPackage", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;
 }

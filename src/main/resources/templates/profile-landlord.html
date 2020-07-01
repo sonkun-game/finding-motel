@@ -92,7 +92,7 @@
                                     <div class="input-information">
                                         <input type="text" v-model="price" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
-                                            <span>VND</span>
+                                            <span>VNĐ</span>
                                         </div>
 
                                     </div>
@@ -120,7 +120,85 @@
                                             <span>KM</span>
                                         </div>
                                     </div>
-
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Số lượng phòng:</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>PHÒNG</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Trạng thái các phòng:</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <table class="table tbl-room">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">STT</th>
+                                                <th scope="col">Phòng</th>
+                                                <th scope="col">Trạng thái</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <th scope="row">Phòng 1</th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <th scope="row">Phòng 2</th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <th scope="row">Phòng 3</th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <th scope="row">Phòng 4</th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <th scope="row">Phòng 5</th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="fill-information">
                                     <div class="title">
@@ -136,6 +214,7 @@
                                         <div class="image-item" v-for="image in uploadImages">
                                             <div class="image">
                                                 <img v-bind:src="image">
+                                                <i class="fas fa-times-circle"></i>
                                             </div>
                                         </div>
                                     </div>

@@ -27,6 +27,19 @@
                         <p class="display-name" v-cloak>Số dư: {{userInfo.amount}} vnđ</p>
                     </div>
                     <div th:replace="layout :: user-task"></div>
+
+                </div>
+                <div class="col-3 note" id="note-wrapper" v-if="task == 13">
+                    <div class="note-body">
+                        <h4>Lưu ý khi đăng tin</h4>
+                        <ul>
+                            <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
+                            <li>Tiêu đề tin không dài quá 100 kí tự.</li>
+                            <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
+                            <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
+                            <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="user-manager-content" class="col-9 sidebar-right">
                     <!-- Thông tin tài khoản -->
@@ -52,9 +65,9 @@
                                     <div class="form-dropdown input-information">
                                         <select class="rounded-pill border-0 shadow-sm">
                                             <option value="1">--- Loại Phòng ---</option>
-                                            <option value="2">Phòng trọ</option>
-                                            <option value="3">Nhà nguyên căn</option>
-                                            <option value="4">Căn hộ</option>
+                                            <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
+<!--                                            <option value="3">Nhà nguyên căn</option>-->
+<!--                                            <option value="4">Căn hộ</option>-->
                                         </select>
                                     </div>
                                 </div>
@@ -116,8 +129,16 @@
                                         <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <div class="upload-file">
+                                        <div class="upload-file" v-on:click="openFileDialog">
                                             <img class="upload-image" src="assets/img/logo/upload.png"/>
+                                        </div>
+                                        <input type="file" id="file-browse" style="display: none" multiple @change="processFile"/>
+                                    </div>
+                                    <div class="list-image input-information" v-show="uploadImages != undefined && uploadImages.length > 0">
+                                        <div class="image-item" v-for="image in uploadImages">
+                                            <div class="image">
+                                                <img v-bind:src="image">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -126,30 +147,14 @@
                                         <h4>Thời hạn bài đăng</h4>
                                     </div>
                                     <div class="input-information">
-                                        <div class="form-check-inline">
-                                            <label class="radio-container">1 tháng
+                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                            <label class="radio-container">
+                                                {{package.duration + ' tháng'}}
                                                 <input type="radio" name="duration">
                                                 <span class="checkmark"></span>
                                             </label>
                                         </div>
-                                        <div class="form-check-inline">
-                                            <label class="radio-container">3 tháng
-                                                <input  type="radio" name="duration">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
-                                        <div class="form-check-inline">
-                                            <label class="radio-container">6 tháng
-                                                <input  type="radio" name="duration">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
-                                        <div class="form-check-inline">
-                                            <label class="radio-container">9 tháng
-                                                <input  type="radio" name="duration">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="fill-information">
@@ -185,36 +190,23 @@
                                     <table class="table">
                                         <thead class="thead-light">
                                         <tr>
-                                            <th scope="col">1 Tháng</th>
-                                            <th scope="col">3 Tháng</th>
-                                            <th scope="col">6 Tháng</th>
-                                            <th scope="col">9 Tháng</th>
+                                            <th scope="col">Gói</th>
+                                            <th scope="col">Thời hạn</th>
+                                            <th scope="col">Giá</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <th scope="row">10.000vnđ</th>
-                                            <th scope="row">20.000vnđ</th>
-                                            <th scope="row">40.000vnđ</th>
-                                            <th scope="row">60.000vnđ</th>
+                                        <tr v-for="package in listPaymentPackage">
+                                            <th scope="row" v-text="'Gói ' + package.id"></th>
+                                            <th scope="row" v-text="package.duration + ' Tháng'"></th>
+                                            <th scope="row" v-text="package.amount + ' VND'"></th>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                        <div class="note">
-                            <div class="note-body">
-                                <h4>Lưu ý khi đăng tin</h4>
-                                <ul>
-                                    <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
-                                    <li>Tiêu đề tin không dài quá 100 kí tự.</li>
-                                    <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
-                                    <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
-                                    <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
-                                </ul>
-                            </div>
-                        </div>
+
                     </div>
 
                 </div>

@@ -20,7 +20,7 @@ public class RoleModel implements Serializable {
     @Column(name = "ROLE_NAME", nullable = false)
     private String roleName;
 
-    @Column(name = "INSTRUCTION_DESCRIPTION")
+    @Column(name = "DISPLAY_NAME")
     private String instructionDesc;
 
     @OneToMany(mappedBy = "role")

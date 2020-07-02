@@ -114,4 +114,22 @@ public class HomeController {
         return "instruction";
     }
 
+
+    @ResponseBody
+    @GetMapping("/api-test-renter")
+    public String testRenter(){
+        return "Renter Access";
+    }
+
+    @ResponseBody
+    @GetMapping("/api-test-landlord")
+    public String testLandlord(){
+        return "Landlord Access";
+    }
+
+    @ResponseBody
+    @GetMapping("/api-test-admin")
+    public String testAdmin(){
+        return "Admin Access";
+    }
 }

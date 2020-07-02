@@ -19,7 +19,7 @@ public class PostModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
     private Long id;
 
@@ -35,7 +35,7 @@ public class PostModel implements Serializable {
     private double price;
 
     @Column(name = "DISTANCE", nullable = false)
-    private  double distance;
+    private double distance;
 
     @Column(name = "SQUARE", nullable = false)
     private double square;
@@ -67,4 +67,9 @@ public class PostModel implements Serializable {
     @ManyToMany(mappedBy = "posts")
     private List<RenterModel> renters;
 
+    @OneToMany(mappedBy = "postPayment", cascade = CascadeType.ALL)
+    private List<PaymentPostModel> paymentPosts;
+
+    @OneToMany(mappedBy = "postRoom", cascade = CascadeType.ALL)
+    private List<RoomModel> rooms;
 }

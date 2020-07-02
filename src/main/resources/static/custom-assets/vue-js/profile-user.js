@@ -281,6 +281,11 @@ var userTaskInstance = new Vue({
                 if(adminManager != null){
                     admin.task = task
                 }
+                let landlordManager = document.getElementById("landlord-manager")
+                if(landlordManager != null){
+                    noteInstance.task = task
+                    landlordInstance.task = task
+                }
             }else{
                 let profileUser = document.getElementById("user-manager-content")
                 profileUser.classList.add("invisible")
@@ -300,6 +305,10 @@ var userTaskInstance = new Vue({
                     renterInstance.getWishlist()
                 }else if(task == 2){
                     renterInstance.task = task
+                }else if(task == 13){
+                    noteInstance.task = task
+                    landlordInstance.task = task
+                    landlordInstance.getInitNewPost()
                 }
             }
 

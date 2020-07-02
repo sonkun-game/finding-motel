@@ -8,8 +8,8 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "ROLE")
-public class RoleModel implements Serializable {
+@Table(name = "PAYMENT_PACKAGE")
+public class PaymentPackageModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -17,12 +17,12 @@ public class RoleModel implements Serializable {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "ROLE_NAME", nullable = false)
-    private String roleName;
+    @Column(name = "AMOUNT")
+    private float amount;
 
-    @Column(name = "DISPLAY_NAME")
-    private String displayName;
+    @Column(name = "DURATION")
+    private int duration;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserModel> users;
+    @OneToMany(mappedBy = "paymentPackage", cascade = CascadeType.ALL)
+    private List<PaymentPostModel> paymentPosts;
 }

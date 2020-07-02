@@ -4,12 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
-@Table(name = "ROLE")
-public class RoleModel implements Serializable {
+@Table(name = "ROOM")
+public class RoomModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -17,12 +16,14 @@ public class RoleModel implements Serializable {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "ROLE_NAME", nullable = false)
-    private String roleName;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
-    @Column(name = "DISPLAY_NAME")
-    private String displayName;
+    @ManyToOne
+    @JoinColumn(name = "STATUS_ID")
+    private StatusModel status;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserModel> users;
+    @ManyToOne
+    @JoinColumn(name = "POST_ID")
+    private PostModel postRoom;
 }

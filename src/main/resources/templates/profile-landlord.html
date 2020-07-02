@@ -7,6 +7,20 @@
     <title>Quản lý tài khoản</title>
 </head>
 <body>
+
+<div id="loading-wrapper">
+    <div v-show="!isHidden" id="loader-login">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>Đăng Lưu</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
@@ -24,9 +38,24 @@
                     <div id="basic-user-info" class="avatar">
                         <i class="ti-user profile-avatar"></i>
                         <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>
-                        <p class="display-name" v-cloak>Số dư: {{userInfo.amount}} vnđ</p>
+                        <p class="display-name" v-cloak>
+                            Số dư: {{authenticationInstance.formatNumberToDisplay(userInfo.amount)}} VNĐ
+                        </p>
                     </div>
                     <div th:replace="layout :: user-task"></div>
+
+                </div>
+                <div class="col-3 note" id="note-wrapper" v-if="task == 13">
+                    <div class="note-body">
+                        <h4>Lưu ý khi đăng tin</h4>
+                        <ul>
+                            <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
+                            <li>Tiêu đề tin không dài quá 100 kí tự.</li>
+                            <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
+                            <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
+                            <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="user-manager-content" class="col-9 sidebar-right">
                     <!-- Thông tin tài khoản -->
@@ -35,8 +64,203 @@
                     <!-- Đổi mật khẩu -->
                     <div th:replace="layout :: change-password"></div>
 
+                </div>
+
+                <div id="landlord-manager" class="col-9 sidebar-right">
                     <!-- Đăng tin -->
-                    <div th:replace="layout :: post-new-room"></div>
+                    <div v-if="task == 13" id="post-new-room">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Đăng tin</h1>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="container">
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Loại phòng</h4>
+                                    </div>
+                                    <div class="form-dropdown input-information">
+                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
+                                            <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thông tin chi tiết</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Giá cho thuê</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>VNĐ</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Diện tích</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>M&sup2</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Khoảng cách (So với Đại Học FPT)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>KM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Số lượng phòng:</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="100" @focusout="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>PHÒNG</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
+                                    <div class="title">
+                                        <h4>Trạng thái các phòng:</h4>
+                                    </div>
+                                    <div class="input-information table-wrapper">
+                                        <table class="table tbl-room">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">STT</th>
+                                                <th scope="col">Phòng</th>
+                                                <th scope="col">Trạng thái</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="room in listRoom">
+                                                <th scope="row" v-text="room.index"></th>
+                                                <th scope="row" v-text="room.roomName"></th>
+                                                <th scope="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox" v-model="room.availableRoom">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="upload-file" v-on:click="openFileDialog">
+                                            <img class="upload-image" src="assets/img/logo/upload.png"/>
+                                        </div>
+                                        <input type="file" id="file-browse" style="display: none" multiple @change="processFile"/>
+                                    </div>
+                                    <div class="list-image input-information" v-show="uploadImages != undefined && uploadImages.length > 0">
+                                        <div class="image-item" v-for="image in uploadImages">
+                                            <div class="image">
+                                                <img v-bind:src="image">
+                                                <i v-on:click="removeImage(image)" class="fas fa-times-circle"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thời hạn bài đăng</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                            <label class="radio-container">
+                                                {{package.duration + ' tháng'}}
+                                                <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="fill-information" v-if="duration != 0">
+                                    <div class="title">
+                                        <h4>Thông tin thanh toán</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div id="table-checkout">
+                                            <table>
+                                                <tr>
+                                                    <td>Thành tiền:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tài khoản:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số dư:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
+                                <div class="title">
+                                    <h4>Bảng giá tham khảo</h4>
+                                </div>
+                                <div id="table-price">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Gói</th>
+                                            <th scope="col">Thời hạn</th>
+                                            <th scope="col">Giá</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="package in listPaymentPackage">
+                                            <th scope="row" v-text="'Gói ' + package.id"></th>
+                                            <th scope="row" v-text="package.duration + ' Tháng'"></th>
+                                            <th scope="row" v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <!-- Xử lý yêu cầu thuê trọ -->
@@ -221,7 +445,7 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 
-<script th:src="@{/assets/js/vendor/active.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>
 </body>
 </html>

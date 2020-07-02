@@ -40,6 +40,9 @@ var authenticationInstance = new Vue({
         getTaskPage(task){
             localStorage.setItem("task", task)
             window.location.href = "https://localhost:8081/profile-user"
+        },
+        formatNumberToDisplay(number){
+            return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
         }
     },
     mounted(){

@@ -16,6 +16,7 @@ var landlordInstance = new Vue({
         numberOfRoom: 0,
         listRoom: [],
         amountSelected: 0,
+        listPayment: [],
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -29,6 +30,20 @@ var landlordInstance = new Vue({
         }
     },
     methods: {
+        getHistoryPayment(){
+            fetch("/api-get-history-payment", {
+                method: 'POST',
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null){
+                        this.listPayment = data
+                    }
+                }).catch(error => {
+                    console.log(error);
+                    })
+        },
         getInitNewPost(){
             fetch("/api-get-init-new-post", {
                 method: 'POST',

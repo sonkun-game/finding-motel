@@ -28,7 +28,7 @@ public class RenterModel extends UserModel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dob;
 
-    @OneToMany(mappedBy = "renterReport")
+    @OneToMany(mappedBy = "renterReport", cascade = CascadeType.ALL)
     private List<ReportModel> reports;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

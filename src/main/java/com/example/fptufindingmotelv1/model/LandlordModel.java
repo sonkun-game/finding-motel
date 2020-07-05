@@ -22,6 +22,6 @@ public class LandlordModel extends UserModel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date unBanDate;
 
-    @OneToMany(mappedBy = "landlord")
+    @OneToMany(mappedBy = "landlord", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PostModel> posts;
 }

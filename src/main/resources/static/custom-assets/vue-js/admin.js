@@ -21,21 +21,21 @@ var admin = new Vue({
         modalData: [],
         //user detail form
         userDetail: [],
-        task : 0,
+        task: 0,
     },
-    beforeMount(){
+    beforeMount() {
         this.task = localStorage.getItem("task")
     },
-    mounted(){
-        if(this.task == 9){
+    mounted() {
+        if (this.task == 9) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getListUser()
-        }else if(this.task == 10){
+        } else if (this.task == 10) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getListPost()
-        }else if(this.task == 11){
+        } else if (this.task == 11) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getListReport()
@@ -91,9 +91,12 @@ var admin = new Vue({
             }
 
         },
-        showModalConfirmBan(id, dataType) {
+        showModalConfirmBan(id, dataType, event) {
             this.modalBanId = id;
             this.modalBanDataType = dataType;
+            if (event.target.className.indexOf("disable") != -1) {
+                return;
+            }
             if (this.modalBanDataType == 'ban') {
                 document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
             } else if (this.modalBanDataType == 'unban') {
@@ -220,12 +223,11 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.listPost = data;
-                    // } else {
-                    // window.location.href = "/error";
-                    // }
-
+                    if (data.code == "000") {
+                        this.listPost = data.data;
+                    } else {
+                        window.location.href = "/error";
+                    }
                 }).catch(error => {
                 console.log(error);
             })
@@ -239,12 +241,11 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.listReport = data;
-                    this.getListPost();
-                    // } else {
-                    //     window.location.href = "/error";
-                    // }
+                    if (data.code == "000") {
+                        this.getListPost();
+                    } else {
+                        window.location.href = "/error";
+                    }
                 }).catch(error => {
                 console.log(error);
             })

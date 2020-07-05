@@ -258,7 +258,31 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+<!--                 Lịch sử nạp tiền-->
+                    <div v-if="task == 6">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Lịch sử nạp tiền</h1>
+                        </div>
+                        <div class="information-detail">
+                            <table >
+                                <tr>
+                                    <th>Mã giao dịch</th>
+                                    <th>Số tiền</th>
+                                    <th>Ngày giao dịch</th>
+                                    <th>Momo ID</th>
+                                    <th>Mã khách hàng</th>
+                                </tr>
+                                <tr v-for="payment in listPayment">
+                                    <td v-text="payment.id"></td>
+                                    <td v-text="payment.amount+' VNĐ'"></td>
+                                    <td v-text="payment.payDate"></td>
+                                    <td v-text="payment.momoId"></td>
+                                    <td v-text="payment.landlord"></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
                 </div>

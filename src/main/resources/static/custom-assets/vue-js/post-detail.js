@@ -2,6 +2,16 @@ var postDtl = new Vue({
     el: '#postDetailBody',
     data: {
         post: null,
+        reportContent: null,
+        userInfo : null,
+        postId : null,
+    },
+    beforeMount() {
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        //get url param
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        this.postId = urlParams.get('id');
     },
     methods: {
         viewDetail: function (event) {
@@ -28,7 +38,29 @@ var postDtl = new Vue({
             }
         },
         sendReport() {
+            let currentDate = new Date();
+            let reportRequest = {
+                "renterId" : this.userInfo.username,
+                "postId" : this.postId,
+                "content" : this.reportContent
+            }
+            fetch("https://localhost:8081/sent-report", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body : JSON.stringify(reportRequest),
+            }).then(response => response.json())
+                .then((data) => {
+                    // if(data.status == 200){
+                    this.listReport = data;
+                    // } else {
+                    // window.location.href = "/error";
+                    // }
 
+                }).catch(error => {
+                console.log(error);
+            })
         }
     },
 

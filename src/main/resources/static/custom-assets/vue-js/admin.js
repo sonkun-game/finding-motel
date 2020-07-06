@@ -183,7 +183,6 @@ var admin = new Vue({
             })
         },
         getListReport() {
-
             fetch("https://localhost:8081/get-report", {
                 method: 'POST',
             }).then(response => response.json())

@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <h4 class="font-weight-normal">Nội dung</h4>
-                                        <textarea></textarea>
+                                        <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button id="modalReportAcceptBtn" @click="handleEventReportModal" class="btn-default">Xác Nhận</button>
@@ -150,6 +150,7 @@
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>
 <script th:src="@{/assets/js/flexslider.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-detail.js}"></script>
 
 </body>
 </html>

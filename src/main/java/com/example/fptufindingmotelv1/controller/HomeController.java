@@ -21,6 +21,7 @@ import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Sort;
 @Controller
 public class HomeController {
 
@@ -37,19 +38,18 @@ public class HomeController {
     public String getHomepage(Model model,
                               @RequestParam(name = "page") Optional<Integer> page,
                               @RequestParam(name = "pageSize")  Optional<Integer> size,
-                              @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort){
+                              @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
 
         // sort post by date
         Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by("createDate").ascending();
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("createDate").descending();
         }
         // Paging
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
-        Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize, Sort.by("createDate").descending());
         List<PostModel> postList =  postRepository.findAll();
-        Page<PostModel> postPage =  postRepository.findAll(pageable);
 
         // Pass PostModel List to PostDTO
         List<PostDTO> postDTOs= new ArrayList<>();
@@ -113,7 +113,6 @@ public class HomeController {
     public String viewInstruction(Model model){
         return "instruction";
     }
-
 
     @ResponseBody
     @GetMapping("/api-test-renter")

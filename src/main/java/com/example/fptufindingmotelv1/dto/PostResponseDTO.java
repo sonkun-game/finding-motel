@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.dto;
 
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 import org.omg.CORBA.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import java.util.Date;
 
 @Data
 public class PostResponseDTO {
-    private String dateFormat;
-
     private String id;
     private String typeId;
     private String typeName;
@@ -29,8 +28,7 @@ public class PostResponseDTO {
     private String displayStatus;
 
     public PostResponseDTO(PostModel postModel) {
-        dateFormat = "HH:mm:ss dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
         this.id = postModel.getId().toString();
         this.typeId = postModel.getType().getId().toString();
         this.typeName = postModel.getType().getName();

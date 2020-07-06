@@ -37,18 +37,18 @@ public class HomeController {
     public String getHomepage(Model model,
                               @RequestParam(name = "page") Optional<Integer> page,
                               @RequestParam(name = "pageSize")  Optional<Integer> size,
-                              @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort){
+                              @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
 
         // sort post by date
         Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by("createDate").ascending();
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("createDate").descending();
         }
         // Paging
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
-        List<PostModel> postList =  postRepository.findAll();
+        List<PostModel> postList =  postRepository.findByVisibleTrue(sortable);
         Page<PostModel> postPage =  postRepository.findAll(pageable);
 
         // Pass PostModel List to PostDTO
@@ -60,9 +60,9 @@ public class HomeController {
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
 
-            if(userDetails.getUserModel().getRole().getId()!=1){
+            if(userDetails.getUserModel().getRole().getId() != 1){
                 for (int i = 0; i< postList.size(); i++){
-                    postDTO=new PostDTO(postList.get(i));
+                    postDTO = new PostDTO(postList.get(i));
                     postDTO.setIsLord("display:none");
                     postDTOs.add(postDTO);
                 }

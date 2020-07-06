@@ -140,16 +140,16 @@ public class ManagePostServiceImpl implements ManagePostService{
     }
 
     @Override
-    public boolean changePostStatus(PostRequestDTO postRequestDTO) {
+    public PostModel changePostStatus(PostRequestDTO postRequestDTO) {
         try {
             PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
-            postModel.setVisible(postRequestDTO.isVisible());
-            postRepository.save(postModel);
-            return true;
+            postModel.setVisible(postRequestDTO.getIsVisible());
+            postModel = postRepository.save(postModel);
+            return postModel;
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     @Override

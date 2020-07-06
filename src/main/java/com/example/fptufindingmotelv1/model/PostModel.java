@@ -53,7 +53,7 @@ public class PostModel implements Serializable {
     private Date expireDate;
 
     @Column(name = "IS_VISIBLE", nullable = false)
-    private boolean isVisible;
+    private boolean visible;
 
     @Column(name = "TITLE", nullable = false)
     private String title;

@@ -17,6 +17,7 @@ var landlordInstance = new Vue({
         listRoom: [],
         amountSelected: 0,
         listPayment: [],
+        listPost: [],
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -27,6 +28,10 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
+        }else if(this.task == 4){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.viewListPost()
         }
     },
     methods: {
@@ -142,7 +147,51 @@ var landlordInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
+        viewListPost(){
+            let request = {
+                'username' : this.userInfo.username,
+            }
+            fetch("/api-view-list-post", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == "post000"){
+                        this.listPost = data.listPost
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        changeStatusPost(index, postId, isVisible){
+            let request = {
+                'postId' : postId,
+                'isVisible' : isVisible
+            }
+            fetch("/api-change-post-status", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == "post000"){
+                        this.$set(this.listPost, index, data.post)
+                        profileInstance.showNotifyModal()
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     }
 })
 var noteInstance = new Vue({

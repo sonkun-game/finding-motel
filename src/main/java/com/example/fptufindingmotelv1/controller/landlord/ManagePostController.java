@@ -75,9 +75,10 @@ public class ManagePostController {
     @PostMapping("/api-change-post-status")
     public JSONObject changePostStatus(@RequestBody PostRequestDTO postRequestDTO) {
         JSONObject response = new JSONObject();
-        boolean isSuccess = managePostService.changePostStatus(postRequestDTO);
+        PostModel postModel = managePostService.changePostStatus(postRequestDTO);
 
-        response.put("msgCode", isSuccess ? "post000" : "sys999");
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("post", new PostResponseDTO(postModel));
         return response;
     }
 

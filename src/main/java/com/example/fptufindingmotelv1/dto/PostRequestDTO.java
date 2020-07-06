@@ -20,5 +20,5 @@ public class PostRequestDTO {
     private List<RoomDTO> listRoom;
     private List<String> listImage;
     private long paymentPackageId;
-    private boolean isVisible;
+    private Boolean isVisible;
 }

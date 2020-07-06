@@ -3,8 +3,8 @@ var postDtl = new Vue({
     data: {
         post: null,
         reportContent: null,
-        userInfo : null,
-        postId : null,
+        userInfo: null,
+        postId: null,
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -29,10 +29,13 @@ var postDtl = new Vue({
         showModalReport() {
             document.getElementById("reportModal").style.display = 'block';
         },
+        closeModalReport() {
+            document.getElementById("reportModal").style.display = 'none';
+        },
         handleEventReportModal(event) {
             //close modal
             if (event.target.id.toString().includes('closeModal')) {
-                document.getElementById("reportModal").style.display = "none";
+                this.closeModalReport();
             } else if (event.target.id.toString() === 'modalReportAcceptBtn') {
                 this.sendReport();
             }
@@ -40,23 +43,23 @@ var postDtl = new Vue({
         sendReport() {
             let currentDate = new Date();
             let reportRequest = {
-                "renterId" : this.userInfo.username,
-                "postId" : this.postId,
-                "content" : this.reportContent
+                "renterId": this.userInfo.username,
+                "postId": this.postId,
+                "content": this.reportContent
             }
             fetch("https://localhost:8081/sent-report", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body : JSON.stringify(reportRequest),
+                body: JSON.stringify(reportRequest),
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.listReport = data;
-                    // } else {
-                    // window.location.href = "/error";
-                    // }
+                    if (data.code == '000') {
+                        this.closeModalReport();
+                    } else {
+                        window.location.href = "/error";
+                    }
 
                 }).catch(error => {
                 console.log(error);

@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <meta charset="UTF-8">
     <title>Chi tiết bài đăng</title>
 </head>
@@ -13,7 +14,7 @@
 
 <main>
     <div class="container-fluid">
-        <div class="main-content">
+            <div id="postDetailBody" class="main-content">
             <div class="row">
                 <div class="sidebar-left-image">
                     <section class="slider">
@@ -93,20 +94,20 @@
                     <div class="report">
                         <div class="title-report">
                             <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo cáo với chúng tôi.</p>
-                            <button class="btn-report" onclick="modal_report()" type="button" id="myBtn">Báo Cáo Bài Viết</button>
-                            <div id="myModal" class="modal">
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">Báo Cáo Bài Viết</button>
+                            <div id="reportModal" class="modal">f
                                 <!-- Modal content -->
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h2>Báo Cáo Bài Viết</h2>
-                                        <span class="close">&times;</span>
+                                        <span @click="handleEventReportModal($event)" class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
                                         <h4 class="font-weight-normal">Nội dung</h4>
                                         <textarea></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn-default">Xác Nhận</button>
+                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal" class="btn-default">Xác Nhận</button>
                                     </div>
                                 </div>
 

@@ -98,7 +98,8 @@
                                            id="myIcon-view"></i>
                                         <i v-if="user.role == 'LANDLORD'"
                                            v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
-                                           @click="showModalConfirmBan(user.username, 'ban', $event)" class="fas fa-lock">
+                                           @click="showModalConfirmBan(user.username, 'ban', $event)"
+                                           class="fas fa-lock">
                                             {{user.unBanDate}}
                                         </i>
                                         <i v-if="user.role == 'LANDLORD'"
@@ -299,7 +300,8 @@
                                             <span>Chủ trọ:</span>
                                         </div>
                                         <div class="search-container">
-                                            <input id="searchLandlordTxt" type="text" placeholder="Tìm kiếm..." name="search">
+                                            <input id="searchLandlordTxt" type="text" placeholder="Tìm kiếm..."
+                                                   name="search">
                                         </div>
                                     </div>
                                 </div>
@@ -332,7 +334,8 @@
                                 <tbody>
                                 <tr v-for="post in listPost">
                                     <th scope="row">{{listPost.indexOf(post) + 1}}</th>
-                                    <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a></td>
+                                    <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
+                                    </td>
                                     <td>{{post.typeName}}</td>
                                     <td>{{post.price}}</td>
                                     <td>{{post.square}}&sup2</td>
@@ -375,7 +378,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal icon delete -->
+                    <!-- Modal ban confirm -->
                     <div id="modalBan" class="modal">
                         <!-- Modal content -->
                         <div class="message-confirm">

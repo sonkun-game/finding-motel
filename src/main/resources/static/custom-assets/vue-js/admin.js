@@ -50,7 +50,7 @@ var admin = new Vue({
                     break;
                 }
             }
-
+            //close modal
             window.onclick = function (event) {
                 if (event.target.id.toString().includes('closeModal')) {
                     document.getElementById("modalUserDetail").style.display = "none";

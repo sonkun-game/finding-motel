@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "LANDLORD")
@@ -20,4 +21,10 @@ public class LandlordModel extends UserModel implements Serializable {
     @Column(name = "UNBAN_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date unBanDate;
+
+    @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL)
+    private List<PostModel> posts;
+
+    @OneToMany(mappedBy = "landlordModel", cascade = CascadeType.ALL)
+    private List<PaymentModel> paymentModels;
 }

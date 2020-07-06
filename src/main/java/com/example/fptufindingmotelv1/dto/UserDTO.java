@@ -40,6 +40,10 @@ public class UserDTO {
 
     private String newPassword;
 
+    private Integer reportNumber;
+
+    private Boolean banAvailable;
+
     public UserDTO(UserModel userModel) {
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();

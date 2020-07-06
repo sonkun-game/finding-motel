@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
@@ -55,8 +56,8 @@
                                             <form action="#">
                                                 <select id="roleFilterCb" v-on:change="getListUser()">
                                                     <option selected value="0">Tất cả</option>
-                                                    <option value="1">Người thuê</option>
-                                                    <option value="2">Chủ trọ</option>
+                                                    <option value="RENTER">Người thuê</option>
+                                                    <option value="LANDLORD">Chủ trọ</option>
                                                 </select>
                                             </form>
                                         </div>
@@ -65,8 +66,10 @@
                                 <div class="col">
                                     <div class="search-container">
                                         <form action="#">
-                                            <input @focusout="getUserById()" id="searchUserTxt" type="text" placeholder="Tìm kiếm..." name="search">
-                                            <button @click.prevent="getUserById()" type="submit"><i class="fa fa-search"></i></button>
+                                            <input @focusout="getUserById()" id="searchUserTxt" type="text"
+                                                   placeholder="Tìm kiếm..." name="search">
+                                            <button @click.prevent="getUserById()" type="submit"><i
+                                                    class="fa fa-search"></i></button>
                                         </form>
                                     </div>
 
@@ -93,13 +96,20 @@
                                     <td>
                                         <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
                                            id="myIcon-view"></i>
-                                        <i v-if="user.role == 'LANDLORD'" v-bind:class="{invisible: user.unBanDate != null}"
-                                           @click="showModalConfirmBan(user.username, 'ban')" class="fas fa-lock">
+                                        <i v-if="user.role == 'LANDLORD'"
+                                           v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
+                                           @click="showModalConfirmBan(user.username, 'ban', $event)"
+                                           class="fas fa-lock">
                                             {{user.unBanDate}}
                                         </i>
-                                        <i v-if="user.role == 'LANDLORD'" v-bind:class="{invisible: user.unBanDate == null}"
-                                           @click="showModalConfirmBan(user.username, 'unban')"
-                                           class="fas fa-unlock"></i>
+                                        <i v-if="user.role == 'LANDLORD'"
+                                           v-bind:class="{invisible: user.unBanDate == null}"
+                                           @click="showModalConfirmBan(user.username, 'unban', $event)"
+                                           :aria-disabled="true"
+                                           class="fas fa-unlock">
+
+                                        </i>
+                                        <label v-if="user.role == 'LANDLORD'">{{user.reportNumber}}</label>
                                     </td>
                                 </tr>
 
@@ -157,7 +167,7 @@
                                                         <input class="right-modal rounded-pill border-0 shadow-sm"
                                                                type="text" disabled/>
                                                     </div>
-                                                    <div  class="infor-modal-table">
+                                                    <div class="infor-modal-table">
                                                         <p class="left-modal">Nội dung báo cáo:</p>
                                                         <textarea></textarea>
                                                     </div>
@@ -287,6 +297,17 @@
                                 <div class="col">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
+                                            <span>Chủ trọ:</span>
+                                        </div>
+                                        <div class="search-container">
+                                            <input id="searchLandlordTxt" type="text" placeholder="Tìm kiếm..."
+                                                   name="search">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="filter-area">
+                                        <div class="title-filter-area">
                                             <button class="btn-search">Tìm kiếm</button>
                                         </div>
                                     </div>
@@ -306,13 +327,15 @@
                                     <th scope="col">Ngày đăng</th>
                                     <th scope="col">Ngày hết hạn</th>
                                     <th scope="col">Trạng thái</th>
+                                    <th scope="col">Chủ sở hữu</th>
                                     <th scope="col">Tác vụ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr v-for="post in listPost">
                                     <th scope="row">{{listPost.indexOf(post) + 1}}</th>
-                                    <td><a v-bind:href='"get-post-detail?postId=" + post.id'>{{post.title}}</a></td>
+                                    <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
+                                    </td>
                                     <td>{{post.typeName}}</td>
                                     <td>{{post.price}}</td>
                                     <td>{{post.square}}&sup2</td>
@@ -320,6 +343,7 @@
                                     <td>{{post.createDate}}</td>
                                     <td>{{post.expireDate}}</td>
                                     <td>{{post.displayStatus}}</td>
+                                    <td>{{post.landlordName}}</td>
                                     <td>
                                         <i class="fas fa-eye"></i>
                                         <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt"
@@ -341,10 +365,12 @@
                             <div class="modal-body">
                                 <label id="modalDelContent"></label>
                                 <div class="group-btn">
-                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">Hủy
+                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">
+                                        Hủy
                                         bỏ
                                     </button>
-                                    <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">Đồng
+                                    <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">
+                                        Đồng
                                         ý
                                     </button>
                                 </div>
@@ -352,7 +378,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal icon delete -->
+                    <!-- Modal ban confirm -->
                     <div id="modalBan" class="modal">
                         <!-- Modal content -->
                         <div class="message-confirm">
@@ -362,10 +388,12 @@
                             <div class="modal-body">
                                 <label id="modalBanContent"></label>
                                 <div class="group-btn">
-                                    <button @click="yesNoConfirmBanClick($event)" value="0" class="btn-hover btn-default-cancel">Hủy
+                                    <button @click="yesNoConfirmBanClick($event)" value="0"
+                                            class="btn-hover btn-default-cancel">Hủy
                                         bỏ
                                     </button>
-                                    <button @click="yesNoConfirmBanClick($event)" value="1" class="btn-hover btn-default-cancel">Đồng
+                                    <button @click="yesNoConfirmBanClick($event)" value="1"
+                                            class="btn-hover btn-default-cancel">Đồng
                                         ý
                                     </button>
                                 </div>
@@ -383,17 +411,20 @@
                             <div class="modal-body">
                                 <div class="infor-modal">
                                     <p class="left-modal">Tên đăng nhập:</p>
-                                    <input :value="userDetail.username" class="right-modal rounded-pill border-0 shadow-sm"
+                                    <input :value="userDetail.username"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
                                 <div class="infor-modal">
                                     <p class="left-modal">Tên hiển thị:</p>
-                                    <input :value="userDetail.displayName" class="right-modal rounded-pill border-0 shadow-sm"
+                                    <input :value="userDetail.displayName"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
                                 <div class="infor-modal">
                                     <p class="left-modal">Số điện thoại:</p>
-                                    <input :value="userDetail.phoneNumber" class="right-modal rounded-pill border-0 shadow-sm"
+                                    <input :value="userDetail.phoneNumber"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
                                 <div v-if="userDetail.role == '1'" class="infor-modal">
@@ -413,12 +444,14 @@
                                 </div>
                                 <div class="infor-modal">
                                     <p class="left-modal">Vai trò:</p>
-                                    <input :value="userDetail.roleName" class="right-modal rounded-pill border-0 shadow-sm"
+                                    <input :value="userDetail.roleName"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
                                 <div v-if="userDetail.role == '2'" class="infor-modal">
                                     <p class="left-modal">Tài khoản:</p>
-                                    <input :value="userDetail.amount" class="right-modal rounded-pill border-0 shadow-sm"
+                                    <input :value="userDetail.amount"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
                                 <div v-if="userDetail.role == '2'" class="infor-modal-table">
@@ -447,8 +480,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
 
@@ -456,6 +487,21 @@
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+<!--<div id="myModal" class="modal">-->
+<!--    &lt;!&ndash; Modal content &ndash;&gt;-->
+<!--    <div class="modal-content">-->
+<!--        <div class="modal-header">-->
+<!--            <span class="close">&times;</span>-->
+<!--            <h2>Modal Header</h2>-->
+<!--        </div>-->
+<!--        <div class="modal-body">-->
+<!--            <p>Some text in the Modal Body</p>-->
+<!--            <p>Some other text...</p>-->
+<!--        </div>-->
+<!--        <div class="modal-footer">-->
+<!--            <h3>Modal Footer</h3>-->
+<!--        </div>-->
+<!--    </div>-->
 
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/admin.js}"></script>

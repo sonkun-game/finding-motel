@@ -603,3 +603,14 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
     display: none;
 
 }
+.fa-unlock {
+    color: mediumspringgreen;
+}
+
+.fa-lock {
+    color: red;
+}
+
+.fa-lock.disable {
+    color : #dddddd;
+}

@@ -50,6 +50,13 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<UserDTO> users = new ArrayList<>();
             for (UserModel user : userRepository.findAll()) {
                 UserDTO userDTO = new UserDTO(user);
+                //add report number
+                if (user.getRole().getId() == 2) {
+                    userDTO.setReportNumber(getReportNumber(user.getUsername()));
+                    boolean banAvailable = userDTO.getUnBanDate() == null && userDTO.getReportNumber() >= 3;
+                    userDTO.setBanAvailable(banAvailable);
+                }
+                //add user to list
                 users.add(userDTO);
             }
             return users;
@@ -57,6 +64,17 @@ public class AdminServiceImpl implements AdminService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Integer getReportNumber(String username) {
+        Integer reportNumber = 0;
+        ArrayList<ReportResponseDTO> listReport = getListReport();
+        for (ReportResponseDTO report : listReport) {
+            if (report.getLandlordName().equals(username)) {
+                reportNumber++;
+            }
+        }
+        return reportNumber;
     }
 
     @Override
@@ -69,6 +87,12 @@ public class AdminServiceImpl implements AdminService {
         ArrayList<UserDTO> users = new ArrayList<>();
         for (UserModel user : userRepository.findByUsernameOrDisplayName(username)) {
             UserDTO userDTO = new UserDTO(user);
+            //add report number and ban available
+            if (user.getRole().getId() == 2) {
+                userDTO.setReportNumber(getReportNumber(user.getUsername()));
+                boolean banAvailable = userDTO.getUnBanDate() == null && userDTO.getReportNumber() >= 3;
+                userDTO.setBanAvailable(banAvailable);
+            }
             users.add(userDTO);
         }
         return users;
@@ -145,10 +169,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deletePost(Long id) {
-//        PostModel post = postModelRepository.getOne(id);
-//        post.get
-//        renterRepository.
-//        postModelRepository.deleteById(id);
+        postRepository.deleteById(id);
     }
 
     @Override

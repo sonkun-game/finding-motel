@@ -60,7 +60,7 @@ public class HomeController {
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
 
-            if(userDetails.getUserModel().getRole().getId()==2){
+            if(userDetails.getUserModel().getRole().getId()!=1){
                 for (int i = 0; i< postList.size(); i++){
                     postDTO=new PostDTO(postList.get(i));
                     postDTO.setIsLord("display:none");
@@ -103,21 +103,17 @@ public class HomeController {
         return "index";
     }
 
-
-
     @GetMapping("/post-detail")
     public String getPostDetail(Model model,@PathParam("id") String id){
         model.addAttribute("post",postService.findOne(Long.valueOf(id)));
         return "post-detail";
     }
-    @ResponseBody
-    @PostMapping(value = "/api-post-detail")
-    public JSONObject viewDetail(@RequestParam(name = "id")String id){
-        JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("msg","Get id success");
-        return jsonObject;
+    @GetMapping("/instruction")
+    public String viewInstruction(Model model){
+        return "instruction";
     }
+
 
     @ResponseBody
     @GetMapping("/api-test-renter")

@@ -601,7 +601,6 @@ input[type=number].hide-arrow::-webkit-inner-spin-button,
 input[type=number].hide-arrow::-webkit-outer-spin-button {
 
     display: none;
-
 }
 .fa-unlock {
     color: mediumspringgreen;
@@ -614,3 +613,4 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 .fa-lock.disable {
     color : #dddddd;
 }
+

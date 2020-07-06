@@ -9,7 +9,6 @@ import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import com.example.fptufindingmotelv1.untils.Constant;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,8 +51,6 @@ public class HomeController {
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
         List<PostModel> postList =  postRepository.findByVisibleTrue(sortable);
-        Page<PostModel> postPage =  postRepository.findAll(pageable);
-
 
         // Pass PostModel List to PostDTO
         List<PostDTO> postDTOs = new ArrayList<>();
@@ -66,7 +63,6 @@ public class HomeController {
 
             if(userDetails.getUserModel().getRole().getId() != 1){
                 for (int i = 0; i< postList.size(); i++){
-
                     postDTO = new PostDTO(postList.get(i));
                     postDTO.setIsLord("display:none");
                     postDTOs.add(postDTO);
@@ -87,6 +83,7 @@ public class HomeController {
         } else {
             for (int i = 0; i < postList.size(); i++) {
                 postDTO = new PostDTO(postList.get(i));
+                postDTO.setIsLord("display:none");
                 postDTOs.add(postDTO);
             }
         }
@@ -118,7 +115,6 @@ public class HomeController {
     public String viewInstruction(Model model) {
         return "instruction";
     }
-
 
     @ResponseBody
     @GetMapping("/api-test-renter")

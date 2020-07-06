@@ -18,6 +18,7 @@ var landlordInstance = new Vue({
         amountSelected: 0,
         listPayment: [],
         listPost: [],
+        listPaymentPost: [],
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -32,9 +33,31 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.viewListPost()
+        }else if(this.task == 6){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getHistoryPayment()
+        }else if(this.task == 7){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getHistoryPaymentPost()
         }
     },
     methods: {
+        getHistoryPaymentPost(){
+            fetch("/api-get-history-payment-post", {
+                method: 'POST',
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null){
+                        this.listPaymentPost = data
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         getHistoryPayment(){
             fetch("/api-get-history-payment", {
                 method: 'POST',

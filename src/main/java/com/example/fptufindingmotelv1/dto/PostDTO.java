@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.dto;
 
 import com.example.fptufindingmotelv1.model.ImageModel;
+import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import lombok.Data;
 
@@ -43,5 +44,6 @@ public class PostDTO {
         for (ImageModel image: postModel.getImages()) {
             images.add(image.getUrl());
         }
+
     }
 }

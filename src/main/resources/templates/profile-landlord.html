@@ -45,7 +45,7 @@
                     <div th:replace="layout :: user-task"></div>
 
                 </div>
-                <div class="col-3 note" id="note-wrapper" v-if="task == 13">
+                <div class="col-3 note" v-if="task == 13" id="note-wrapper">
                     <div class="note-body">
                         <h4>Lưu ý khi đăng tin</h4>
                         <ul>
@@ -265,7 +265,7 @@
                         <div class="title">
                             <h1 class="title-name uppercase">Lịch sử nạp tiền</h1>
                         </div>
-                        <div class="information-detail">
+                        <div class="information-detail" id="history-payment">
                             <table >
                                 <tr>
                                     <th>Mã giao dịch</th>
@@ -317,6 +317,29 @@
                                 </tr>
 
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!--   Lịch sử thanh toán-->
+                    <div v-if="task == 7">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Lịch sử thanh toán</h1>
+                        </div>
+                        <div class="information-detail">
+                            <table >
+                                <tr>
+                                    <th>Mã giao dịch</th>
+                                    <th>Ngày giao dịch</th>
+                                    <th>Mã bài đăng</th>
+                                    <th>Gói</th>
+                                </tr>
+                                <tr v-for="list in listPaymentPost">
+                                    <td v-text="list.id"></td>
+                                    <td v-text="list.payDate"></td>
+                                    <td v-text="list.postId"></td>
+                                    <td v-text="list.packageID"></td>
+                                </tr>
                             </table>
                         </div>
                     </div>

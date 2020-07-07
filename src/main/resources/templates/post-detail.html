@@ -19,21 +19,9 @@
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
                             <ul class="slides" th:object="${post}">
-                                <li th:each="image:*{images}" th:data-thumb="${image.url}">
-                                    <div class="thumb-image"> <img th:src="${image.url}" data-imagezoom="true" class="img-responsive"> </div>
+                                <li th:each="image:*{images}">
+                                    <img th:src="${image.url}" />
                                 </li>
-                                <!--<li data-thumb="assets/img/rooms/room2.jpg">
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room2.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room3.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room3.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room4.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room4.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room5.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room5.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -126,7 +114,10 @@
                             </select>
                         </div>
                     </div>
-
+                    <div class="room-number">
+                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                        <input type="date" >
+                    </div>
                     <div class="sent-request">
                         <button class="btn btn-danger">Gửi Yêu Cầu</button>
                     </div>

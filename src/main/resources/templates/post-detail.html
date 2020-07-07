@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <meta charset="UTF-8">
     <title>Chi tiết bài đăng</title>
 </head>
@@ -12,27 +13,15 @@
 
 <main>
     <div class="container-fluid">
-        <div class="main-content">
+            <div id="postDetailBody" class="main-content">
             <div class="row">
                 <div class="sidebar-left-image">
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
                             <ul class="slides" th:object="${post}">
-                                <li th:each="image:*{images}" th:data-thumb="${image.url}">
-                                    <div class="thumb-image"> <img th:src="${image.url}" data-imagezoom="true" class="img-responsive"> </div>
+                                <li th:each="image:*{images}">
+                                    <img th:src="${image.url}" />
                                 </li>
-                                <!--<li data-thumb="assets/img/rooms/room2.jpg">
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room2.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room3.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room3.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room4.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room4.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room5.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room5.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -69,18 +58,7 @@
                         </div>
                         <div class="description-information">
                             <h4 class="font-weight-bold">Thông tin chi tiết</h4>
-                            <p>
-                                Tôi Tên Khôi là chính chủ Miếng đất thửa 505 Mặt tiền đường Bùi Thị Điệt, Xã Nhuận Đức, Huyện Củ Chi (ngay ngã 3 Nhuận Đức, Bùi Thị Điệt)</br>
-                                Hiện tôi đang kẹt nên muốn bán miếng đất 774.7m2 này</br>
-                                Miếng đất đã có sẳn 100m2 thổ cư rồi rất hợp xây nhà vườn, biệt thự hay kho xưởng đều được.</br>
-                                Tôi bán với giá 3 tỷ 650 ( thương lượng với người thiện chí )</br>
-
-                                Muốn đi xem thực tế xin gọi cho tôi:</br>
-                                Các thông tin của miếng đất:</br>
-                                Đất thuộc dạng dân cư hiện hữu</br>
-                                Khu vực có người ở đông đúc rồi, gần khu biệt thự với khách sạn Nhuận Đức.</br>
-                                Vui lòng gọi cho tôi đừng nhắn tin. Cảm ơn bạn đã đọc tin</br>
-                            </p>
+                            <p th:text="${post.description}"></p>
                         </div>
                     </div>
                     <div class="share">
@@ -94,20 +72,20 @@
                     <div class="report">
                         <div class="title-report">
                             <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo cáo với chúng tôi.</p>
-                            <button class="btn-report" onclick="modal_report()" type="button" id="myBtn">Báo Cáo Bài Viết</button>
-                            <div id="myModal" class="modal">
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">Báo Cáo Bài Viết</button>
+                            <div id="reportModal" class="modal">f
                                 <!-- Modal content -->
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h2>Báo Cáo Bài Viết</h2>
-                                        <span class="close">&times;</span>
+                                        <span id="closeModalReport" @click="handleEventReportModal($event)" class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
                                         <h4 class="font-weight-normal">Nội dung</h4>
-                                        <textarea></textarea>
+                                        <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn-default">Xác Nhận</button>
+                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal" class="btn-default">Xác Nhận</button>
                                     </div>
                                 </div>
 
@@ -136,7 +114,10 @@
                             </select>
                         </div>
                     </div>
-
+                    <div class="room-number">
+                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                        <input type="date" >
+                    </div>
                     <div class="sent-request">
                         <button class="btn btn-danger">Gửi Yêu Cầu</button>
                     </div>
@@ -160,6 +141,7 @@
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>
 <script th:src="@{/assets/js/flexslider.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-detail.js}"></script>
 
 </body>
 </html>

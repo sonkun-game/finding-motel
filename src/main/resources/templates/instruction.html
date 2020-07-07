@@ -3,7 +3,7 @@
 <head>
     <div th:replace="layout :: head"></div>
     <title>Hướng dẫn</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/instruc.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/instruction.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/paging.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
@@ -15,78 +15,147 @@
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 <main>
-    <div class="slider-area ">
-        <!-- Cover -->
-        <!-- <div class="slider-active dot-style"> -->
-        <div class="single-slider hero-overly slider-height d-flex align-items-center" data-background="assets/img/hero/F1.jpg">
-            <div class="container">
-                <div class="row justify-content-center text-center">
-                    <div class="col-xl-9">
-                        <div class="h1-slider-caption">
-                            <h1 data-animation="fadeInUp" data-delay=".4s">phòng trọ tại hòa lạc</h1>
-                            <h3 data-animation="fadeInDown" data-delay=".4s">Tìm Kiếm Phòng Trọ</h3>
-                        </div>
+    <div class="container-fluid">
+        <div class="main-content">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">Chủ trọ</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Người thuê</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane container active" id="tab1">
+                    <div class="content">
+                    <h3>Hướng Dẫn Đăng Tin</h3>
+                        <ul>
+                            <li class="li-1">Nếu bạn chưa có tài khoản, hãy đăng ký <a th:href="@{/dang-ki}">tại đây</a>.</li>
+                            <li class="li-1">Nếu đã có tài khoản, sau khi đăng nhập vào website, bạn vui lòng chọn mục đăng tin trong thông tin tài khoản để bắt đầu.</li>
+                            <li class="li-1">Khi đăng tin các bạn đọc kỹ mô tả từng bước, nhập đầy đủ và chính xác nội dung cho tin đăng, đặc biệt là mục Giá, Diện tích và Khoảng cách. Những tin có nội dung hình ảnh rõ ràng, đầy đủ sẽ có tỉ lệ xem cao</li>
+                            <li class="li-1">Lưu ý khi đăng tin:
+                                <ul>
+                                    <li>Điền đầy đủ các thông tin bắt buộc vào các ô nhập liệu trong phần đăng tin</li>
+                                    <li>Phần giá cho thuê, vui lòng nhập chính xác 1 giá duy nhất (Không nhập giá từ ....đến ....) và chọn đúng đơn vị giá là triệu/tháng hoặc nghìn/tháng. Ví dụ bạn cho thuê 3 triệu/tháng thì bạn nhập đủ như sau 3000000 (1 số 3 và 6 số 0)</li>
+                                    <li>Diện tích nhập đúng 1 diện tích duy nhất (Không nhập diện tích từ ....đến ....)</li>
+                                    <li>Sau khi nhập đầy đủ các thông tin, bấm ĐĂNG TIN NGAY và chờ vài giây để tin bạn hiển thị trên website, nếu đăng tin thành công hệ thống sẽ báo bạn đã đăng tin thành công, nếu hệ thống cảnh báo màu đỏ, các ô chọn màu bị sai, vui lòng nhập lại cho chính xác và bấm <a th:href="@{/}">ĐĂNG TIN NGAY</a> lại.</li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                        <br/>
+
+                        <h3>Hướng Dẫn Nạp Tiền</h3>
+                        <ul>
+                        <li class="li-1">Sau khi <a th:href="@{/dang-nhap}">Đăng nhập</a> quý khách nhấp chọn vào phần Quản lý tài khoản và chọn Nạp Tiền</li>
+                        <li class="li-1">Quý khách có thể chọn các hình thức thanh toán sau:
+                            <ul>
+                                <li>Thanh toán qua ví điện tử Momo cho số điện thoại 0968227855</li>
+                                <li>Thanh toán qua Zalo Pay cho số điện thoại 0968227855</li>
+                            </ul>
+                        </li>
+                        </ul>
+                        </br>
+
+                        <h3>Hướng Dẫn Quản Lý Bài Đăng</h3>
+                        <ul>
+                            <li>Đăng nhập tài khoản, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý tin đăng để quản lý các tin đã đăng trên hệ thống.
+                            <ul>
+                                <li><b>Gia hạn</b>: Khi hết hạn, bạn vẫn có thể quản lý tin của mình, nhưng tin sẽ không được hiển thị trên hệ thống của chúng tôi. Bạn có thể gia hạn để tin được tiếp tục hiển thị trên hệ thống.
+                                </li>
+                                <li><b> Sửa</b>: có nghĩa là bạn có thể sửa lại tin bạn đã đăng như nội dung, tiêu đề, hoặc giá, tình trạng phòng,...
+                                </li>
+                                <li><b>Ẩn/Hiện</b>: Thay đổi trạng thái hiển thị hay không hiển thị của tin trên website.
+                                </li>
+                                <li><b> Xoá</b>: có nghĩa là bạn sẽ xoá bỏ vĩnh viễn tin đăng của mình.
+                                </li>
+                            </ul>
+                            </li>
+                        </ul>
+                        <br>
+
+                        <h3>Hướng Dẫn Quản Lý Yêu Cầu Thuê Phòng</h3>
+                        <ul>
+                        <li class="li-1">Đăng nhập tài khoản, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý yêu cầu thuê phòng để quản lý các yêu cầu thuê phòng đối với phòng trọ của bạn.
+                            <ul>
+                                <li><b>Đồng ý</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để trở thành người thuê phòng trọ của mình.
+                                </li>
+                                <li><b>Từ chối</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để từ chối không cho họ thuê phòng của mình.
+                                </li>
+                            </ul>
+                        </li>
+                        </ul>
+                        <br/>
+
+                </div>
+                </div>
+                <div class="tab-pane container fade" id="tab2">
+                    <div class="content">
+                        <h3>Hướng Dẫn Đăng Tin</h3>
+                        <ul>
+                            <li class="li-1">Nếu bạn chưa có tài khoản, hãy đăng ký <a th:href="@{/dang-ki}">tại đây</a>.</li>
+                            <li class="li-1">Nếu đã có tài khoản, sau khi đăng nhập vào website, bạn vui lòng chọn mục đăng tin trong thông tin tài khoản để bắt đầu.</li>
+                            <li class="li-1">Khi đăng tin các bạn đọc kỹ mô tả từng bước, nhập đầy đủ và chính xác nội dung cho tin đăng, đặc biệt là mục Giá, Diện tích và Khoảng cách. Những tin có nội dung hình ảnh rõ ràng, đầy đủ sẽ có tỉ lệ xem cao</li>
+                            <li class="li-1">Lưu ý khi đăng tin:
+                                <ul>
+                                    <li>Điền đầy đủ các thông tin bắt buộc vào các ô nhập liệu trong phần đăng tin</li>
+                                    <li>Phần giá cho thuê, vui lòng nhập chính xác 1 giá duy nhất (Không nhập giá từ ....đến ....) và chọn đúng đơn vị giá là triệu/tháng hoặc nghìn/tháng. Ví dụ bạn cho thuê 3 triệu/tháng thì bạn nhập đủ như sau 3000000 (1 số 3 và 6 số 0)</li>
+                                    <li>Diện tích nhập đúng 1 diện tích duy nhất (Không nhập diện tích từ ....đến ....)</li>
+                                    <li>Sau khi nhập đầy đủ các thông tin, bấm ĐĂNG TIN NGAY và chờ vài giây để tin bạn hiển thị trên website, nếu đăng tin thành công hệ thống sẽ báo bạn đã đăng tin thành công, nếu hệ thống cảnh báo màu đỏ, các ô chọn màu bị sai, vui lòng nhập lại cho chính xác và bấm <a th:href="@{/}">ĐĂNG TIN NGAY</a> lại.</li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                        <br/>
+
+                        <h3>Hướng Dẫn Nạp Tiền</h3>
+                        <ul>
+                            <li class="li-1">Sau khi <a th:href="@{/dang-nhap}">Đăng nhập</a> quý khách nhấp chọn vào phần Quản lý tài khoản và chọn Nạp Tiền</li>
+                            <li class="li-1">Quý khách có thể chọn các hình thức thanh toán sau:
+                                <ul>
+                                    <li>Thanh toán qua ví điện tử Momo cho số điện thoại 0968227855</li>
+                                    <li>Thanh toán qua Zalo Pay cho số điện thoại 0968227855</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        </br>
+
+                        <h3>Hướng Dẫn Quản Lý Bài Đăng</h3>
+                        <ul>
+                            <li class="li-1">Đăng nhập tài khoản, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý tin đăng để quản lý các tin đã đăng trên hệ thống.
+                                <ul>
+                                    <li><b>Gia hạn</b>: Khi hết hạn, bạn vẫn có thể quản lý tin của mình, nhưng tin sẽ không được hiển thị trên hệ thống của chúng tôi. Bạn có thể gia hạn để tin được tiếp tục hiển thị trên hệ thống.
+                                    </li>
+                                    <li><b> Sửa</b>: có nghĩa là bạn có thể sửa lại tin bạn đã đăng như nội dung, tiêu đề, hoặc giá, tình trạng phòng,...
+                                    </li>
+                                    <li><b>Ẩn/Hiện</b>: Thay đổi trạng thái hiển thị hay không hiển thị của tin trên website.
+                                    </li>
+                                    <li><b> Xoá</b>: có nghĩa là bạn sẽ xoá bỏ vĩnh viễn tin đăng của mình.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <br>
+
+                        <h3>Hướng Dẫn Quản Lý Yêu Cầu Thuê Phòng</h3>
+                        <ul>
+                            <li class="li-1">Đăng nhập tài khoản, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý yêu cầu thuê phòng để quản lý các yêu cầu thuê phòng đối với phòng trọ của bạn.
+                                <ul>
+                                    <li><b>Đồng ý</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để trở thành người thuê phòng trọ của mình.
+                                    </li>
+                                    <li><b>Từ chối</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để từ chối không cho họ thuê phòng của mình.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <br/>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <table>
-        <tr>
-            <td class="left"><img  class="ads" src="assets/img/hero/instruct.png"/></td>
-            <td th:object="${renter}"><br/><h2 th:text="${renter}"></h2>
-                <p>Nếu bạn chưa có tài khoản, hãy đăng ký <a th:href="@{/dang-ki}">tại đây</a> trước khi bắt đầu đăng tin mới.</p>
-                <p>Nếu đã có tài khoản, sau khi đăng nhập vào website, bạn bấm vào nút <a th:href="@{/}">ĐĂNG TIN</a> để bắt đầu.</p>
-                <p>Khi đăng tin các bạn đọc kỹ mô tả từng bước, nhập đầy đủ và chính xác nội dung cho tin đăng, đặc biệt là mục Giá, Diện tích và Khoảng cách. Những tin có nội dung hình ảnh rõ ràng, đầy đủ sẽ có tỉ lệ xem cao</p>
-                <p>Lưu ý khi đăng tin:</p>
-                <ul>
-                    <li>+ Điền đầy đủ các thông tin bắt buộc vào các ô nhập liệu trong phần đăng tin
-                    </li>
-                    <li>+ Phần giá cho thuê, vui lòng nhập chính xác 1 giá duy nhất (Không nhập giá từ ....đến ....) và chọn đúng đơn vị giá là triệu/tháng hoặc nghìn/tháng. Ví dụ bạn cho thuê 3 triệu/tháng thì bạn nhập đủ như sau 3000000 (1 số 3 và 6 số 0)
-                    </li>
-                    <li>+ Diện tích nhập đúng 1 diện tích duy nhất (Không nhập diện tích từ ....đến ....)
-                    </li>
-                    <li>+ Sau khi nhập đầy đủ các thông tin, bấm ĐĂNG TIN NGAY và chờ vài giây để tin bạn hiển thị trên website, nếu đăng tin thành công hệ thống sẽ báo bạn đã đăng tin thành công, nếu hệ thống cảnh báo màu đỏ, các ô chọn màu bị sai, vui lòng nhập lại cho chính xác và bấm <a th:href="@{/}">ĐĂNG TIN NGAY</a> lại.
-                    </li>
-                </ul><br/>
-
-                <h2>Hướng dẫn nạp tiền</h2>
-                <p>Sau khi <a th:href="@{/dang-nhap}">Đăng nhập</a> quý khách nhấp chọn vào phần Quản lý tài khoản và chọn Nạp Tiền</p>
-                <p>Quý khách có thể chọn các hình thức thanh toán sau:</p>
-                <ul>
-                    <li>+ Thanh toán qua ví điện tử Momo <img style="width: 28px; height: 24px" src="assets/img/logo/mo.png"/> cho số điện thoại 0968227855
-                    </li>
-                    <li>+ Thanh toán qua Zalo Pay <img class="image" src="assets/img/logo/za.png"/> cho số điện thoại 0968227855
-                </ul>
-                <p>Link nạp tiền : <a href="#">.............................</a></p><br/>
-
-                <h2>Hướng dẫn quản lý tin rao</h2>
-                <p><a th:href="@{/dang-nhap}">Đăng nhập tài khoản</a>, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý tin đăng để quản lý các tin đã đăng trên hệ thống.</p>
-                <ul>
-                    <li>+ <b>Gia hạn</b>: Khi hết hạn, bạn vẫn có thể quản lý tin của mình, nhưng tin sẽ không được hiển thị trên hệ thống của chúng tôi. Bạn có thể gia hạn để tin được tiếp tục hiển thị trên hệ thống.
-                    </li>
-                    <li>+<b> Sửa</b>: có nghĩa là bạn có thể sửa lại tin bạn đã đăng như nội dung, tiêu đề, hoặc giá, tình trạng phòng,...
-                    </li>
-                    <li><img src="assets/img/logo/carrot.png"/><b>Ẩn/Hiện</b>: Thay đổi trạng thái hiển thị hay không hiển thị của tin trên website.
-                    </li>
-                    <li><img src="assets/img/logo/carrot.png"/><b> Xoá</b>: có nghĩa là bạn sẽ xoá bỏ vĩnh viễn tin đăng của mình.
-                    </li>
-                </ul><br>
-
-                <h2>Hướng dẫn quản lý yêu cầu thuê phòng</h2>
-                <p><a href="#">Đăng nhập tài khoản</a>, sau đó nhấp vào phần Quản lý tài khoản, chọn Quản lý yêu cầu thuê phòng để quản lý các yêu cầu thuê phòng đối với phòng trọ của bạn.</p>
-                <ul>
-                    <li><img class="image" src="assets/img/logo/carrot.png"/><b>Đồng ý</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để trở thành người thuê phòng trọ của mình.
-                    </li>
-                    <li><img src="assets/img/logo/carrot.png"/><b>Từ chối</b>: Bạn có thể chọn một người thuê trong danh sách những người gửi yêu cầu để từ chối không cho họ thuê phòng của mình.
-                    </li>
-                </ul><br/>
-            </td>
-        </tr>
-    </table>
-
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

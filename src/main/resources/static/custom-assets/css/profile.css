@@ -159,6 +159,7 @@ font-family:  sans-serif !important;
 
 .information-detail{
 margin-top: 30px;
+    text-align: center;
 }
 
 .post-wishlist{
@@ -601,4 +602,33 @@ input[type=number].hide-arrow::-webkit-inner-spin-button,
 input[type=number].hide-arrow::-webkit-outer-spin-button {
 
     display: none;
+}
+.fa-unlock {
+    color: mediumspringgreen;
+}
+
+.fa-lock {
+    color: red;
+}
+
+.fa-lock.disable {
+    color : #dddddd;
+}
+
+.date-time-box{
+    padding: 15px;
+    background-color: aquamarine;
+    line-height: 30px;
+}
+.btn-extend{
+    height: 30px;
+    background: #dca73a;
+    display: block;
+    border: medium none;
+    border-radius: 3px;
+    color: white;
+    margin: auto;
+}
+.flexElement{
+    display: flex;
 }

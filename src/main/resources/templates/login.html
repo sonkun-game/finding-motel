@@ -48,10 +48,10 @@
                                             </span>
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input v-bind:value="fillRegisteredUsername" v-model="username" id="inputUsername" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
+                                            <input v-on:keyup.enter="loginButtonClickEvent" v-bind:value="fillRegisteredUsername" v-model="username" id="inputUsername" type="email" placeholder="Tên đăng nhập" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                         <div class="form-group mb-3">
-                                            <input id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4">
+                                            <input v-on:keyup.enter="loginButtonClickEvent" id="inputPassword" v-model="password" type="password" placeholder="Mật khẩu" class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                         <div class="custom-control custom-checkbox mb-3">
                                             <a class="forgot-pass" th:href="@{forgot}">Quên mật khẩu? </a>

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class PostRequestDTO {
+    private long postId;
     private long typeId;
     private String title;
     private String description;
@@ -19,4 +20,5 @@ public class PostRequestDTO {
     private List<RoomDTO> listRoom;
     private List<String> listImage;
     private long paymentPackageId;
+    private Boolean isVisible;
 }

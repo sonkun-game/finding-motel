@@ -13,4 +13,14 @@ public interface ManagePostService {
     List<TypeModel> getListTypePost();
 
     PostModel saveNewPost(PostRequestDTO postRequestDTO);
+
+    List<PostModel> getAllPost(PostRequestDTO postRequestDTO);
+
+    PostModel changePostStatus(PostRequestDTO postRequestDTO);
+
+    boolean extendTimeOfPost(PostRequestDTO postRequestDTO);
+
+    boolean deletePost(PostRequestDTO postRequestDTO);
+
+    PostModel editPost(PostRequestDTO postRequestDTO);
 }

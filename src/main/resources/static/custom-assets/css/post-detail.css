@@ -152,7 +152,7 @@
 }
 
 .room-number{
-    margin: 30px 20px;
+    margin: 20px 18px;
     display: flex;
 }
 .select-room{
@@ -161,9 +161,20 @@
 
 .font-weight-normal{
     font-size: 16px !important;
+    padding-top: 5px;
 }
 
 select{
+    display: block !important;
+    width: 170px;
+    height: auto;
+    margin: auto 28px;
+    border: 1px solid #dca73a;
+    border-radius: 2px;
+    color: #1C1C1C;
+}
+
+.room-number input{
     display: block !important;
     width: 170px;
     height: auto;
@@ -172,6 +183,7 @@ select{
     border-radius: 2px;
     color: #1C1C1C;
 }
+
 .report{
     margin-top: 30px;
 }

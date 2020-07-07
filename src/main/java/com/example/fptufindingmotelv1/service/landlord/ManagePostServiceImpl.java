@@ -80,7 +80,7 @@ public class ManagePostServiceImpl implements ManagePostService{
             Date createdDate = new Timestamp(date.getTime());
             Calendar c = Calendar.getInstance();
             c.setTime(date);
-            c.add(Calendar.DATE, packageModel.getDuration());
+            c.add(Calendar.MONTH, packageModel.getDuration());
             Date expireDate = c.getTime();
             postModel.setCreateDate(createdDate);
             postModel.setExpireDate(expireDate);
@@ -121,6 +121,103 @@ public class ManagePostServiceImpl implements ManagePostService{
 
             landlordModel.setAmount(landlordModel.getAmount() - packageModel.getAmount());
             landlordRepository.save(landlordModel);
+            return newPostCreated;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PostModel> getAllPost(PostRequestDTO postRequestDTO) {
+        try {
+            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
+            return landlordModel.getPosts();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public PostModel changePostStatus(PostRequestDTO postRequestDTO) {
+        try {
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+            postModel.setVisible(postRequestDTO.getIsVisible());
+            postModel = postRepository.save(postModel);
+            return postModel;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean extendTimeOfPost(PostRequestDTO postRequestDTO) {
+        try {
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
+            PaymentPackageModel packageModel
+                    = paymentPackageRepository.findById(postRequestDTO.getPaymentPackageId()).get();
+            Date date = new Date();
+            Date payDate = new Timestamp(date.getTime());
+            Calendar c = Calendar.getInstance();
+            c.setTime(postModel.getExpireDate());
+            c.add(Calendar.MONTH, packageModel.getDuration());
+            Date expireDate = c.getTime();
+
+            // save amount of landlord
+            landlordModel.setAmount(landlordModel.getAmount() - packageModel.getAmount());
+            landlordRepository.save(landlordModel);
+
+            // save payment post
+            PaymentPostModel paymentPostModel = new PaymentPostModel();
+            paymentPostModel.setPaymentPackage(packageModel);
+            paymentPostModel.setPostPayment(postModel);
+            paymentPostModel.setPayDate(payDate);
+            paymentPostRepository.save(paymentPostModel);
+
+            // add expire date and save post
+            postModel.setExpireDate(expireDate);
+            postModel.setVisible(true);
+            postRepository.save(postModel);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deletePost(PostRequestDTO postRequestDTO) {
+        try {
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+
+            postRepository.delete(postModel);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public PostModel editPost(PostRequestDTO postRequestDTO) {
+        try {
+            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
+            TypeModel typeModel = typeRepository.findById(postRequestDTO.getTypeId()).get();
+
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+            postModel.setLandlord(landlordModel);
+            postModel.setDescription(postRequestDTO.getDescription());
+            postModel.setDistance(postRequestDTO.getDistance());
+            postModel.setPrice(postRequestDTO.getPrice());
+            postModel.setSquare(postRequestDTO.getSquare());
+            postModel.setTitle(postRequestDTO.getTitle());
+            postModel.setType(typeModel);
+
+            PostModel newPostCreated = postRepository.save(postModel);
+
             return newPostCreated;
         }catch (Exception e){
             e.printStackTrace();

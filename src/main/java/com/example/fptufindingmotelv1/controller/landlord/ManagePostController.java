@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.landlord;
 
 import com.example.fptufindingmotelv1.dto.PaymentPackageDTO;
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
 import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
@@ -52,6 +53,62 @@ public class ManagePostController {
         PostModel postModel = managePostService.saveNewPost(postRequestDTO);
         response.put("msgCode", postModel != null ? "post000" : "sys999");
         response.put("postId", postModel.getId());
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-edit-post")
+    public JSONObject editPost(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        PostModel postModel = managePostService.editPost(postRequestDTO);
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("postId", postModel.getId());
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-view-list-post")
+    public JSONObject viewListPost(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        List<PostModel> listPost = managePostService.getAllPost(postRequestDTO);
+        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
+        for (PostModel post:
+             listPost) {
+            postResponseDTOS.add(new PostResponseDTO(post));
+        }
+        response.put("msgCode", postResponseDTOS != null && postResponseDTOS.size() > 0 ? "post000" : "sys999");
+        response.put("listPost", postResponseDTOS);
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-change-post-status")
+    public JSONObject changePostStatus(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        PostModel postModel = managePostService.changePostStatus(postRequestDTO);
+
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("post", new PostResponseDTO(postModel));
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-extend-time-of-post")
+    public JSONObject extendTimeOfPost(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        boolean isSuccess = managePostService.extendTimeOfPost(postRequestDTO);
+
+        response.put("msgCode", isSuccess ? "post000" : "sys999");
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-delete-post")
+    public JSONObject deletePost(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        boolean isSuccess = managePostService.deletePost(postRequestDTO);
+
+        response.put("msgCode", isSuccess ? "post000" : "sys999");
         return response;
     }
 }

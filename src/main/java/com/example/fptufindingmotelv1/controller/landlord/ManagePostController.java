@@ -57,6 +57,16 @@ public class ManagePostController {
     }
 
     @ResponseBody
+    @PostMapping("/api-edit-post")
+    public JSONObject editPost(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        PostModel postModel = managePostService.editPost(postRequestDTO);
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("postId", postModel.getId());
+        return response;
+    }
+
+    @ResponseBody
     @PostMapping("/api-view-list-post")
     public JSONObject viewListPost(@RequestBody PostRequestDTO postRequestDTO) {
         JSONObject response = new JSONObject();

@@ -21,4 +21,6 @@ public interface ManagePostService {
     boolean extendTimeOfPost(PostRequestDTO postRequestDTO);
 
     boolean deletePost(PostRequestDTO postRequestDTO);
+
+    PostModel editPost(PostRequestDTO postRequestDTO);
 }

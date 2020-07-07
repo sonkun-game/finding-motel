@@ -141,7 +141,7 @@
                                         <h4>Số lượng phòng:</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" max="100" @focusout="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input v-bind:disabled="editMode" type="number" min="0" max="100" @focusout="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>PHÒNG</span>
                                         </div>
@@ -194,11 +194,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
+                                <div class="fill-information" v-bind:class="{flexElement: editMode}">
+                                    <div class="title" v-show="!editMode">
                                         <h4>Thời hạn bài đăng</h4>
                                     </div>
-                                    <div class="input-information">
+                                    <div class="input-information" v-show="!editMode">
                                         <div class="form-check-inline" v-for="package in listPaymentPackage">
                                             <label class="radio-container">
                                                 {{package.duration + ' tháng'}}
@@ -208,8 +208,14 @@
                                         </div>
 
                                     </div>
+                                    <div class="date-time-box col-6" v-show="editMode">
+                                        <span v-text="'Bài đăng có thời hạn đến: ' + createdDate"></span>
+                                    </div>
+                                    <div class="date-time-box col-6" v-show="editMode">
+                                        <button class="btn-hover btn-extend">Gia hạn bài đăng</button>
+                                    </div>
                                 </div>
-                                <div class="fill-information" v-if="duration != 0">
+                                <div v-show="!editMode" class="fill-information" v-if="duration != 0">
                                     <div class="title">
                                         <h4>Thông tin thanh toán</h4>
                                     </div>
@@ -305,12 +311,14 @@
                                 <tbody>
                                 <tr v-for="(post, index) in listPost">
                                     <th scope="row" v-text="index + 1"></th>
-                                    <td><a href="#" v-text="post.title">abc-xyz</a></td>
+                                    <td><a href="#" v-text="post.title"></a></td>
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
-                                    <td v-text="post.displayStatus"></td>
                                     <td>
-                                        <i class="fas fa-edit"></i>
+                                        <div v-bind:class="post.postVisible ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-edit" v-on:click="handleEditPost(post)"></i>
                                         <i class="fas fa-trash-alt"></i>
                                         <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)"></i>
                                     </td>

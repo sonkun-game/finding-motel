@@ -201,6 +201,30 @@ public class ManagePostServiceImpl implements ManagePostService{
         return false;
     }
 
+    @Override
+    public PostModel editPost(PostRequestDTO postRequestDTO) {
+        try {
+            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
+            TypeModel typeModel = typeRepository.findById(postRequestDTO.getTypeId()).get();
+
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+            postModel.setLandlord(landlordModel);
+            postModel.setDescription(postRequestDTO.getDescription());
+            postModel.setDistance(postRequestDTO.getDistance());
+            postModel.setPrice(postRequestDTO.getPrice());
+            postModel.setSquare(postRequestDTO.getSquare());
+            postModel.setTitle(postRequestDTO.getTitle());
+            postModel.setType(typeModel);
+
+            PostModel newPostCreated = postRepository.save(postModel);
+
+            return newPostCreated;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<ImageModel> uploadImages(List<String> uploadImages, String username, PostModel post){
         List<ImageModel> imageList = new ArrayList<>();
         // create user image folder

@@ -18,9 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.springframework.data.domain.Sort;
 @Controller
 public class HomeController {
@@ -48,9 +47,9 @@ public class HomeController {
         // Paging
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
-        Pageable pageable = PageRequest.of(evalPage, evalPageSize, Sort.by("createDate").descending());
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize);
         List<PostModel> postList =  postRepository.findAll();
-
+        postList.sort(Comparator.comparing(PostModel::getCreateDate).reversed());
         // Pass PostModel List to PostDTO
         List<PostDTO> postDTOs= new ArrayList<>();
         PostDTO postDTO= null;
@@ -85,13 +84,16 @@ public class HomeController {
                 postDTOs.add(postDTO);
             }
         }
+
         int total = postDTOs.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), total);
+        //Collections.reverse(postDTOs);
         List<PostDTO> sublist = new ArrayList<>();
         if (start <= end) {
             sublist = postDTOs.subList(start, end);
         }
+
         Page<PostDTO> listDTO  = new PageImpl<>(sublist, pageable, postDTOs.size());
         // pass data and direct
         model.addAttribute("posts",listDTO);

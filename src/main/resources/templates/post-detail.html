@@ -108,8 +108,8 @@
                     <div class="room-number">
                         <h4 class="font-weight-normal">Chọn phòng:</h4>
                         <div class="select-room" th:object="${post}">
-                            <select name="room" id="rooms" th:field="*{roomNumber}">
-                                <option th:each="i : ${#numbers.sequence(1, post.roomNumber)}" th:value="${i}" th:text="${'room'+i}">
+                            <select name="room" id="rooms">
+                                <option  th:each="room: *{rooms}" th:text="${room.name}">
                                 </option>
                             </select>
                         </div>

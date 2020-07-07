@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "POST")
 
-public class PostModel implements Serializable {
+public class PostModel implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -72,4 +72,5 @@ public class PostModel implements Serializable {
 
     @OneToMany(mappedBy = "postRoom", cascade = CascadeType.ALL)
     private List<RoomModel> rooms;
+
 }

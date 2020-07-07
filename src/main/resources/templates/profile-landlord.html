@@ -30,8 +30,8 @@
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
-    <main>
-        <div class="container-fluid">
+<main>
+    <div class="container-fluid">
         <div class="container">
             <div class="row">
                 <div class="col-3 sidebar-left">
@@ -79,7 +79,7 @@
                                         <h4>Loại phòng</h4>
                                     </div>
                                     <div class="form-dropdown input-information">
-                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost" required>
+                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
                                             <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
                                         </select>
                                     </div>
@@ -89,7 +89,7 @@
                                         <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm" required>
+                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
                                     </div>
                                 </div>
                                 <div class="fill-information">
@@ -266,6 +266,7 @@
                         </div>
                     </div>
 
+
 <!--                 Lịch sử nạp tiền-->
                     <div v-if="task == 6">
                         <div class="title">
@@ -322,9 +323,11 @@
                                         <div v-bind:class="post.postVisible ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
                                     </td>
                                     <td>
-                                        <i class="fas fa-edit" v-on:click="handleEditPost(post)"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
+                                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
                                         <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)"></i>
+                                        <i @click="showModalExtend()" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+
                                     </td>
                                 </tr>
 
@@ -359,129 +362,65 @@
                             </table>
                         </div>
                     </div>
-                </div>
-
-                <!-- Xử lý yêu cầu thuê trọ -->
-
-<!--                <div class="col-9 sidebar-right">-->
-<!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">Xử lý yêu cầu thuê trọ</h1>-->
-<!--                    </div>-->
-<!--                    <div class="information-detail">-->
-<!--                        <table class="table">-->
-<!--                            <thead class="thead-light">-->
-<!--                            <tr>-->
-<!--                                <th scope="col">STT</th>-->
-<!--                                <th scope="col">Tên đăng nhập</th>-->
-<!--                                <th scope="col">Bài đăng</th>-->
-<!--                                <th scope="col">Phòng</th>-->
-<!--                                <th scope="col">Ngày</th>-->
-<!--                                <th scope="col">Tình trạng</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td>Oanhdtk</td>-->
-<!--                                <td>abc-xyz</td>-->
-<!--                                <td>R1</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>-->
-<!--                                    <button class="table-button">Đồng ý</button>-->
-<!--                                    <button class="table-button">Từ chối</button>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">2</th>-->
-<!--                                <td>Oanhdtk</td>-->
-<!--                                <td>abc-xyz</td>-->
-<!--                                <td>R2</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>-->
-<!--                                    <button class="table-button">Đồng ý</button>-->
-<!--                                    <button class="table-button">Từ chối</button>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">3</th>-->
-<!--                                <td>Oanhdtk</td>-->
-<!--                                <td>abc-xyz</td>-->
-<!--                                <td>R3</td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>-->
-<!--                                    <button class="table-button">Đồng ý</button>-->
-<!--                                    <button class="table-button">Từ chối</button>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </div>-->
 
 
-
-                <!-- Lịch sử nạp tiền -->
-<!--                <div class="col-9 sidebar-right">-->
-<!--                    <div class="title">-->
-<!--                        <h1 class="title-name uppercase">lịch sử nạp tiền</h1>-->
-<!--                    </div>-->
-<!--                    <div class="information-detail">-->
-<!--                        <table class="table">-->
-<!--                            <thead class="thead-light">-->
-<!--                            <tr>-->
-<!--                                <th scope="col">STT</th>-->
-<!--                                <th scope="col">Tên bài đăng</th>-->
-<!--                                <th scope="col">Ngày đăng</th>-->
-<!--                                <th scope="col">Ngày hết hạn</th>-->
-<!--                                <th scope="col">Tình trạng</th>-->
-<!--                                <th scope="col">Tác vụ</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">1</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">2</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <th scope="row">3</th>-->
-<!--                                <td><a href="#">abc-xyz</a></td>-->
-<!--                                <td>14-6-2020</td>-->
-<!--                                <td>14-9-2020</td>-->
-<!--                                <td>Còn trống</td>-->
-<!--                                <td>-->
-<!--                                    <i class="fas fa-edit"></i>-->
-<!--                                    <i class="fas fa-trash-alt"></i>-->
-<!--                                    <i class="fas fa-eye-slash"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </div>-->
+                    <!--   Modal extend -->
+                    <div id="myModal_Extend" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Gia hạn bài đăng</h2>
+                                <span @click="closeModalExtend()" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thời hạn bài đăng</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                            <label class="radio-container">
+                                                {{package.duration + ' tháng'}}
+                                                <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information" v-if="duration != 0">
+                                    <div class="title">
+                                        <h4>Thông tin thanh toán</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div id="table-checkout">
+                                            <table>
+                                                <tr>
+                                                    <td>Thành tiền:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tài khoản:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số dư:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button @click="closeModalExtend()" class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

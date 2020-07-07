@@ -105,21 +105,50 @@
                             </div>
                         </div>
                     </div>
-                    <div class="room-number">
-                        <h4 class="font-weight-normal">Chọn phòng:</h4>
-                        <div class="select-room" th:object="${post}">
-                            <select name="room" id="rooms">
-                                <option  th:each="room: *{listRoom}" th:text="${room.roomName}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="room-number">
-                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
-                        <input type="date" >
-                    </div>
                     <div class="sent-request">
-                        <button class="btn btn-danger">Gửi Yêu Cầu</button>
+                        <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                    </div>
+
+                    <!--Modal choose room-->
+                    <div id="myModal_chooseRoom" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Chọn phòng</h2>
+                                <span @click="closeModalChooseRoom" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="room-number">
+                                    <div class="title-room">
+                                         <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                    </div>
+                                    <div class="choose-room">
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                    </div>
+                                </div>
+                                <div class="room-number">
+                                    <div class="title-room">
+                                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                    </div>
+                                    <div class="choose-room">
+                                        <input type="date" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button @click="closeModalChooseRoom" class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="contact">

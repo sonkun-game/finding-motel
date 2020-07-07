@@ -64,6 +64,12 @@ var postDtl = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        showModalChooseRoom() {
+            document.getElementById("myModal_chooseRoom").style.display = 'block';
+        },
+        closeModalChooseRoom() {
+            document.getElementById("myModal_chooseRoom").style.display = 'none';
         }
     },
 

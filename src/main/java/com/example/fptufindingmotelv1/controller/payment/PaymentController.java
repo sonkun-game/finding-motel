@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.controller.payment;
 
 import com.example.fptufindingmotelv1.dto.PaymentDTO;
+import com.example.fptufindingmotelv1.dto.PaymentPostDTO;
 import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
@@ -33,6 +34,26 @@ public class PaymentController {
             List<PaymentDTO> response = new ArrayList<>();
             for (PaymentModel paymet: landlordModel.getPaymentModels()) {
                 response.add(new PaymentDTO(paymet));
+            }
+            return response;
+        }
+        return null;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-history-payment-post")
+    public List<PaymentPostDTO> getHistoryPaymentPost(){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            //Get username of landlord
+            LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
+            List<PaymentPostDTO> response = new ArrayList<>();
+            for(int i=0;i<landlordModel.getPostModels().size();i++){
+                for(int j=0;j<landlordModel.getPostModels().get(i).getPaymentPosts().size();j++){
+                    //Add to list PaymentPostDTO
+                    response.add(new PaymentPostDTO(landlordModel.getPostModels().get(i).getPaymentPosts().get(j)));
+                }
             }
             return response;
         }

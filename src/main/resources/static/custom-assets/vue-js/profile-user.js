@@ -310,8 +310,18 @@ var userTaskInstance = new Vue({
                     landlordInstance.task = task
                     landlordInstance.getInitNewPost()
                 }else if(task == 6){
+                    noteInstance.task = task
                     landlordInstance.task = task
                     landlordInstance.getHistoryPayment()
+                }else if(task == 7){
+                    noteInstance.task = task
+                    landlordInstance.task = task
+                    landlordInstance.getHistoryPaymentPost()
+                }
+                else if(task == 4){
+                    noteInstance.task = task
+                    landlordInstance.task = task
+                    landlordInstance.viewListPost()
                 }
             }
 

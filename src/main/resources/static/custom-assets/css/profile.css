@@ -153,6 +153,11 @@ padding-left: 10px !important;
 cursor: pointer !important;
 }
 
+.far{
+    padding-left: 10px !important;
+    cursor: pointer !important;
+}
+
 .table{
 font-family:  sans-serif !important;
 }
@@ -213,6 +218,7 @@ color: #dca73a;
 }
 
 .search-area{
+    display: flex;
 width: 100%;
 height: auto;
 border: 1px solid #CFCFCF;
@@ -228,7 +234,13 @@ margin-top: 30px;
 }
 
 .row-search{
-margin: 10px auto;
+margin: 10px;
+width: 80%;
+}
+
+.area-search{
+    width: 20%;
+    margin: auto;
 }
 
 .filter-area{
@@ -303,9 +315,6 @@ margin: 4px 22px;
 display: none !important;
 }
 
-.search-container {
-float: right;
-}
 
 .search-container button {
 float: right;

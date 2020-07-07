@@ -95,7 +95,7 @@
                                     <td>{{user.roleName}}</td>
                                     <td>
                                         <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
-                                           id="myIcon-view"></i>
+                                           id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
                                         <i v-if="user.role == 'LANDLORD'"
                                            v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
                                            @click="showModalConfirmBan(user.username, 'ban', $event)"
@@ -193,7 +193,7 @@
                         </div>
                         <div class="search-area">
                             <div class="row row-search">
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Loại phòng:</span>
@@ -210,7 +210,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Giá:</span>
@@ -234,7 +234,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Diện tích:</span>
@@ -258,7 +258,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Khoảng cách:</span>
@@ -278,7 +278,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Trạng thái:</span>
@@ -294,7 +294,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Chủ trọ:</span>
@@ -305,11 +305,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <button class="btn-search">Tìm kiếm</button>
-                                        </div>
+                            </div>
+                            <div class="area-search">
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <button class="btn-search">Tìm kiếm</button>
                                     </div>
                                 </div>
                             </div>
@@ -338,15 +338,15 @@
                                     </td>
                                     <td>{{post.typeName}}</td>
                                     <td>{{post.price}}</td>
-                                    <td>{{post.square}}&sup2</td>
+                                    <td>{{post.square}} m&sup2</td>
                                     <td>{{post.distance}} km</td>
                                     <td>{{post.createDate}}</td>
                                     <td>{{post.expireDate}}</td>
                                     <td>{{post.displayStatus}}</td>
                                     <td>{{post.landlordName}}</td>
                                     <td>
-                                        <i class="fas fa-eye"></i>
-                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt"
+                                        <i class="fas fa-eye" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
+                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài đăng"
                                            id="myIcon"></i>
 
                                     </td>

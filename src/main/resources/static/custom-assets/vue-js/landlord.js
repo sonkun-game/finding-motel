@@ -215,6 +215,12 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
+        showModalExtend() {
+            document.getElementById("myModal_Extend").style.display = 'block';
+        },
+        closeModalExtend() {
+            document.getElementById("myModal_Extend").style.display = 'none';
+        }
     }
 })
 var noteInstance = new Vue({

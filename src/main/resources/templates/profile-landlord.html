@@ -30,8 +30,8 @@
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
-    <main>
-        <div class="container-fluid">
+<main>
+    <div class="container-fluid">
         <div class="container">
             <div class="row">
                 <div class="col-3 sidebar-left">
@@ -260,6 +260,7 @@
                         </div>
                     </div>
 
+
 <!--                 Lịch sử nạp tiền-->
                     <div v-if="task == 6">
                         <div class="title">
@@ -317,6 +318,8 @@
                                         <i class="fas fa-edit" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
                                         <i class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
                                         <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)" ></i>
+                                        <i @click="showModalExtend()" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+
                                     </td>
                                 </tr>
 
@@ -351,11 +354,65 @@
                             </table>
                         </div>
                     </div>
-                </div>
+
+
+                    <!--   Modal extend -->
+                    <div id="myModal_Extend" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Gia hạn bài đăng</h2>
+                                <span @click="closeModalExtend()" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Thời hạn bài đăng</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                            <label class="radio-container">
+                                                {{package.duration + ' tháng'}}
+                                                <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information" v-if="duration != 0">
+                                    <div class="title">
+                                        <h4>Thông tin thanh toán</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <div id="table-checkout">
+                                            <table>
+                                                <tr>
+                                                    <td>Thành tiền:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tài khoản:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số dư:</td>
+                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button @click="closeModalExtend()" class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

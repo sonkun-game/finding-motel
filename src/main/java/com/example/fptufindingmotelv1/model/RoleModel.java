@@ -25,4 +25,7 @@ public class RoleModel implements Serializable {
 
     @OneToMany(mappedBy = "role")
     private List<UserModel> users;
+
+    @OneToMany(mappedBy = "roleModel")
+    private List<InstructionModel> instructions;
 }

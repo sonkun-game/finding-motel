@@ -4,11 +4,12 @@ import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PagerModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.repository.InstructionRepository;
 import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import com.example.fptufindingmotelv1.untils.Constant;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,9 @@ import java.util.*;
 import org.springframework.data.domain.Sort;
 @Controller
 public class HomeController {
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     PostService postService;
@@ -40,10 +44,10 @@ public class HomeController {
                               @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
 
         // sort post by date
-        Sort sortable = null;
+      /*  Sort sortable = null;
         if (sort.equals("DESC")) {
             sortable = Sort.by("createDate").descending();
-        }
+        }*/
         // Paging
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
@@ -113,6 +117,8 @@ public class HomeController {
 
     @GetMapping("/instruction")
     public String viewInstruction(Model model){
+        model.addAttribute("renter",roleRepository.findById(1L));
+        model.addAttribute("landLord",roleRepository.findById(2L));
         return "instruction";
     }
 

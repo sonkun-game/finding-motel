@@ -14,7 +14,7 @@
             <div class="preloader-inner position-relative">
                 <div class="preloader-circle"></div>
                 <div class="preloader-img pere-text">
-                    <b>Đăng Lưu</b>
+                    <b>Đang Lưu</b>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
                                         <h4>Loại phòng</h4>
                                     </div>
                                     <div class="form-dropdown input-information">
-                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
+                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost" required>
                                             <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
                                         </select>
                                     </div>
@@ -89,7 +89,7 @@
                                         <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm" required>
                                     </div>
                                 </div>
                                 <div class="fill-information">
@@ -272,21 +272,25 @@
                             <h1 class="title-name uppercase">Lịch sử nạp tiền</h1>
                         </div>
                         <div class="information-detail" id="history-payment">
-                            <table >
-                                <tr>
-                                    <th>Mã giao dịch</th>
-                                    <th>Số tiền</th>
-                                    <th>Ngày giao dịch</th>
-                                    <th>Momo ID</th>
-                                    <th>Mã khách hàng</th>
-                                </tr>
-                                <tr v-for="payment in listPayment">
-                                    <td v-text="payment.id"></td>
-                                    <td v-text="payment.amount+' VNĐ'"></td>
-                                    <td v-text="payment.payDate"></td>
-                                    <td v-text="payment.momoId"></td>
-                                    <td v-text="payment.landlord"></td>
-                                </tr>
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Mã giao dịch</th>
+                                        <th>Số tiền</th>
+                                        <th>Ngày giao dịch</th>
+                                        <th>Momo ID</th>
+                                        <th>Mã khách hàng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="payment in listPayment">
+                                        <td v-text="payment.id"></td>
+                                        <td v-text="payment.amount+' VNĐ'"></td>
+                                        <td v-text="payment.payDate"></td>
+                                        <td v-text="payment.momoId"></td>
+                                        <td v-text="payment.landlord"></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -335,23 +339,26 @@
                             <h1 class="title-name uppercase">Lịch sử thanh toán</h1>
                         </div>
                         <div class="information-detail">
-                            <table >
-                                <tr>
-                                    <th>Mã giao dịch</th>
-                                    <th>Ngày giao dịch</th>
-                                    <th>Mã bài đăng</th>
-                                    <th>Gói</th>
-                                </tr>
-                                <tr v-for="list in listPaymentPost">
-                                    <td v-text="list.id"></td>
-                                    <td v-text="list.payDate"></td>
-                                    <td v-text="list.postId"></td>
-                                    <td v-text="list.packageID"></td>
-                                </tr>
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Mã giao dịch</th>
+                                        <th>Ngày giao dịch</th>
+                                        <th>Mã bài đăng</th>
+                                        <th>Gói</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="list in listPaymentPost">
+                                        <td v-text="list.id"></td>
+                                        <td v-text="list.payDate"></td>
+                                        <td v-text="list.postId"></td>
+                                        <td v-text="list.packageID"></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Xử lý yêu cầu thuê trọ -->

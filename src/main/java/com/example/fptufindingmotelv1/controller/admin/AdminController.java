@@ -7,6 +7,7 @@ import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
+import com.restfb.json.Json;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/get-user-by-id")
-    public ArrayList<UserDTO> getUserById(@RequestParam(value = "username") String username) {
+    public ArrayList<UserDTO> getUserByUsernameOrDisplayName(@RequestParam(value = "username") String username) {
         return adminService.searchUserByUsernameOrDisplayName(username);
     }
 
@@ -69,17 +70,21 @@ public class AdminController {
     public JSONObject deleteReport(@RequestParam(value = "reportId") String reportId) {
         try {
             adminService.deleteReport(Long.parseLong(reportId));
-            return responseMsg("000", "Success!");
+            return responseMsg("000", "Success!", null);
         } catch (Exception e) {
-            return responseMsg("001", "System error!");
+            return responseMsg("001", "System error!", null);
         }
     }
 
     @ResponseBody
     @RequestMapping(value = "/get-post")
-    public ArrayList<PostResponseDTO> getPost() {
-        ArrayList<PostResponseDTO> posts = adminService.getListPost();
-        return posts;
+    public JSONObject getPost() {
+        try {
+            ArrayList<PostResponseDTO> posts = adminService.getListPost();
+            return responseMsg("000", "Success!", posts);
+        } catch (Exception e) {
+            return responseMsg("001", e.getMessage(), null);
+        }
     }
 
     @ResponseBody
@@ -87,21 +92,17 @@ public class AdminController {
     public JSONObject deletePost(@RequestParam(value = "postId") String postId) {
         try {
             adminService.deletePost(Long.parseLong(postId));
-            return responseMsg("000", "Success!");
+            return responseMsg("000", "Success!", null);
         } catch (Exception e) {
-            return responseMsg("001", "System error!");
+            return responseMsg("001", e.getMessage(), null);
         }
     }
 
-    @RequestMapping(value = "/post-detail")
-    public String getPostDetail(Model model) {
-        return "post-detail";
-    }
-
-    public JSONObject responseMsg(String code, String message) {
+    public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
         msg.put("code", code);
         msg.put("message", message);
+        msg.put("data", data);
         return msg;
     }
 }

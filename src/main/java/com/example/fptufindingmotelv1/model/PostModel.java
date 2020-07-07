@@ -53,15 +53,15 @@ public class PostModel implements Serializable{
     private Date expireDate;
 
     @Column(name = "IS_VISIBLE", nullable = false)
-    private boolean isVisible;
+    private boolean visible;
 
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<ImageModel> images;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postReport")
+    @OneToMany( mappedBy = "postReport", cascade = CascadeType.ALL)
     private List<ReportModel> reports;
 
     @ManyToMany(mappedBy = "posts")

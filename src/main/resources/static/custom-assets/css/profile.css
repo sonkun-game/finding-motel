@@ -153,12 +153,18 @@ padding-left: 10px !important;
 cursor: pointer !important;
 }
 
+.far{
+    padding-left: 10px !important;
+    cursor: pointer !important;
+}
+
 .table{
 font-family:  sans-serif !important;
 }
 
 .information-detail{
 margin-top: 30px;
+    text-align: center;
 }
 
 .post-wishlist{
@@ -213,6 +219,7 @@ color: #dca73a;
 }
 
 .search-area{
+    display: flex;
 width: 100%;
 height: auto;
 border: 1px solid #CFCFCF;
@@ -228,7 +235,13 @@ margin-top: 30px;
 }
 
 .row-search{
-margin: 10px auto;
+margin: 10px;
+width: 80%;
+}
+
+.area-search{
+    width: 20%;
+    margin: auto;
 }
 
 .filter-area{
@@ -303,9 +316,6 @@ margin: 4px 22px;
 display: none !important;
 }
 
-.search-container {
-float: right;
-}
 
 .search-container button {
 float: right;
@@ -614,3 +624,20 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
     color : #dddddd;
 }
 
+.date-time-box{
+    padding: 15px;
+    background-color: aquamarine;
+    line-height: 30px;
+}
+.btn-extend{
+    height: 30px;
+    background: #dca73a;
+    display: block;
+    border: medium none;
+    border-radius: 3px;
+    color: white;
+    margin: auto;
+}
+.flexElement{
+    display: flex;
+}

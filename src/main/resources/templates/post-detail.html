@@ -19,28 +19,16 @@
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
                             <ul class="slides" th:object="${post}">
-                                <li th:each="image:*{images}" th:data-thumb="${image.url}">
-                                    <div class="thumb-image"> <img th:src="${image.url}" data-imagezoom="true" class="img-responsive"> </div>
+                                <li th:each="image:*{images}">
+                                    <img th:src="${image}" />
                                 </li>
-                                <!--<li data-thumb="assets/img/rooms/room2.jpg">
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room2.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room3.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room3.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room4.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room4.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>
-                                <li data-thumb=assets/img/rooms/room5.jpg>
-                                    <div class="thumb-image"> <img src="assets/img/rooms/room5.jpg" data-imagezoom="true" class="img-responsive"> </div>
-                                </li>-->
                             </ul>
                         </div>
                     </div>
                     <div class="description">
                         <div class="title">
                             <div class="title-left">
-                                <h3 class="uppercase">Phòng trọ Nhà Xanh gần cây xăng Hòa Lạc diện tích 30m vuông, cách trường 2km</h3>
+                                <h3 class="uppercase" th:text="post.title"></h3>
                             </div>
                             <div class="title-right">
                                 <i class="far fa-2x fa-heart icon-heart"></i>
@@ -51,7 +39,7 @@
                             <div class="row" th:object="${post}">
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/house.png">
-                                    <label th:text="${'Loại phòng: '+post.type.name}"></label>
+                                    <label th:text="${'Loại phòng: '+post.type}"></label>
                                 </div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/money.png">
@@ -111,29 +99,61 @@
                             <img class="avatar-information" src="assets/img/logo/user.png">
                         </div>
                         <div class="name-landlord">
-                            <label th:text="${post.landlord.displayName}"></label>
+                            <label th:text="${post.landlordDisplayName}"></label>
                             <div class="create-date">
                                 <label th:text="${'Ngày đăng: '+#dates.format(post.createDate, 'dd/MM/YYYY')}"></label>
                             </div>
                         </div>
                     </div>
-                    <div class="room-number">
-                        <h4 class="font-weight-normal">Chọn phòng:</h4>
-                        <div class="select-room" th:object="${post}">
-                            <select name="room" id="rooms">
-                                <option  th:each="room: *{rooms}" th:text="${room.name}">
-                                </option>
-                            </select>
-                        </div>
+                    <div class="sent-request">
+                        <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
                     </div>
 
-                    <div class="sent-request">
-                        <button class="btn btn-danger">Gửi Yêu Cầu</button>
+                    <!--Modal choose room-->
+                    <div id="myModal_chooseRoom" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Chọn phòng</h2>
+                                <span @click="closeModalChooseRoom" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="room-number">
+                                    <div class="title-room">
+                                         <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                    </div>
+                                    <div class="choose-room">
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                        <div class="select-room">Room 1</div>
+                                    </div>
+                                </div>
+                                <div class="room-number">
+                                    <div class="title-room">
+                                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                    </div>
+                                    <div class="choose-room">
+                                        <input type="date" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button @click="closeModalChooseRoom" class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="contact">
                         <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
-                        <h3 th:text="${post.landlord.phoneNumber}"></h3>
+                        <h3 th:text="${post.phoneNumber}"></h3>
                     </div>
                 </div>
             </div>

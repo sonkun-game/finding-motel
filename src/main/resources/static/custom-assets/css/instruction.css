@@ -1,0 +1,25 @@
+.container-fluid{
+    background-color: #f8f9fa!important;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.main-content{
+    width: 70%;
+    height: auto;
+    margin: auto;
+}
+
+.content{
+    margin: 40px 0px;
+}
+
+.li-1{
+    list-style-type: square !important;
+}
+
+.content li{
+    font-family:  sans-serif;
+    list-style-type: circle;
+    margin-left: 15px;
+}

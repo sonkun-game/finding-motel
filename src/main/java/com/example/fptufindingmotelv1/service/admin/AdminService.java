@@ -21,8 +21,9 @@ public interface AdminService {
 
     public ArrayList<PostResponseDTO> getListPost();
 
-    public PostResponseDTO getPostDetail(Long id);
+    public PostResponseDTO getPostDetail(String id);
 
+    public void deletePost(String id);
     public void deletePost(Long id);
 
     public ArrayList<ReportResponseDTO> getListReport();

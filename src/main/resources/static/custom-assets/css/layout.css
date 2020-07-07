@@ -112,3 +112,17 @@ p{
 .hide{
     display: none;
 }
+.status-hide{
+    background-color: aquamarine;
+    color: #c17e7e;
+}
+.status-show{
+    background-color: aquamarine;
+    color: #0056b3;
+}
+.single-room .room-img{
+    overflow: hidden;
+    height: 382px;
+    background-color: beige;
+    line-height: 382px;
+}

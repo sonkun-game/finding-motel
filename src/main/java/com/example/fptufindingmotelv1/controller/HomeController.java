@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+
 @Controller
 public class HomeController {
 
@@ -87,14 +89,17 @@ public class HomeController {
                 postDTOs.add(postDTO);
             }
         }
+
         int total = postDTOs.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), total);
+        //Collections.reverse(postDTOs);
         List<PostDTO> sublist = new ArrayList<>();
         if (start <= end) {
             sublist = postDTOs.subList(start, end);
         }
         Page<PostDTO> listDTO = new PageImpl<>(sublist, pageable, postDTOs.size());
+
         // pass data and direct
         model.addAttribute("posts", listDTO);
 
@@ -107,7 +112,7 @@ public class HomeController {
 
     @GetMapping("/post-detail")
     public String getPostDetail(Model model, @PathParam("id") String id) {
-        model.addAttribute("post", postService.findOne(Long.valueOf(id)));
+        model.addAttribute("post", new PostDTO(postService.findOne(id)));
         return "post-detail";
     }
 

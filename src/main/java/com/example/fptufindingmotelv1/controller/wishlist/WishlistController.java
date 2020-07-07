@@ -47,7 +47,7 @@ public class WishlistController {
                     .getAuthentication().getPrincipal();
 
             RenterModel renterModel = renterService.findOne(userDetails.getUserModel().getUsername());
-            PostModel postModel= postService.findOne(Long.valueOf(id));
+            PostModel postModel= postService.findOne(id);
             if(status.equals("add")){
                 renterModel.getPosts().add(postModel);
             } else if(status.equals("remove")){
@@ -81,7 +81,7 @@ public class WishlistController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            return wishlistService.removeItem(userDetails.getUsername(), Long.valueOf(postId));
+            return wishlistService.removeItem(userDetails.getUsername(), postId);
         }
         return null;
     }

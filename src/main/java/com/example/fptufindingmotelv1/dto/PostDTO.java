@@ -6,14 +6,17 @@ import com.example.fptufindingmotelv1.model.PostModel;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
 @Data
 public class PostDTO {
-    private Long id;
+    private String id;
     private String type;
     private String landlord;
+    private String landlordDisplayName;
+    private String phoneNumber;
     private double price;
     private double distance;
     private double square;
@@ -26,11 +29,14 @@ public class PostDTO {
     private String color;
     private String isLord;
     private List<String> images;
+    private List<RoomDTO> listRoom;
 
     public PostDTO(PostModel postModel) {
         this.id = postModel.getId();
         this.type = postModel.getType().getName();
         this.landlord = postModel.getLandlord().getUsername();
+        this.landlordDisplayName = postModel.getLandlord().getDisplayName();
+        this.phoneNumber = postModel.getLandlord().getPhoneNumber();
         this.price = postModel.getPrice();
         this.distance = postModel.getDistance();
         this.square = postModel.getSquare();
@@ -41,8 +47,15 @@ public class PostDTO {
         this.isVisible = postModel.isVisible();
         this.title = postModel.getTitle();
         this.images = new ArrayList<>();
-        for (ImageModel image: postModel.getImages()) {
-            images.add(image.getUrl());
+        for (ImageModel image:
+                postModel.getImages()) {
+            String imageUrl = "data:image/"+ image.getFileType()+";base64,"
+                    + Base64.getEncoder().encodeToString(image.getFileContent());
+            images.add(imageUrl);
+        }
+        this.listRoom = new ArrayList<>();
+        for (int i = 0; i < postModel.getRooms().size(); i++) {
+            listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
         }
 
     }

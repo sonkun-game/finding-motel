@@ -158,7 +158,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PostResponseDTO getPostDetail(Long id) {
+    public PostResponseDTO getPostDetail(String id) {
         return new PostResponseDTO(postRepository.getOne(id));
     }
 
@@ -168,7 +168,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deletePost(Long id) {
+    public void deletePost(String id) {
         postRepository.deleteById(id);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,9 @@ public class PostResponseDTO {
         this.listImage = new ArrayList<>();
         for (ImageModel image:
              postModel.getImages()) {
-            listImage.add(image.getUrl());
+            String imageUrl = "data:image/"+ image.getFileType()+";base64,"
+                    + Base64.getEncoder().encodeToString(image.getFileContent());
+            listImage.add(imageUrl);
         }
     }
 }

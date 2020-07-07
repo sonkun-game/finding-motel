@@ -240,6 +240,7 @@ public class ManagePostServiceImpl implements ManagePostService{
         for (int i = 0; i < uploadImages.size(); i++) {
             ImageModel imageModel = new ImageModel();
             String imgBase64 = uploadImages.get(i);
+            String fileType = "";
             StringBuffer fileName = new StringBuffer();
             fileName.append(UUID.randomUUID().toString().replaceAll("-", ""));
             if (StringUtils.isEmpty(imgBase64)) {
@@ -253,20 +254,23 @@ public class ManagePostServiceImpl implements ManagePostService{
 //                fileName.append(".jpeg");
 //            }
             else {
-                String fileType = imgBase64.split("/")[1].split(";")[0];
+                fileType = imgBase64.split("/")[1].split(";")[0];
                 imgBase64 = imgBase64.split(";base64,")[1];
                 fileName.append("." + fileType);
             }
-            File file = new File(fileFolder + "/", fileName.toString());
+
             byte[] fileBytes = Base64.getDecoder().decode(imgBase64);
-            try {
-                FileUtils.writeByteArrayToFile(file, fileBytes);
-                imageModel.setUrl("/assets/img/rooms/"+username+"/"+fileName.toString());
-                imageModel.setPost(post);
-                imageList.add(imageModel);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            File file = new File(fileFolder + "/", fileName.toString());
+//            try {
+//                FileUtils.writeByteArrayToFile(file, fileBytes);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            imageModel.setFileContent(fileBytes);
+            imageModel.setFileType(fileType);
+            imageModel.setPost(post);
+            imageList.add(imageModel);
         }
 
         return imageList;

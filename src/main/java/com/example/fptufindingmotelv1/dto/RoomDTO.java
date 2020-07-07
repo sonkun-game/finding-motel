@@ -11,6 +11,9 @@ public class RoomDTO {
     private long statusId;
     private String displayStatus;
 
+    public RoomDTO() {
+    }
+
     public RoomDTO(int index, RoomModel roomModel) {
         this.index = index;
         this.roomName = roomModel.getName();

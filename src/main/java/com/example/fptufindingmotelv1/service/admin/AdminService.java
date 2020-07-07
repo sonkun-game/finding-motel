@@ -23,12 +23,12 @@ public interface AdminService {
 
     public PostResponseDTO getPostDetail(Long id);
 
-    public ArrayList<PostModel> searchPost();
-
     public void deletePost(Long id);
 
     public ArrayList<ReportResponseDTO> getListReport();
 
     public void deleteReport(Long id);
+
+    ArrayList<PostResponseDTO> searchPost();
 
 }

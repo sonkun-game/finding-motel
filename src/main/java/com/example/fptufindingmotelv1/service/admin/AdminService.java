@@ -25,7 +25,7 @@ public interface AdminService {
 
     public ArrayList<ReportResponseDTO> getListReport();
 
-    public void deleteReport(Long id);
+    public void deleteReport(String id);
 
     ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
 

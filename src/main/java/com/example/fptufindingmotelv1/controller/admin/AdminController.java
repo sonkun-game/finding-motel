@@ -68,7 +68,7 @@ public class AdminController {
     @RequestMapping(value = "/delete-report")
     public JSONObject deleteReport(@RequestParam(value = "reportId") String reportId) {
         try {
-            adminService.deleteReport(Long.parseLong(reportId));
+            adminService.deleteReport(reportId);
             return responseMsg("000", "Success!", null);
         } catch (Exception e) {
             return responseMsg("001", "System error!", null);

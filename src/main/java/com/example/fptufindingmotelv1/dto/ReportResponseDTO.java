@@ -14,9 +14,9 @@ public class ReportResponseDTO {
     private String reportDate;
 
     public ReportResponseDTO(ReportModel report) {
-        this.id = report.getId().toString();
+        this.id = report.getId();
         this.renterId = report.getRenterReport().getUsername();
-        this.postId = report.getPostReport().getId().toString();
+        this.postId = report.getPostReport().getId();
         this.content = report.getContent();
         this.reportDate = report.getReportDate().toString();
         this.postTitle = report.getPostReport().getTitle();

@@ -27,7 +27,7 @@ public class WishlistServiceImpl implements WishlistService{
     }
 
     @Override
-    public List<PostDTO> removeItem(String username, Long postId) {
+    public List<PostDTO> removeItem(String username, String postId) {
         try {
             RenterModel renterModel = renterRepository.findByUsername(username);
             PostModel postModel = postRepository.findById(postId).get();

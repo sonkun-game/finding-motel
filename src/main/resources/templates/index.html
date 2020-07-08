@@ -161,10 +161,9 @@
                     <div class="single-room mb-50" th:id="${post.id}">
                         <div class="room-img">
                             <a th:href="@{'/post-detail?id=' + ${post.id}}"><img th:src="@{${post.images[0]}}" alt=""></a>
-                        <div th:style="${post.isLord}">
-                            <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart"  v-on:click="addWishlist">
-                            </i>
-                        </div>
+                            <div th:style="${post.isLord}">
+                                <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart"  v-on:click="addWishlist"></i>
+                            </div>
                         </div>
                         <div class="room-caption">
                             <h3><a href="/post-detail" th:utext="${post.title}"></a></h3>

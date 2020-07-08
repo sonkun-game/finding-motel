@@ -91,7 +91,7 @@ public class AdminController {
     @RequestMapping(value = "/delete-post")
     public JSONObject deletePost(@RequestParam(value = "postId") String postId) {
         try {
-            adminService.deletePost(Long.parseLong(postId));
+            adminService.deletePost(postId);
             return responseMsg("000", "Success!", null);
         } catch (Exception e) {
             return responseMsg("001", e.getMessage(), null);

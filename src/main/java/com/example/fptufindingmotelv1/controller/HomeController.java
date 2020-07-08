@@ -112,7 +112,7 @@ public class HomeController {
 
     @GetMapping("/post-detail")
     public String getPostDetail(Model model, @PathParam("id") String id) {
-        model.addAttribute("post", postService.findOne(Long.valueOf(id)));
+        model.addAttribute("post", new PostDTO(postService.findOne(id)));
         return "post-detail";
     }
 

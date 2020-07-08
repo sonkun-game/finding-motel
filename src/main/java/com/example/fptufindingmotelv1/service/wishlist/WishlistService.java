@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface WishlistService {
     public List<PostDTO> getWishlist();
-    public List<PostDTO> removeItem(String username, Long postId);
+    public List<PostDTO> removeItem(String username, String postId);
 }

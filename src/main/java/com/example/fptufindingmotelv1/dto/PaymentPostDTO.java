@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public class PaymentPostDTO {
     private Long id;
     private String payDate;
-    private Long postId;
+    private String postId;
     private Long packageID;
     public PaymentPostDTO(PaymentPostModel paymentPostModel){
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);

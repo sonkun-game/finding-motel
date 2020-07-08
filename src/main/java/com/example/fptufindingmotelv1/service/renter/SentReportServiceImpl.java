@@ -24,7 +24,7 @@ public class SentReportServiceImpl implements SentReportService {
     public void sendReport(ReportRequestDTO reportRequestDTO) {
         try {
             ReportModel reportModel = null;
-            PostModel postModel = postRepository.getOne(Long.parseLong(reportRequestDTO.getPostId()));
+            PostModel postModel = postRepository.getOne(reportRequestDTO.getPostId());
             RenterModel renterModel = renterRepository.getOne(reportRequestDTO.getRenterId());
             reportModel = new ReportModel(renterModel, postModel, reportRequestDTO);
             reportRepository.save(reportModel);

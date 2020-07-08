@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class PostRequestDTO {
-    private long postId;
+    private String postId;
     private long typeId;
     private String title;
     private String description;

@@ -322,6 +322,7 @@ var userTaskInstance = new Vue({
                     noteInstance.task = task
                     landlordInstance.task = task
                     landlordInstance.viewListPost()
+                    landlordInstance.getInitNewPost()
                 }
             }
 

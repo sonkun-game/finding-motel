@@ -20,8 +20,9 @@ var landlordInstance = new Vue({
         listPost: [],
         listPaymentPost: [],
         editMode: false,
-        createdDate: "",
+        expireDate: "",
         postId : "",
+        postIndex : "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -36,6 +37,7 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.viewListPost()
+            this.getInitNewPost()
         }else if(this.task == 6){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -234,7 +236,7 @@ var landlordInstance = new Vue({
             this.numberOfRoom = post.roomNumber
             this.listRoom = post.listRoom
             this.uploadImages = post.listImage
-            this.createdDate = post.createDate
+            this.expireDate = post.expireDate
             this.postId = post.id
             userTaskInstance.activeBtn(13)
         },
@@ -269,12 +271,47 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalExtend() {
+        showModalExtend(postId, postIndex) {
+            if(postId != null){
+                this.postId = postId
+            }
+            if(postIndex != null){
+                this.postIndex = postIndex
+            }
             document.getElementById("myModal_Extend").style.display = 'block';
         },
         closeModalExtend() {
             document.getElementById("myModal_Extend").style.display = 'none';
-        }
+        },
+        extendTimePost(){
+            let request = {
+                'postId' : this.postId,
+                'paymentPackageId' : this.duration,
+                'username' : this.userInfo.username,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-extend-time-of-post", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'post000'){
+                        profileInstance.showNotifyModal()
+                        setTimeout(() => {
+                            this.expireDate = data.post.expireDate
+                            this.$set(this.listPost, this.postIndex, data.post)
+                            this.closeModalExtend()
+                        }, 2000);
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     }
 })
 var noteInstance = new Vue({

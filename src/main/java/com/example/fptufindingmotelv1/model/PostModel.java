@@ -60,7 +60,7 @@ public class PostModel implements Serializable{
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 
     @OneToMany( mappedBy = "postReport", cascade = CascadeType.ALL)

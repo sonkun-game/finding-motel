@@ -118,6 +118,7 @@ public class HomeController {
 
     @GetMapping("/instruction")
     public String viewInstruction(Model model) {
+
         return "instruction";
     }
 

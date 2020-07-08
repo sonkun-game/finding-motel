@@ -82,6 +82,7 @@ public class ManagePostServiceImpl implements ManagePostService{
             postModel.setSquare(postRequestDTO.getSquare());
             postModel.setTitle(postRequestDTO.getTitle());
             postModel.setVisible(true);
+            postModel.setBanned(false);
             postModel.setRoomNumber(postRequestDTO.getRoomNumber());
             postModel.setType(typeModel);
             PaymentPackageModel packageModel
@@ -178,7 +179,11 @@ public class ManagePostServiceImpl implements ManagePostService{
             Date date = new Date();
             Date payDate = new Timestamp(date.getTime());
             Calendar c = Calendar.getInstance();
-            c.setTime(postModel.getExpireDate());
+            if(payDate.after(postModel.getExpireDate())){
+                c.setTime(payDate);
+            }else{
+                c.setTime(postModel.getExpireDate());
+            }
             c.add(Calendar.MONTH, packageModel.getDuration());
             Date expireDate = c.getTime();
 

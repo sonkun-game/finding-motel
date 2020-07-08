@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostModel, String> {
-    List<PostModel> findByVisibleTrue(Sort sort);
+    List<PostModel> findByVisibleTrueAndBannedFalse(Sort sort);
 
     @Query(value = "select p from PostModel p " +
             "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +

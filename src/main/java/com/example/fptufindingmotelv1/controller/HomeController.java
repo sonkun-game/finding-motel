@@ -52,7 +52,7 @@ public class HomeController {
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
         Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
-        List<PostModel> postList =  postRepository.findByVisibleTrue(sortable);
+        List<PostModel> postList =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
 
         // Pass PostModel List to PostDTO
         List<PostDTO> postDTOs = new ArrayList<>();

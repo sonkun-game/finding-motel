@@ -6,11 +6,12 @@ var admin = new Vue({
         listPost: [],
         listUser: [],
         //request parameter
-        postType: {},
-        postPrice: {},
-        postSquare: {},
-        postDistance: {},
-        postStatus: {},
+        postType: 0,
+        postPrice: 0,
+        postSquare: 0,
+        postDistance: 0,
+        postStatus: "",
+        postTitleOrLandlord: "",
         isBannedUser: false,
         //modal form
         modalBanId: {},
@@ -22,6 +23,20 @@ var admin = new Vue({
         //user detail form
         userDetail: [],
         task: 0,
+        //metal data
+        priceValueSheet: [
+            {max: null, min: null},
+            {max: "1000000", min: null},
+        ],
+        distanceValueSheet: [
+            {max: null, min: null},
+            {max: "1", min: null},
+        ],
+        squareValueSheet: [
+            {max: null, min: null},
+            {max: "20", min: null},
+        ],
+
     },
     beforeMount() {
         this.task = localStorage.getItem("task")
@@ -249,22 +264,39 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-
+        isNullSearchParam(param) {
+            return param == 0 ? null : param;
+        },
+        valueSheetData(value, list) {
+            if (list == null || !list) return {max: null, min: null};
+            return list[value];
+        },
         searchPost() {
-            let reportId = id;
-            fetch("https://localhost:8081/delete-post?postId=" + id, {
+            let postRequestDTO = {
+                "typeId": this.isNullSearchParam(this.postType),
+                "title": this.isNullSearchParam(this.postTitleOrLandlord),
+                "priceMax": this.valueSheetData(this.postPrice, this.priceValueSheet).max,
+                "priceMin": this.valueSheetData(this.postPrice, this.priceValueSheet).min,
+                "distanceMax": this.valueSheetData(this.postDistance, this.distanceValueSheet).max,
+                "distanceMin": this.valueSheetData(this.postDistance, this.distanceValueSheet).min,
+                "squareMax": this.valueSheetData(this.postSquare, this.squareValueSheet).max,
+                "squareMin": this.valueSheetData(this.postSquare, this.squareValueSheet).min,
+                "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
+                "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
+            }
+            fetch("https://localhost:8081/search-post", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(postRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.listReport = data;
-                    this.getListPost();
-                    // } else {
-                    //     window.location.href = "/error";
-                    // }
+                    if (data.code == "000") {
+                        this.listPost = data.data;
+                    } else {
+                        window.location.href = "/error";
+                    }
                 }).catch(error => {
                 console.log(error);
             })

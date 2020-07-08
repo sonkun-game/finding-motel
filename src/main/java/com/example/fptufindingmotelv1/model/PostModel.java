@@ -72,7 +72,7 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "postPayment", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;
 
-    @OneToMany(mappedBy = "postRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postRoom")
     private List<RoomModel> rooms;
 
 }

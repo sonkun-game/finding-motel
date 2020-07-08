@@ -44,6 +44,9 @@ public class ManagePostServiceImpl implements ManagePostService{
     @Autowired
     private ImageRepository imageRepository;
 
+    @Autowired
+    private RoomRepository roomRepository;
+
     @Override
     public List<PaymentPackageModel> getListPaymentPackage() {
         try {
@@ -119,6 +122,7 @@ public class ManagePostServiceImpl implements ManagePostService{
                 roomModel.setPostRoom(newPostCreated);
                 listRoom.add(roomModel);
             }
+            listRoom = roomRepository.saveAll(listRoom);
 
             newPostCreated.setImages(listImages);
             newPostCreated.setRooms(listRoom);

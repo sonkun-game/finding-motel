@@ -5,7 +5,6 @@ import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
-import org.omg.CORBA.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 

@@ -1,8 +1,6 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Controller
@@ -93,6 +92,19 @@ public class AdminController {
         try {
             adminService.deletePost(postId);
             return responseMsg("000", "Success!", null);
+        } catch (Exception e) {
+            return responseMsg("001", e.getMessage(), null);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/search-post")
+    public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO) {
+        try {
+            ArrayList<PostResponseDTO> posts = adminService.searchPost(postSearchDTO);
+            return posts != null && !posts.isEmpty()
+                    ? responseMsg("000", "Success!", posts)
+                    : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
             return responseMsg("001", e.getMessage(), null);
         }

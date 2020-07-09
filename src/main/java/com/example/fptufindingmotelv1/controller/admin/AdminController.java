@@ -114,11 +114,9 @@ public class AdminController {
     @RequestMapping(value = "/ban-post")
     public JSONObject banPost(@RequestParam String postId) {
         try {
-
-//            return posts != null
-//                    ? responseMsg("000", "Success!", posts)
-//                    : responseMsg("001", "SYSTEM ERROR", null);
-            return responseMsg("001", "SYSTEM ERROR", null);
+            return adminService.banPost(postId)
+                    ? responseMsg("000", "Success!", null)
+                    : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
             return responseMsg("999", e.getMessage(), null);
         }

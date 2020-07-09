@@ -196,7 +196,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void banPost(String postId) {
-        PostModel postModel = postRepository.getOne(postId);
+    public Boolean banPost(String postId) {
+        try {
+            PostModel postModel = postRepository.getOne(postId);
+            postModel.setBanned(true);
+            postRepository.save(postModel);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

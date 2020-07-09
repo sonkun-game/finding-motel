@@ -21,10 +21,10 @@ public interface AdminService {
 
      ArrayList<ReportResponseDTO> getListReport();
 
-     void deleteReport(Long id);
+     void deleteReport(String id);
 
     ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
 
-    void banPost(String postId) ;
+    Boolean banPost(String postId) ;
 
 }

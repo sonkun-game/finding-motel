@@ -485,15 +485,17 @@ input:focus, textarea:focus, select:focus {
 }
 #table-checkout{
     width: 50%;
+}
+.table-checkout{
     height: auto;
     border-radius: 2px;
     border: 1px dashed #aaa;
 }
-#table-checkout td{
+.table-checkout td{
     padding: .75rem;
     font-family: sans-serif;
 }
-#table-checkout .money-col{
+.table-checkout .money-col{
     padding-left: 7rem!important;
 }
 .input-information .form-check-inline .radio-container{
@@ -640,4 +642,8 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 }
 .flexElement{
     display: flex;
+}
+#table-checkout-modal{
+    margin: auto;
+    width: 60%;
 }

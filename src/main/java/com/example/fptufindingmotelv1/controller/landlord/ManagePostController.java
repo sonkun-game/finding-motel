@@ -96,9 +96,10 @@ public class ManagePostController {
     @PostMapping("/api-extend-time-of-post")
     public JSONObject extendTimeOfPost(@RequestBody PostRequestDTO postRequestDTO) {
         JSONObject response = new JSONObject();
-        boolean isSuccess = managePostService.extendTimeOfPost(postRequestDTO);
+        PostModel postModel = managePostService.extendTimeOfPost(postRequestDTO);
 
-        response.put("msgCode", isSuccess ? "post000" : "sys999");
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("post", new PostResponseDTO(postModel));
         return response;
     }
 

@@ -60,7 +60,10 @@ public class PostModel implements Serializable{
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @Column(name = "IS_BANNED", nullable = false)
+    private boolean banned;
+
+    @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 
     @OneToMany( mappedBy = "postReport", cascade = CascadeType.ALL)
@@ -72,7 +75,7 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "postPayment", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;
 
-    @OneToMany(mappedBy = "postRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postRoom")
     private List<RoomModel> rooms;
 
 }

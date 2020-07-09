@@ -70,7 +70,7 @@
                     <!-- Đăng tin -->
                     <div v-if="task == 13" id="post-new-room">
                         <div class="title">
-                            <h1 class="title-name uppercase">Đăng tin</h1>
+                            <h1 class="title-name uppercase" v-text="editMode ? 'Cập nhật bài đăng' : 'Đăng tin'"></h1>
                         </div>
                         <div class="container-fluid">
                             <div class="container">
@@ -209,10 +209,10 @@
 
                                     </div>
                                     <div class="date-time-box col-6" v-show="editMode">
-                                        <span v-text="'Bài đăng có thời hạn đến: ' + createdDate"></span>
+                                        <span v-text="'Bài đăng có thời hạn đến: ' + expireDate"></span>
                                     </div>
                                     <div class="date-time-box col-6" v-show="editMode">
-                                        <button class="btn-hover btn-extend">Gia hạn bài đăng</button>
+                                        <button class="btn-hover btn-extend" v-on:click="showModalExtend()">Gia hạn bài đăng</button>
                                     </div>
                                 </div>
                                 <div v-show="!editMode" class="fill-information" v-if="duration != 0">
@@ -220,7 +220,7 @@
                                         <h4>Thông tin thanh toán</h4>
                                     </div>
                                     <div class="input-information">
-                                        <div id="table-checkout">
+                                        <div id="table-checkout" class="table-checkout">
                                             <table>
                                                 <tr>
                                                     <td>Thành tiền:</td>
@@ -325,8 +325,8 @@
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
                                         <i class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                        <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)"></i>
-                                        <i @click="showModalExtend()" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+                                        <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                        <i @click="showModalExtend(post.id, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                     </td>
                                 </tr>
@@ -367,7 +367,7 @@
                     <!--   Modal extend -->
                     <div id="myModal_Extend" class="modal">
                         <!-- Modal content -->
-                        <div class="view-information">
+                        <div class="view-information" v-if="editMode">
                             <div class="modal-header">
                                 <h2>Gia hạn bài đăng</h2>
                                 <span @click="closeModalExtend()" class="close">&times;</span>
@@ -378,7 +378,7 @@
                                         <h4>Thời hạn bài đăng</h4>
                                     </div>
                                     <div class="input-information">
-                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                        <div class="form-check-inline col" v-for="package in listPaymentPackage">
                                             <label class="radio-container">
                                                 {{package.duration + ' tháng'}}
                                                 <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
@@ -392,7 +392,7 @@
                                         <h4>Thông tin thanh toán</h4>
                                     </div>
                                     <div class="input-information">
-                                        <div id="table-checkout">
+                                        <div id="table-checkout-modal" class="table-checkout">
                                             <table>
                                                 <tr>
                                                     <td>Thành tiền:</td>
@@ -412,7 +412,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button @click="closeModalExtend()" class="btn-hover btn-default">Xác Nhận</button>
+                                <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>
                             </div>
                         </div>
                     </div>

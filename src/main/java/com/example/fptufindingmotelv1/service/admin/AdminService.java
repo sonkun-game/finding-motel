@@ -1,8 +1,6 @@
 package com.example.fptufindingmotelv1.service.admin;
 
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
@@ -23,12 +21,12 @@ public interface AdminService {
 
     public PostResponseDTO getPostDetail(String id);
 
-    public ArrayList<PostModel> searchPost();
-
     public void deletePost(String id);
 
     public ArrayList<ReportResponseDTO> getListReport();
 
-    public void deleteReport(Long id);
+    public void deleteReport(String id);
+
+    ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
 
 }

@@ -1,8 +1,6 @@
 package com.example.fptufindingmotelv1.service.admin;
 
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.dto.ReportResponseDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
@@ -163,11 +161,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<PostModel> searchPost() {
-        return null;
-    }
-
-    @Override
     public void deletePost(String id) {
         postRepository.deleteById(id);
     }
@@ -189,7 +182,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteReport(Long id) {
+    public void deleteReport(String id) {
         reportRepository.deleteById(id);
+    }
+
+    @Override
+    public ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO) {
+        try {
+            ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.searchPost(postSearchDTO.getLandlordUsername(),
+                    postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
+                    postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
+                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId());
+            ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
+            for (PostModel p : posts) {
+                PostResponseDTO pr = new PostResponseDTO(p);
+                postResponseDTOs.add(pr);
+            }
+            return postResponseDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

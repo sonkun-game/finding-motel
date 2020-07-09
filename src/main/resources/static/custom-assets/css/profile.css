@@ -656,6 +656,22 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
     max-width: 21% !important;
 }
 
+.col-table{
+    flex: 0 0 79% !important;
+    max-width: 79% !important;
+}
+.table-container{
+    overflow: auto;
+}
+.table-container td,
+.table-container th {
+    min-width: 110px;
+    padding: 0.75rem 0.25rem !important;
+}
+.col-first{
+    min-width: 55px!important;
+}
+
 
 /*.user-infor{*/
 /*    margin-bottom: 15px;*/

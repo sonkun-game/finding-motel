@@ -117,7 +117,7 @@ var admin = new Vue({
         },
         showModalConfirmBan(id, dataType, action, event) {
             this.modalBanDataId = id;
-            this.modalDelDataType = dataType;
+            this.modalBanDataType = dataType;
             this.modalBanAction = action;
             if (event.target.className.indexOf("disable") != -1) {
                 return;
@@ -320,13 +320,11 @@ var admin = new Vue({
             })
         },
         banPost(id) {
-            let postId = id;
-            fetch("https://localhost:8081/ban-post", {
+            fetch("https://localhost:8081/ban-post?postId=" + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(postId),
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {

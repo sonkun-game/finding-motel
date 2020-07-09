@@ -30,11 +30,18 @@
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
+
+
 <main>
     <div class="container-fluid">
-        <div class="container">
+<!--        <div class="container">-->
             <div class="row">
-                <div class="col-3 sidebar-left">
+                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
+<!--                    <div class="user-infor">-->
+<!--                        <div class="user-avatar">-->
+<!--                            <img class="avatar" src="assets/img/logo/ava.png" />-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div id="basic-user-info" class="avatar">
                         <i class="ti-user profile-avatar"></i>
                         <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>
@@ -45,7 +52,7 @@
                     <div th:replace="layout :: user-task"></div>
 
                 </div>
-                <div class="col-3 note" v-if="task == 13" id="note-wrapper">
+                <div class="col-menu note" v-if="task == 13" id="note-wrapper">
                     <div class="note-body">
                         <h4>Lưu ý khi đăng tin</h4>
                         <ul>
@@ -57,7 +64,7 @@
                         </ul>
                     </div>
                 </div>
-                <div id="user-manager-content" class="col-9 sidebar-right">
+                <div id="user-manager-content" class="col sidebar-right">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 
@@ -66,7 +73,7 @@
 
                 </div>
 
-                <div id="landlord-manager" class="col-9 sidebar-right">
+                <div id="landlord-manager" class="col sidebar-right">
 
                     <div th:replace="layout :: confirm-modal"></div>
 
@@ -424,7 +431,7 @@
                 </div>
             </div>
         </div>
-    </div>
+<!--    </div>-->
 </main>
 
 <footer th:replace="layout :: footer"></footer>

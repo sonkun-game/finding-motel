@@ -8,12 +8,13 @@
     height: 100%;
     border: 0.1px solid #CFCFCF;
     background-color: #e9ecef!important
+
 }
 
 .sidebar-right{
     height: 100%;
     width: 100%;
-    padding-left: 70px;
+    padding-left: 30px;
 }
 
 .avatar{
@@ -78,8 +79,8 @@ font-weight: bold !important;
 
 .container-fluid{
     background-color: #f8f9fa!important;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding: 50px;
+
 }
 
 .detail{
@@ -316,15 +317,17 @@ margin: 4px 22px;
 display: none !important;
 }
 
+.search-container form{
+    margin-top: 20px;
+}
 
 .search-container button {
 float: right;
-padding: 6px 10px;
-margin-top: 8px;
-margin-right: 16px;
+padding: 5px 10px;
 background: #ddd;
 font-size: 17px;
 border: none;
+    border-radius: 5px;
 cursor: pointer;
 color: black;
 }
@@ -647,3 +650,30 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
     margin: auto;
     width: 60%;
 }
+
+.col-menu{
+    flex: 0 0 21% !important;
+    max-width: 21% !important;
+}
+
+
+/*.user-infor{*/
+/*    margin-bottom: 15px;*/
+/*    padding-bottom: 10px;*/
+/*}*/
+
+/*.user-avatar{*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    float: left;*/
+/*    border-radius: 50%;*/
+/*    overflow: hidden;*/
+/*    background: #eee;*/
+/*}*/
+
+/*.avatar {*/
+/*    display: block;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    object-fit: cover;*/
+/*}*/

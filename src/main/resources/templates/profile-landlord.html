@@ -37,18 +37,36 @@
 <!--        <div class="container">-->
             <div class="row">
                 <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
-<!--                    <div class="user-infor">-->
-<!--                        <div class="user-avatar">-->
-<!--                            <img class="avatar" src="assets/img/logo/ava.png" />-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div id="basic-user-info" class="avatar">
-                        <i class="ti-user profile-avatar"></i>
-                        <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>
-                        <p class="display-name" v-cloak>
-                            Số dư: {{authenticationInstance.formatNumberToDisplay(userInfo.amount)}} VNĐ
-                        </p>
+                    <div class="user-infor">
+                        <div class="user-avatar">
+                            <img class="avatar" src="assets/img/logo/ava.png" />
+                        </div>
+                        <div class="user-meta">
+                            <div class="inner">
+                                <div class="user-name">
+                                    Văn Mỹ
+                                </div>
+                                <div class="user-verify">
+                                    0774831849
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <ul>
+                        <li>
+                            <span>Số dư: </span>
+                            <span style="font-weight: 700">9500000</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="btn-payment mr-2">Nạp tiền</a>
+                    <a href="#" class="btn-post-profile ">Đăng tin</a>
+<!--                    <div id="basic-user-info" class="avatar">-->
+<!--                        <i class="ti-user profile-avatar"></i>-->
+<!--                        <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>-->
+<!--                        <p class="display-name" v-cloak>-->
+<!--                            Số dư: {{authenticationInstance.formatNumberToDisplay(userInfo.amount)}} VNĐ-->
+<!--                        </p>-->
+<!--                    </div>-->
                     <div th:replace="layout :: user-task"></div>
 
                 </div>
@@ -64,7 +82,7 @@
                         </ul>
                     </div>
                 </div>
-                <div id="user-manager-content" class="col sidebar-right">
+                <div id="user-manager-content" class="col-9 sidebar-right">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 

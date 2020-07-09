@@ -333,6 +333,27 @@
         </div>
     </div>
 
+<!--modal confirm -->
+    <div id="confirm-modal" class="modal" th:fragment="confirm-modal">
+        <!-- Modal content -->
+        <div class="message-confirm">
+            <div class="modal-header">
+                <h2>Xác Nhận</h2>
+            </div>
+            <div class="modal-body">
+                <label id="confirm-content"></label>
+                <div class="group-btn">
+                    <button @click="yesNoConfirmClick($event)" value="0"
+                            class="btn-hover btn-default-cancel">Hủy
+                        bỏ
+                    </button>
+                    <button @click="yesNoConfirmClick($event)" value="1"
+                            class="btn-hover btn-default-cancel">Đồng ý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

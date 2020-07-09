@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -46,6 +48,12 @@ public class ManagePostServiceImpl implements ManagePostService{
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private RenterRepository renterRepository;
 
     @Override
     public List<PaymentPackageModel> getListPaymentPackage() {
@@ -209,17 +217,47 @@ public class ManagePostServiceImpl implements ManagePostService{
         return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public boolean deletePost(PostRequestDTO postRequestDTO) {
-        try {
-            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+        PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
 
-            postRepository.delete(postModel);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
+        // delete wishlist have post
+        for (RenterModel renter:
+             postModel.getRenters()) {
+            renter.getPosts().remove(postModel);
         }
-        return false;
+        renterRepository.saveAll(postModel.getRenters());
+
+        postModel.getRenters().clear();
+
+        // delete images of post
+        for (ImageModel image:
+                postModel.getImages()) {
+            imageRepository.delete(image);
+        }
+
+        // delete rooms of post
+        for (RoomModel room:
+             postModel.getRooms()) {
+            roomRepository.delete(room);
+        }
+
+        // delete paymentPosts  of post
+        for (PaymentPostModel paymentPostModel:
+                postModel.getPaymentPosts()) {
+            paymentPostRepository.delete(paymentPostModel);
+        }
+
+        // delete reports  of post
+        for (ReportModel reportModel:
+                postModel.getReports()) {
+            reportRepository.delete(reportModel);
+        }
+
+        postRepository.delete(postModel);
+        return true;
+
     }
 
     @Override

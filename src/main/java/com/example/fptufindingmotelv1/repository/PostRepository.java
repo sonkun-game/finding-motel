@@ -26,18 +26,4 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
                                Double squareMax, Double squareMin, Boolean isVisible, Long postType);
-
-    @Query(value = "select p from PostModel p " +
-            "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
-            "and (:priceMax is null or p.price <= :priceMax) " +
-            "and (:priceMin is null or p.price >= :priceMin) " +
-            "and (:distanceMax is null or p.distance <= :distanceMax) " +
-            "and (:distanceMin is null or p.distance >= :distanceMin) " +
-            "and (:squareMax is null or p.square <= :squareMax) " +
-            "and (:squareMin is null or p.square >= :squareMin) " +
-            "and (:isVisible is null or p.visible = :isVisible)" +
-            "")
-    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
-                               Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible);
 }

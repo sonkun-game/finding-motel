@@ -71,7 +71,7 @@ public class AdminController {
             adminService.deleteReport(reportId);
             return responseMsg("000", "Success!", null);
         } catch (Exception e) {
-            return responseMsg("001", "System error!", null);
+            return responseMsg("999", "System error!", null);
         }
     }
 
@@ -82,7 +82,7 @@ public class AdminController {
             ArrayList<PostResponseDTO> posts = adminService.getListPost();
             return responseMsg("000", "Success!", posts);
         } catch (Exception e) {
-            return responseMsg("001", e.getMessage(), null);
+            return responseMsg("999", e.getMessage(), null);
         }
     }
 
@@ -93,7 +93,7 @@ public class AdminController {
             adminService.deletePost(postId);
             return responseMsg("000", "Success!", null);
         } catch (Exception e) {
-            return responseMsg("001", e.getMessage(), null);
+            return responseMsg("999", e.getMessage(), null);
         }
     }
 
@@ -102,13 +102,27 @@ public class AdminController {
     public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO) {
         try {
             ArrayList<PostResponseDTO> posts = adminService.searchPost(postSearchDTO);
-            return posts != null && !posts.isEmpty()
+            return posts != null
                     ? responseMsg("000", "Success!", posts)
                     : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
-            return responseMsg("001", e.getMessage(), null);
+            return responseMsg("999", e.getMessage(), null);
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/ban-post")
+    public JSONObject banPost(@RequestParam String postId) {
+        try {
+            return adminService.banPost(postId)
+                    ? responseMsg("000", "Success!", null)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+
+
 
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();

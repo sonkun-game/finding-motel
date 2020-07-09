@@ -4,6 +4,7 @@ import com.example.fptufindingmotelv1.dto.ReportRequestDTO;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.restfb.types.Post;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,9 +29,10 @@ public class ReportModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "ID", nullable = false)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "RENTER_ID")
@@ -46,9 +48,14 @@ public class ReportModel implements Serializable {
     @Column(name = "REPORT_DATE")
     private Date reportDate;
 
-    public ReportModel(RenterModel renterModel, PostModel postModel, ReportRequestDTO reportRequestDTO) throws Exception {
+    @ManyToOne
+    @JoinColumn(name = "STATUS_ID")
+    private StatusModel statusReport;
+
+    public ReportModel(RenterModel renterModel, PostModel postModel, StatusModel statusModel, ReportRequestDTO reportRequestDTO) throws Exception {
         this.renterReport = renterModel;
         this.postReport = postModel;
+        this.statusReport = statusModel;
         this.content = reportRequestDTO.getContent();
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");

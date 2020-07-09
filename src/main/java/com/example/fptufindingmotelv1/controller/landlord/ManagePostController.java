@@ -1,9 +1,6 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
-import com.example.fptufindingmotelv1.dto.PaymentPackageDTO;
-import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.dto.TypePostDTO;
+import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.TypeModel;
@@ -53,6 +50,7 @@ public class ManagePostController {
         PostModel postModel = managePostService.saveNewPost(postRequestDTO);
         response.put("msgCode", postModel != null ? "post000" : "sys999");
         response.put("postId", postModel.getId());
+        response.put("userInfo", new UserDTO(postModel.getLandlord()));
         return response;
     }
 
@@ -63,6 +61,7 @@ public class ManagePostController {
         PostModel postModel = managePostService.editPost(postRequestDTO);
         response.put("msgCode", postModel != null ? "post000" : "sys999");
         response.put("postId", postModel.getId());
+        response.put("userInfo", new UserDTO(postModel.getLandlord()));
         return response;
     }
 
@@ -76,7 +75,7 @@ public class ManagePostController {
              listPost) {
             postResponseDTOS.add(new PostResponseDTO(post));
         }
-        response.put("msgCode", postResponseDTOS != null && postResponseDTOS.size() > 0 ? "post000" : "sys999");
+        response.put("msgCode", listPost != null ? "post000" : "sys999");
         response.put("listPost", postResponseDTOS);
         return response;
     }
@@ -96,9 +95,11 @@ public class ManagePostController {
     @PostMapping("/api-extend-time-of-post")
     public JSONObject extendTimeOfPost(@RequestBody PostRequestDTO postRequestDTO) {
         JSONObject response = new JSONObject();
-        boolean isSuccess = managePostService.extendTimeOfPost(postRequestDTO);
+        PostModel postModel = managePostService.extendTimeOfPost(postRequestDTO);
 
-        response.put("msgCode", isSuccess ? "post000" : "sys999");
+        response.put("msgCode", postModel != null ? "post000" : "sys999");
+        response.put("post", new PostResponseDTO(postModel));
+        response.put("userInfo", new UserDTO(postModel.getLandlord()));
         return response;
     }
 

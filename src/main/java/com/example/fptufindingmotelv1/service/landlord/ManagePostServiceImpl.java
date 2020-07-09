@@ -9,8 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -36,6 +42,18 @@ public class ManagePostServiceImpl implements ManagePostService{
 
     @Autowired
     private PaymentPostRepository paymentPostRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private RenterRepository renterRepository;
 
     @Override
     public List<PaymentPackageModel> getListPaymentPackage() {
@@ -72,6 +90,7 @@ public class ManagePostServiceImpl implements ManagePostService{
             postModel.setSquare(postRequestDTO.getSquare());
             postModel.setTitle(postRequestDTO.getTitle());
             postModel.setVisible(true);
+            postModel.setBanned(false);
             postModel.setRoomNumber(postRequestDTO.getRoomNumber());
             postModel.setType(typeModel);
             PaymentPackageModel packageModel
@@ -89,7 +108,12 @@ public class ManagePostServiceImpl implements ManagePostService{
 
             // save list image
             List<ImageModel> listImages = uploadImages(postRequestDTO.getListImage()
-                    , postRequestDTO.getUsername(), newPostCreated);
+                    , newPostCreated);
+            if(listImages == null){
+                return null;
+            }else {
+                listImages = imageRepository.saveAll(listImages);
+            }
 
             // save list room
             List<RoomModel> listRoom = new ArrayList<>();
@@ -107,6 +131,7 @@ public class ManagePostServiceImpl implements ManagePostService{
                 roomModel.setPostRoom(newPostCreated);
                 listRoom.add(roomModel);
             }
+            listRoom = roomRepository.saveAll(listRoom);
 
             newPostCreated.setImages(listImages);
             newPostCreated.setRooms(listRoom);
@@ -153,7 +178,7 @@ public class ManagePostServiceImpl implements ManagePostService{
     }
 
     @Override
-    public boolean extendTimeOfPost(PostRequestDTO postRequestDTO) {
+    public PostModel extendTimeOfPost(PostRequestDTO postRequestDTO) {
         try {
             PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
             LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
@@ -162,7 +187,11 @@ public class ManagePostServiceImpl implements ManagePostService{
             Date date = new Date();
             Date payDate = new Timestamp(date.getTime());
             Calendar c = Calendar.getInstance();
-            c.setTime(postModel.getExpireDate());
+            if(payDate.after(postModel.getExpireDate())){
+                c.setTime(payDate);
+            }else{
+                c.setTime(postModel.getExpireDate());
+            }
             c.add(Calendar.MONTH, packageModel.getDuration());
             Date expireDate = c.getTime();
 
@@ -180,25 +209,55 @@ public class ManagePostServiceImpl implements ManagePostService{
             // add expire date and save post
             postModel.setExpireDate(expireDate);
             postModel.setVisible(true);
-            postRepository.save(postModel);
-            return true;
+            postModel = postRepository.save(postModel);
+            return postModel;
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public boolean deletePost(PostRequestDTO postRequestDTO) {
-        try {
-            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+        PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
 
-            postRepository.delete(postModel);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
+        // delete wishlist have post
+        for (RenterModel renter:
+             postModel.getRenters()) {
+            renter.getPosts().remove(postModel);
         }
-        return false;
+        renterRepository.saveAll(postModel.getRenters());
+
+        postModel.getRenters().clear();
+
+        // delete images of post
+        for (ImageModel image:
+                postModel.getImages()) {
+            imageRepository.delete(image);
+        }
+
+        // delete rooms of post
+        for (RoomModel room:
+             postModel.getRooms()) {
+            roomRepository.delete(room);
+        }
+
+        // delete paymentPosts  of post
+        for (PaymentPostModel paymentPostModel:
+                postModel.getPaymentPosts()) {
+            paymentPostRepository.delete(paymentPostModel);
+        }
+
+        // delete reports  of post
+        for (ReportModel reportModel:
+                postModel.getReports()) {
+            reportRepository.delete(reportModel);
+        }
+
+        postRepository.delete(postModel);
+        return true;
+
     }
 
     @Override
@@ -216,6 +275,20 @@ public class ManagePostServiceImpl implements ManagePostService{
             postModel.setTitle(postRequestDTO.getTitle());
             postModel.setType(typeModel);
 
+
+            for (int i = 0; i < postModel.getImages().size(); i++) {
+                imageRepository.delete(postModel.getImages().get(i));
+            }
+            postModel.getImages().clear();
+
+            // save list image
+            List<ImageModel> listImages = uploadImages(postRequestDTO.getListImage()
+                    , postModel);
+
+            listImages = imageRepository.saveAll(listImages);
+
+            postModel.setImages(listImages);
+
             PostModel newPostCreated = postRepository.save(postModel);
 
             return newPostCreated;
@@ -225,52 +298,26 @@ public class ManagePostServiceImpl implements ManagePostService{
         return null;
     }
 
-    public List<ImageModel> uploadImages(List<String> uploadImages, String username, PostModel post){
+    public List<ImageModel> uploadImages(List<String> uploadImages, PostModel post){
         List<ImageModel> imageList = new ArrayList<>();
-        // create user image folder
-        String fileFolder = "src/main/resources/static/assets/img/rooms/" +username;
-        File folder = new File(fileFolder);
-        if (!folder.exists()) {
-            if (folder.mkdir()) {
-                System.out.println("Directory is created!");
-            } else {
-                System.err.println("Failed to create new folder");
-            }
-        }
         for (int i = 0; i < uploadImages.size(); i++) {
-            ImageModel imageModel = new ImageModel();
             String imgBase64 = uploadImages.get(i);
             String fileType = "";
-            StringBuffer fileName = new StringBuffer();
-            fileName.append(UUID.randomUUID().toString().replaceAll("-", ""));
             if (StringUtils.isEmpty(imgBase64)) {
                 return null;
-            }
-//            else if (imgBase64.indexOf("data:image/png;") != -1) {
-//                imgBase64 = imgBase64.replace("data:image/png;base64,", "");
-//                fileName.append(".png");
-//            } else if (imgBase64.indexOf("data:image/jpeg;") != -1) {
-//                imgBase64 = imgBase64.replace("data:image/jpeg;base64,", "");
-//                fileName.append(".jpeg");
-//            }
-            else {
+            }else {
                 fileType = imgBase64.split("/")[1].split(";")[0];
                 imgBase64 = imgBase64.split(";base64,")[1];
-                fileName.append("." + fileType);
             }
-
             byte[] fileBytes = Base64.getDecoder().decode(imgBase64);
-//            File file = new File(fileFolder + "/", fileName.toString());
-//            try {
-//                FileUtils.writeByteArrayToFile(file, fileBytes);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+
+            ImageModel imageModel = new ImageModel();
+
             imageModel.setFileContent(fileBytes);
             imageModel.setFileType(fileType);
             imageModel.setPost(post);
             imageList.add(imageModel);
+
         }
 
         return imageList;

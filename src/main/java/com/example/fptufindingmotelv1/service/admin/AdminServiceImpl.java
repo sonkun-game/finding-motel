@@ -172,7 +172,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteReport(Long id) {
+    public void deleteReport(String id) {
         reportRepository.deleteById(id);
     }
 

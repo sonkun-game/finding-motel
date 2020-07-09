@@ -8,15 +8,15 @@ import java.text.SimpleDateFormat;
 
 @Data
 public class PaymentPostDTO {
-    private Long id;
+    private String id;
     private String payDate;
     private String postId;
     private Long packageID;
     public PaymentPostDTO(PaymentPostModel paymentPostModel){
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
-        this.id=paymentPostModel.getId();
-        this.payDate=sdf.format(paymentPostModel.getPayDate());
-        this.postId=paymentPostModel.getPostPayment().getId();
-        this.packageID=paymentPostModel.getPaymentPackage().getId();
+        this.id = paymentPostModel.getId();
+        this.payDate = sdf.format(paymentPostModel.getPayDate());
+        this.postId = paymentPostModel.getPostPayment().getId();
+        this.packageID = paymentPostModel.getPaymentPackage().getId();
     }
 }

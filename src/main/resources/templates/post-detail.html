@@ -5,10 +5,16 @@
     <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="assets/css/flex-slider.css" rel="stylesheet" type="text/css"/>
     <meta charset="UTF-8">
     <title>Chi tiết bài đăng</title>
 </head>
 <body>
+
+<!--    inlude loading screen-->
+<div th:replace="layout :: loader"></div>
+
+<!--    include header-->
 <header th:replace="layout :: header"></header>
 
 <main>
@@ -28,7 +34,7 @@
                     <div class="description">
                         <div class="title">
                             <div class="title-left">
-                                <h3 class="uppercase" th:text="post.title"></h3>
+                                <h3 class="uppercase" th:text="${post.title}"></h3>
                             </div>
                             <div class="title-right">
                                 <i class="far fa-2x fa-heart icon-heart"></i>

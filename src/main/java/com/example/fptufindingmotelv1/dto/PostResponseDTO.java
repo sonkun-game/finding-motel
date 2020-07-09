@@ -28,6 +28,7 @@ public class PostResponseDTO {
     private String description;
     private String expireDate;
     private boolean postVisible;
+    private boolean banned;
     private String title;
     private String displayStatus;
     private List<RoomDTO> listRoom;
@@ -47,8 +48,10 @@ public class PostResponseDTO {
         this.description = postModel.getDescription();
         this.expireDate = sdf.format(postModel.getExpireDate());
         this.postVisible = postModel.isVisible();
+        this.banned = postModel.isBanned();
         this.title = postModel.getTitle();
         this.displayStatus = this.postVisible ? "Hiển thị" : "Không hiển thị";
+        this.displayStatus = this.banned ? "Bị khóa" : this.displayStatus;
         this.listRoom = new ArrayList<>();
         for (int i = 0; i < postModel.getRooms().size(); i++) {
             listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));

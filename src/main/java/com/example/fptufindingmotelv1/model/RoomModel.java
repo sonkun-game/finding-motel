@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.model;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,9 +13,10 @@ public class RoomModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "ID", nullable = false)
-    private Long id;
+    private String id;
 
     @Column(name = "NAME", nullable = false)
     private String name;

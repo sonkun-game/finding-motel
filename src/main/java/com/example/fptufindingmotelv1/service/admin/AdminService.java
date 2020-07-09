@@ -8,25 +8,23 @@ import com.example.fptufindingmotelv1.model.UserModel;
 import java.util.ArrayList;
 
 public interface AdminService {
-    public ArrayList<UserDTO> getListUser();
+     ArrayList<UserDTO> getListUser();
 
-    public UserModel getUserDetail(String username);
+     ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username);
 
-    public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username);
+     ArrayList<LandlordModel> banLandlord(String username);
+     ArrayList<LandlordModel> unbanLandlord(String username);
 
-    public ArrayList<LandlordModel> banLandlord(String username);
-    public ArrayList<LandlordModel> unbanLandlord(String username);
+     ArrayList<PostResponseDTO> getListPost();
 
-    public ArrayList<PostResponseDTO> getListPost();
+     void deletePost(String id);
 
-    public PostResponseDTO getPostDetail(String id);
+     ArrayList<ReportResponseDTO> getListReport();
 
-    public void deletePost(String id);
-
-    public ArrayList<ReportResponseDTO> getListReport();
-
-    public void deleteReport(Long id);
+     void deleteReport(Long id);
 
     ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
+
+    void banPost(String postId) ;
 
 }

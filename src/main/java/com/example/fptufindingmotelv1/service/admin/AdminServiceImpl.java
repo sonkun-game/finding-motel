@@ -76,11 +76,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public UserModel getUserDetail(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
     public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username) {
         ArrayList<UserDTO> users = new ArrayList<>();
         for (UserModel user : userRepository.findByUsernameOrDisplayName(username)) {
@@ -156,11 +151,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public PostResponseDTO getPostDetail(String id) {
-        return new PostResponseDTO(postRepository.getOne(id));
-    }
-
-    @Override
     public void deletePost(String id) {
         postRepository.deleteById(id);
     }
@@ -203,5 +193,10 @@ public class AdminServiceImpl implements AdminService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void banPost(String postId) {
+        PostModel postModel = postRepository.getOne(postId);
     }
 }

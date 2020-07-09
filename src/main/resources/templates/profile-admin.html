@@ -346,8 +346,10 @@
                                     <td>{{post.landlordName}}</td>
                                     <td>
                                         <i class="fas fa-eye" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
-                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài đăng"
-                                           id="myIcon"></i>
+                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-lock" data-toggle="tooltip" data-html="true" title="Khóa bài đăng"
+                                           id="lockPostIcon"></i>
+                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-unlock" data-toggle="tooltip" data-html="true" title="Mở khóa bài đăng"
+                                           id="unlockPostIcon"></i>
 
                                     </td>
                                 </tr>

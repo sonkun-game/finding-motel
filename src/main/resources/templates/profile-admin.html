@@ -20,9 +20,9 @@
 
 <main>
     <div class="container-fluid">
-        <div class="container">
+<!--        <div class="container">-->
             <div id="pageContent" class="row">
-                <div class="col-3 sidebar-left">
+                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
                     <div class="avatar" id="basic-user-info">
                         <i class="ti-user profile-avatar"></i>
                         <p class="display-name" v-text="userInfo.displayName"></p>
@@ -30,7 +30,7 @@
                     <div th:replace="layout :: user-task"></div>
                 </div>
 
-                <div id="user-manager-content" class="col-9 sidebar-right">
+                <div id="user-manager-content" class="col sidebar-right">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 
@@ -38,7 +38,7 @@
                     <div th:replace="layout :: change-password"></div>
                 </div>
 
-                <div id="dataTable" class="col-9 sidebar-right">
+                <div id="dataTable" class="col   sidebar-right">
                     <!-- Quản lý người dùng -->
 
                     <div id="userTable" v-if="task == 9">
@@ -47,7 +47,7 @@
                         </div>
                         <div class="choose-role">
                             <div class="row">
-                                <div class="col">
+                                <div class="col-3">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Vai trò:</span>
@@ -63,7 +63,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3">
                                     <div class="search-container">
                                         <form action="#">
                                             <input @focusout="getUserById()" id="searchUserTxt" type="text"
@@ -483,7 +485,7 @@
             </div>
         </div>
 
-    </div>
+<!--    </div>-->
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

@@ -19,9 +19,9 @@
 
 <main>
     <div class="container-fluid">
-        <div class="container">
+<!--        <div class="container">-->
             <div class="row">
-                <div class="col-3 sidebar-left">
+                <div class="col-lg-2 d-none d-lg-block bg-light sidebar-left">
                     <div class="avatar" id="basic-user-info">
                         <i class="ti-user profile-avatar"></i>
                         <p class="display-name overflow-dots" v-text="userInfo.displayName"></p>
@@ -29,7 +29,7 @@
                     <div th:replace="layout :: user-task"></div>
                 </div>
 
-                <div id="user-manager-content" class="col-9 sidebar-right">
+                <div id="user-manager-content" class="col-lg-10 sidebar-right">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 
@@ -38,7 +38,7 @@
                     <div th:replace="layout :: change-password"></div>
                 </div>
 
-                <div id="renter-manager" class="col-9 sidebar-right">
+                <div id="renter-manager" class="col-lg-10 sidebar-right">
                     <!-- Quản lý yêu cầu -->
 
                     <div id="request-manager" v-if="task == 2">
@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-    </div>
+<!--    </div>-->
 </main>
 
 <footer th:replace="layout :: footer"></footer>

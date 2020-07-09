@@ -127,3 +127,21 @@ p{
     background-color: beige;
     line-height: 382px;
 }
+
+.button-post{
+    background-color: #dc3545;
+    color: white;
+    /* margin: 0px 0px; */
+    margin-right: 20px;
+    min-width: 120px;
+    height: 45px;
+    padding: 6px 10px 5px 10px;
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-post:hover{
+    background: #dca73a ;
+    border-color: #dca73a;
+}

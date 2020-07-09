@@ -5,7 +5,9 @@ import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PagerModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.repository.InstructionRepository;
 import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import com.example.fptufindingmotelv1.untils.Constant;
@@ -29,6 +31,9 @@ public class HomeController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -118,7 +123,7 @@ public class HomeController {
 
     @GetMapping("/instruction")
     public String viewInstruction(Model model) {
-
+        model.addAttribute("customer",roleRepository.getOne((long) 2));
         return "instruction";
     }
 

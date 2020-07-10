@@ -4,6 +4,7 @@ var authenticationInstance = new Vue({
         userInfo: {},
         authenticated: false,
         task: 0,
+        isShowBtn: true,
     },
     methods: {
         logout(){
@@ -39,7 +40,12 @@ var authenticationInstance = new Vue({
         },
         getTaskPage(task){
             localStorage.setItem("task", task)
-            window.location.href = "https://localhost:8081/profile-user"
+            if(task == 13){
+                window.location.href = "dang-tin"
+            }else if(task == 0 || task == 1){
+                window.location.href = "quan-ly-tai-khoan"
+            }
+
         },
         formatNumberToDisplay(number){
             return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')

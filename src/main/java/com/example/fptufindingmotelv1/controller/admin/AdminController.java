@@ -1,13 +1,13 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.restfb.json.Json;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +24,21 @@ public class AdminController {
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
         return "profile-admin";
+    }
+
+    @GetMapping(value = {"/quan-ly-he-thong"})
+    public String getManagerPage(Model model){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if(!(userDetails.getUserModel() instanceof LandlordModel)
+                && !(userDetails.getUserModel() instanceof RenterModel)){
+                return "profile-admin";
+            }else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
     }
 
     @ResponseBody

@@ -1,13 +1,14 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.PaymentPackageModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.TypeModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -17,6 +18,20 @@ public class ManagePostController {
 
     @Autowired
     private ManagePostService managePostService;
+
+    @GetMapping(value = {"/dang-tin", "/quan-ly-bai-dang"})
+    public String getManagerPage(Model model){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if(userDetails.getUserModel() instanceof LandlordModel){
+                return "profile-landlord";
+            }else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
+    }
 
     @ResponseBody
     @PostMapping("/api-get-init-new-post")

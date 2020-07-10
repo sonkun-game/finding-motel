@@ -23,29 +23,8 @@
 <!--        <div class="container">-->
             <div id="pageContent" class="row">
                 <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
-                    <div class="user-infor">
-                        <div class="user-avatar">
-                            <img class="avatar" src="assets/img/logo/ava.png" />
-                        </div>
-                        <div class="user-meta">
-                            <div class="inner">
-                                <div class="user-name">
-                                    Văn Mỹ
-                                </div>
-                                <div class="user-verify">
-                                    0774831849
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul>
-                        <li>
-                            <span>Số dư: </span>
-                            <span style="font-weight: 700">9500000</span>
-                        </li>
-                    </ul>
-                    <a href="#" class="btn-payment mr-2">Nạp tiền</a>
-                    <a href="#" class="btn-post-profile ">Đăng tin</a>
+                    <div th:replace="layout :: basic-user-infor"></div>
+
 <!--                    <div class="avatar" id="basic-user-info">-->
 <!--                        <i class="ti-user profile-avatar"></i>-->
 <!--                        <p class="display-name" v-text="userInfo.displayName"></p>-->

@@ -443,10 +443,14 @@ input, textarea, select {
     outline: none;
     border-radius: 6px!important;
     border: 1px solid #DDDDDD;
-    padding: 4px 10px;
+    padding: 4px 9px;
     font-size: 16px;
     font-family: sans-serif;
     color: #495057;
+}
+
+#searchUserTxt{
+    width: 80%;
 }
 
 
@@ -733,7 +737,7 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 
 .btn-post-profile{
     background-color: #dc3545;
-    color: white;
+    color: white!important;
     /* margin: 0px 0px; */
     margin-right: 20px;
     min-width: 120px;
@@ -742,4 +746,12 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
     border: 1px solid #dc3545;
     border-radius: 5px;
     cursor: pointer;
+}
+.inner{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+a:hover {
+    color: #0056b3!important;
 }

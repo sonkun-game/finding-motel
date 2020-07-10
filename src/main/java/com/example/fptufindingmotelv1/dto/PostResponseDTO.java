@@ -20,10 +20,10 @@ public class PostResponseDTO {
     private String typeId;
     private String typeName;
     private String landlordName;
-    private String price;
-    private String distance;
-    private String square;
-    private String roomNumber;
+    private double price;
+    private double distance;
+    private double square;
+    private int roomNumber;
     private String createDate;
     private String description;
     private String expireDate;
@@ -36,14 +36,14 @@ public class PostResponseDTO {
 
     public PostResponseDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
-        this.id = postModel.getId().toString();
+        this.id = postModel.getId();
         this.typeId = postModel.getType().getId().toString();
         this.typeName = postModel.getType().getName();
         this.landlordName = postModel.getLandlord().getUsername();
-        this.price = postModel.getPrice() + "";
-        this.distance = postModel.getDistance() + "";
-        this.square = postModel.getSquare() + "";
-        this.roomNumber = postModel.getRoomNumber() +"";
+        this.price = postModel.getPrice();
+        this.distance = postModel.getDistance();
+        this.square = postModel.getSquare();
+        this.roomNumber = postModel.getRoomNumber();
         this.createDate = sdf.format(postModel.getCreateDate());
         this.description = postModel.getDescription();
         this.expireDate = sdf.format(postModel.getExpireDate());

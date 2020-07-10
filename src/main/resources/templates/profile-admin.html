@@ -20,17 +20,19 @@
 
 <main>
     <div class="container-fluid">
-        <div class="container">
+<!--        <div class="container">-->
             <div id="pageContent" class="row">
-                <div class="col-3 sidebar-left">
-                    <div class="avatar" id="basic-user-info">
-                        <i class="ti-user profile-avatar"></i>
-                        <p class="display-name" v-text="userInfo.displayName"></p>
-                    </div>
+                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
+                    <div th:replace="layout :: basic-user-infor"></div>
+
+<!--                    <div class="avatar" id="basic-user-info">-->
+<!--                        <i class="ti-user profile-avatar"></i>-->
+<!--                        <p class="display-name" v-text="userInfo.displayName"></p>-->
+<!--                    </div>-->
                     <div th:replace="layout :: user-task"></div>
                 </div>
 
-                <div id="user-manager-content" class="col-9 sidebar-right">
+                <div id="user-manager-content" class="col sidebar-right col-table">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 
@@ -38,7 +40,8 @@
                     <div th:replace="layout :: change-password"></div>
                 </div>
 
-                <div id="dataTable" class="col-9 sidebar-right">
+                <div id="dataTable" class="col sidebar-right col-table">
+
                     <!-- Quản lý người dùng -->
 
                     <div id="userTable" v-if="task == 9">
@@ -47,7 +50,7 @@
                         </div>
                         <div class="choose-role">
                             <div class="row">
-                                <div class="col">
+                                <div class="col-3">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Vai trò:</span>
@@ -63,7 +66,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3">
                                     <div class="search-container">
                                         <form action="#">
                                             <input @focusout="getUserById()" id="searchUserTxt" type="text"
@@ -95,16 +100,17 @@
                                     <td>{{user.roleName}}</td>
                                     <td>
                                         <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
-                                           id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
+                                           id="myIcon-view" data-toggle="tooltip" data-html="true"
+                                           title="Xem chi tiết"></i>
                                         <i v-if="user.role == 'LANDLORD'"
                                            v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
-                                           @click="showModalConfirmBan(user.username, 'ban', $event)"
+                                           @click="showModalConfirmBan(user.username, 'landlord', 'ban', $event)"
                                            class="fas fa-lock">
                                             {{user.unBanDate}}
                                         </i>
                                         <i v-if="user.role == 'LANDLORD'"
                                            v-bind:class="{invisible: user.unBanDate == null}"
-                                           @click="showModalConfirmBan(user.username, 'unban', $event)"
+                                           @click="showModalConfirmBan(user.username,'landlord' ,'unban', $event)"
                                            :aria-disabled="true"
                                            class="fas fa-unlock">
 
@@ -300,7 +306,8 @@
                                             <span>Chủ trọ:</span>
                                         </div>
                                         <div class="search-container">
-                                            <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text" placeholder="Tìm kiếm..."
+                                            <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
+                                                   placeholder="Tìm kiếm..."
                                                    name="search">
                                         </div>
                                     </div>
@@ -314,11 +321,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="information-detail">
+                        <div class="information-detail table-container">
                             <table class="table">
                                 <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">STT</th>
+                                    <th class="col-first" scope="col">STT</th>
+                                    <th scope="col">Tác vụ</th>
                                     <th scope="col">Tên phòng trọ</th>
                                     <th scope="col">Loại phòng</th>
                                     <th scope="col">Giá</th>
@@ -328,12 +336,25 @@
                                     <th scope="col">Ngày hết hạn</th>
                                     <th scope="col">Trạng thái</th>
                                     <th scope="col">Chủ sở hữu</th>
-                                    <th scope="col">Tác vụ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr v-for="post in listPost">
-                                    <th scope="row">{{listPost.indexOf(post) + 1}}</th>
+                                    <td class="col-first" scope="row">{{listPost.indexOf(post) + 1}}</td>
+                                    <td>
+                                        <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
+                                           title="Xem chi tiết"></i>
+                                        <i v-bind:class="{invisible: post.banned}"
+                                           @click="showModalConfirmBan(post.id, 'post','ban', $event)"
+                                           class="fas fa-lock" data-toggle="tooltip" data-html="true"
+                                           title="Khóa bài đăng"
+                                           id="lockPostIcon"></i>
+                                        <i v-bind:class="{invisible: !post.banned}"
+                                           @click="showModalConfirmBan(post.id, 'post','unban', $event)"
+                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true"
+                                           title="Mở khóa bài đăng"
+                                           id="unlockPostIcon"></i>
+                                    </td>
                                     <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
                                     </td>
                                     <td>{{post.typeName}}</td>
@@ -344,12 +365,7 @@
                                     <td>{{post.expireDate}}</td>
                                     <td>{{post.displayStatus}}</td>
                                     <td>{{post.landlordName}}</td>
-                                    <td>
-                                        <i class="fas fa-eye" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
-                                        <i @click="showModalConfirmDelete(post.id, 'post')" class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài đăng"
-                                           id="myIcon"></i>
 
-                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -483,7 +499,7 @@
             </div>
         </div>
 
-    </div>
+<!--    </div>-->
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

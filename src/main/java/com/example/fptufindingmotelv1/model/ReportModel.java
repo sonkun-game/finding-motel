@@ -48,9 +48,14 @@ public class ReportModel implements Serializable {
     @Column(name = "REPORT_DATE")
     private Date reportDate;
 
-    public ReportModel(RenterModel renterModel, PostModel postModel, ReportRequestDTO reportRequestDTO) throws Exception {
+    @ManyToOne
+    @JoinColumn(name = "STATUS_ID")
+    private StatusModel statusReport;
+
+    public ReportModel(RenterModel renterModel, PostModel postModel, StatusModel statusModel, ReportRequestDTO reportRequestDTO) throws Exception {
         this.renterReport = renterModel;
         this.postReport = postModel;
+        this.statusReport = statusModel;
         this.content = reportRequestDTO.getContent();
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");

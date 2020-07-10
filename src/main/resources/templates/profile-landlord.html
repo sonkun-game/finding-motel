@@ -30,22 +30,20 @@
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
+
+
 <main>
     <div class="container-fluid">
-        <div class="container">
+<!--        <div class="container">-->
             <div class="row">
-                <div class="col-3 sidebar-left">
-                    <div id="basic-user-info" class="avatar">
-                        <i class="ti-user profile-avatar"></i>
-                        <p v-text="userInfo.displayName" class="display-name overflow-dots"></p>
-                        <p class="display-name" v-cloak>
-                            Số dư: {{authenticationInstance.formatNumberToDisplay(userInfo.amount)}} VNĐ
-                        </p>
-                    </div>
+                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
+
+                    <div th:replace="layout :: basic-user-infor"></div>
+
                     <div th:replace="layout :: user-task"></div>
 
                 </div>
-                <div class="col-3 note" v-if="task == 13" id="note-wrapper">
+                <div class="col-menu note" v-if="task == 13" id="note-wrapper">
                     <div class="note-body">
                         <h4>Lưu ý khi đăng tin</h4>
                         <ul>
@@ -57,7 +55,7 @@
                         </ul>
                     </div>
                 </div>
-                <div id="user-manager-content" class="col-9 sidebar-right">
+                <div id="user-manager-content" class="col-9 sidebar-right col-table">
                     <!-- Thông tin tài khoản -->
                     <div th:replace="layout :: profile-user"></div>
 
@@ -66,7 +64,10 @@
 
                 </div>
 
-                <div id="landlord-manager" class="col-9 sidebar-right">
+                <div id="landlord-manager" class="col sidebar-right col-table">
+
+                    <div th:replace="layout :: confirm-modal"></div>
+
                     <!-- Đăng tin -->
                     <div v-if="task == 13" id="post-new-room">
                         <div class="title">
@@ -324,7 +325,7 @@
                                     </td>
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
+                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post.id, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
                                         <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
                                         <i @click="showModalExtend(post.id, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
@@ -362,6 +363,8 @@
                             </table>
                         </div>
                     </div>
+
+
 
 
                     <!--   Modal extend -->
@@ -419,7 +422,7 @@
                 </div>
             </div>
         </div>
-    </div>
+<!--    </div>-->
 </main>
 
 <footer th:replace="layout :: footer"></footer>

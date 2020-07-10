@@ -154,6 +154,7 @@ body {
     font-family:  sans-serif;
     font-weight: normal;
     font-style: normal;
+    overflow-x: hidden!important;
 }
 
 .img {
@@ -2048,10 +2049,10 @@ label {
     display: flex;
     background-color: #dca73a;
     color: white;
-    margin: -7px 0px;
-    width: auto;
-    height: 30px;
-    padding: 5px 10px 5px 10px;
+    /* margin: -7px 0px; */
+    min-width: 45px;
+    height: 45px;
+    padding: 10px 10px 5px 12px;
     border: 1px solid #CFCFCF;
     border-radius: 5px;
 }
@@ -2062,7 +2063,7 @@ label {
 }
 
 .ti-user{
-    float: left !important;
+    font-size: 20px;
 }
 
 .display-name-dropdown{

@@ -169,16 +169,15 @@ public class HomeController {
         model.addAttribute("posts", listDTO);
 
         PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
-
-        /*model.addAttribute("selectedPageSize", evalPageSize);
+        model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pageSizes", Constant.PAGE_SIZES);
-        model.addAttribute("pager", pager);*/
+        model.addAttribute("pager", pager);
         return "index";
     }
 
     @GetMapping("/post-detail")
-    public String getPostDetail() {
-        //model.addAttribute("post", new PostDTO(postService.findOne(id)));
+    public String getPostDetail(Model model, @PathParam("id") String id) {
+        model.addAttribute("post", new PostDTO(postService.findOne(id)));
         return "post-detail";
     }
 
@@ -193,6 +192,7 @@ public class HomeController {
     }
 
     @GetMapping("/instruction")
+    @GetMapping("/huong-dan")
     public String viewInstruction(Model model) {
         model.addAttribute("customer",roleRepository.getOne((long) 2));
         return "instruction";

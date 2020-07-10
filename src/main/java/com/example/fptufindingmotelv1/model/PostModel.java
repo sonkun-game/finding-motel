@@ -66,13 +66,13 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 
-    @OneToMany( mappedBy = "postReport", cascade = CascadeType.ALL)
+    @OneToMany( mappedBy = "postReport")
     private List<ReportModel> reports;
 
     @ManyToMany(mappedBy = "posts")
     private List<RenterModel> renters;
 
-    @OneToMany(mappedBy = "postPayment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postPayment")
     private List<PaymentPostModel> paymentPosts;
 
     @OneToMany(mappedBy = "postRoom")

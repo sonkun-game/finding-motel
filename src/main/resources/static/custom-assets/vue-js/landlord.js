@@ -23,6 +23,7 @@ var landlordInstance = new Vue({
         expireDate: "",
         postId : "",
         postIndex : "",
+        confirmType : "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -49,6 +50,24 @@ var landlordInstance = new Vue({
         }
     },
     methods: {
+        yesNoConfirmClick(event) {
+            document.getElementById("confirm-modal").style.display = 'none';
+            let modalConfirmClick = event.target.value;
+            if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
+                if (this.confirmType == 'delete') {
+                    this.deletePost();
+                }
+            }
+
+        },
+        showModalConfirm(id, confirmType) {
+            this.postId = id;
+            this.confirmType = confirmType;
+            if (this.confirmType == 'delete') {
+                document.getElementById("confirm-content").innerHTML = 'Bạn có muốn xóa bài viết này không?';
+            }
+            document.getElementById("confirm-modal").style.display = 'block';
+        },
         getHistoryPaymentPost(){
             fetch("/api-get-history-payment-post", {
                 method: 'POST',
@@ -173,6 +192,8 @@ var landlordInstance = new Vue({
                     .then((data) => {
                         console.log(data);
                         if(data != null && data.msgCode == 'post000'){
+                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            basicInfoInstance.userInfo = data.userInfo
                             window.location.href = "/"
                         }
                     }).catch(error => {
@@ -265,13 +286,19 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == 'post000'){
                         profileInstance.showNotifyModal()
-                        setTimeout(() => userTaskInstance.activeBtn(4), 2000);
+                        setTimeout(() =>
+                        {
+                            userTaskInstance.activeBtn(4)
+                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            basicInfoInstance.userInfo = data.userInfo
+                        }, 2000);
                     }
                 }).catch(error => {
                 console.log(error);
             })
         },
         showModalExtend(postId, postIndex) {
+            this.editMode = true
             if(postId != null){
                 this.postId = postId
             }
@@ -281,6 +308,7 @@ var landlordInstance = new Vue({
             document.getElementById("myModal_Extend").style.display = 'block';
         },
         closeModalExtend() {
+            this.editMode = false
             document.getElementById("myModal_Extend").style.display = 'none';
         },
         extendTimePost(){
@@ -303,10 +331,35 @@ var landlordInstance = new Vue({
                     if(data != null && data.msgCode == 'post000'){
                         profileInstance.showNotifyModal()
                         setTimeout(() => {
+                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            basicInfoInstance.userInfo = data.userInfo
                             this.expireDate = data.post.expireDate
                             this.$set(this.listPost, this.postIndex, data.post)
                             this.closeModalExtend()
                         }, 2000);
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        deletePost(){
+            let request = {
+                'postId' : this.postId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-delete-post", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'post000'){
+                        profileInstance.showNotifyModal()
+                        setTimeout(() => this.viewListPost(), 2000);
                     }
                 }).catch(error => {
                 console.log(error);

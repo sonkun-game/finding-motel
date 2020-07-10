@@ -14,10 +14,11 @@ var admin = new Vue({
         postTitleOrLandlord: "",
         isBannedUser: false,
         //modal form
-        modalBanId: {},
+        modalBanDataId: {},
         modalDelId: {},
         modalDelDataType: {},
         modalBanDataType: {},
+        modalBanAction: {},
         modalConfirmClick: {},
         modalData: [],
         //user detail form
@@ -98,24 +99,41 @@ var admin = new Vue({
             document.getElementById("modalBan").style.display = 'none';
             this.modalConfirmClick = event.target.value;
             if (this.modalConfirmClick != null && this.modalConfirmClick.length > 0 && this.modalConfirmClick == '1') {
-                if (this.modalBanDataType == 'ban') {
-                    this.banLanlord(this.modalBanId);
-                } else if (this.modalBanDataType == 'unban') {
-                    this.unbanLanlord(this.modalBanId);
+                if (this.modalBanDataType == 'landlord') {
+                    if (this.modalBanAction == 'ban') {
+                        this.banLanlord(this.modalBanDataId);
+                    } else if (this.modalBanAction == 'unban') {
+                        this.unbanLanlord(this.modalBanDataId);
+                    }
+                } else if(this.modalBanDataType == 'post') {
+                    if (this.modalBanAction == 'ban') {
+                        this.banPost(this.modalBanDataId);
+                    } else if (this.modalBanAction == 'unban') {
+                        this.unbanPost(this.modalBanDataId);
+                    }
                 }
             }
 
         },
-        showModalConfirmBan(id, dataType, event) {
-            this.modalBanId = id;
+        showModalConfirmBan(id, dataType, action, event) {
+            this.modalBanDataId = id;
             this.modalBanDataType = dataType;
+            this.modalBanAction = action;
             if (event.target.className.indexOf("disable") != -1) {
                 return;
             }
-            if (this.modalBanDataType == 'ban') {
-                document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
-            } else if (this.modalBanDataType == 'unban') {
-                document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa tài khoản này không?';
+            if (dataType == 'post') {
+                if (action == 'ban') {
+                    document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa bài đăng này không?';
+                } else if (this.modalBanDataType == 'unban') {
+                    document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa bài đăng này không?';
+                }
+            } else if (dataType == 'landlord') {
+                if (action == 'ban') {
+                    document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
+                } else if (this.modalBanDataType == 'unban') {
+                    document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa tài khoản này không?';
+                }
             }
             document.getElementById("modalBan").style.display = 'block';
         },
@@ -296,6 +314,43 @@ var admin = new Vue({
                         this.listPost = data.data;
                     } else {
                         window.location.href = "/error";
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        banPost(id) {
+            fetch("https://localhost:8081/ban-post?postId=" + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        this.getListPost();
+                    } else {
+                        alert("Error" + data.code);
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+
+        unbanPost(id) {
+            let postId = id;
+            fetch("https://localhost:8081/unban-post", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postId),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        this.getListPost();
+                    } else {
+                        alert("Error" + data.code);
                     }
                 }).catch(error => {
                 console.log(error);

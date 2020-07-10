@@ -24,9 +24,9 @@
                 <div class="sidebar-left-image">
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
-                            <ul class="slides" th:object="${post}">
-                                <li th:each="image:*{images}">
-                                    <img th:src="${image}" />
+                            <ul class="slides">
+                                <li v-for="image in post.images}">
+                                    <img v-bind:src="image" />
                                 </li>
                             </ul>
                         </div>
@@ -34,7 +34,7 @@
                     <div class="description">
                         <div class="title">
                             <div class="title-left">
-                                <h3 class="uppercase" th:text="${post.title}"></h3>
+                                <h3 class="uppercase" v-text="post.title"></h3>
                             </div>
                             <div class="title-right">
                                 <i class="far fa-2x fa-heart icon-heart"></i>
@@ -42,29 +42,29 @@
                             </div>
                         </div>
                         <div class="detail">
-                            <div class="row" th:object="${post}">
+                            <div class="row">
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/house.png">
-                                    <label th:text="${'Loại phòng: '+post.type}"></label>
+                                    <label v-text="'Loại phòng: '+post.type"></label>
                                 </div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/money.png">
-                                    <span th:text="${'Giá: ' +post.price+' vnd/ tháng'}"></span>
+                                    <span v-text="'Giá: ' +post.price+' vnd/ tháng'"></span>
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/square.png">
-                                    <label th:text="${'Diện tích: '+post.square+'m&sup2'}"></label>
+                                    <label v-text="'Diện tích: '+post.square+'m&sup2'"></label>
                                 </div>
                                 <div class="col">
                                     <img class="icon-post-detail" src="assets/img/logo/distance.png">
-                                    <label th:text="${'Khoảng cách: '+post.distance+' km'}"></label>
+                                    <label v-text="'Khoảng cách: '+post.distance+' km'"></label>
                                 </div>
                             </div>
                         </div>
                         <div class="description-information">
                             <h4 class="font-weight-bold">Thông tin chi tiết</h4>
-                            <p th:text="${post.description}"></p>
+                            <p v-text="post.description"></p>
                         </div>
                     </div>
                     <div class="share">
@@ -99,15 +99,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-right-information" th:object="${post}">
+                <div class="sidebar-right-information">
                     <div class="information">
                         <div class="icon-information">
                             <img class="avatar-information" src="assets/img/logo/user.png">
                         </div>
                         <div class="name-landlord">
-                            <label th:text="${post.landlordDisplayName}"></label>
+                            <label v-text="post.landlordDisplayName"></label>
                             <div class="create-date">
-                                <label th:text="${'Ngày đăng: '+#dates.format(post.createDate, 'dd/MM/YYYY')}"></label>
+<!--                                <label th:text="${'Ngày đăng: '+#dates.format(post.createDate, 'dd/MM/YYYY')}"></label>-->
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
 
                     <div class="contact">
                         <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
-                        <h3 th:text="${post.phoneNumber}"></h3>
+                        <h3 v-text="post.phoneNumber"></h3>
                     </div>
                 </div>
             </div>

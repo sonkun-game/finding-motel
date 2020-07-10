@@ -11,6 +11,7 @@ import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.displayall.PostService;
 import com.example.fptufindingmotelv1.service.displayall.RenterService;
 import com.example.fptufindingmotelv1.untils.Constant;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +41,65 @@ public class HomeController {
 
     @Autowired
     RenterService renterService;
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-all-post")
+    public List<PostDTO> getAllPost(@RequestParam(name = "page") Optional<Integer> page,
+                                    @RequestParam(name = "pageSize")  Optional<Integer> size,
+            @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
+        Sort sortable = null;
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("createDate").descending();
+        }
+        int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
+        int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
+        List<PostModel> postList =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
+        List<PostDTO> response = new ArrayList<>();
+        PostDTO postDTO = null;
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            // get username
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+
+            if(userDetails.getUserModel().getRole().getId() != 1){
+                for (int i = 0; i< postList.size(); i++){
+                    postDTO = new PostDTO(postList.get(i));
+                    postDTO.setIsLord("display:none");
+                    response.add(postDTO);
+                }
+            } else {
+                RenterModel renter = renterService.findOne(userDetails.getUserModel().getUsername());
+                // Set color for DTO
+                for (int j = 0; j < postList.size(); j++) {
+                    postDTO = new PostDTO(postList.get(j));
+                    if (renter.getPosts().contains(postList.get(j))) {
+                        postDTO.setColor("color: red");
+                    } else {
+                        postDTO.setColor("color: white");
+                    }
+                    response.add(postDTO);
+                }
+            }
+        } else {
+            for (int i = 0; i < postList.size(); i++) {
+                postDTO = new PostDTO(postList.get(i));
+                //postDTO.setIsLord("display:none");
+                response.add(postDTO);
+            }
+        }
+
+        /*int total = postDTOs.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), total);
+        //Collections.reverse(postDTOs);
+        List<PostDTO> sublist = new ArrayList<>();
+        if (start <= end) {
+            sublist = postDTOs.subList(start, end);
+        }
+        Page<PostDTO> postDTOPage = new PageImpl<>(sublist, pageable, postDTOs.size());*/
+        return response;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(Model model,
@@ -109,16 +169,27 @@ public class HomeController {
         model.addAttribute("posts", listDTO);
 
         PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
-        model.addAttribute("selectedPageSize", evalPageSize);
+
+        /*model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pageSizes", Constant.PAGE_SIZES);
-        model.addAttribute("pager", pager);
+        model.addAttribute("pager", pager);*/
         return "index";
     }
 
     @GetMapping("/post-detail")
-    public String getPostDetail(Model model, @PathParam("id") String id) {
-        model.addAttribute("post", new PostDTO(postService.findOne(id)));
+    public String getPostDetail() {
+        //model.addAttribute("post", new PostDTO(postService.findOne(id)));
         return "post-detail";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-post-detail")
+    public PostModel viewPost(@PathParam("id") String id){
+        JSONObject jsonObject = new JSONObject();
+        PostModel postDTO= postRepository.getOne(id);
+
+        //System.out.println(postDTO.toString());
+        return postDTO;
     }
 
     @GetMapping("/instruction")

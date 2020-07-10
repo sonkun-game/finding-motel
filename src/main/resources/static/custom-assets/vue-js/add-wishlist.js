@@ -6,24 +6,7 @@ var addVue = new Vue({
         existedId:null,
         status: null,
         wishList: [],
-    }/*,
-    created: {
-        loadPost: function () {
-            fetch("https://localhost:8081/api-view-post", {
-                method: 'POST',
-
-            }).then(response => response.json())
-                .then((data) => {
-                    console.log(data);
-                    this.id=data
-                    this.status=data
-
-                }).catch(error => {
-                console.log(error);
-            })
-        }
-
-    }*/,
+    },
     methods : {
         addWishlist : function(event){
             console.log(event.target.id)

@@ -64,7 +64,7 @@
                                         <li><a th:href="@{/}">TRANG CHỦ</a></li>
                                         <li><a href="#">PHÒNG TRỌ</a></li>
                                         <li><a href="#">CĂN HỘ</a></li>
-                                        <li><a th:href="@{/instruction}">HƯỚNG DẪN</a></li>
+                                        <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
                                         <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
                                             <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
                                         </li>

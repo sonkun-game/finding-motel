@@ -116,7 +116,7 @@ public class HomeController {
         return "post-detail";
     }
 
-    @GetMapping("/instruction")
+    @GetMapping("/huong-dan")
     public String viewInstruction(Model model) {
         return "instruction";
     }

@@ -1,11 +1,9 @@
 package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.ReportModel;
-import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +11,7 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -35,6 +30,9 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     ReportRepository reportRepository;
 
+    @Autowired
+    StatusRepository statusRepository;
+
     protected JSONObject getResponeMessage(String code, String msg) {
         JSONObject responeMsg = new JSONObject();
         responeMsg.put("code", code);
@@ -50,8 +48,8 @@ public class AdminServiceImpl implements AdminService {
                 UserDTO userDTO = new UserDTO(user);
                 //add report number
                 if (user.getRole().getId() == 2) {
-                    userDTO.setReportNumber(getReportNumber(user.getUsername()));
-                    boolean banAvailable = userDTO.getUnBanDate() == null && userDTO.getReportNumber() >= 3;
+                    boolean banAvailable = userDTO.getUnBanDate() == null
+                            && userDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
                     userDTO.setBanAvailable(banAvailable);
                 }
                 //add user to list
@@ -64,16 +62,6 @@ public class AdminServiceImpl implements AdminService {
         return null;
     }
 
-    public Integer getReportNumber(String username) {
-        Integer reportNumber = 0;
-        ArrayList<ReportResponseDTO> listReport = getListReport();
-        for (ReportResponseDTO report : listReport) {
-            if (report.getLandlordName().equals(username)) {
-                reportNumber++;
-            }
-        }
-        return reportNumber;
-    }
 
     @Override
     public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username) {
@@ -82,8 +70,8 @@ public class AdminServiceImpl implements AdminService {
             UserDTO userDTO = new UserDTO(user);
             //add report number and ban available
             if (user.getRole().getId() == 2) {
-                userDTO.setReportNumber(getReportNumber(user.getUsername()));
-                boolean banAvailable = userDTO.getUnBanDate() == null && userDTO.getReportNumber() >= 3;
+                boolean banAvailable = userDTO.getUnBanDate() == null
+                        && userDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
                 userDTO.setBanAvailable(banAvailable);
             }
             users.add(userDTO);
@@ -108,6 +96,20 @@ public class AdminServiceImpl implements AdminService {
                 calendar.add(Calendar.DAY_OF_MONTH, 14);
 
                 landlord.setUnBanDate(calendar.getTime());
+                for (PostModel post:
+                     landlord.getPosts()) {
+                    post.setBanned(true);
+                    for (ReportModel report:
+                         post.getReports()) {
+                        if(report.getStatusReport().getId() == 3){
+                            StatusModel statusModel = statusRepository.findByIdAndType(5, 2);
+                            report.setStatusReport(statusModel);
+                        }else if(report.getStatusReport().getId() == 4){
+                            StatusModel statusModel = statusRepository.findByIdAndType(6, 2);
+                            report.setStatusReport(statusModel);
+                        }
+                    }
+                }
                 landlordRepository.save(landlord);
                 return (ArrayList<LandlordModel>) landlordRepository.findAll();
             }
@@ -126,6 +128,10 @@ public class AdminServiceImpl implements AdminService {
                 return null;
             } else {
                 landlord.setUnBanDate(null);
+                for (PostModel post:
+                        landlord.getPosts()) {
+                    post.setBanned(false);
+                }
                 landlordRepository.save(landlord);
                 return (ArrayList<LandlordModel>) landlordRepository.findAll();
             }
@@ -141,6 +147,9 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostResponseDTO> posts = new ArrayList<>();
             for (PostModel post : postRepository.findAll()) {
                 PostResponseDTO postResponseDTO = new PostResponseDTO(post);
+                boolean banAvailable = post.getLandlord().getUnBanDate() == null
+                        && postResponseDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
+                postResponseDTO.setBanAvailable(banAvailable);
                 posts.add(postResponseDTO);
             }
             return posts;
@@ -186,6 +195,9 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
             for (PostModel p : posts) {
                 PostResponseDTO pr = new PostResponseDTO(p);
+                boolean banAvailable = p.getLandlord().getUnBanDate() == null
+                        && pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
+                pr.setBanAvailable(banAvailable);
                 postResponseDTOs.add(pr);
             }
             return postResponseDTOs;
@@ -196,14 +208,78 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Boolean banPost(String postId) {
+    public PostModel banPost(String postId) {
         try {
-            PostModel postModel = postRepository.getOne(postId);
+            PostModel postModel = postRepository.findById(postId).get();
             postModel.setBanned(true);
-            postRepository.save(postModel);
-            return true;
+            for (ReportModel report:
+                    postModel.getReports()) {
+                if(report.getStatusReport().getId() == 3){
+                    StatusModel statusModel = statusRepository.findByIdAndType(4, 2);
+                    report.setStatusReport(statusModel);
+                }else if(report.getStatusReport().getId() == 5){
+                    StatusModel statusModel = statusRepository.findByIdAndType(6, 2);
+                    report.setStatusReport(statusModel);
+                }
+            }
+            postModel = postRepository.save(postModel);
+            return postModel;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public PostModel unBanPost(String postId) {
+        try {
+            PostModel postModel = postRepository.findById(postId).get();
+            postModel.setBanned(false);
+            postModel = postRepository.save(postModel);
+            return postModel;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO) {
+        try {
+            List<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
+                    reportRequestDTO.getRenterId(), reportRequestDTO.getPostTitle(),
+                    reportRequestDTO.getStatusReport());
+            ArrayList<ReportResponseDTO> reportResponseDTOS = new ArrayList<>();
+            for (ReportModel report : reportModels) {
+                ReportResponseDTO responseDTO = new ReportResponseDTO(report);
+                reportResponseDTOS.add(responseDTO);
+            }
+            return reportResponseDTOS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public JSONObject getInitAdminManager() {
+        JSONObject response = new JSONObject();
+        try {
+            // get list status report
+            List<StatusModel> listStatus = statusRepository.findAllByType(2);
+            List<StatusDTO> listStatusReport = new ArrayList<>();
+            for (StatusModel status:
+                    listStatus) {
+                listStatusReport.add(new StatusDTO(status));
+            }
+            response.put("msgCode", "admin000");
+            response.put("listStatusReport", listStatusReport);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("msgCode", "sys999");
+            response.put("message", e.getMessage());
+            return response;
         }
     }
 }

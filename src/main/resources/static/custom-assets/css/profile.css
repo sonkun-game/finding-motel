@@ -755,3 +755,12 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 a:hover {
     color: #0056b3!important;
 }
+.search-box-label{
+    margin-bottom: 0px!important;
+}
+.search-form{
+    margin-top: 30px;
+}
+.search-box{
+    width: 100%;
+}

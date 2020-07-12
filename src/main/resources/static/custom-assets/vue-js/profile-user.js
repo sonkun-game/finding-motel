@@ -254,15 +254,23 @@ var basicInfoInstance = new Vue({
     },
     methods : {
         handlePostNewRoom(){
-            localStorage.setItem("task", 13)
-            window.location.href = "/dang-tin"
+            if(this.userInfo.banned){
+                modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                    "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                modalMessageInstance.showModal()
+            }else{
+                localStorage.setItem("task", 13)
+                window.location.href = "dang-tin"
+            }
+
         }
     }
 
 })
 var router = new VueRouter({
     mode: 'history',
-    routes: []
+    routes: [],
 });
 var userTaskInstance = new Vue({
     router,
@@ -325,7 +333,8 @@ var userTaskInstance = new Vue({
                 }else if(task == 11){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListReport()
+                        admin.searchReport()
+                        admin.getInitAdmin()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }

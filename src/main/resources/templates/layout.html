@@ -71,7 +71,7 @@
                                         <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
-                                                <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
+                                                <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN USER -->
@@ -356,6 +356,23 @@
                             class="btn-hover btn-default-cancel">Đồng ý
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!--   Modal extend -->
+    <div th:fragment="message-modal" id="message-modal" class="modal">
+        <!-- Modal content -->
+        <div class="view-information">
+            <div class="modal-header">
+                <h2>Thông báo</h2>
+                <span @click="closeModal()" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="notification-content" v-html="message"></div>
+            </div>
+            <div class="modal-footer">
+                <button @click="closeModal()" class="btn-hover btn-default">Xác Nhận</button>
             </div>
         </div>
     </div>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -129,15 +130,27 @@ public class AdminController {
     @RequestMapping(value = "/ban-post")
     public JSONObject banPost(@RequestParam String postId) {
         try {
-            return adminService.banPost(postId)
-                    ? responseMsg("000", "Success!", null)
+            PostModel postModel = adminService.banPost(postId);
+            return postModel != null
+                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
                     : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
             return responseMsg("999", e.getMessage(), null);
         }
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "/api-un-ban-post")
+    public JSONObject unBanPost(@RequestParam String postId) {
+        try {
+            PostModel postModel = adminService.unBanPost(postId);
+            return postModel != null
+                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
 
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
@@ -145,6 +158,25 @@ public class AdminController {
         msg.put("message", message);
         msg.put("data", data);
         return msg;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/search-report")
+    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO) {
+        try {
+            List<ReportResponseDTO> response = adminService.searchReport(reportRequestDTO);
+            return response != null
+                    ? responseMsg("000", "Success!", response)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-init-admin")
+    public JSONObject getInitAdmin() {
+        return adminService.getInitAdminManager();
     }
 }
 

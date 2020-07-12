@@ -6,4 +6,6 @@ public class Constant {
     public static final int INITIAL_PAGE_SIZE = 6;
     public static final int[] PAGE_SIZES = {6, 12};
     public static final String DATE_FORMAT = "HH:mm:ss dd/MM/yyyy";
+    public static final int NUMBER_OF_BAN_DATE_POST = 3;
+    public static final int NUMBER_OF_BAN_DATE_USER = 10;
 }

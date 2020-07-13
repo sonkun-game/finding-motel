@@ -324,7 +324,7 @@
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
                                     <td>
-                                        <div v-bind:class="post.postVisible ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                        <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
                                     </td>
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>

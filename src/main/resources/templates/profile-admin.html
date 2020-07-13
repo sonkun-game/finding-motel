@@ -423,7 +423,10 @@
                                     <td>{{post.distance}} km</td>
                                     <td>{{post.createDate}}</td>
                                     <td>{{post.expireDate}}</td>
-                                    <td>{{post.displayStatus}}</td>
+                                    <td>
+                                        <div v-text="post.displayStatus" v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
+                                        </div>
+                                    </td>
                                     <td>{{post.landlordName}}</td>
 
                                 </tr>

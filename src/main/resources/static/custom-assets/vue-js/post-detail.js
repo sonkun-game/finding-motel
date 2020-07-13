@@ -6,6 +6,7 @@ var postDtl = new Vue({
         reportContent: null,
         userInfo: null,
         postId: null,
+        listImage: [],
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -28,6 +29,7 @@ var postDtl = new Vue({
                 .then((data) => {
                     console.log(data);
                     this.post = data;
+                    this.listImage = this.post.images
 
                 }).catch(error => {
                 console.log(error);

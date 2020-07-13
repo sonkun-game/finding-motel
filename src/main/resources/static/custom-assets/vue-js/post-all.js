@@ -3,7 +3,7 @@ var postInstance = new Vue({
     el: '#row',
     data: {
         postList: [],
-        page:{},
+        pager:{},
         post:{},
     },
     methods : {
@@ -46,6 +46,5 @@ var postInstance = new Vue({
     },
     created(){
         this.getAllPost();
-        // this.getPage();
     }
 })

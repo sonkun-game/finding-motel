@@ -22,11 +22,11 @@
             <div id="postDetailBody" class="main-content">
             <div class="row" >
                 <div class="sidebar-left-image">
-                    <div class="grid images_3_of_2">
-                        <div class="flexslider">
-                            <ul class="slides">
-                                <li v-for="image in post.images">
-                                    <img v-bind:src="image"/>
+                    <div class="grid images_3_of_2" >
+                        <div class="flexslider" >
+                            <ul class="slides" >
+                                <li class="flex-active" style="float: left; display: block; width: 567px" v-for="image of listImage">
+                                    <img v-bind:src="image" draggable="false"/>
                                 </li>
                             </ul>
                         </div>

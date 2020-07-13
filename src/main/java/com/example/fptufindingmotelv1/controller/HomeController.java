@@ -92,6 +92,55 @@ public class HomeController {
         return response;
     }
 
+    @ResponseBody
+    @PostMapping(value = "/api-get-page")
+    public PagerModel getPage(Model model,
+                              @RequestParam(name = "page") Optional<Integer> page,
+                              @RequestParam(name = "pageSize")  Optional<Integer> size,
+                              @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
+
+
+        // sort post by date
+        Sort sortable = null;
+        if (sort.equals("DESC")) {
+            sortable = Sort.by("createDate").descending();
+        }
+        // Paging
+        int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
+        int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
+        List<PostModel> postList =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
+
+        // Pass PostModel List to PostDTO
+        List<PostDTO> postDTOs = new ArrayList<>();
+        PostDTO postDTO = null;
+
+        for (int i = 0; i < postList.size(); i++) {
+            postDTO = new PostDTO(postList.get(i));
+            //postDTO.setIsLord("display:none");
+            postDTOs.add(postDTO);
+        }
+
+        int total = postDTOs.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), total);
+        //Collections.reverse(postDTOs);
+        List<PostDTO> sublist = new ArrayList<>();
+        if (start <= end) {
+            sublist = postDTOs.subList(start, end);
+        }
+        Page<PostDTO> listDTO = new PageImpl<>(sublist, pageable, postDTOs.size());
+
+        // pass data and direct
+        model.addAttribute("posts", listDTO);
+
+        PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
+        model.addAttribute("selectedPageSize", evalPageSize);
+        model.addAttribute("pageSizes", Constant.PAGE_SIZES);
+        model.addAttribute("pager", pager);
+        return pager;
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(Model model,
                               @RequestParam(name = "page") Optional<Integer> page,
@@ -100,7 +149,7 @@ public class HomeController {
 
 
         // sort post by date
-        /*Sort sortable = null;
+        Sort sortable = null;
         if (sort.equals("DESC")) {
             sortable = Sort.by("createDate").descending();
         }
@@ -162,7 +211,7 @@ public class HomeController {
         PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
         model.addAttribute("selectedPageSize", evalPageSize);
         model.addAttribute("pageSizes", Constant.PAGE_SIZES);
-        model.addAttribute("pager", pager);*/
+        model.addAttribute("pager", pager);
         return "index";
     }
 

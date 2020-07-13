@@ -25,6 +25,14 @@ public class ManageRentalRequestController {
     @ResponseBody
     @RequestMapping(value = "/search-retal-request")
     public JSONObject searchRentalRequest() {
+        return null;
+    }
 
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
     }
 }

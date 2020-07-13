@@ -138,9 +138,10 @@ var postDtl = new Vue({
             }).then(response => response.json())
                 .then((responseMsg) => {
                     if (responseMsg.code == '000') {
-                        this.showModalNotify();
+                        this.showModalNotify(true);
                     } else {
                         console.log(rentalRequest);
+                        this.showModalNotify(false);
                     }
                 }).catch(error => {
                 console.log(error);

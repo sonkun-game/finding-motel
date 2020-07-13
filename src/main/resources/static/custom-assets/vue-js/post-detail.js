@@ -1,10 +1,12 @@
+
 var postDtl = new Vue({
     el: '#postDetailBody',
     data: {
-        post: null,
+        post: {},
         reportContent: null,
         userInfo: null,
         postId: null,
+        listImage: [],
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -12,16 +14,23 @@ var postDtl = new Vue({
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         this.postId = urlParams.get('id');
+
+
     },
     methods: {
-        viewDetail: function (event) {
-            var id = event.target.id
-            fetch("https://localhost:8081/api-post-detail?id=" + id, {
+        viewDetail: function () {
+            var query = window.location.search;
+            var url = new URLSearchParams(query);
+            var id = url.get('id');
+
+            fetch("https://localhost:8081/api-post-detail?id="+id  , {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
                     this.post = data;
+                    this.listImage = this.post.images
+
                 }).catch(error => {
                 console.log(error);
             })
@@ -72,5 +81,9 @@ var postDtl = new Vue({
             document.getElementById("myModal_chooseRoom").style.display = 'none';
         }
     },
+    created(){
+        this.viewDetail();
+    }
+
 
 })

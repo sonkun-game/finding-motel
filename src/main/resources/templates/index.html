@@ -158,33 +158,33 @@
                 </div>
             </div>
             <div class="row" id="row">
-                <div class="col-xl-4 col-lg-6 col-md-6" th:each="post, state : ${posts}">
+                <div class="col-xl-4 col-lg-6 col-md-6" v-for="post in postList" v-bind:id="post.id">
                     <!-- Single Room -->
-                    <div class="single-room mb-50" th:id="${post.id}">
+                    <div class="single-room mb-50">
                         <div class="room-img">
-                            <a th:href="@{'/post-detail?id=' + ${post.id}}"><img th:src="@{${post.images[0]}}" alt=""></a>
-                            <div th:style="${post.isLord}">
-                                <i th:id="${post.id}" th:style="${post.color}" class="fa fa-2x fa-heart"  v-on:click="addWishlist"></i>
+                            <a v-bind:href="'/post-detail?id='+post.id"><img v-bind:src="post.images[0]" alt=""></a>
+                            <div v-bind:style="post.isLord">
+                                <i v-bind:id="post.id" v-bind:style="post.color" class="fa fa-2x fa-heart"  v-on:click="addWishlist"></i>
                             </div>
                         </div>
                         <div class="room-caption">
-                            <h3><a href="/post-detail" th:utext="${post.title}"></a></h3>
+                            <h3><a v-bind:href="'/post-detail?id='+post.id" v-text="post.title"></a></h3>
                             <div class="per-night">
-                                <span th:utext="${post.price}"></span><span> vnđ </span><span>/ tháng</span>
+                                <span v-text="post.price+' VNĐ/ tháng'"></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-           <nav th:if="${posts.totalPages != 1}" class="form-group col-md-11 pagination-centered">
+          <nav th:if="${posts.totalPages != 1}" class="form-group col-md-11 pagination-centered">
                 <ul class="pagination">
                     <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
                         <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
                     </li>
                 </ul>
-            </nav>
-    </span>
+           </nav>
+
 
         </div>
 
@@ -193,7 +193,8 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
-<script type="text/javascript" th:src="@{/custom-assets/vue-js/add-wishlist.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-all.js}"></script>
+
 
 </body>
 </html>

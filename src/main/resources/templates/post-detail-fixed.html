@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:replace="layout :: head"></div>
+    <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
+    <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="assets/css/flex-slider.css" rel="stylesheet" type="text/css"/>
+    <meta charset="UTF-8">
+    <title>Chi tiết bài đăng</title>
+</head>
+<body>
+
+<!--    inlude loading screen-->
+<div th:replace="layout :: loader"></div>
+
+<!--    include header-->
+<header th:replace="layout :: header"></header>
+
+<main>
+    <div class="container-fluid">
+        <div id="postDetailBody" class="main-content">
+            <div class="row">
+                <div class="col-left">
+                    <div class="grid images_3_of_2">
+                        <div class="flexslider">
+                            <ul class="slides" th:object="${post}">
+                                <li th:each="image:*{images}">
+                                    <img th:src="${image}" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="wish-list clearfix">
+                        <button class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
+                            <img src="assets/img/logo/alert.png">
+                            <span>Báo cáo</span>
+                        </button>
+                        <button class="btn-save" type="button" title="Lưu tin này">
+                            <img src="assets/img/logo/bookmark.png">
+                            <span>Lưu tin này</span>
+                        </button>
+                    </div>
+                    <div class="title-area clearfix">
+                        <h1 class="title" th:text="${post.title}"></h1>
+                    </div>
+                    <div class="overview clearfix">
+                        <div class="title-name">
+                            <span>Đặc điểm chung:</span>
+                        </div>
+                        <div class="content clearfix">
+                            <ul class="list-overview clearfix" th:object="${post}">
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/house.png"> Loại phòng:</span>
+                                    <span class="item-value" th:text="${post.type}"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/money.png"> Giá cho thuê:</span>
+                                    <span class="item-value" th:text="${post.price+' vnđ/tháng'}"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/square.png"> Diện tích:</span>
+                                    <span class="item-value" th:text="${post.square+'m&sup2'}"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/distance.png"> Khoảng cách:</span>
+                                    <span class="item-value" th:text="${post.distance+' km'}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="description clearfix">
+                        <div class="title-name">
+                            <span>Thông tin mô tả:</span>
+                        </div>
+                        <div class="description-content">
+                            <p th:text="${post.description}"></p>
+                        </div>
+                    </div>
+                    <div class="location clearfix">
+                        <div class="title-name">
+                            <span>Vị trí:</span>
+                        </div>
+                        <div class="address">
+                            <span class="subtext">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Gần cây xăng 39, Thạch Hòa, Thạch Thất, Hà Nội
+                            </span>
+                        </div>
+                        <div class="map">
+                            Chỗ này là bản đồ
+                        </div>
+                    </div>
+                    <div class="service clearfix">
+                        <div class="title-name">
+                            <span>Các tiện ích:</span>
+                        </div>
+                        <div class="item-service clearfix">
+                            <ul class="list-service clearfix">
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Điều hòa</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Chỗ phơi quần áo</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">An ninh an toàn</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Tự do nấu nướng</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Giờ giấc thoải mái</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="share clearfix">
+                        <div class="title-name">
+                            <span>Chia sẻ:</span>
+                            <button class="btn-share-fb" type="button">
+                                <img src="assets/img/logo/facebook.png">
+                                <span>Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="report clearfix">
+                        <div class="report-area">
+                            <p>
+                                <strong>Lưu ý:</strong>
+                                </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng cung cấp các thông tin đầy đủ,
+                                chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
+                                nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
+                            </p>
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                                <img src="assets/img/logo/alert.png">
+                                <span>Báo Cáo</span>
+                            </button>
+                            <div id="reportModal" class="modal">
+                                <!-- Modal content -->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2>Báo Cáo Bài Viết</h2>
+                                        <span id="closeModalReport" @click="handleEventReportModal($event)" class="close">&times;</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4 class="font-weight-normal">Nội dung</h4>
+                                        <textarea v-model="reportContent"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal" class="btn-default">Xác Nhận</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-right" th:object="${post}">
+                    <div class="information-header">
+                        <div class="display clearfix">
+                            <div class="display-avatar">
+                                <img src="assets/img/logo/ava.png">
+                            </div>
+                            <div class="display-name">
+                                <span class="name-value" th:text="${post.landlordDisplayName}"></span>
+                                <span class="date-value" th:text="${'Ngày đăng: '+#dates.format(post.createDate, 'dd/MM/YYYY')}"></span>
+                            </div>
+                        </div>
+                        <div class="sent-request">
+                            <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                        </div>
+
+                        <!--Modal choose room-->
+                        <div id="myModal_chooseRoom" class="modal">
+                            <!-- Modal content -->
+                            <div class="view-information">
+                                <div class="modal-header">
+                                    <h2>Chọn phòng</h2>
+                                    <span @click="closeModalChooseRoom" class="close">&times;</span>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="room-number">
+                                        <div class="title-room">
+                                            <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                        </div>
+                                        <div class="choose-room">
+                                            <div class="select-room">Room 1</div>
+                                            <div class="select-room">Room 2</div>
+                                            <div class="select-room">Room 3</div>
+                                            <div class="select-room">Room 4</div>
+                                            <div class="select-room">Room 5</div>
+                                        </div>
+                                    </div>
+                                    <div class="room-number">
+                                        <div class="title-room">
+                                            <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                        </div>
+                                        <div class="choose-room">
+                                            <input type="date" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button @click="closeModalChooseRoom" class="btn-hover btn-default">Xác Nhận</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact">
+                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
+                            <h3 th:text="${post.phoneNumber}"></h3>
+                        </div>
+                    </div>
+                    <div class="news-involve">
+                        <div class="header-news">
+                            <span>Có thể bạn quan tâm:</span>
+                        </div>
+                        <div class="list-news-content">
+                            <ul class="list-news clearfix">
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong5.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong4.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong3.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong2.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong1.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ads-left">
+        <img src="assets/img/logo/banner.jpg">
+    </div>
+    <div class="ads-right">
+        <img src="assets/img/logo/banner.jpg">
+    </div>
+
+</main>
+
+<footer th:replace="layout :: footer"></footer>
+<div th:replace="layout :: js-fragment"></div>
+<script th:src="@{/assets/js/main.js}"></script>
+<script th:src="@{/assets/js/vendor/modal.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>
+<!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
+<script th:src="@{/assets/js/jquery.flexslider.js}"></script>
+<script th:src="@{/assets/js/flexslider.js}"></script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/post-detail.js}"></script>
+
+</body>
+</html>

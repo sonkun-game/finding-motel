@@ -34,7 +34,7 @@ public class RentalRequestModel implements Serializable {
     @Column(name = "REQUEST_DATE")
     private Date requestDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "STATUS_ID")
     private StatusModel rentalStatus;
 }

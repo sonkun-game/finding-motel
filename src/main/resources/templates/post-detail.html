@@ -137,7 +137,7 @@
                                 chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
-                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                            <button v-bind:class="{invisible : !(userInfo.role == 'RENTER')}" class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
                                 <img src="assets/img/logo/alert.png">
                                 <span>Báo Cáo</span>
                             </button>
@@ -175,7 +175,7 @@
                             </div>
                         </div>
                         <div class="sent-request">
-                            <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                            <button v-bind:class="{invisible : !(userInfo.role == 'RENTER')}" @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
                         </div>
 
                         <!--Modal choose room-->

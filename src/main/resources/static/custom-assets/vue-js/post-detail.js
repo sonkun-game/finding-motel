@@ -9,10 +9,11 @@ var postDtl = new Vue({
 
         //rental param
         roomIdRental: null,
-        dateRequestRental : null,
+        dateRequestRental: null,
         //action
         confirmAction : null,
         relatedPosts: [],
+
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -114,18 +115,18 @@ var postDtl = new Vue({
         },
         showModalNotify(msg) {
             document.getElementById("my-modal-notification").style.display = 'block';
-            document.getElementById("modalNotifyMessage").innerHTML =  msg;
+            document.getElementById("modalNotifyMessage").innerHTML = msg;
             setTimeout(function () {
                 document.getElementById("my-modal-notification").style.display = 'none';
-            },3000);
+            }, 3000);
         },
         sentRentalRequest() {
             let rentalRequest = {
-                "renterUsername" : this.userInfo.username,
-                "roomId" : this.roomIdRental,
-                "requestDate" : this.dateRequestRental,
-                "statusId" : 6,
-                "postId" : this.postId,
+                "renterUsername": this.userInfo.username,
+                "roomId": this.roomIdRental,
+                "requestDate": this.dateRequestRental,
+                "statusId": 6,
+                "postId": this.postId,
             }
             fetch("https://localhost:8081/sent-rental-request", {
                 method: 'POST',
@@ -135,8 +136,12 @@ var postDtl = new Vue({
                 body: JSON.stringify(rentalRequest),
             }).then(response => response.json())
                 .then((responseMsg) => {
-                    if (responseMsg != null) {
-                        this.showModalNotify(responseMsg.message);
+                    if (responseMsg.status == 403) {
+                        window.location.href = "dang-nhap";
+                    } else {
+                        if (responseMsg != null) {
+                            this.showModalNotify(responseMsg.message);
+                        }
                     }
                 }).catch(error => {
                 console.log(error);

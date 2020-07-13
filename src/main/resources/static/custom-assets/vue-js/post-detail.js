@@ -133,6 +133,9 @@ var postDtl = new Vue({
                 body: JSON.stringify(rentalRequest),
             }).then(response => response.json())
                 .then((responseMsg) => {
+                    if (responseMsg.status == 403) {
+                        window.location.href = "dang-nhap";
+                    }
                     if (responseMsg != null) {
                         this.showModalNotify(responseMsg.message);
                     }

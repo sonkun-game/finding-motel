@@ -2,10 +2,7 @@ package com.example.fptufindingmotelv1.service.renter;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
-import com.example.fptufindingmotelv1.repository.RenterRepository;
-import com.example.fptufindingmotelv1.repository.RoomRepository;
-import com.example.fptufindingmotelv1.repository.StatusRepository;
+import com.example.fptufindingmotelv1.repository.*;
 import com.restfb.json.JsonObject;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +28,18 @@ public class RentalRequestServiceImpl implements RentalRequestService {
     @Autowired
     StatusRepository statusRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public boolean checkExitRentalRequest(RentalRequestDTO rentalRequestDTO) {
         try {
-            RenterModel renterModel = renterRepository.findByUsername(rentalRequestDTO.getRenterUsername());
-            RoomModel roomModel = roomRepository.getOne(rentalRequestDTO.getRoomId());
+            RenterModel renterModel = (RenterModel) userRepository.findByUsername(rentalRequestDTO.getRenterUsername());
+            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
             RentalRequestModel rentalRequestModel = rentalRequestRepository
                     .findByRentalRenterAndRentalRoom(renterModel, roomModel);
             return rentalRequestModel != null;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -58,20 +59,12 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             rentalRequestModel.setRentalRenter(renterModel);
             rentalRequestModel.setRentalStatus(statusModel);
             //get current date
-            if (rentalRequestDTO.getRequestDate() == null) {
-                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
-                dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Ho_Chi_Minh")));
-
-                String currentDate = dateFormat.format(new Date());
-                Date date = dateFormat.parse(currentDate);
-                rentalRequestModel.setRequestDate(date);
-            } else {
-                rentalRequestModel.setRequestDate(rentalRequestDTO.getRequestDate());
-            }
+            rentalRequestModel.setRequestDate(rentalRequestDTO.getRequestDate());
 
             rentalRequestRepository.save(rentalRequestModel);
             return responseMsg("000", "Cập nhật thành công!", null);
         } catch (Exception e) {
+            e.printStackTrace();
             return responseMsg("999", "Cập nhật không thành công!", null);
         }
     }
@@ -85,6 +78,7 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             rentalRequestRepository.save(rentalRequestModel);
             return responseMsg("000", "Cập nhật thành công!", null);
         } catch (Exception e) {
+            e.printStackTrace();
             return responseMsg("999", "Cập nhật không thành công!", null);
         }
 

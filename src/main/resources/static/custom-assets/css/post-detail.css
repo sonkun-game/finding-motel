@@ -44,7 +44,9 @@
     margin-left: 30px;
 }
 
-
+.view-information{
+    width: 30% !important;
+}
 
 .row .col{
     margin: 10px auto;
@@ -66,15 +68,17 @@
     display: flex;
 }
 .select-room{
-    width: 100px !important;
+    width: auto;
     border-radius: 2px;
     border: .5px solid #CFCFCF;
     text-align: center;
-    padding-top: 2px;
-    margin-left: 10px;
+    padding: 2px 15px;
+    margin-left: 5px;
     cursor: pointer;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    float: left;
 }
+
 
 .choose-room{
     width: 80%;

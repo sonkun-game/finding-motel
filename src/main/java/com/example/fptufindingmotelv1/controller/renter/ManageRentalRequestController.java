@@ -16,26 +16,14 @@ public class ManageRentalRequestController {
     @ResponseBody
     @RequestMapping(value = "/sent-rental-request")
     public JSONObject sentRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        try {
-            return rentalRequestService.sentRentalRequest(rentalRequestDTO)
-                    ?  responseMsg("000", "Success!", null)
-                    :  responseMsg("999", "System error!", null);
-        } catch (Exception e) {
-            return responseMsg("001", "Something error!", null);
-        }
+       return rentalRequestService.sentRentalRequest(rentalRequestDTO);
     }
 
     @ResponseBody
     @RequestMapping(value = "/change-rental-request-status", method = RequestMethod.POST)
     public JSONObject changeRentalRequestStatus(@RequestParam(value = "rentalRequestId") String rentalRequestId
             , @RequestParam(value = "StatusId") Long statusId) {
-        try {
-            return rentalRequestService.changeStatus(rentalRequestId, statusId)
-                    ?  responseMsg("000", "Success!", null)
-                    :  responseMsg("999", "System error!", null);
-        } catch (Exception e) {
-            return responseMsg("001", "Something error!", null);
-        }
+            return rentalRequestService.changeStatus(rentalRequestId, statusId);
     }
 
 //    @ResponseBody
@@ -50,11 +38,4 @@ public class ManageRentalRequestController {
 //        }
 //    }
 
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
-    }
 }

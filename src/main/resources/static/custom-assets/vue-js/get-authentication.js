@@ -56,7 +56,9 @@ var authenticationInstance = new Vue({
 
         },
         formatNumberToDisplay(number){
-            return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+            if (number != null){
+                return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+            }
         }
     },
     mounted(){

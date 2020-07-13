@@ -26,4 +26,12 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
                                Double squareMax, Double squareMin, Boolean isVisible, Long postType);
+
+    @Query(value = "select top 5 * from POST p " +
+            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
+            "and (p.ID != :postId)" +
+            "or (p.TYPE_ID = :typeId and p.ID != :postId)" +
+            "", nativeQuery = true)
+    List<PostModel> getRelatedPost(String postId, String landlordId, Long typeId);
+
 }

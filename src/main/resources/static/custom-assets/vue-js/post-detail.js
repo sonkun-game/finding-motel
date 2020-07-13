@@ -12,6 +12,7 @@ var postDtl = new Vue({
         dateRequestRental : null,
         //action
         confirmAction : null,
+        relatedPosts: [],
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -19,7 +20,8 @@ var postDtl = new Vue({
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         this.postId = urlParams.get('id');
-
+        this.viewDetail();
+        this.getRelatedPost();
 
     },
     methods: {
@@ -139,9 +141,21 @@ var postDtl = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        getRelatedPost(){
+            fetch("/api-get-related-post?id=" + this.postId, {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    this.relatedPosts = data.listPost;
+
+                }).catch(error => {
+                console.log(error);
+            })
         }
     },
     created() {
-        this.viewDetail();
+
     }
 })

@@ -56,7 +56,7 @@
                                 </li>
                                 <li class="item">
                                     <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/money.png"> Giá cho thuê:</span>
-                                    <span class="item-value" v-text="post.price + ' VNĐ/Tháng'"></span>
+                                    <span class="item-value" v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
                                 </li>
                                 <li class="item">
                                     <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/square.png"> Diện tích:</span>
@@ -222,91 +222,91 @@
                         </div>
                         <div class="list-news-content">
                             <ul class="list-news clearfix">
-                                <li class="news">
-                                    <a class="post-link clearfix" href="#">
+                                <li class="news" v-for="relatedPost in relatedPosts">
+                                    <a class="post-link clearfix" v-bind:href="'/post-detail?id=' + relatedPost.id">
                                         <figure class="thumb">
-                                            <img src="assets/img/rooms/cohuong5.jpg">
+                                            <img v-bind:src="relatedPost.listImage[0]">
                                         </figure>
                                         <div class="infor">
                                             <div class="inner">
-                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
+                                                <span class="title-news" v-text="relatedPost.title"></span>
                                                 <div class="clearfix">
                                                     <div class="price">
-                                                        <span>1500000 vnđ/tháng</span>
+                                                        <span v-text="authenticationInstance.formatNumberToDisplay(relatedPost.price) + ' VNĐ/Tháng'"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 </li>
-                                <li class="news">
-                                    <a class="post-link clearfix" href="#">
-                                        <figure class="thumb">
-                                            <img src="assets/img/rooms/cohuong4.jpg">
-                                        </figure>
-                                        <div class="infor">
-                                            <div class="inner">
-                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
-                                                <div class="clearfix">
-                                                    <div class="price">
-                                                        <span>1500000 vnđ/tháng</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="news">
-                                    <a class="post-link clearfix" href="#">
-                                        <figure class="thumb">
-                                            <img src="assets/img/rooms/cohuong3.jpg">
-                                        </figure>
-                                        <div class="infor">
-                                            <div class="inner">
-                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
-                                                <div class="clearfix">
-                                                    <div class="price">
-                                                        <span>1500000 vnđ/tháng</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="news">
-                                    <a class="post-link clearfix" href="#">
-                                        <figure class="thumb">
-                                            <img src="assets/img/rooms/cohuong2.jpg">
-                                        </figure>
-                                        <div class="infor">
-                                            <div class="inner">
-                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
-                                                <div class="clearfix">
-                                                    <div class="price">
-                                                        <span>1500000 vnđ/tháng</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="news">
-                                    <a class="post-link clearfix" href="#">
-                                        <figure class="thumb">
-                                            <img src="assets/img/rooms/cohuong1.jpg">
-                                        </figure>
-                                        <div class="infor">
-                                            <div class="inner">
-                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
-                                                <div class="clearfix">
-                                                    <div class="price">
-                                                        <span>1500000 vnđ/tháng</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
+<!--                                <li class="news">-->
+<!--                                    <a class="post-link clearfix" href="#">-->
+<!--                                        <figure class="thumb">-->
+<!--                                            <img src="assets/img/rooms/cohuong4.jpg">-->
+<!--                                        </figure>-->
+<!--                                        <div class="infor">-->
+<!--                                            <div class="inner">-->
+<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>-->
+<!--                                                <div class="clearfix">-->
+<!--                                                    <div class="price">-->
+<!--                                                        <span>1500000 vnđ/tháng</span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="news">-->
+<!--                                    <a class="post-link clearfix" href="#">-->
+<!--                                        <figure class="thumb">-->
+<!--                                            <img src="assets/img/rooms/cohuong3.jpg">-->
+<!--                                        </figure>-->
+<!--                                        <div class="infor">-->
+<!--                                            <div class="inner">-->
+<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+<!--                                                <div class="clearfix">-->
+<!--                                                    <div class="price">-->
+<!--                                                        <span>1500000 vnđ/tháng</span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="news">-->
+<!--                                    <a class="post-link clearfix" href="#">-->
+<!--                                        <figure class="thumb">-->
+<!--                                            <img src="assets/img/rooms/cohuong2.jpg">-->
+<!--                                        </figure>-->
+<!--                                        <div class="infor">-->
+<!--                                            <div class="inner">-->
+<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+<!--                                                <div class="clearfix">-->
+<!--                                                    <div class="price">-->
+<!--                                                        <span>1500000 vnđ/tháng</span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="news">-->
+<!--                                    <a class="post-link clearfix" href="#">-->
+<!--                                        <figure class="thumb">-->
+<!--                                            <img src="assets/img/rooms/cohuong1.jpg">-->
+<!--                                        </figure>-->
+<!--                                        <div class="infor">-->
+<!--                                            <div class="inner">-->
+<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+<!--                                                <div class="clearfix">-->
+<!--                                                    <div class="price">-->
+<!--                                                        <span>1500000 vnđ/tháng</span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </li>-->
                             </ul>
                         </div>
                     </div>

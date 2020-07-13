@@ -398,6 +398,7 @@ main{
     color: #333;
     font-size: .95rem;
     display: flex;
+    cursor: pointer;
 }
 
 .thumb{

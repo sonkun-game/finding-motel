@@ -20,13 +20,14 @@
 
 <main>
     <div class="container-fluid">
-            <div id="postDetailBody" class="main-content">
-            <div class="row" >
+        <div id="postDetailBody" class="main-content">
+            <div class="row">
                 <div class="sidebar-left-image">
-                    <div class="grid images_3_of_2" >
-                        <div class="flexslider" >
-                            <ul class="slides" >
-                                <li class="flex-active" style="float: left; display: block; width: 567px" v-for="image of listImage">
+                    <div class="grid images_3_of_2">
+                        <div class="flexslider">
+                            <ul class="slides">
+                                <li class="flex-active" style="float: left; display: block; width: 567px"
+                                    v-for="image of listImage">
                                     <img v-bind:src="image" draggable="false"/>
                                 </li>
                             </ul>
@@ -39,7 +40,7 @@
                             </div>
                             <div class="title-right">
                                 <i class="far fa-2x fa-heart icon-heart"></i>
-<!--                                <i class="fa fa-2x fa-heart full"></i>-->
+                                <!--                                <i class="fa fa-2x fa-heart full"></i>-->
                             </div>
                         </div>
                         <div class="detail">
@@ -78,21 +79,27 @@
                     </div>
                     <div class="report">
                         <div class="title-report">
-                            <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo cáo với chúng tôi.</p>
-                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">Báo Cáo Bài Viết</button>
+                            <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo
+                                cáo với chúng tôi.</p>
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">Báo
+                                Cáo Bài Viết
+                            </button>
                             <div id="reportModal" class="modal">f
                                 <!-- Modal content -->
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h2>Báo Cáo Bài Viết</h2>
-                                        <span id="closeModalReport" @click="handleEventReportModal($event)" class="close">&times;</span>
+                                        <span id="closeModalReport" @click="handleEventReportModal($event)"
+                                              class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
                                         <h4 class="font-weight-normal">Nội dung</h4>
                                         <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal" class="btn-default">Xác Nhận</button>
+                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal"
+                                                class="btn-default">Xác Nhận
+                                        </button>
                                     </div>
                                 </div>
 
@@ -113,7 +120,7 @@
                         </div>
                     </div>
                     <div class="sent-request">
-                        <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                        <button @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
                     </div>
 
                     <!--Modal choose room-->
@@ -127,11 +134,11 @@
                             <div class="modal-body">
                                 <div class="room-number">
                                     <div class="title-room">
-                                         <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                        <h4 class="font-weight-normal">Chọn phòng:</h4>
                                     </div>
                                     <div class="choose-room" v-for="room in post.listRoom">
-                                        <div class="select-room" v-text="room.roomName"></div>
-
+                                        <div @click="setRoomIdRental(room.roomId)" class="select-room"
+                                             v-text="room.roomName"></div>
                                     </div>
                                 </div>
                                 <div class="room-number">
@@ -139,12 +146,12 @@
                                         <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
                                     </div>
                                     <div class="choose-room">
-                                        <input type="date" >
+                                        <input @input="setRequestDateRental($event.target.value)" type="date">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button @click="closeModalChooseRoom" class="btn-hover btn-default">Xác Nhận</button>
+                                <button @click="showModalConfirmSentRental()" class="btn-hover btn-default">Xác Nhận</button>
                             </div>
                         </div>
                     </div>
@@ -155,6 +162,9 @@
                     </div>
                 </div>
             </div>
+            <!---Modal-->
+            <div th:replace="layout :: confirmModalFragment"></div>
+            <div th:replace="layout :: notification"></div>
         </div>
     </div>
 

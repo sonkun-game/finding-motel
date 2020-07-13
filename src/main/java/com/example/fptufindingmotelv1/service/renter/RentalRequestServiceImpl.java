@@ -54,6 +54,8 @@ public class RentalRequestServiceImpl implements RentalRequestService{
            } else {
                rentalRequestModel.setRequestDate(rentalRequestDTO.getRequestDate());
            }
+
+           rentalRequestRepository.save(rentalRequestModel);
            return true;
        } catch (Exception e) {
            return false;

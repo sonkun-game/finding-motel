@@ -6,16 +6,19 @@ import lombok.Data;
 @Data
 public class RoomDTO {
     private int index;
+    private String roomId;
     private String roomName;
     private boolean availableRoom;
     private long statusId;
     private String displayStatus;
+
 
     public RoomDTO() {
     }
 
     public RoomDTO(int index, RoomModel roomModel) {
         this.index = index;
+        this.roomId = roomModel.getId();
         this.roomName = roomModel.getName();
         this.statusId = roomModel.getStatus().getId();
         this.displayStatus = roomModel.getStatus().getStatus();

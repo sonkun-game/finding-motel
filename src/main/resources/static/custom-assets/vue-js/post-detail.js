@@ -1,3 +1,4 @@
+
 var postDtl = new Vue({
     el: '#postDetailBody',
     data: {
@@ -12,11 +13,16 @@ var postDtl = new Vue({
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         this.postId = urlParams.get('id');
+
+
     },
     methods: {
-        viewDetail: function (event) {
-            var id=event.target.id
-            fetch("https://localhost:8081/api-post-detail?id=" + id, {
+        viewDetail: function () {
+            var query = window.location.search;
+            var url = new URLSearchParams(query);
+            var id = url.get('id');
+
+            fetch("https://localhost:8081/api-post-detail?id="+id  , {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
@@ -74,7 +80,7 @@ var postDtl = new Vue({
         }
     },
     created(){
-
+        this.viewDetail();
     }
 
 

@@ -98,7 +98,7 @@ public class AdminServiceImpl implements AdminService {
                 landlord.setUnBanDate(calendar.getTime());
                 for (PostModel post:
                      landlord.getPosts()) {
-                    post.setBanned(true);
+                    post.setVisible(false);
                     for (ReportModel report:
                          post.getReports()) {
                         if(report.getStatusReport().getId() == 3){
@@ -130,7 +130,7 @@ public class AdminServiceImpl implements AdminService {
                 landlord.setUnBanDate(null);
                 for (PostModel post:
                         landlord.getPosts()) {
-                    post.setBanned(false);
+                    post.setVisible(true);
                 }
                 landlordRepository.save(landlord);
                 return (ArrayList<LandlordModel>) landlordRepository.findAll();
@@ -147,8 +147,7 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostResponseDTO> posts = new ArrayList<>();
             for (PostModel post : postRepository.findAll()) {
                 PostResponseDTO postResponseDTO = new PostResponseDTO(post);
-                boolean banAvailable = post.getLandlord().getUnBanDate() == null
-                        && postResponseDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
+                boolean banAvailable = postResponseDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
                 postResponseDTO.setBanAvailable(banAvailable);
                 posts.add(postResponseDTO);
             }
@@ -195,8 +194,7 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
             for (PostModel p : posts) {
                 PostResponseDTO pr = new PostResponseDTO(p);
-                boolean banAvailable = p.getLandlord().getUnBanDate() == null
-                        && pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
+                boolean banAvailable = pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
                 pr.setBanAvailable(banAvailable);
                 postResponseDTOs.add(pr);
             }

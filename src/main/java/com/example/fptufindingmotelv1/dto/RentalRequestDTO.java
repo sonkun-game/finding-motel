@@ -11,4 +11,5 @@ public class RentalRequestDTO {
     String roomId;
     Date requestDate;
     Long statusId;
+    String postId;
 }

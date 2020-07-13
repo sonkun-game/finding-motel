@@ -110,14 +110,9 @@ var postDtl = new Vue({
         setRequestDateRental(date) {
             this.dateRequestRental = date;
         },
-        showModalNotify(trueFalse) {
+        showModalNotify(msg) {
             document.getElementById("my-modal-notification").style.display = 'block';
-            if (trueFalse == true) {
-                document.getElementById("modalNotifyMessage").innerHTML = 'Cập Nhật Thành Công!';
-            } else {
-                document.getElementById("modalNotifyMessage").innerHTML = 'Xảy ra lỗi!';
-            }
-
+            document.getElementById("modalNotifyMessage").innerHTML =  msg;
             setTimeout(function () {
                 document.getElementById("my-modal-notification").style.display = 'none';
             },3000);
@@ -128,6 +123,7 @@ var postDtl = new Vue({
                 "roomId" : this.roomIdRental,
                 "requestDate" : this.dateRequestRental,
                 "statusId" : 6,
+                "postId" : this.postId,
             }
             fetch("https://localhost:8081/sent-rental-request", {
                 method: 'POST',
@@ -137,11 +133,8 @@ var postDtl = new Vue({
                 body: JSON.stringify(rentalRequest),
             }).then(response => response.json())
                 .then((responseMsg) => {
-                    if (responseMsg.code == '000') {
-                        this.showModalNotify(true);
-                    } else {
-                        console.log(rentalRequest);
-                        this.showModalNotify(false);
+                    if (responseMsg != null) {
+                        this.showModalNotify(responseMsg.message);
                     }
                 }).catch(error => {
                 console.log(error);

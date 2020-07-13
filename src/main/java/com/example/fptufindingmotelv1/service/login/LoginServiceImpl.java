@@ -2,7 +2,9 @@ package com.example.fptufindingmotelv1.service.login;
 
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +31,6 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponseDTO validateUser(String username, String password) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         LoginResponseDTO response = new LoginResponseDTO();
         try {
             UserModel userModel = userRepository.findByUsername(username);
@@ -40,13 +41,26 @@ public class LoginServiceImpl implements LoginService {
             }else if(userModel != null && userModel.getUsername() != null && !passwordEncoder.matches(password, userModel.getPassword())){
                 response.setMsgCode("login002");
                 response.setMessage("Mật khẩu không chính xác");
-            }else if(userModel != null && userModel.getUsername() != null
-                    && passwordEncoder.matches(password, userModel.getPassword())
-                    && userModel instanceof LandlordModel && ((LandlordModel)userModel).getUnBanDate() != null
-                    && ((LandlordModel)userModel).getUnBanDate().after(new Timestamp(date.getTime()))){
-                response.setMsgCode("login003");
-                response.setMessage("Tài khoản của bạn bị tạm khóa đến "+sdf.format(((LandlordModel)userModel).getUnBanDate()));
-            }else {
+            }
+//            else if(userModel != null && userModel.getUsername() != null
+//                    && passwordEncoder.matches(password, userModel.getPassword())
+//                    && userModel instanceof LandlordModel && ((LandlordModel)userModel).getUnBanDate() != null
+//                    && ((LandlordModel)userModel).getUnBanDate().after(new Timestamp(date.getTime()))){
+//                response.setMsgCode("login003");
+//                response.setMessage("Tài khoản của bạn bị tạm khóa đến "+sdf.format(((LandlordModel)userModel).getUnBanDate()));
+//            }
+            else {
+                if(userModel instanceof LandlordModel
+                        && ((LandlordModel) userModel).getUnBanDate() != null
+                        && ((LandlordModel) userModel).getUnBanDate().before(new Timestamp(date.getTime()))){
+                    ((LandlordModel) userModel).setUnBanDate(null);
+                    for (PostModel post:
+                            ((LandlordModel) userModel).getPosts()) {
+                        post.setBanned(false);
+                    }
+                    userRepository.save(userModel);
+                }
+
                 response.setMsgCode("login000");
                 response.setMessage("Đăng nhập thành công!");
             }

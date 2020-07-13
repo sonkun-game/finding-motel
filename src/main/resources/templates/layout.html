@@ -63,13 +63,15 @@
                                     <ul id="navigation">
                                         <li><a th:href="@{/}">TRANG CHỦ</a></li>
                                         <li><a href="#">PHÒNG TRỌ</a></li>
-                                        <li><a href="#">NHÀ NGUYÊN CĂN</a></li>
                                         <li><a href="#">CĂN HỘ</a></li>
-                                        <li><a th:href="@{/instruction}">HƯỚNG DẪN</a>
+                                        <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
+                                        <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
+                                            <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
+                                        </li>
                                         <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
-                                                <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
+                                                <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN USER -->
@@ -79,23 +81,23 @@
                                             </i>
 
                                             <ul class="submenu">
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(1)">Đổi mật khẩu</a></li>
+                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
+                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)">Đổi mật khẩu</a></li>
 
                                                 <!-- DROPDOWN RENTER -->
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a>
+                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a></li>
+                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
+
 
                                                 <!-- DROPDOWN LANDLORD -->
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(13)" v-show="userInfo.role == 'LANDLORD'">Đăng tin</a>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a>
+                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
 
 
                                                 <!-- DROPDOWN ADMIN -->
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
                                                 <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
                                             </ul>
                                         </li>
@@ -288,17 +290,20 @@
     <div th:fragment="user-task" class="information" id="user-task">
         <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information"><img src="assets/img/logo/infor.png" class="logo-button">Thông tin tài khoản</button>
         <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">Đổi mật khẩu</button>
-        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>
-        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
+<!--        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>-->
         <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
-        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
+        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
+
         <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
         <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
-        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>
+        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
+
+        
+<!--        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>-->
         <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
-        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Danh sách bài đăng</button>
-        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Báo cáo</button>
+        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Danh sách báo cáo</button>
         <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img src="assets/img/logo/logout.png" class="logo-button">Đăng xuất</button>
 
     </div>
@@ -353,6 +358,46 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!--   Modal extend -->
+    <div th:fragment="message-modal" id="message-modal" class="modal">
+        <!-- Modal content -->
+        <div class="view-information">
+            <div class="modal-header">
+                <h2>Thông báo</h2>
+                <span @click="closeModal()" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="notification-content" v-html="message"></div>
+            </div>
+            <div class="modal-footer">
+                <button @click="closeModal()" class="btn-hover btn-default">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+
+<!--    basic user information-->
+    <div id="basic-user-info" th:fragment="basic-user-infor">
+        <div class="user-infor">
+            <div class="user-avatar">
+                <img class="avatar" src="assets/img/logo/ava.png" />
+            </div>
+            <div class="user-meta">
+                <div class="inner">
+                    <div class="user-name" v-text="userInfo.displayName" data-toggle="tooltip" data-html="true" v-bind:title="userInfo.displayName"></div>
+                    <div class="user-verify" v-text="userInfo.phoneNumber"></div>
+                </div>
+            </div>
+        </div>
+        <ul v-if="userInfo.role == 'LANDLORD'">
+            <li>
+                <span>Số dư: </span>
+                <span style="font-weight: 700" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></span>
+            </li>
+        </ul>
+        <a v-if="userInfo.role == 'LANDLORD'" href="" class="btn-payment mr-2">Nạp tiền</a>
+        <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
     </div>
 
 </body>

@@ -1,15 +1,17 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.PaymentPackageModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.TypeModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
@@ -17,6 +19,40 @@ public class ManagePostController {
 
     @Autowired
     private ManagePostService managePostService;
+
+    @GetMapping(value = {"/dang-tin"})
+    public String getFucntionPage(Model model){
+        Date date = new Date();
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if(userDetails.getUserModel() instanceof LandlordModel){
+                if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() == null){
+                    return "profile-landlord";
+                }else if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() != null
+                && ((LandlordModel) userDetails.getUserModel()).getUnBanDate().after(new Timestamp(date.getTime()))){
+                    return "redirect:/";
+                }
+            }else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping(value = {"/quan-ly-bai-dang"})
+    public String getManagerPage(Model model){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if(userDetails.getUserModel() instanceof LandlordModel){
+                return "profile-landlord";
+            }else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
+    }
 
     @ResponseBody
     @PostMapping("/api-get-init-new-post")

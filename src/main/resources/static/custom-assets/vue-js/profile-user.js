@@ -18,6 +18,7 @@ var profileInstance = new Vue({
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
         this.gender = this.userInfo.gender ? "1" : "0";
         this.task = localStorage.getItem("task")
+        authenticationInstance.isShowBtn = false
     },
     mounted(){
 
@@ -250,11 +251,29 @@ var basicInfoInstance = new Vue({
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    },
+    methods : {
+        handlePostNewRoom(){
+            if(this.userInfo.banned){
+                modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                    "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                modalMessageInstance.showModal()
+            }else{
+                localStorage.setItem("task", 13)
+                window.location.href = "dang-tin"
+            }
+
+        }
     }
 
 })
-
+var router = new VueRouter({
+    mode: 'history',
+    routes: [],
+});
 var userTaskInstance = new Vue({
+    router,
     el: '#user-task',
     data: {
         userInfo: {},
@@ -271,20 +290,24 @@ var userTaskInstance = new Vue({
             localStorage.setItem("task", task)
 
             if(task == 0 || task == 1){
-                let profileUser = document.getElementById("user-manager-content")
-                profileUser.classList.remove("invisible")
-                let renterManager = document.getElementById("renter-manager")
-                if(renterManager != null){
-                    renterInstance.task = task
-                }
-                let adminManager = document.getElementById("dataTable")
-                if(adminManager != null){
-                    admin.task = task
-                }
-                let landlordManager = document.getElementById("landlord-manager")
-                if(landlordManager != null){
-                    noteInstance.task = task
-                    landlordInstance.task = task
+                if(this.$route.fullPath.includes("quan-ly-tai-khoan")){
+                    let profileUser = document.getElementById("user-manager-content")
+                    profileUser.classList.remove("invisible")
+                    let renterManager = document.getElementById("renter-manager")
+                    if(renterManager != null){
+                        renterInstance.task = task
+                    }
+                    let adminManager = document.getElementById("dataTable")
+                    if(adminManager != null){
+                        admin.task = task
+                    }
+                    let landlordManager = document.getElementById("landlord-manager")
+                    if(landlordManager != null){
+                        noteInstance.task = task
+                        landlordInstance.task = task
+                    }
+                }else{
+                    window.location.href = "/quan-ly-tai-khoan"
                 }
             }else{
                 let profileUser = document.getElementById("user-manager-content")
@@ -292,14 +315,30 @@ var userTaskInstance = new Vue({
                 if(task == 12){
                     authenticationInstance.logout()
                 }else if(task == 9){
-                    admin.task = task
-                    admin.getListUser()
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.getListUser()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
                 }else if(task == 10){
-                    admin.task = task
-                    admin.getListPost()
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.getListPost()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
                 }else if(task == 11){
-                    admin.task = task
-                    admin.getListReport()
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.searchReport()
+                        admin.getInitAdmin()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
                 }else if(task == 3){
                     renterInstance.task = task
                     renterInstance.getWishlist()
@@ -310,22 +349,34 @@ var userTaskInstance = new Vue({
                     landlordInstance.task = task
                     landlordInstance.getInitNewPost()
                 }else if(task == 6){
-                    noteInstance.task = task
-                    landlordInstance.task = task
-                    landlordInstance.getHistoryPayment()
+                    if(this.$route.fullPath.includes("quan-ly-tai-khoan")){
+                        noteInstance.task = task
+                        landlordInstance.task = task
+                        landlordInstance.getHistoryPayment()
+                    }else{
+                        window.location.href = "/quan-ly-tai-khoan"
+                    }
                 }else if(task == 7){
-                    noteInstance.task = task
-                    landlordInstance.task = task
-                    landlordInstance.getHistoryPaymentPost()
+                    if(this.$route.fullPath.includes("quan-ly-bai-dang")){
+                        noteInstance.task = task
+                        landlordInstance.task = task
+                        landlordInstance.getHistoryPaymentPost()
+                    }else{
+                        window.location.href = "/quan-ly-bai-dang"
+                    }
                 }
                 else if(task == 4){
-                    noteInstance.task = task
-                    landlordInstance.task = task
-                    landlordInstance.viewListPost()
-                    landlordInstance.getInitNewPost()
+                    if(this.$route.fullPath.includes("quan-ly-bai-dang")){
+                        noteInstance.task = task
+                        landlordInstance.task = task
+                        landlordInstance.viewListPost()
+                        landlordInstance.getInitNewPost()
+                    }else{
+                        window.location.href = "/quan-ly-bai-dang"
+                    }
                 }
-            }
 
+            }
 
         }
     }

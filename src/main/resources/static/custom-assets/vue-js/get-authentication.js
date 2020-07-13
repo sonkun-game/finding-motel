@@ -4,6 +4,7 @@ var authenticationInstance = new Vue({
         userInfo: {},
         authenticated: false,
         task: 0,
+        isShowBtn: true,
     },
     methods: {
         logout(){
@@ -39,7 +40,20 @@ var authenticationInstance = new Vue({
         },
         getTaskPage(task){
             localStorage.setItem("task", task)
-            window.location.href = "https://localhost:8081/profile-user"
+            if(task == 13){
+                if(this.userInfo.banned){
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                        "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                    modalMessageInstance.showModal()
+                }else{
+                    window.location.href = "dang-tin"
+                }
+
+            }else if(task == 0 || task == 1){
+                window.location.href = "quan-ly-tai-khoan"
+            }
+
         },
         formatNumberToDisplay(number){
             return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
@@ -73,9 +87,38 @@ var authenticationInstance = new Vue({
                     this.userInfo = data.userInfo
                     localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
+
+                    if(this.userInfo.banned && (document.referrer.includes("/dang-nhap")
+                        || document.referrer.includes("/dang-ky")
+                        || document.referrer.includes("/facebook?code=")
+                        || document.referrer.includes("/google?code="))){
+                        modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                            "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                            "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                        modalMessageInstance.showModal()
+                    }
                 }
             }).catch(error => {
             console.log(error);
         })
     }
+})
+var modalMessageInstance = new Vue({
+    el: '#message-modal',
+    data: {
+        userInfo: {},
+        message: "",
+    },
+    beforeMount(){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    },
+    methods : {
+        closeModal(){
+            document.getElementById("message-modal").style.display = 'none';
+        },
+        showModal(){
+            document.getElementById("message-modal").style.display = 'block';
+        }
+    }
+
 })

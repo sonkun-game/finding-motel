@@ -3,8 +3,11 @@ package com.example.fptufindingmotelv1.dto;
 import com.example.fptufindingmotelv1.model.ImageModel;
 import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -21,7 +24,7 @@ public class PostDTO {
     private double distance;
     private double square;
     private int roomNUmber;
-    private Date createDate;
+    private String createDate;
     private String description;
     private Date expireDate;
     private boolean isVisible;
@@ -32,6 +35,7 @@ public class PostDTO {
     private List<RoomDTO> listRoom;
 
     public PostDTO(PostModel postModel) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.id = postModel.getId();
         this.type = postModel.getType().getName();
         this.landlord = postModel.getLandlord().getUsername();
@@ -41,7 +45,7 @@ public class PostDTO {
         this.distance = postModel.getDistance();
         this.square = postModel.getSquare();
         this.roomNUmber = postModel.getRoomNumber();
-        this.createDate = postModel.getCreateDate();
+        this.createDate = sdf.format(postModel.getCreateDate());
         this.description = postModel.getDescription();
         this.expireDate = postModel.getExpireDate();
         this.isVisible = postModel.isVisible();

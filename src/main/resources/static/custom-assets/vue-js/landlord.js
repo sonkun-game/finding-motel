@@ -224,6 +224,13 @@ var landlordInstance = new Vue({
             })
         },
         changeStatusPost(index, postId, isVisible){
+            if(this.userInfo.banned){
+                modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                    "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             let request = {
                 'postId' : postId,
                 'isVisible' : isVisible

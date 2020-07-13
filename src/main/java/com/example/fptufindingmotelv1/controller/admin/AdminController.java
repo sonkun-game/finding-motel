@@ -1,19 +1,20 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.restfb.json.Json;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -24,6 +25,21 @@ public class AdminController {
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
         return "profile-admin";
+    }
+
+    @GetMapping(value = {"/quan-ly-he-thong"})
+    public String getManagerPage(Model model){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if(!(userDetails.getUserModel() instanceof LandlordModel)
+                && !(userDetails.getUserModel() instanceof RenterModel)){
+                return "profile-admin";
+            }else {
+                return "redirect:/";
+            }
+        }
+        return "redirect:/";
     }
 
     @ResponseBody
@@ -114,8 +130,22 @@ public class AdminController {
     @RequestMapping(value = "/ban-post")
     public JSONObject banPost(@RequestParam String postId) {
         try {
-            return adminService.banPost(postId)
-                    ? responseMsg("000", "Success!", null)
+            PostModel postModel = adminService.banPost(postId);
+            return postModel != null
+                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api-un-ban-post")
+    public JSONObject unBanPost(@RequestParam String postId) {
+        try {
+            PostModel postModel = adminService.unBanPost(postId);
+            return postModel != null
+                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
                     : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
             return responseMsg("999", e.getMessage(), null);
@@ -128,6 +158,25 @@ public class AdminController {
         msg.put("message", message);
         msg.put("data", data);
         return msg;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/search-report")
+    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO) {
+        try {
+            List<ReportResponseDTO> response = adminService.searchReport(reportRequestDTO);
+            return response != null
+                    ? responseMsg("000", "Success!", response)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-init-admin")
+    public JSONObject getInitAdmin() {
+        return adminService.getInitAdminManager();
     }
 }
 

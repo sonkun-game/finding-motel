@@ -1,11 +1,10 @@
 
-var addVue = new Vue({
+var postInstance = new Vue({
     el: '#row',
     data: {
-        id: null,
-        existedId:null,
-        status: null,
-        wishList: [],
+        postList: [],
+        pager:{},
+        post:{},
     },
     methods : {
         addWishlist : function(event){
@@ -31,5 +30,21 @@ var addVue = new Vue({
                 console.log(error);
             })
         },
+        getAllPost : function(){
+            fetch("https://localhost:8081/api-get-all-post", {
+                method: 'POST',
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    this.postList=data
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+
+    },
+    created(){
+        this.getAllPost();
     }
 })

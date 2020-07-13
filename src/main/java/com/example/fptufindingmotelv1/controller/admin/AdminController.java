@@ -122,8 +122,6 @@ public class AdminController {
         }
     }
 
-
-
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
         msg.put("code", code);

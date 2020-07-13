@@ -125,13 +125,13 @@ var admin = new Vue({
             if (dataType == 'post') {
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa bài đăng này không?';
-                } else if (this.modalBanDataType == 'unban') {
+                } else if (action == 'unban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa bài đăng này không?';
                 }
             } else if (dataType == 'landlord') {
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
-                } else if (this.modalBanDataType == 'unban') {
+                } else if (action == 'unban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa tài khoản này không?';
                 }
             }

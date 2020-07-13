@@ -10,8 +10,7 @@
     <title>Chi tiết bài đăng</title>
 </head>
 <body>
-<!--    include message modal-->
-<div th:replace="layout :: message-modal"></div>
+
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
@@ -22,69 +21,127 @@
     <div class="container-fluid">
         <div id="postDetailBody" class="main-content">
             <div class="row">
-                <div class="sidebar-left-image">
+                <div class="col-left">
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
                             <ul class="slides">
-                                <li class="flex-active" style="float: left; display: block; width: 567px"
-                                    v-for="image of listImage">
-                                    <img v-bind:src="image" draggable="false"/>
+                                <li v-for="image of listImage">
+                                    <img v-bind:src="image" />
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="description">
-                        <div class="title">
-                            <div class="title-left">
-                                <h3 class="uppercase" v-text="post.title"></h3>
-                            </div>
-                            <div class="title-right">
-                                <i class="far fa-2x fa-heart icon-heart"></i>
-                                <!--                                <i class="fa fa-2x fa-heart full"></i>-->
-                            </div>
+                    <div class="wish-list clearfix">
+                        <button class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
+                            <img src="assets/img/logo/alert.png">
+                            <span>Báo cáo</span>
+                        </button>
+                        <button class="btn-save" type="button" title="Lưu tin này">
+                            <img src="assets/img/logo/bookmark.png">
+                            <span>Lưu tin này</span>
+                        </button>
+                    </div>
+                    <div class="title-area clearfix">
+                        <h1 class="title" v-text="post.title"></h1>
+                    </div>
+                    <div class="overview clearfix">
+                        <div class="title-name">
+                            <span>Đặc điểm chung:</span>
                         </div>
-                        <div class="detail">
-                            <div class="row">
-                                <div class="col">
-                                    <img class="icon-post-detail" src="assets/img/logo/house.png">
-                                    <label v-text="'Loại phòng: '+post.type"></label>
-                                </div>
-                                <div class="col">
-                                    <img class="icon-post-detail" src="assets/img/logo/money.png">
-                                    <span v-text="'Giá: '+post.price+' vnd/ tháng'"></span>
-                                </div>
-                                <div class="w-100"></div>
-                                <div class="col">
-                                    <img class="icon-post-detail" src="assets/img/logo/square.png">
-                                    <label v-text="'Diện tích: '+post.square+' m&sup2'"></label>
-                                </div>
-                                <div class="col">
-                                    <img class="icon-post-detail" src="assets/img/logo/distance.png">
-                                    <label v-text="'Khoảng cách: '+post.distance+' km'"></label>
-                                </div>
-                            </div>
+                        <div class="content clearfix">
+                            <ul class="list-overview clearfix">
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/house.png"> Loại phòng:</span>
+                                    <span class="item-value" v-text="post.type"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/money.png"> Giá cho thuê:</span>
+                                    <span class="item-value" v-text="post.price + ' VNĐ/Tháng'"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/square.png"> Diện tích:</span>
+                                    <span class="item-value" v-text="post.square + 'M&sup2'"></span>
+                                </li>
+                                <li class="item">
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/distance.png"> Khoảng cách:</span>
+                                    <span class="item-value" v-text="post.distance + ' KM'"></span>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="description-information">
-                            <h4 class="font-weight-bold">Thông tin chi tiết</h4>
+                    </div>
+                    <div class="description clearfix">
+                        <div class="title-name">
+                            <span>Thông tin mô tả:</span>
+                        </div>
+                        <div class="description-content">
                             <p v-text="post.description"></p>
                         </div>
                     </div>
-                    <div class="share">
-                        <div class="title-share">
-                            <h4 class="font-weight-bold">Chia sẻ </h4>
+                    <div class="location clearfix">
+                        <div class="title-name">
+                            <span>Vị trí:</span>
                         </div>
-                        <div class="btn-share">
-                            <button class="btn-share-fb" type="button">Chia Sẻ Facebook</button>
+                        <div class="address">
+                            <span class="subtext">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Gần cây xăng 39, Thạch Hòa, Thạch Thất, Hà Nội
+                            </span>
+                        </div>
+                        <div class="map">
+                            Chỗ này là bản đồ
                         </div>
                     </div>
-                    <div class="report">
-                        <div class="title-report">
-                            <p class="description-report">Bài viết này đã được kiểm duyệt. Nếu gặp vấn đề vui lòng báo
-                                cáo với chúng tôi.</p>
-                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">Báo
-                                Cáo Bài Viết
+                    <div class="service clearfix">
+                        <div class="title-name">
+                            <span>Các tiện ích:</span>
+                        </div>
+                        <div class="item-service clearfix">
+                            <ul class="list-service clearfix">
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Điều hòa</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Chỗ phơi quần áo</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">An ninh an toàn</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Tự do nấu nướng</span>
+                                </li>
+                                <li class="sub-item">
+                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
+                                    <span class="sub-item-value">Giờ giấc thoải mái</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="share clearfix">
+                        <div class="title-name">
+                            <span>Chia sẻ:</span>
+                            <button class="btn-share-fb" type="button">
+                                <img src="assets/img/logo/facebook.png">
+                                <span>Facebook</span>
                             </button>
-                            <div id="reportModal" class="modal">f
+                        </div>
+                    </div>
+                    <div class="report clearfix">
+                        <div class="report-area">
+                            <p>
+                                <strong>Lưu ý:</strong>
+                                </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng cung cấp các thông tin đầy đủ,
+                                chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
+                                nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
+                            </p>
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                                <img src="assets/img/logo/alert.png">
+                                <span>Báo Cáo</span>
+                            </button>
+                            <div id="reportModal" class="modal">
                                 <!-- Modal content -->
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -102,63 +159,156 @@
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-right-information">
-                    <div class="information">
-                        <div class="icon-information">
-                            <img class="avatar-information" src="assets/img/logo/user.png">
-                        </div>
-                        <div class="name-landlord">
-                            <label v-text="post.landlordDisplayName"></label>
-                            <div class="create-date">
-                                <label v-text="'Ngày đăng:'+post.createDate"></label>
+                <div class="col-right">
+                    <div class="information-header">
+                        <div class="display clearfix">
+                            <div class="display-avatar">
+                                <img src="assets/img/logo/ava.png">
+                            </div>
+                            <div class="display-name">
+                                <span class="name-value" v-text="post.landlordDisplayName"></span>
+                                <span class="date-value" v-text="'Ngày đăng: ' + post.createDate"></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="sent-request">
-                        <button @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
-                    </div>
+                        <div class="sent-request">
+                            <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                        </div>
 
-                    <!--Modal choose room-->
-                    <div id="myModal_chooseRoom" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2>Chọn phòng</h2>
-                                <span @click="closeModalChooseRoom" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="room-number">
-                                    <div class="title-room">
-                                        <h4 class="font-weight-normal">Chọn phòng:</h4>
+                        <!--Modal choose room-->
+                        <div id="myModal_chooseRoom" class="modal">
+                            <!-- Modal content -->
+                            <div class="view-information">
+                                <div class="modal-header">
+                                    <h2>Chọn phòng</h2>
+                                    <span @click="closeModalChooseRoom" class="close">&times;</span>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="room-number">
+                                        <div class="title-room">
+                                            <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                        </div>
+                                        <div class="choose-room" v-for="room in post.listRoom">
+                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"
+                                                 v-text="room.roomName"></div>
+                                        </div>
                                     </div>
-                                    <div class="choose-room" v-for="room in post.listRoom">
-                                        <div @click="setRoomIdRental(room.roomId)" class="select-room"
-                                             v-text="room.roomName"></div>
+                                    <div class="room-number">
+                                        <div class="title-room">
+                                            <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                        </div>
+                                        <div class="choose-room">
+                                            <input @input="setRequestDateRental($event.target.value)" type="date">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="room-number">
-                                    <div class="title-room">
-                                        <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
-                                    </div>
-                                    <div class="choose-room">
-                                        <input @input="setRequestDateRental($event.target.value)" type="date">
-                                    </div>
+                                <div class="modal-footer">
+                                    <button @click="showModalConfirmSentRental()" class="btn-hover btn-default">Xác Nhận</button>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button @click="showModalConfirmSentRental()" class="btn-hover btn-default">Xác Nhận</button>
-                            </div>
+                        </div>
+
+                        <div class="contact">
+                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
+                            <h3 v-text="post.phoneNumber"></h3>
                         </div>
                     </div>
-
-                    <div class="contact">
-                        <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
-                        <h3 v-text="post.phoneNumber"></h3>
+                    <div class="news-involve">
+                        <div class="header-news">
+                            <span>Có thể bạn quan tâm:</span>
+                        </div>
+                        <div class="list-news-content">
+                            <ul class="list-news clearfix">
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong5.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong4.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong3.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong2.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="news">
+                                    <a class="post-link clearfix" href="#">
+                                        <figure class="thumb">
+                                            <img src="assets/img/rooms/cohuong1.jpg">
+                                        </figure>
+                                        <div class="infor">
+                                            <div class="inner">
+                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>
+                                                <div class="clearfix">
+                                                    <div class="price">
+                                                        <span>1500000 vnđ/tháng</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -167,6 +317,12 @@
             <div th:replace="layout :: notification"></div>
         </div>
     </div>
+<!--    <div class="ads-left">-->
+<!--        <img src="assets/img/logo/banner.jpg">-->
+<!--    </div>-->
+<!--    <div class="ads-right">-->
+<!--        <img src="assets/img/logo/banner.jpg">-->
+<!--    </div>-->
 
 </main>
 

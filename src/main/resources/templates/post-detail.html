@@ -25,18 +25,18 @@
                     <div class="grid images_3_of_2">
                         <div class="flexslider">
                             <ul class="slides">
-                                <li v-for="image of listImage">
+                                <li v-for="image of listImage" class="slide-image-container">
                                     <img v-bind:src="image" />
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="wish-list clearfix">
-                        <button class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
+                        <button v-if="userInfo.role == 'RENTER'" class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
-                        <button class="btn-save" type="button" title="Lưu tin này">
+                        <button v-if="userInfo.role == 'RENTER'" class="btn-save" type="button" title="Lưu tin này">
                             <img src="assets/img/logo/bookmark.png">
                             <span>Lưu tin này</span>
                         </button>
@@ -137,7 +137,7 @@
                                 chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
-                            <button v-bind:class="{invisible : !(userInfo.role == 'RENTER')}" class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                            <button v-if="userInfo.role == 'RENTER'" class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
                                 <img src="assets/img/logo/alert.png">
                                 <span>Báo Cáo</span>
                             </button>
@@ -174,8 +174,8 @@
                                 <span class="date-value" v-text="'Ngày đăng: ' + post.createDate"></span>
                             </div>
                         </div>
-                        <div class="sent-request">
-                            <button v-bind:class="{invisible : !(userInfo.role == 'RENTER')}" @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                        <div class="sent-request" v-if="userInfo.role == 'RENTER'">
+                            <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
                         </div>
 
                         <!--Modal choose room-->
@@ -193,8 +193,8 @@
                                         </div>
                                         <div class="choose-room clearfix">
                                             <ul class="list-select-room"  v-for="room in post.listRoom" >
-                                                <li class="select-room" @click="setRoomIdRental(room.roomId)">
-                                                    <span v-text="room.roomName"></span>
+                                                <li class="select-room" v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}" @click="setRoomIdRental(room.roomId, $event)">
+                                                    {{room.roomName}}
                                                 </li>
 
                                             </ul>

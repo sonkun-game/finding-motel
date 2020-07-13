@@ -107,7 +107,10 @@ var postDtl = new Vue({
                 return;
             }
         },
-        setRoomIdRental(roomId) {
+        setRoomIdRental(roomId, event) {
+            if (event.target.className.indexOf("disable") != -1) {
+                return;
+            }
             this.roomIdRental = roomId;
         },
         setRequestDateRental(date) {

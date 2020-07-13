@@ -44,10 +44,6 @@
     margin-left: 30px;
 }
 
-.view-information{
-    width: 30% !important;
-}
-
 .row .col{
     margin: 10px auto;
 }
@@ -73,7 +69,6 @@
     border: .5px solid #CFCFCF;
     text-align: center;
     padding: 2px 15px;
-    margin-left: 5px;
     cursor: pointer;
     margin-bottom: 3px;
     float: left;
@@ -81,9 +76,12 @@
 
 
 .choose-room{
-    width: 80%;
+    width: 75%;
     display: flex;
     flex-wrap: wrap;
+}
+.title-room{
+    width: 25%;
 }
 
 .start-date{
@@ -109,9 +107,8 @@ select{
 
 .room-number input{
     display: block !important;
-    width: 170px;
+    width: 70%;
     height: auto;
-    margin: auto 10px;
     border: 1px solid #dca73a;
     border-radius: 2px;
     color: #1C1C1C;
@@ -480,4 +477,15 @@ main{
 }
 .invisible {
     display: none;
+}
+
+.disable{
+    background-color: #dddddd;
+    cursor: unset;
+}
+.selected{
+    background-color: #dca73a;
+}
+.slide-image-container{
+    display: flex!important;
 }

@@ -223,7 +223,7 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        changeStatusPost(index, postId, isVisible){
+        changeStatusPost(index, post){
             if(this.userInfo.banned){
                 modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
                     "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
@@ -231,9 +231,14 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            if(post.banned){
+                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             let request = {
-                'postId' : postId,
-                'isVisible' : isVisible
+                'postId' : post.id,
+                'isVisible' : !post.postVisible
             }
             fetch("/api-change-post-status", {
                 method: 'POST',
@@ -254,6 +259,11 @@ var landlordInstance = new Vue({
             })
         },
         handleEditPost(post){
+            if(post.banned){
+                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             this.editMode = true
             this.typeOfPost = post.typeId
             this.title = post.title
@@ -304,10 +314,15 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalExtend(postId, postIndex) {
+        showModalExtend(post, postIndex) {
+            if(post.banned){
+                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             this.editMode = true
-            if(postId != null){
-                this.postId = postId
+            if(post != null){
+                this.postId = post.id
             }
             if(postIndex != null){
                 this.postIndex = postIndex

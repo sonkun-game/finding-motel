@@ -33,6 +33,9 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     StatusRepository statusRepository;
 
+    @Autowired
+    RentalRequestRepository rentalRequestRepository;
+
     protected JSONObject getResponeMessage(String code, String msg) {
         JSONObject responeMsg = new JSONObject();
         responeMsg.put("code", code);
@@ -210,6 +213,13 @@ public class AdminServiceImpl implements AdminService {
         try {
             PostModel postModel = postRepository.findById(postId).get();
             postModel.setBanned(true);
+            // delete rental request of room of post
+            for (RoomModel room:
+                    postModel.getRooms()) {
+                if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
+                    rentalRequestRepository.deleteAll(room.getRoomRentals());
+                }
+            }
             for (ReportModel report:
                     postModel.getReports()) {
                 if(report.getStatusReport().getId() == 3){

@@ -399,16 +399,16 @@
                                     <td>
                                         <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
                                            title="Xem chi tiết"></i>
-                                        <i v-bind:class="{invisible: post.banned, disable : !post.banAvailable}"
+                                        <i v-bind:class="{disable : !post.banAvailable}"
                                            @click="showModalConfirmBan(post.id, 'post','ban', index, $event)"
                                            class="fas fa-lock" data-toggle="tooltip" data-html="true"
                                            v-bind:title="post.banAvailable ? 'Khóa bài đăng' : ''"
                                            id="lockPostIcon"></i>
-                                        <i v-bind:class="{invisible: !post.banned}"
-                                           @click="showModalConfirmBan(post.id, 'post','unban', index, $event)"
-                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true"
-                                           title="Mở khóa bài đăng"
-                                           id="unlockPostIcon"></i>
+<!--                                        <i v-bind:class="{invisible: !post.banned}"-->
+<!--                                           @click="showModalConfirmBan(post.id, 'post','unban', index, $event)"-->
+<!--                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true"-->
+<!--                                           title="Mở khóa bài đăng"-->
+<!--                                           id="unlockPostIcon"></i>-->
                                     </td>
                                     <td>
                                         <i v-on:click="handleGetReport(post, null)" class="fas fa-eye" data-toggle="tooltip" data-html="true"

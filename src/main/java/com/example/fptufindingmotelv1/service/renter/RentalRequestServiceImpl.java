@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -81,8 +82,27 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             e.printStackTrace();
             return responseMsg("999", "Cập nhật không thành công!", null);
         }
-
     }
+
+    @Override
+    public JSONObject searchRentalRequest(RentalRequestDTO rentalRequestDTO) {
+        try {
+            ArrayList<RentalRequestModel> renterModels = rentalRequestRepository.searchRentalRequest(
+                    rentalRequestDTO.getId(), rentalRequestDTO.getRenterUsername(), rentalRequestDTO.getRoomId()
+                    ,rentalRequestDTO.getStatusId());
+
+            ArrayList<RentalRequestDTO> requestDTOS = new ArrayList<>();
+            for (RentalRequestModel requestModel : renterModels) {
+                RentalRequestDTO requestDTO = new RentalRequestDTO(requestModel);
+                requestDTOS.add(requestDTO);
+            }
+            return renterModels.size() > 0 ? responseMsg("000", "OK", requestDTOS   )
+                                            : responseMsg("111", "No Data!", null);
+        } catch (Exception e) {
+            return responseMsg("999", "System Error!", null);
+        }
+    }
+
 
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();

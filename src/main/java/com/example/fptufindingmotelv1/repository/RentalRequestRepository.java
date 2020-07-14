@@ -6,9 +6,10 @@ import com.example.fptufindingmotelv1.model.RoomModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 @Repository
 public interface RentalRequestRepository extends JpaRepository<RentalRequestModel, String> {
@@ -16,8 +17,14 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
     RentalRequestModel findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
     @Query(value = "select r from RentalRequestModel r " +
             "where (r.rentalRoom.postRoom.landlord.username = :landlordId)" +
-
             "")
     List<RentalRequestModel> getListRequest(String landlordId);
 
+
+    @Query(value = "select rr from RentalRequestModel rr " +
+            "where (:id is null or rr.id like :id )" +
+            "and (:renterUsername is null or rr.rentalRenter.username like %:renterUsername%)" +
+            "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
+            "and (:statusId is null or rr.rentalStatus.id = :statusId)")
+    ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId);
 }

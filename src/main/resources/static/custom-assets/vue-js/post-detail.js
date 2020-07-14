@@ -23,7 +23,6 @@ var postDtl = new Vue({
         this.postId = urlParams.get('id');
         this.viewDetail();
         this.getRelatedPost();
-
     },
     methods: {
         viewDetail: function () {

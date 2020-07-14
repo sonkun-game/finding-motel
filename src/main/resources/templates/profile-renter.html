@@ -55,34 +55,20 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Phòng trọ 1</td>
-                                    <td>R1</td>
-                                    <td>14-6-2020</td>
-                                    <td>Đang yêu cầu</td>
+
+
+
+
+
+                                
+                                <tr v-for="(rentalRequest, index) in listRentalRq">
+                                    <th v-text="index + 1" scope="row"></th>
+                                    <td v-text="rentalRequest.postTitle"></td>
+                                    <td v-text="rentalRequest.roomName"></td>
+                                    <td v-text="rentalRequest.requestDate"></td>
+                                    <td v-text="rentalRequest.statusDisplay"></td>
                                     <td>
-                                        <button class="table-button">Hủy</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Phòng trọ 2</td>
-                                    <td>R2</td>
-                                    <td>15-6-2020</td>
-                                    <td>Đang yêu cầu</td>
-                                    <td>
-                                        <button class="table-button">Hủy</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Phòng trọ 3</td>
-                                    <td>R3</td>
-                                    <td>16-6-2020</td>
-                                    <td>Đang yêu cầu</td>
-                                    <td>
-                                        <button class="table-button">Hủy</button>
+                                        <button @click="showModalCancelRequest(rentalRequest.id)" class="table-button">Hủy</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -110,6 +96,8 @@
                             </div>
                         </div>
                     </div>
+                    <div th:replace="layout :: notification"></div>
+                    <div th:replace="layout :: confirmModalFragment"></div>
                 </div>
             </div>
         </div>

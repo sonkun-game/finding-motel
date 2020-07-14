@@ -13,6 +13,7 @@ var profileInstance = new Vue({
         oldPassword: "",
         newPassword: "",
         rePassword: "",
+
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -344,6 +345,7 @@ var userTaskInstance = new Vue({
                     renterInstance.getWishlist()
                 }else if(task == 2){
                     renterInstance.task = task
+                    renterInstance.searchRentalRequest();
                 }else if(task == 13){
                     noteInstance.task = task
                     landlordInstance.task = task
@@ -383,9 +385,7 @@ var userTaskInstance = new Vue({
                         window.location.href = "/quan-ly-bai-dang"
                     }
                 }
-
             }
-
         }
     }
 

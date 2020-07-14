@@ -63,7 +63,7 @@
                                     <span class="item-value" v-text="post.square + 'M&sup2'"></span>
                                 </li>
                                 <li class="item">
-                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/distance.png"> Khoảng cách:</span>
+                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/distance.svg"> Khoảng cách:</span>
                                     <span class="item-value" v-text="post.distance + ' KM'"></span>
                                 </li>
                             </ul>
@@ -196,7 +196,6 @@
                                                 <li class="select-room" v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}" @click="setRoomIdRental(room.roomId, $event)">
                                                     {{room.roomName}}
                                                 </li>
-
                                             </ul>
 <!--                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"-->
 <!--                                                 v-text="room.roomName"></div>-->

@@ -19,8 +19,6 @@ var postDtl = new Vue({
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         this.postId = urlParams.get('id');
-
-
     },
     methods: {
         viewDetail: function () {
@@ -123,7 +121,6 @@ var postDtl = new Vue({
                 "roomId": this.roomIdRental,
                 "requestDate": this.dateRequestRental,
                 "statusId": 6,
-                "postId": this.postId,
             }
             fetch("https://localhost:8081/sent-rental-request", {
                 method: 'POST',

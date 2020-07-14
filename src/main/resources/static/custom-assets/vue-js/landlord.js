@@ -24,6 +24,7 @@ var landlordInstance = new Vue({
         postId : "",
         postIndex : "",
         confirmType : "",
+        listRentalRequest: [],
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -47,6 +48,10 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getHistoryPaymentPost()
+        }else if(this.task == 5){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListRequest()
         }
     },
     methods: {
@@ -387,6 +392,28 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
+        getListRequest(){
+            let request = {
+                'landlordUsername' : this.userInfo.username,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-view-list-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.listRentalRequest = data.listRequest
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        }
     }
 })
 var noteInstance = new Vue({

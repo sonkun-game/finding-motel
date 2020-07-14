@@ -367,6 +367,41 @@
                         </div>
                     </div>
 
+                    <!-- Quản lý yêu cầu -->
+
+                    <div id="request-manager" v-if="task == 5">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                        </div>
+                        <div class="information-detail">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên phòng trọ</th>
+                                    <th scope="col">Phòng</th>
+                                    <th scope="col">Ngày</th>
+                                    <th scope="col">Tình trạng</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(request, index) in listRentalRequest">
+                                    <th scope="row" v-text="index + 1"></th>
+                                    <td v-text="request.postTitle"></td>
+                                    <td v-text="request.roomName"></td>
+                                    <td v-text="request.requestDate"></td>
+                                    <td v-text="request.statusDisplay"></td>
+                                    <td>
+                                        <button class="table-button">Chấp nhận</button>
+                                        <button class="table-button">Từ chối</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
 
 

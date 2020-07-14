@@ -128,7 +128,7 @@ var postDtl = new Vue({
                 "renterUsername": this.userInfo.username,
                 "roomId": this.roomIdRental,
                 "requestDate": this.dateRequestRental,
-                "statusId": 6,
+                "statusId": 7,
                 "postId": this.postId,
             }
             fetch("https://localhost:8081/sent-rental-request", {

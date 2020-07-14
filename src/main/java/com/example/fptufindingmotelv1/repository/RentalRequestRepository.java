@@ -14,5 +14,10 @@ import java.util.List;
 public interface RentalRequestRepository extends JpaRepository<RentalRequestModel, String> {
 
     RentalRequestModel findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
-    List<RentalRequestModel> findAllByRentalRoom(RoomModel roomModel);
+    @Query(value = "select r from RentalRequestModel r " +
+            "where (r.rentalRoom.postRoom.landlord.username = :landlordId)" +
+
+            "")
+    List<RentalRequestModel> getListRequest(String landlordId);
+
 }

@@ -126,7 +126,7 @@ var postDtl = new Vue({
             let rentalRequest = {
                 "renterUsername": this.userInfo.username,
                 "roomId": this.roomIdRental,
-                "requestDate": this.dateRequestRental,
+                "startDate": this.dateRequestRental,
                 "statusId": 7,
                 "postId": this.postId,
             }
@@ -141,8 +141,11 @@ var postDtl = new Vue({
                     if (responseMsg.status == 403) {
                         window.location.href = "dang-nhap";
                     } else {
-                        if (responseMsg != null) {
+                        if (responseMsg != null && responseMsg.code == "000") {
                             this.showModalNotify(responseMsg.message);
+                        }else {
+                            modalMessageInstance.message = responseMsg.message
+                            modalMessageInstance.showModal()
                         }
                     }
                 }).catch(error => {

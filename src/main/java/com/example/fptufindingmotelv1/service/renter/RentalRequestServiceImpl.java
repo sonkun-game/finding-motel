@@ -3,11 +3,13 @@ package com.example.fptufindingmotelv1.service.renter;
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.untils.Constant;
 import com.restfb.json.JsonObject;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -52,15 +54,23 @@ public class RentalRequestServiceImpl implements RentalRequestService {
                 return responseMsg("111", "Bạn đã yêu cầu thuê phòng này!", null);
             }
             RentalRequestModel rentalRequestModel = new RentalRequestModel();
-            RoomModel roomModel = roomRepository.getOne(rentalRequestDTO.getRoomId());
-            RenterModel renterModel = renterRepository.getOne(rentalRequestDTO.getRenterUsername());
-            StatusModel statusModel = statusRepository.getOne(rentalRequestDTO.getStatusId());
+            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
+            RenterModel renterModel = renterRepository.findByUsername(rentalRequestDTO.getRenterUsername());
+            StatusModel statusModel = statusRepository.findById(rentalRequestDTO.getStatusId()).get();
             rentalRequestModel.setId(rentalRequestDTO.getId());
             rentalRequestModel.setRentalRoom(roomModel);
             rentalRequestModel.setRentalRenter(renterModel);
             rentalRequestModel.setRentalStatus(statusModel);
-            //get current date
-            rentalRequestModel.setRequestDate(rentalRequestDTO.getRequestDate());
+
+            Date date = new Date();
+            Date createdDate = new Timestamp(date.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT_ONLY_DATE);
+            if(createdDate.after(rentalRequestDTO.getStartDate())){
+                return responseMsg("001", "Vui lòng chọn ngày bắt đầu sau ngày " + sdf.format(createdDate), null);
+            }
+            //set start date
+            rentalRequestModel.setStartDate(rentalRequestDTO.getStartDate());
+            rentalRequestModel.setRequestDate(createdDate);
 
             rentalRequestRepository.save(rentalRequestModel);
             return responseMsg("000", "Cập nhật thành công!", null);

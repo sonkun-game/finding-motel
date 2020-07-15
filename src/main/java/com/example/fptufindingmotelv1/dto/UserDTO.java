@@ -47,6 +47,8 @@ public class UserDTO {
 
     private boolean banned;
 
+    private int requestNumber;
+
 
     public UserDTO(UserModel userModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -68,7 +70,7 @@ public class UserDTO {
             this.amount = ((LandlordModel) userModel).getAmount();
             this.reportNumber = 0;
             for (PostModel post:
-                 ((LandlordModel) userModel).getPostModels()) {
+                 ((LandlordModel) userModel).getPosts()) {
                 if(post != null && post.getReports() != null){
                     for (ReportModel report:
                             post.getReports()) {
@@ -83,7 +85,6 @@ public class UserDTO {
             }else {
                 this.banned = false;
             }
-
         }
     }
 

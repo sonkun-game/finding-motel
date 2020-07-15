@@ -37,4 +37,30 @@ public class ManageRequestController {
         response.put("listRequest", rentalRequestDTOList);
         return response;
     }
+
+    @ResponseBody
+    @PostMapping("/api-accept-request")
+    public JSONObject acceptRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        JSONObject response = new JSONObject();
+        List<RentalRequestDTO> rentalRequestDTOList = new ArrayList<>();
+        List<RentalRequestModel> rentalRequestModels = manageRequestService.acceptRentalRequest(rentalRequestDTO);
+        for (RentalRequestModel rentalRequest:
+                rentalRequestModels) {
+            rentalRequestDTOList.add(new RentalRequestDTO(rentalRequest));
+        }
+        response.put("msgCode", rentalRequestModels != null ? "request000" : "sys999");
+        response.put("listRequest", rentalRequestDTOList);
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-reject-request")
+    public JSONObject rejectRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        JSONObject response = new JSONObject();
+        RentalRequestModel rentalRequestModel = manageRequestService.rejectRentalRequest(rentalRequestDTO);
+
+        response.put("msgCode", rentalRequestModel != null ? "request000" : "sys999");
+        response.put("listRequest", new RentalRequestDTO(rentalRequestModel));
+        return response;
+    }
 }

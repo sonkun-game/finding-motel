@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface ManageRequestService {
     List<RentalRequestModel> getListRequest(RentalRequestDTO rentalRequestDTO);
+
+    List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO);
+
+    RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO);
 }

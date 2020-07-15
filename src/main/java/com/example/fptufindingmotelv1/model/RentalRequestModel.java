@@ -32,7 +32,12 @@ public class RentalRequestModel implements Serializable {
     private RoomModel rentalRoom;
 
     @Column(name = "REQUEST_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date requestDate;
+
+    @Column(name = "START_DATE")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
 
     @ManyToOne
     @JoinColumn(name = "STATUS_ID")

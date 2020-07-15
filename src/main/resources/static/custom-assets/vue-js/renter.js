@@ -53,7 +53,10 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalCancelRequest(rentalRequestIdCancel) {
+        showModalCancelRequest(rentalRequestIdCancel, event) {
+            if (event.target.className.indexOf("disable") != -1) {
+                return;
+            }
             this.rentalRequestIdCancel = rentalRequestIdCancel;
             this.confirmAction = this.cancelRentalRequest;
             //show modal

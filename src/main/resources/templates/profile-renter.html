@@ -49,26 +49,22 @@
                                     <th scope="col">STT</th>
                                     <th scope="col">Tên phòng trọ</th>
                                     <th scope="col">Phòng</th>
-                                    <th scope="col">Ngày</th>
+                                    <th scope="col">Ngày tạo</th>
+                                    <th scope="col">Ngày bắt đầu</th>
                                     <th scope="col">Tình trạng</th>
                                     <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
-
-
-
-
-                                
                                 <tr v-for="(rentalRequest, index) in listRentalRq">
                                     <th v-text="index + 1" scope="row"></th>
-                                    <td v-text="rentalRequest.postTitle"></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId" v-text="rentalRequest.postTitle"></a> </td>
                                     <td v-text="rentalRequest.roomName"></td>
-                                    <td v-text="rentalRequest.requestDate"></td>
+                                    <td v-text="rentalRequest.displayRequestDate"></td>
+                                    <td v-text="rentalRequest.displayStartDate"></td>
                                     <td v-text="rentalRequest.statusDisplay"></td>
                                     <td>
-                                        <button @click="showModalCancelRequest(rentalRequest.id)" class="table-button">Hủy</button>
+                                        <button v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalCancelRequest(rentalRequest.id, $event)" class="table-button">Hủy</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -83,16 +79,18 @@
                         </div>
                         <div class="information-detail">
                             <div class="post-wishlist" v-for="post in wishList" :key="wishList.id">
-                                <div class="img-post-wishlist">
-                                    <img v-bind:src="post.images[0]" alt=""/>
-                                </div>
-                                <div class="title-post-wishlist">
-                                    <h3><a href="rooms.html" v-text="post.title"></a></h3>
-                                    <div class="per-night">
-                                        <span v-text="post.price + ' vnd'"> <span>/ tháng</span></span>
+                                <a v-bind:href="'/post-detail?id=' + post.id">
+                                    <div class="img-post-wishlist">
+                                        <img v-bind:src="post.images[0]" alt=""/>
                                     </div>
-                                    <i v-on:click="removeFromWishList(post.id)" class="fas fa-times-circle"></i>
-                                </div>
+                                    <div class="title-post-wishlist">
+                                        <h3><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></h3>
+                                        <div class="per-night">
+                                            <span v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
+                                        </div>
+                                        <i v-on:click="removeFromWishList(post.id)" class="fas fa-times-circle"></i>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>

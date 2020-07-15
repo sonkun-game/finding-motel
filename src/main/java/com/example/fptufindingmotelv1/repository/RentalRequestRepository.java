@@ -27,4 +27,11 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
             "and (:statusId is null or rr.rentalStatus.id = :statusId)")
     ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId);
+
+    @Query(value = "select count(rr) from RentalRequestModel rr " +
+            "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +
+            "and rr.rentalStatus.id = :statusId")
+    int getRequestNumber(String landlordUsername, Long statusId);
+
+    List<RentalRequestModel> findAllByRentalRoom(RoomModel room);
 }

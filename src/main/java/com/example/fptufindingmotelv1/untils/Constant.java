@@ -8,4 +8,5 @@ public class Constant {
     public static final String DATE_FORMAT = "HH:mm:ss dd/MM/yyyy";
     public static final int NUMBER_OF_BAN_DATE_POST = 3;
     public static final int NUMBER_OF_BAN_DATE_USER = 10;
+    public static final String DATE_FORMAT_ONLY_DATE = "dd/MM/yyyy";
 }

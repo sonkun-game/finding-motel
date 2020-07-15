@@ -309,6 +309,7 @@
                             <table class="table">
                                 <thead class="thead-light">
                                 <tr>
+                                    <th scope="col"></th>
                                     <th scope="col">STT</th>
                                     <th scope="col">Tên bài đăng</th>
                                     <th scope="col">Ngày đăng</th>
@@ -319,6 +320,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(post, index) in listPost">
+
                                     <th scope="row" v-text="index + 1"></th>
                                     <td><a href="#" v-text="post.title"></a></td>
                                     <td v-text="post.createDate"></td>
@@ -374,31 +376,102 @@
                             <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
                         </div>
                         <div class="information-detail">
-                            <table class="table">
+<!--                            <table class="table">-->
+<!--                                <thead class="thead-light">-->
+<!--                                <tr>-->
+<!--                                    <th scope="col">STT</th>-->
+<!--                                    <th scope="col">Tên phòng trọ</th>-->
+<!--                                    <th scope="col">Phòng</th>-->
+<!--                                    <th scope="col">Ngày</th>-->
+<!--                                    <th scope="col">Tình trạng</th>-->
+<!--                                    <th scope="col"></th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                <tr v-for="(request, index) in listRentalRequest">-->
+<!--                                    <th scope="row" v-text="index + 1"></th>-->
+<!--                                    <td v-text="request.postTitle"></td>-->
+<!--                                    <td v-text="request.roomName"></td>-->
+<!--                                    <td v-text="request.displayDate"></td>-->
+<!--                                    <td v-text="request.statusDisplay"></td>-->
+<!--                                    <td>-->
+<!--                                        <button class="table-button">Chấp nhận</button>-->
+<!--                                        <button class="table-button">Từ chối</button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+                            <table class="table table-bordered">
                                 <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">STT</th>
-                                    <th scope="col">Tên phòng trọ</th>
-                                    <th scope="col">Phòng</th>
-                                    <th scope="col">Ngày</th>
-                                    <th scope="col">Tình trạng</th>
-                                    <th scope="col"></th>
-                                </tr>
+                                    <tr>
+                                        <th  width="2%"></th>
+                                        <th  width="2%">STT</th>
+                                        <th  width="48%">Tên phòng trọ</th>
+                                        <th  width="20%">Phòng</th>
+                                        <th  width="28">Ngày đăng</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(request, index) in listRentalRequest">
-                                    <th scope="row" v-text="index + 1"></th>
-                                    <td v-text="request.postTitle"></td>
-                                    <td v-text="request.roomName"></td>
-                                    <td v-text="request.displayDate"></td>
-                                    <td v-text="request.statusDisplay"></td>
-                                    <td>
-                                        <button class="table-button">Chấp nhận</button>
-                                        <button class="table-button">Từ chối</button>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
+                                        <td>1</td>
+                                        <td>Phòng ABC</td>
+                                        <td>Room 1</td>
+                                        <td>20-7-2020</td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
+                                        <td>1</td>
+                                        <td>Phòng ABC</td>
+                                        <td>Room 1</td>
+                                        <td>20-7-2020</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
+                                        <td>1</td>
+                                        <td>Phòng ABC</td>
+                                        <td>Room 1</td>
+                                        <td>20-7-2020</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
+                                        <td>1</td>
+                                        <td>Phòng ABC</td>
+                                        <td>Room 1</td>
+                                        <td>20-7-2020</td>
+                                    </tr>
+
                                 </tbody>
                             </table>
+                            <tr>
+                                <td colspan="8">
+                                    <table class="table collapse table-bordered" id="demo">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">STT</th>
+                                            <th scope="col">Tên người thuê</th>
+                                            <th scope="col">Ngày bắt đầu</th>
+                                            <th scope="col">Ngày yêu cầu</th>
+                                            <th scope="col">Tác vụ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>ABC</td>
+                                            <td>20-7-2020</td>
+                                            <td>16-7-2020</td>
+                                            <td>
+                                                <button class="table-button">Chấp nhận</button>
+                                                <button class="table-button">Từ chối</button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                         </div>
                     </div>
 
@@ -465,7 +538,8 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
-
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>
 </body>

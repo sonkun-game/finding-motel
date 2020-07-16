@@ -4,7 +4,7 @@
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 9999; /* Sit on top */
+    z-index: 99999; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -155,7 +155,6 @@ textarea{
 }
 
 .message-update{
-    margin: 16px 86px;
     font-size: 20px;
     font-family:  sans-serif;
 }
@@ -208,4 +207,8 @@ textarea{
 }
 #my-modal-notification{
     z-index: 99999!important;
+}
+.notification-content{
+    margin: 10px 0;
+    line-height: 30px;
 }

@@ -17,6 +17,7 @@ var authenticationInstance = new Vue({
                 .then((data) => {
                     console.log(data)
                     if(data != null && data.code === "msg001"){
+                        localStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
                         window.location.href = "https://localhost:8081/"
@@ -41,14 +42,24 @@ var authenticationInstance = new Vue({
         getTaskPage(task){
             localStorage.setItem("task", task)
             if(task == 13){
-                window.location.href = "dang-tin"
+                if(this.userInfo.banned){
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                        "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                    modalMessageInstance.showModal()
+                }else{
+                    window.location.href = "dang-tin"
+                }
+
             }else if(task == 0 || task == 1){
                 window.location.href = "quan-ly-tai-khoan"
             }
 
         },
         formatNumberToDisplay(number){
-            return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+            if (number != null){
+                return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+            }
         }
     },
     mounted(){
@@ -79,9 +90,76 @@ var authenticationInstance = new Vue({
                     this.userInfo = data.userInfo
                     localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
+
+                    if(this.userInfo.banned && (document.referrer.includes("/dang-nhap")
+                        || document.referrer.includes("/dang-ky")
+                        || document.referrer.includes("/facebook?code=")
+                        || document.referrer.includes("/google?code="))){
+                        modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                            "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                            "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                        modalMessageInstance.showModal()
+                    }
+                }else {
+                    localStorage.removeItem("userInfo")
                 }
             }).catch(error => {
             console.log(error);
         })
     }
+})
+var modalMessageInstance = new Vue({
+    el: '#message-modal',
+    data: {
+        userInfo: {},
+        message: "",
+    },
+    beforeMount(){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    },
+    methods : {
+        closeModal(){
+            document.getElementById("message-modal").style.display = 'none';
+        },
+        showModal(){
+            document.getElementById("message-modal").style.display = 'block';
+        }
+    }
+
+})
+
+var modalConfirmInstance = new Vue({
+    el: '#confirm-modal',
+    data: {
+        userInfo: {},
+        messageConfirm: "",
+        confirm : false,
+    },
+    beforeMount(){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    },
+    methods : {
+        closeModal(){
+            document.getElementById("confirm-modal").style.display = 'none';
+        },
+        showModal(){
+            document.getElementById("confirm-modal").style.display = 'block';
+        },
+        yesNoConfirmClick(event) {
+            document.getElementById("confirm-modal").style.display = 'none';
+            let modalConfirmClick = event.target.value;
+            if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
+                let confirmAction = sessionStorage.getItem("confirmAction")
+                if(confirmAction == "send-report"){
+                    postDetailInstance.sendReport()
+                }else if(confirmAction == "delete-post"){
+                    landlordInstance.deletePost()
+                }else if(confirmAction == "hide-post"){
+                    landlordInstance.changeStatusPost()
+                }
+                sessionStorage.removeItem("confirmAction")
+            }
+        }
+    },
+
 })

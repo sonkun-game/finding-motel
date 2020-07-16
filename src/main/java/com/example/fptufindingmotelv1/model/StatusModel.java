@@ -28,4 +28,7 @@ public class StatusModel implements Serializable {
 
     @OneToMany(mappedBy = "statusReport")
     private List<ReportModel> reports;
+
+    @OneToMany(mappedBy = "rentalStatus")
+    private List<RentalRequestModel> rentalRequest;
 }

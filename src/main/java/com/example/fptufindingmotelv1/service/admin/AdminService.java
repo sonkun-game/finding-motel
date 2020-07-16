@@ -4,8 +4,10 @@ import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
+import net.minidev.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface AdminService {
      ArrayList<UserDTO> getListUser();
@@ -25,6 +27,11 @@ public interface AdminService {
 
     ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
 
-    Boolean banPost(String postId) ;
+    PostModel banPost(String postId);
+    PostModel unBanPost(String postId);
+
+    List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO);
+
+    JSONObject getInitAdminManager();
 
 }

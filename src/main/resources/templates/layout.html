@@ -24,11 +24,38 @@
 
 </head>
 <body>
+    <!-- Modal confirm -->
+    <div th:fragment="confirmModalFragment" id="modalConfirm" class="modal">
+        <!-- Modal content -->
+        <div class="message-confirm">
+            <div class="modal-header">
+                <h2>Xác Nhận</h2>
+            </div>
+            <div class="modal-body">
+                <label id="modalConfirmMessage"></label>
+                <div class="group-btn">
+                    <button @click="executeConfirm(false)" value="0"
+                            class="btn-hover btn-default-cancel">Hủy bỏ
+                    </button>
+                    <button @click="executeConfirm(true)" value="1"
+                            class="btn-hover btn-default-cancel">Đồng ý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div th:fragment="notification" id="my-modal-notification" class="modal">
         <div class="message">
             <div class="modal-body">
-                <i class="fas fa-check"></i>
-                <label class="message-update">Cập Nhật Thành Công</label>
+                <div>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div class="message-success-container">
+                        <label id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -56,7 +83,7 @@
                                 <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-lg-10">
+                        <div class="col-xl-10 col-lg-10 pdr-40px">
                             <!-- main-menu -->
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
@@ -71,7 +98,7 @@
                                         <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
                                                 <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
-                                                <li><a th:href="@{dang-ki}">Đăng Ký</a></li>
+                                                <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN USER -->
@@ -91,6 +118,7 @@
 
                                                 <!-- DROPDOWN LANDLORD -->
                                                 <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
+                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(5)" v-show="userInfo.role == 'LANDLORD'" v-text="'Xử lý yêu cầu thuê trọ (' + userInfo.requestNumber + ')'"></a></li>
                                                 <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
 
 
@@ -299,7 +327,7 @@
         <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
         <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
 
-        
+
 <!--        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>-->
         <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
         <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
@@ -346,16 +374,32 @@
                 <h2>Xác Nhận</h2>
             </div>
             <div class="modal-body">
-                <label id="confirm-content"></label>
+                <label id="confirm-content" v-text="messageConfirm"></label>
                 <div class="group-btn">
                     <button @click="yesNoConfirmClick($event)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy
-                        bỏ
+                            class="btn-hover btn-default-cancel">Hủy bỏ
                     </button>
                     <button @click="yesNoConfirmClick($event)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!--   Modal extend -->
+    <div th:fragment="message-modal" id="message-modal" class="modal">
+        <!-- Modal content -->
+        <div class="view-information">
+            <div class="modal-header">
+                <h2>Thông báo</h2>
+                <span @click="closeModal()" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="notification-content" v-html="message"></div>
+            </div>
+            <div class="modal-footer">
+                <button @click="closeModal()" class="btn-hover btn-default">Xác Nhận</button>
             </div>
         </div>
     </div>

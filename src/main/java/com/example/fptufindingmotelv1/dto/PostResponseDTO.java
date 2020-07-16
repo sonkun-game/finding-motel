@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.dto;
 
 import com.example.fptufindingmotelv1.model.ImageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
@@ -33,6 +34,8 @@ public class PostResponseDTO {
     private String displayStatus;
     private List<RoomDTO> listRoom;
     private List<String> listImage;
+    private int reportNumber;
+    private boolean banAvailable;
 
     public PostResponseDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -62,6 +65,13 @@ public class PostResponseDTO {
             String imageUrl = "data:image/"+ image.getFileType()+";base64,"
                     + Base64.getEncoder().encodeToString(image.getFileContent());
             listImage.add(imageUrl);
+        }
+        this.reportNumber = 0;
+        for (ReportModel report:
+             postModel.getReports()) {
+            if(report.getStatusReport().getId() == 3 || report.getStatusReport().getId() == 5){
+                this.reportNumber ++;
+            }
         }
     }
 }

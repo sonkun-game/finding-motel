@@ -21,6 +21,12 @@
     </div>
 </div>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
+<!--    include message modal-->
+<div th:replace="layout :: message-modal"></div>
+
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
@@ -65,8 +71,6 @@
                 </div>
 
                 <div id="landlord-manager" class="col sidebar-right col-table">
-
-                    <div th:replace="layout :: confirm-modal"></div>
 
                     <!-- Đăng tin -->
                     <div v-if="task == 13" id="post-new-room">
@@ -317,17 +321,17 @@
                                 <tbody>
                                 <tr v-for="(post, index) in listPost">
                                     <th scope="row" v-text="index + 1"></th>
-                                    <td><a href="#" v-text="post.title"></a></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></td>
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
                                     <td>
-                                        <div v-bind:class="post.postVisible ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                        <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
                                     </td>
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post.id, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                        <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
-                                        <i @click="showModalExtend(post.id, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
+                                        <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                        <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                     </td>
                                 </tr>
@@ -359,6 +363,41 @@
                                         <td v-text="list.postId"></td>
                                         <td v-text="list.packageID"></td>
                                     </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quản lý yêu cầu -->
+
+                    <div id="request-manager" v-if="task == 5">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                        </div>
+                        <div class="information-detail">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên phòng trọ</th>
+                                    <th scope="col">Phòng</th>
+                                    <th scope="col">Ngày</th>
+                                    <th scope="col">Tình trạng</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(request, index) in listRentalRequest">
+                                    <th scope="row" v-text="index + 1"></th>
+                                    <td v-text="request.postTitle"></td>
+                                    <td v-text="request.roomName"></td>
+                                    <td v-text="request.displayDate"></td>
+                                    <td v-text="request.statusDisplay"></td>
+                                    <td>
+                                        <button class="table-button">Chấp nhận</button>
+                                        <button class="table-button">Từ chối</button>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

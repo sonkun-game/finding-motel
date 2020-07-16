@@ -145,3 +145,17 @@ p{
     background: #dca73a ;
     border-color: #dca73a;
 }
+.pdr-40px{
+    padding-right: 40px!important;
+}
+main{
+    min-height: 300px;
+    background-color: #f8f9fa;
+}
+#confirm-modal, #message-modal{
+    z-index: 9999999!important;
+}
+.message-success-container{
+    width: fit-content;
+    margin: auto;
+}

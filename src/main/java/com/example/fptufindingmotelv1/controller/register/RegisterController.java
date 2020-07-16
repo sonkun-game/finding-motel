@@ -19,7 +19,7 @@ public class RegisterController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/dang-ki")
+    @GetMapping("/dang-ky")
     public String getRegister() {
         return "register";
     }

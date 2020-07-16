@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,4 +29,8 @@ public class RoomModel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private PostModel postRoom;
+
+    @OneToMany(mappedBy = "rentalRoom")
+    private List<RentalRequestModel> roomRentals;
+
 }

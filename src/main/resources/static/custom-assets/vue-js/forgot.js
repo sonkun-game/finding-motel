@@ -14,10 +14,9 @@ var forgotInstance = new Vue({
     },
     methods: {
         checkOTP() {
-            if(this.inputPhoneNum == null || this.inputPhoneNum.length == 0){
-                this.showMsg = true
-                this.message = "Vui lòng nhập mã số điện thoại"
-                return
+            this.checkExistPhone()
+            if(this.showMsg){
+                return;
             }
             if(this.inputOtp == null || this.inputOtp.length == 0){
                 this.showMsg = true
@@ -34,6 +33,9 @@ var forgotInstance = new Vue({
             }else {
                 this.showMsg = false
                 this.stepScreen = 2
+                this.inputOtp = ""
+                this.inputPhoneNum = ""
+                // this.otpCode = ""
             }
         },
         sendOTP() {
@@ -50,11 +52,11 @@ var forgotInstance = new Vue({
                 })
         },
         getOTP() {
-            if (this.phone == null || this.phone.length == 0) {
+            if (this.inputPhoneNum == null || this.inputPhoneNum.length == 0) {
                 this.showMsg = true
-                this.message = "Hãy nhập số điện thoại"
+                this.message = "Vui lòng nhập số điện thoại"
             } else {
-                if (this.phone.length == 10) {
+                if (this.inputPhoneNum.length == 10) {
                     this.showMsg = false
                     fetch("/api/get-otp?otpLength=6", {
                         method: 'POST'

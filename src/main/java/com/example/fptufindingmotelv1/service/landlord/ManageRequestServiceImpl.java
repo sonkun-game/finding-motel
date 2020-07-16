@@ -31,7 +31,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
         try {
             if(rentalRequestDTO.getLandlordUsername() != null && !rentalRequestDTO.getLandlordUsername().isEmpty()){
                 LandlordModel landlordModel = landlordRepository.findByUsername(rentalRequestDTO.getLandlordUsername());
-                return roomRepository.getListRoom(landlordModel.getUsername());
+                return roomRepository.getListRoom(landlordModel.getUsername(), rentalRequestDTO.getPostId());
             }
             return null;
         }catch (Exception e){

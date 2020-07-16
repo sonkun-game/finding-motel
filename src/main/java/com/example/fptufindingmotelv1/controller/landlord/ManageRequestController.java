@@ -48,8 +48,10 @@ public class ManageRequestController {
                     roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
                 }
             }
-            roomDTO.setRequestNumber(requestNumber);
-            roomDTOS.add(roomDTO);
+            if(requestNumber > 0){
+                roomDTO.setRequestNumber(requestNumber);
+                roomDTOS.add(roomDTO);
+            }
         }
         response.put("msgCode", roomModels != null ? "request000" : "sys999");
         response.put("listRoomRequest", roomDTOS);
@@ -78,7 +80,7 @@ public class ManageRequestController {
         RentalRequestModel rentalRequestModel = manageRequestService.rejectRentalRequest(rentalRequestDTO);
 
         response.put("msgCode", rentalRequestModel != null ? "request000" : "sys999");
-        response.put("listRequest", new RentalRequestDTO(rentalRequestModel));
+        response.put("request", new RentalRequestDTO(rentalRequestModel));
         return response;
     }
 }

@@ -393,10 +393,11 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        getListRoomRequest(statusId){
+        getListRoomRequest(statusId, postId){
             let request = {
                 'landlordUsername' : this.userInfo.username,
                 'statusId' : statusId,
+                'postId' : postId,
             }
             let options = {
                 method: 'POST',
@@ -415,6 +416,58 @@ var landlordInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        acceptRentalRequest(rentalRequest){
+            let request = {
+                'id' : rentalRequest.id,
+                'roomId' : rentalRequest.roomId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-accept-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.listRoomRequest.listRentalRequest = data.listRequest
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        rejectRentalRequest(rentalRequest){
+            let index = this.listRoomRequest.listRentalRequest.indexOf(rentalRequest)
+            let request = {
+                'id' : rentalRequest.id,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-reject-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.$set(this.listRoomRequest.listRentalRequest, index, data.request)
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        handleViewRoom(post){
+            userTaskInstance.task = 5
+            noteInstance.task = 5
+            this.task = 5
+            this.getListRoomRequest(null, post.id)
         }
     }
 })

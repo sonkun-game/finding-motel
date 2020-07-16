@@ -143,7 +143,7 @@
     </div>
     <!-- Booking Room End-->
     <section class="room-area">
-        <div class="container" >
+        <div class="container" id="postPage">
             <div class="row justify-content-center">
                 <div class="col-xl-8">
                     <!--font-back-tittle  -->
@@ -156,7 +156,7 @@
                 </div>
             </div>
             <div class="row" id="row">
-                <div class="col-xl-4 col-lg-6 col-md-6" v-for="post in postList" v-bind:id="post.id">
+                <div class="col-xl-4 col-lg-6 col-md-6" v-for="post in page.content" v-bind:id="post.id">
                     <!-- Single Room -->
                     <div class="single-room mb-50">
                         <div class="room-img">
@@ -174,15 +174,20 @@
                     </div>
                 </div>
             </div>
-
-          <nav th:if="${posts.totalPages != 1}" class="form-group col-md-11 pagination-centered">
+            <nav v-if="page.totalPages != 1" class="form-group col-md-11 pagination-centered">
+                <ul class="pagination">
+                    <li v-bind:class="page.number === (n-1) ? 'active pointer-disabled':''" v-for="n in endPage">
+                        <a class="page-link" v-bind:href="'/?pages='+n" v-text="n"></a>
+                    </li>
+                </ul>
+            </nav>
+            <!--<nav th:if="posts.totalPages != 1" class="form-group col-md-11 pagination-centered">
                 <ul class="pagination">
                     <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
                         <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
                     </li>
                 </ul>
-           </nav>
-
+           </nav>-->
 
         </div>
 
@@ -192,7 +197,5 @@
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/post-all.js}"></script>
-
-
 </body>
 </html>

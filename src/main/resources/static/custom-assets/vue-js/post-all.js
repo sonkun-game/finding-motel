@@ -1,10 +1,13 @@
 
 var postInstance = new Vue({
-    el: '#row',
+    el: '#postPage',
     data: {
+        page:{},
         postList: [],
         pager:{},
-        post:{},
+        posts:{},
+        endPage:null,
+        pages:null,
     },
     methods : {
         addWishlist : function(event){
@@ -30,21 +33,47 @@ var postInstance = new Vue({
                 console.log(error);
             })
         },
-        getAllPost : function(){
-            fetch("https://localhost:8081/api-get-all-post", {
+        getPager : function(){
+            fetch("https://localhost:8081/api-get-pager", {
                 method: 'POST',
 
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    this.postList=data
+                    this.page=data.page;
+                    this.endPage=data.endPage;
                 }).catch(error => {
                 console.log(error);
             })
         },
+        getAll : function(){
+            var query = window.location.search;
+            var url = new URLSearchParams(query);
+            var pages =url.get('pages');
+            if(pages==null){
+                return 1;
+            }
+            fetch("https://localhost:8081/api-get-posts?pages="+pages, {
+                method: 'POST',
 
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    this.pageSize=data.pageSize;
+                  //  this.pages=data;
+                    this.page=data.page;
+                    this.endPage= data.endPage;
+
+                }).catch(error => {
+                console.log(error);
+            })
+        }
     },
     created(){
-        this.getAllPost();
+        this.getPager();
+        this.getAll();
+    },
+    mounted(){
+
     }
 })

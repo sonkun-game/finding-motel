@@ -23,8 +23,8 @@ var landlordInstance = new Vue({
         expireDate: "",
         postId : "",
         postIndex : "",
-        confirmType : "",
         listRentalRequest: [],
+        selectedPost : {},
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -55,23 +55,34 @@ var landlordInstance = new Vue({
         }
     },
     methods: {
-        yesNoConfirmClick(event) {
-            document.getElementById("confirm-modal").style.display = 'none';
-            let modalConfirmClick = event.target.value;
-            if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
-                if (this.confirmType == 'delete') {
-                    this.deletePost();
+        showModalConfirm(post, confirmType) {
+            this.selectedPost = post
+            this.postId = post.id;
+            this.postIndex = this.listPost.indexOf(post)
+            if (confirmType == 'delete') {
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn xóa bài viết này không?';
+                sessionStorage.setItem("confirmAction", "delete-post")
+            }else if(confirmType == 'hide'){
+                if(this.userInfo.banned){
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                        "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                    modalMessageInstance.showModal()
+                    return
                 }
+                if(post.banned){
+                    modalMessageInstance.message = "Bài đăng của bạn đã bị khóa!";
+                    modalMessageInstance.showModal()
+                    return
+                }
+                if(post.postVisible){
+                    modalConfirmInstance.messageConfirm = "Bạn có muốn ẩn bài viết này không?"
+                }else{
+                    modalConfirmInstance.messageConfirm = "Bạn có muốn hiển thị bài viết này không?"
+                }
+                sessionStorage.setItem("confirmAction", "hide-post")
             }
-
-        },
-        showModalConfirm(id, confirmType) {
-            this.postId = id;
-            this.confirmType = confirmType;
-            if (this.confirmType == 'delete') {
-                document.getElementById("confirm-content").innerHTML = 'Bạn có muốn xóa bài viết này không?';
-            }
-            document.getElementById("confirm-modal").style.display = 'block';
+            modalConfirmInstance.showModal()
         },
         getHistoryPaymentPost(){
             fetch("/api-get-history-payment-post", {
@@ -228,22 +239,10 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        changeStatusPost(index, post){
-            if(this.userInfo.banned){
-                modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
-                    "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
-                    "Chức năng Đăng Tin và Nạp Tiền bị khóa";
-                modalMessageInstance.showModal()
-                return
-            }
-            if(post.banned){
-                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
-                modalMessageInstance.showModal()
-                return
-            }
+        changeStatusPost(){
             let request = {
-                'postId' : post.id,
-                'isVisible' : !post.postVisible
+                'postId' : this.selectedPost.id,
+                'isVisible' : !this.selectedPost.postVisible
             }
             fetch("/api-change-post-status", {
                 method: 'POST',
@@ -257,7 +256,9 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "post000"){
                         profileInstance.showNotifyModal()
-                        setTimeout(() => this.$set(this.listPost, index, data.post), 2000);
+                        setTimeout(() => {
+                            this.$set(this.listPost, this.postIndex, data.post)
+                        }, 2000);
                     }
                 }).catch(error => {
                 console.log(error);

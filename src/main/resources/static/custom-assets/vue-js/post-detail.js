@@ -1,14 +1,14 @@
-var postDtl = new Vue({
+var postDetailInstance = new Vue({
     el: '#postDetailBody',
     data: {
         post: {},
         reportContent: null,
-        userInfo: null,
-        postId: null,
+        userInfo: {},
+        postId: "",
         listImage: [],
 
         //rental param
-        roomIdRental: null,
+        roomIdRental: "",
         dateRequestRental: null,
         //action
         confirmAction : null,
@@ -43,18 +43,15 @@ var postDtl = new Vue({
             })
         },
         showModalReport() {
+            if(this.userInfo == null){
+                window.location.href = "/dang-nhap"
+                return
+            }
             document.getElementById("reportModal").style.display = 'block';
+            this.reportContent = ""
         },
         closeModalReport() {
             document.getElementById("reportModal").style.display = 'none';
-        },
-        handleEventReportModal(event) {
-            //close modal
-            if (event.target.id.toString().includes('closeModal')) {
-                this.closeModalReport();
-            } else if (event.target.id.toString() === 'modalReportAcceptBtn') {
-                this.sendReport();
-            }
         },
         sendReport() {
             let currentDate = new Date();
@@ -72,7 +69,8 @@ var postDtl = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == '000') {
-                        this.closeModalReport();
+                        this.showModalNotify("Gửi Thành Công")
+                        setTimeout(() => this.closeModalReport(), 2000);
                     } else {
                         window.location.href = "/error";
                     }
@@ -82,6 +80,10 @@ var postDtl = new Vue({
             })
         },
         showModalChooseRoom() {
+            if(this.userInfo == null){
+                window.location.href = "/dang-nhap"
+                return
+            }
             document.getElementById("myModal_chooseRoom").style.display = 'block';
         },
         closeModalChooseRoom() {
@@ -120,7 +122,7 @@ var postDtl = new Vue({
             document.getElementById("modalNotifyMessage").innerHTML = msg;
             setTimeout(function () {
                 document.getElementById("my-modal-notification").style.display = 'none';
-            }, 3000);
+            }, 2000);
         },
         sentRentalRequest() {
             let rentalRequest = {
@@ -163,7 +165,17 @@ var postDtl = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
+        showModalConfirmSendReport() {
+            if(this.reportContent == ""){
+                modalMessageInstance.message = "Vui lòng nhập nội dung báo cáo!"
+                modalMessageInstance.showModal()
+                return
+            }
+            modalConfirmInstance.messageConfirm = 'Bạn có muốn gửi báo cáo này không?';
+            modalConfirmInstance.showModal()
+            sessionStorage.setItem("confirmAction", "send-report")
+        },
     },
     created() {
 

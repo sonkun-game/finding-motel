@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
 
 <!--    include message modal-->
 <div th:replace="layout :: message-modal"></div>
@@ -36,11 +38,11 @@
                         </div>
                     </div>
                     <div class="wish-list clearfix">
-                        <button v-if="userInfo.role == 'RENTER'" class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
+                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
-                        <button v-if="userInfo.role == 'RENTER'" class="btn-save" type="button" title="Lưu tin này">
+                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save" type="button" title="Lưu tin này">
                             <img src="assets/img/logo/bookmark.png">
                             <span>Lưu tin này</span>
                         </button>
@@ -133,7 +135,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="report clearfix">
+                    <div class="report clearfix" v-if="userInfo == null || userInfo.role == 'RENTER'">
                         <div class="report-area">
                             <p>
                                 <strong>Lưu ý:</strong>
@@ -141,7 +143,7 @@
                                 chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
-                            <button v-if="userInfo.role == 'RENTER'" class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
                                 <img src="assets/img/logo/alert.png">
                                 <span>Báo Cáo</span>
                             </button>
@@ -150,7 +152,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h2>Báo Cáo Bài Viết</h2>
-                                        <span id="closeModalReport" @click="handleEventReportModal($event)"
+                                        <span id="closeModalReport" @click="closeModalReport()"
                                               class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
@@ -158,7 +160,7 @@
                                         <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="modalReportAcceptBtn" @click="handleEventReportModal"
+                                        <button id="modalReportAcceptBtn" @click="showModalConfirmSendReport()"
                                                 class="btn-default">Xác Nhận
                                         </button>
                                     </div>
@@ -178,7 +180,7 @@
                                 <span class="date-value" v-text="'Ngày đăng: ' + post.createDate"></span>
                             </div>
                         </div>
-                        <div class="sent-request" v-if="userInfo.role == 'RENTER'">
+                        <div class="sent-request" v-if="userInfo == null || userInfo.role == 'RENTER'">
                             <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
                         </div>
 

@@ -48,8 +48,14 @@
     <div th:fragment="notification" id="my-modal-notification" class="modal">
         <div class="message">
             <div class="modal-body">
-                <i class="fas fa-check"></i>
-                <label id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</label>
+                <div>
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div class="message-success-container">
+                        <label id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -369,11 +375,10 @@
                 <h2>Xác Nhận</h2>
             </div>
             <div class="modal-body">
-                <label id="confirm-content"></label>
+                <label id="confirm-content" v-text="messageConfirm"></label>
                 <div class="group-btn">
                     <button @click="yesNoConfirmClick($event)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy
-                        bỏ
+                            class="btn-hover btn-default-cancel">Hủy bỏ
                     </button>
                     <button @click="yesNoConfirmClick($event)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý

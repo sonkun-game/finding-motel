@@ -23,7 +23,7 @@ var landlordInstance = new Vue({
         expireDate: "",
         postId : "",
         postIndex : "",
-        listRentalRequest: [],
+        listRoomRequest: [],
         selectedPost : {},
     },
     beforeMount(){
@@ -51,7 +51,7 @@ var landlordInstance = new Vue({
         }else if(this.task == 5){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListRequest()
+            this.getListRoomRequest(7)
         }
     },
     methods: {
@@ -393,9 +393,10 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        getListRequest(){
+        getListRoomRequest(statusId){
             let request = {
                 'landlordUsername' : this.userInfo.username,
+                'statusId' : statusId,
             }
             let options = {
                 method: 'POST',
@@ -409,7 +410,7 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
-                        this.listRentalRequest = data.listRequest
+                        this.listRoomRequest = data.listRoomRequest
                     }
                 }).catch(error => {
                 console.log(error);

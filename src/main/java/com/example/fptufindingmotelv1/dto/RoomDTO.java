@@ -1,7 +1,11 @@
 package com.example.fptufindingmotelv1.dto;
 
+import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class RoomDTO {
@@ -11,6 +15,10 @@ public class RoomDTO {
     private boolean availableRoom;
     private long statusId;
     private String displayStatus;
+    private String postId;
+    private String postTitle;
+    private int requestNumber;
+    private List<RentalRequestDTO> listRentalRequest;
 
 
     public RoomDTO() {
@@ -23,5 +31,8 @@ public class RoomDTO {
         this.statusId = roomModel.getStatus().getId();
         this.displayStatus = roomModel.getStatus().getStatus();
         this.availableRoom = roomModel.getStatus().getId() == 1 ? true : false;
+        this.postId = roomModel.getPostRoom().getId();
+        this.postTitle = roomModel.getPostRoom().getTitle();
+        this.listRentalRequest = new ArrayList<>();
     }
 }

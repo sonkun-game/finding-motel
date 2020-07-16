@@ -27,11 +27,11 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     private StatusRepository statusRepository;
 
     @Override
-    public List<RentalRequestModel> getListRequest(RentalRequestDTO rentalRequestDTO) {
+    public List<RoomModel> getListRequest(RentalRequestDTO rentalRequestDTO) {
         try {
             if(rentalRequestDTO.getLandlordUsername() != null && !rentalRequestDTO.getLandlordUsername().isEmpty()){
                 LandlordModel landlordModel = landlordRepository.findByUsername(rentalRequestDTO.getLandlordUsername());
-                return rentalRequestRepository.getListRequest(landlordModel.getUsername());
+                return roomRepository.getListRoom(landlordModel.getUsername());
             }
             return null;
         }catch (Exception e){

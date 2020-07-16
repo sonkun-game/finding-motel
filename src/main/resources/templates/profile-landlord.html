@@ -409,70 +409,53 @@
                                         <th  width="2%">STT</th>
                                         <th  width="48%">Tên phòng trọ</th>
                                         <th  width="20%">Phòng</th>
-                                        <th  width="28">Ngày đăng</th>
+                                        <th  width="28%">Ngày đăng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
-                                        <td>1</td>
-                                        <td>Phòng ABC</td>
-                                        <td>Room 1</td>
-                                        <td>20-7-2020</td>
-                                    </tr>
+                                    <template v-for="(room, index) in listRoomRequest">
+                                        <tr>
+                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId"><i class="fas fa-plus-circle"></i></td>
+                                            <td v-text="index + 1"></td>
+                                            <td v-text="room.postTitle">Phòng ABC</td>
+                                            <td v-text="room.roomName">Room 1</td>
+                                            <td v-text="">20-7-2020</td>
+                                        </tr>
 
-
-                                    <tr>
-                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
-                                        <td>1</td>
-                                        <td>Phòng ABC</td>
-                                        <td>Room 1</td>
-                                        <td>20-7-2020</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
-                                        <td>1</td>
-                                        <td>Phòng ABC</td>
-                                        <td>Room 1</td>
-                                        <td>20-7-2020</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-toggle="collapse" data-target="#demo"><i class="fas fa-plus-circle"></i></td>
-                                        <td>1</td>
-                                        <td>Phòng ABC</td>
-                                        <td>Room 1</td>
-                                        <td>20-7-2020</td>
-                                    </tr>
+                                        <tr v-bind:id="room.roomId" class="table collapse table-bordered">
+                                            <td colspan="5">
+                                                <table class="collapse-table">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th width="2%"></th>
+                                                        <th width="2%">STT</th>
+                                                        <th width="40%">Tên người thuê</th>
+                                                        <th width="15%">Ngày yêu cầu</th>
+                                                        <th width="15%">Ngày bắt đầu</th>
+                                                        <th width="26%">Tác vụ</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr v-for="(request, index) in room.listRentalRequest">
+                                                        <td></td>
+                                                        <td v-text="index + 1"></td>
+                                                        <td v-text="request.renterUsername"></td>
+                                                        <td v-text="request.displayRequestDate"></td>
+                                                        <td v-text="request.displayStartDate"></td>
+                                                        <td>
+                                                            <button class="table-button">Chấp nhận</button>
+                                                            <button class="table-button">Từ chối</button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </template>
 
                                 </tbody>
                             </table>
-                            <tr>
-                                <td colspan="8">
-                                    <table class="table collapse table-bordered" id="demo">
-                                        <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">STT</th>
-                                            <th scope="col">Tên người thuê</th>
-                                            <th scope="col">Ngày bắt đầu</th>
-                                            <th scope="col">Ngày yêu cầu</th>
-                                            <th scope="col">Tác vụ</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>ABC</td>
-                                            <td>20-7-2020</td>
-                                            <td>16-7-2020</td>
-                                            <td>
-                                                <button class="table-button">Chấp nhận</button>
-                                                <button class="table-button">Từ chối</button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
+
                         </div>
                     </div>
 
@@ -539,8 +522,11 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
-<script th:src="@{/assets/js/bootstrap.min.js}"></script>
-<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>-->
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>
 </body>

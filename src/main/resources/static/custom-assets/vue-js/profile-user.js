@@ -380,7 +380,7 @@ var userTaskInstance = new Vue({
                     if(this.$route.fullPath.includes("quan-ly-bai-dang")){
                         noteInstance.task = task
                         landlordInstance.task = task
-                        landlordInstance.getListRequest()
+                        landlordInstance.getListRoomRequest(7)
                     }else{
                         window.location.href = "/quan-ly-bai-dang"
                     }

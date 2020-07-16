@@ -771,4 +771,7 @@ a:hover {
     background-color: #dddddd;
     border: none;
 }
+.collapse-table{
+    width: 100%;
+}
 

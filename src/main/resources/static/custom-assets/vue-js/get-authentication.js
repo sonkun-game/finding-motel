@@ -17,6 +17,7 @@ var authenticationInstance = new Vue({
                 .then((data) => {
                     console.log(data)
                     if(data != null && data.code === "msg001"){
+                        localStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
                         window.location.href = "https://localhost:8081/"
@@ -99,6 +100,8 @@ var authenticationInstance = new Vue({
                             "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                         modalMessageInstance.showModal()
                     }
+                }else {
+                    localStorage.removeItem("userInfo")
                 }
             }).catch(error => {
             console.log(error);
@@ -122,5 +125,41 @@ var modalMessageInstance = new Vue({
             document.getElementById("message-modal").style.display = 'block';
         }
     }
+
+})
+
+var modalConfirmInstance = new Vue({
+    el: '#confirm-modal',
+    data: {
+        userInfo: {},
+        messageConfirm: "",
+        confirm : false,
+    },
+    beforeMount(){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+    },
+    methods : {
+        closeModal(){
+            document.getElementById("confirm-modal").style.display = 'none';
+        },
+        showModal(){
+            document.getElementById("confirm-modal").style.display = 'block';
+        },
+        yesNoConfirmClick(event) {
+            document.getElementById("confirm-modal").style.display = 'none';
+            let modalConfirmClick = event.target.value;
+            if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
+                let confirmAction = sessionStorage.getItem("confirmAction")
+                if(confirmAction == "send-report"){
+                    postDetailInstance.sendReport()
+                }else if(confirmAction == "delete-post"){
+                    landlordInstance.deletePost()
+                }else if(confirmAction == "hide-post"){
+                    landlordInstance.changeStatusPost()
+                }
+                sessionStorage.removeItem("confirmAction")
+            }
+        }
+    },
 
 })

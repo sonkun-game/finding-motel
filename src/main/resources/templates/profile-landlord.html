@@ -21,6 +21,9 @@
     </div>
 </div>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
 <!--    include message modal-->
 <div th:replace="layout :: message-modal"></div>
 
@@ -68,8 +71,6 @@
                 </div>
 
                 <div id="landlord-manager" class="col sidebar-right col-table">
-
-                    <div th:replace="layout :: confirm-modal"></div>
 
                     <!-- Đăng tin -->
                     <div v-if="task == 13" id="post-new-room">
@@ -320,7 +321,7 @@
                                 <tbody>
                                 <tr v-for="(post, index) in listPost">
                                     <th scope="row" v-text="index + 1"></th>
-                                    <td><a href="#" v-text="post.title"></a></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></td>
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
                                     <td>
@@ -328,8 +329,8 @@
                                     </td>
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post.id, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                        <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="changeStatusPost(index ,post)" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
+                                        <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
                                         <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                     </td>

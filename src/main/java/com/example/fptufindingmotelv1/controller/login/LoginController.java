@@ -4,7 +4,9 @@ import com.example.fptufindingmotelv1.dto.LoginRequestDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
 import com.example.fptufindingmotelv1.service.login.LoginService;
@@ -41,6 +43,9 @@ public class LoginController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RentalRequestRepository rentalRequestRepository;
+
     @GetMapping("/dang-nhap")
     public String getLogin(Model model){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
@@ -64,7 +69,12 @@ public class LoginController {
         String token = jwtTokenProvider.generateToken((CustomUserDetails)authentication.getPrincipal());
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         responseDTO.setAccessToken(token);
-        responseDTO.setUserDTO(new UserDTO(userDetails.getUserModel()));
+        UserDTO userDTO = new UserDTO(userDetails.getUserModel());
+        if(userDetails.getUserModel() instanceof LandlordModel){
+            int countRequest = rentalRequestRepository.getRequestNumber(userDetails.getUsername(), 7L);
+            userDTO.setRequestNumber(countRequest);
+        }
+        responseDTO.setUserDTO(userDTO);
         return responseDTO;
     }
 
@@ -94,7 +104,12 @@ public class LoginController {
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
             UserModel userModel = userRepository.findByUsername(userDetails.getUsername());
-            responseDTO.setUserDTO(new UserDTO(userModel));
+            UserDTO userDTO = new UserDTO(userModel);
+            if(userModel instanceof LandlordModel){
+                int countRequest = rentalRequestRepository.getRequestNumber(userModel.getUsername(), 7L);
+                userDTO.setRequestNumber(countRequest);
+            }
+            responseDTO.setUserDTO(userDTO);
         }
         return responseDTO;
     }

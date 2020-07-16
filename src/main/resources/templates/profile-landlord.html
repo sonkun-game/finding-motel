@@ -21,6 +21,12 @@
     </div>
 </div>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
+<!--    include message modal-->
+<div th:replace="layout :: message-modal"></div>
+
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
@@ -65,8 +71,6 @@
                 </div>
 
                 <div id="landlord-manager" class="col sidebar-right col-table">
-
-                    <div th:replace="layout :: confirm-modal"></div>
 
                     <!-- Đăng tin -->
                     <div v-if="task == 13" id="post-new-room">
@@ -308,6 +312,7 @@
                                 <tr>
                                     <th scope="col">STT</th>
                                     <th scope="col">Tên bài đăng</th>
+                                    <th scope="col">Số phòng</th>
                                     <th scope="col">Ngày đăng</th>
                                     <th scope="col">Ngày hết hạn</th>
                                     <th scope="col">Tình trạng</th>
@@ -316,18 +321,23 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(post, index) in listPost">
+
                                     <th scope="row" v-text="index + 1"></th>
-                                    <td><a href="#" v-text="post.title"></a></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></td>
+                                    <td>
+                                        <i class="fas fa-eye" v-on:click="handleViewRoom(post)" data-toggle="tooltip" data-html="true" title="Xem phòng"></i>
+                                        <span v-text="post.roomNumber"></span>
+                                    </td>
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
                                     <td>
-                                        <div v-bind:class="post.postVisible ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                        <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
                                     </td>
                                     <td>
                                         <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post.id, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                        <i class="fas" v-bind:class="post.postVisible ? 'fa-eye-slash' : 'fa-eye'" v-on:click="changeStatusPost(index ,post.id, !post.postVisible)" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
-                                        <i @click="showModalExtend(post.id, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
+                                        <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                        <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                     </td>
                                 </tr>
@@ -361,6 +371,73 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <!-- Quản lý yêu cầu -->
+
+                    <div id="request-manager" v-if="task == 5">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                        </div>
+                        <div class="information-detail">
+
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th  width="2%"></th>
+                                        <th  width="2%">STT</th>
+                                        <th  width="48%">Tên phòng trọ</th>
+                                        <th  width="28%">Phòng</th>
+                                        <th  width="20%">Yêu cầu thuê phòng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-for="(room, index) in listRoomRequest">
+                                        <tr>
+                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId"><i class="fas fa-plus-circle"></i></td>
+                                            <td v-text="index + 1"></td>
+                                            <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
+                                            <td v-text="room.roomName">Room 1</td>
+                                            <td v-text="room.requestNumber"></td>
+                                        </tr>
+
+                                        <tr v-bind:id="room.roomId" class="table collapse table-bordered">
+                                            <td colspan="5">
+                                                <table class="collapse-table">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th width="2%"></th>
+                                                        <th width="2%">STT</th>
+                                                        <th width="25%">Tên người thuê</th>
+                                                        <th width="15%">Ngày yêu cầu</th>
+                                                        <th width="15%">Ngày bắt đầu</th>
+                                                        <th width="15%">Trạng thái</th>
+                                                        <th width="26%">Tác vụ</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr v-for="(request, index) in room.listRentalRequest">
+                                                        <td></td>
+                                                        <td v-text="index + 1"></td>
+                                                        <td v-text="request.renterUsername"></td>
+                                                        <td v-text="request.displayRequestDate"></td>
+                                                        <td v-text="request.displayStartDate"></td>
+                                                        <td v-text="request.statusDisplay"></td>
+                                                        <td>
+                                                            <button v-if="request.statusId == 7" v-on:click="acceptRentalRequest(request)" class="table-button">Chấp nhận</button>
+                                                            <button v-if="request.statusId == 7" v-on:click="rejectRentalRequest(request)" class="table-button">Từ chối</button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </template>
+
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
 
@@ -427,7 +504,11 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
-
+<!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>-->
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>
 </body>

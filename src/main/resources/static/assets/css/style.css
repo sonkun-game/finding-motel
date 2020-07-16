@@ -2565,7 +2565,8 @@ label {
 
 .main-header .main-menu ul ul.submenu {
     position: absolute;
-    width: 170px;
+    min-width: 157px;
+    white-space: nowrap;
     background: #fff;
     left: 0;
     top: 120%;

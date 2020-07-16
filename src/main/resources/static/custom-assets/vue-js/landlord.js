@@ -23,7 +23,8 @@ var landlordInstance = new Vue({
         expireDate: "",
         postId : "",
         postIndex : "",
-        confirmType : "",
+        listRoomRequest: [],
+        selectedPost : {},
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -47,26 +48,41 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getHistoryPaymentPost()
+        }else if(this.task == 5){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListRoomRequest(7)
         }
     },
     methods: {
-        yesNoConfirmClick(event) {
-            document.getElementById("confirm-modal").style.display = 'none';
-            let modalConfirmClick = event.target.value;
-            if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
-                if (this.confirmType == 'delete') {
-                    this.deletePost();
+        showModalConfirm(post, confirmType) {
+            this.selectedPost = post
+            this.postId = post.id;
+            this.postIndex = this.listPost.indexOf(post)
+            if (confirmType == 'delete') {
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn xóa bài viết này không?';
+                sessionStorage.setItem("confirmAction", "delete-post")
+            }else if(confirmType == 'hide'){
+                if(this.userInfo.banned){
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                        "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                    modalMessageInstance.showModal()
+                    return
                 }
+                if(post.banned){
+                    modalMessageInstance.message = "Bài đăng của bạn đã bị khóa!";
+                    modalMessageInstance.showModal()
+                    return
+                }
+                if(post.postVisible){
+                    modalConfirmInstance.messageConfirm = "Bạn có muốn ẩn bài viết này không?"
+                }else{
+                    modalConfirmInstance.messageConfirm = "Bạn có muốn hiển thị bài viết này không?"
+                }
+                sessionStorage.setItem("confirmAction", "hide-post")
             }
-
-        },
-        showModalConfirm(id, confirmType) {
-            this.postId = id;
-            this.confirmType = confirmType;
-            if (this.confirmType == 'delete') {
-                document.getElementById("confirm-content").innerHTML = 'Bạn có muốn xóa bài viết này không?';
-            }
-            document.getElementById("confirm-modal").style.display = 'block';
+            modalConfirmInstance.showModal()
         },
         getHistoryPaymentPost(){
             fetch("/api-get-history-payment-post", {
@@ -223,10 +239,10 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        changeStatusPost(index, postId, isVisible){
+        changeStatusPost(){
             let request = {
-                'postId' : postId,
-                'isVisible' : isVisible
+                'postId' : this.selectedPost.id,
+                'isVisible' : !this.selectedPost.postVisible
             }
             fetch("/api-change-post-status", {
                 method: 'POST',
@@ -240,13 +256,20 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "post000"){
                         profileInstance.showNotifyModal()
-                        setTimeout(() => this.$set(this.listPost, index, data.post), 2000);
+                        setTimeout(() => {
+                            this.$set(this.listPost, this.postIndex, data.post)
+                        }, 2000);
                     }
                 }).catch(error => {
                 console.log(error);
             })
         },
         handleEditPost(post){
+            if(post.banned){
+                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             this.editMode = true
             this.typeOfPost = post.typeId
             this.title = post.title
@@ -297,10 +320,15 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalExtend(postId, postIndex) {
+        showModalExtend(post, postIndex) {
+            if(post.banned){
+                modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
+                modalMessageInstance.showModal()
+                return
+            }
             this.editMode = true
-            if(postId != null){
-                this.postId = postId
+            if(post != null){
+                this.postId = post.id
             }
             if(postIndex != null){
                 this.postIndex = postIndex
@@ -365,6 +393,82 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
+        getListRoomRequest(statusId, postId){
+            let request = {
+                'landlordUsername' : this.userInfo.username,
+                'statusId' : statusId,
+                'postId' : postId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-view-list-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.listRoomRequest = data.listRoomRequest
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        acceptRentalRequest(rentalRequest){
+            let request = {
+                'id' : rentalRequest.id,
+                'roomId' : rentalRequest.roomId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-accept-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.listRoomRequest.listRentalRequest = data.listRequest
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        rejectRentalRequest(rentalRequest){
+            let index = this.listRoomRequest.listRentalRequest.indexOf(rentalRequest)
+            let request = {
+                'id' : rentalRequest.id,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-reject-request", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        this.$set(this.listRoomRequest.listRentalRequest, index, data.request)
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        handleViewRoom(post){
+            userTaskInstance.task = 5
+            noteInstance.task = 5
+            this.task = 5
+            this.getListRoomRequest(null, post.id)
+        }
     }
 })
 var noteInstance = new Vue({

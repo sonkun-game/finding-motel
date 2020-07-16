@@ -1,11 +1,12 @@
 package com.example.fptufindingmotelv1.dto;
 
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.RenterModel;
-import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
 import javax.persistence.Column;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -44,7 +45,14 @@ public class UserDTO {
 
     private Boolean banAvailable;
 
+    private boolean banned;
+
+    private int requestNumber;
+
+
     public UserDTO(UserModel userModel) {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
+        Date date = new Date();
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();
         this.roleName = userModel.getRole().getDisplayName();
@@ -58,8 +66,25 @@ public class UserDTO {
             this.career = ((RenterModel) userModel).getCareer();
             this.dob = ((RenterModel) userModel).getDob();
         } else if (userModel instanceof LandlordModel) {
-            this.unBanDate = ((LandlordModel) userModel).getUnBanDate() == null ? null : ((LandlordModel) userModel).getUnBanDate().toString();
+            this.unBanDate = ((LandlordModel) userModel).getUnBanDate() == null ? null : sdf.format(((LandlordModel) userModel).getUnBanDate());
             this.amount = ((LandlordModel) userModel).getAmount();
+            this.reportNumber = 0;
+            for (PostModel post:
+                 ((LandlordModel) userModel).getPosts()) {
+                if(post != null && post.getReports() != null){
+                    for (ReportModel report:
+                            post.getReports()) {
+                        if(report.getStatusReport().getId() == 3 || report.getStatusReport().getId() == 4){
+                            this.reportNumber ++;
+                        }
+                    }
+                }
+            }
+            if(((LandlordModel) userModel).getUnBanDate() != null && ((LandlordModel)userModel).getUnBanDate().after(new Timestamp(date.getTime()))){
+                this.banned = true;
+            }else {
+                this.banned = false;
+            }
         }
     }
 

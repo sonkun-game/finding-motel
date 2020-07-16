@@ -55,6 +55,9 @@ public class ManagePostServiceImpl implements ManagePostService{
     @Autowired
     private RenterRepository renterRepository;
 
+    @Autowired
+    private RentalRequestRepository rentalRequestRepository;
+
     @Override
     public List<PaymentPackageModel> getListPaymentPackage() {
         try {
@@ -240,6 +243,9 @@ public class ManagePostServiceImpl implements ManagePostService{
         // delete rooms of post
         for (RoomModel room:
              postModel.getRooms()) {
+            if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
+                rentalRequestRepository.deleteAll(room.getRoomRentals());
+            }
             roomRepository.delete(room);
         }
 

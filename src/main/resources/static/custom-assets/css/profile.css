@@ -174,6 +174,9 @@ width: 80%;
 height: 150px;
 margin: 20px auto;
 border: 1px solid #CFCFCF;
+background-color: antiquewhite;
+box-shadow: 2px 3px #e6dada;
+border-radius: 10px;
 }
 
 
@@ -184,12 +187,12 @@ max-width: 150px;
 
 }
 
+
 .img-post-wishlist img{
-max-width: 150px;
-max-height: 150px;
-width: auto;
-height: auto;
+width: 150px;
+height: 150px;
 display: block;
+border-radius: 10px 0px 0px 10px;
 }
 
 .title-post-wishlist{
@@ -755,3 +758,20 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 a:hover {
     color: #0056b3!important;
 }
+.search-box-label{
+    margin-bottom: 0px!important;
+}
+.search-form{
+    margin-top: 30px;
+}
+.search-box{
+    width: 100%;
+}
+.table-button.disable{
+    background-color: #dddddd;
+    border: none;
+}
+.collapse-table{
+    width: 100%;
+}
+

@@ -37,7 +37,13 @@ var admin = new Vue({
             {max: null, min: null},
             {max: "20", min: null},
         ],
-
+        inputLandlordId: "",
+        inputRenterId: "",
+        inputPostTitle: "",
+        listStatusReport: [],
+        inputStatusReport: 0,
+        userIndex: -1,
+        postIndex: -1,
     },
     beforeMount() {
         this.task = localStorage.getItem("task")
@@ -54,7 +60,8 @@ var admin = new Vue({
         } else if (this.task == 11) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListReport()
+            this.searchReport()
+            this.getInitAdmin()
         }
     },
     methods: {
@@ -115,7 +122,7 @@ var admin = new Vue({
             }
 
         },
-        showModalConfirmBan(id, dataType, action, event) {
+        showModalConfirmBan(id, dataType, action, index, event) {
             this.modalBanDataId = id;
             this.modalBanDataType = dataType;
             this.modalBanAction = action;
@@ -123,15 +130,17 @@ var admin = new Vue({
                 return;
             }
             if (dataType == 'post') {
+                this.postIndex = index
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa bài đăng này không?';
-                } else if (this.modalBanDataType == 'unban') {
+                } else if (action == 'unban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa bài đăng này không?';
                 }
             } else if (dataType == 'landlord') {
+                this.userIndex = index
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
-                } else if (this.modalBanDataType == 'unban') {
+                } else if (action == 'unban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn mở khóa tài khoản này không?';
                 }
             }
@@ -211,21 +220,6 @@ var admin = new Vue({
                     // } else {
                     //     window.location.href = "/error";
                     // }
-                }).catch(error => {
-                console.log(error);
-            })
-        },
-        getListReport() {
-            fetch("https://localhost:8081/get-report", {
-                method: 'POST',
-            }).then(response => response.json())
-                .then((data) => {
-                    // if(data.status == 200){
-                    this.listReport = data;
-                    // } else {
-                    // window.location.href = "/error";
-                    // }
-
                 }).catch(error => {
                 console.log(error);
             })
@@ -320,7 +314,7 @@ var admin = new Vue({
             })
         },
         banPost(id) {
-            fetch("https://localhost:8081/ban-post?postId=" + id, {
+            fetch("ban-post?postId=" + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -328,7 +322,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
-                        this.getListPost();
+                        this.$set(this.listPost, this.postIndex, data.data)
                     } else {
                         alert("Error" + data.code);
                     }
@@ -338,17 +332,15 @@ var admin = new Vue({
         },
 
         unbanPost(id) {
-            let postId = id;
-            fetch("https://localhost:8081/unban-post", {
+            fetch("/api-un-ban-post?postId="+id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(postId),
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
-                        this.getListPost();
+                        this.$set(this.listPost, this.postIndex, data.data)
                     } else {
                         alert("Error" + data.code);
                     }
@@ -356,5 +348,86 @@ var admin = new Vue({
                 console.log(error);
             })
         },
+        searchReport() {
+            let reportRequestDTO = {
+                "landlordId": this.inputLandlordId == "" ? null : this.inputLandlordId,
+                "renterId": this.inputRenterId == "" ? null : this.inputRenterId,
+                "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
+                "statusReport": this.isNullSearchParam(this.inputStatusReport),
+            }
+            fetch("/search-report", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reportRequestDTO),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        this.listReport = data.data;
+                    } else {
+                        window.location.href = "/error";
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        getInitAdmin() {
+            fetch("api-get-init-admin", {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data.msgCode == "admin000"){
+                        this.listStatusReport = data.listStatusReport
+                    }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        handleGetReport(post, user){
+            userTaskInstance.task = 11
+            localStorage.setItem("task", 11)
+            this.task = 11
+            this.getInitAdmin()
+            if(post != null){
+                this.inputLandlordId = post.landlordName
+                this.inputPostTitle = post.title
+            }else if(user != null){
+                this.inputLandlordId = user.username
+                this.inputPostTitle = ""
+            }
+
+            let reportRequestDTO = {
+                "landlordId": this.inputLandlordId == "" ? null : this.inputLandlordId,
+                "renterId": null,
+                "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
+                "statusReport": null,
+            }
+            fetch("/search-report", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reportRequestDTO),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        let listReport = []
+                        for (let report of data.data) {
+                            if(post != null && (report.statusId == 3 || report.statusId == 5)){
+                                listReport.push(report)
+                            }else if(user != null && (report.statusId == 3 || report.statusId == 4)){
+                                listReport.push(report)
+                            }
+                        }
+                        this.listReport = listReport
+                    } else {
+                        window.location.href = "/error";
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        }
     }
 })

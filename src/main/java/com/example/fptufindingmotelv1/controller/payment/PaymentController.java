@@ -49,10 +49,10 @@ public class PaymentController {
             //Get username of landlord
             LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
             List<PaymentPostDTO> response = new ArrayList<>();
-            for(int i=0;i<landlordModel.getPostModels().size();i++){
-                for(int j=0;j<landlordModel.getPostModels().get(i).getPaymentPosts().size();j++){
+            for(int i=0;i<landlordModel.getPosts().size();i++){
+                for(int j=0;j<landlordModel.getPosts().get(i).getPaymentPosts().size();j++){
                     //Add to list PaymentPostDTO
-                    response.add(new PaymentPostDTO(landlordModel.getPostModels().get(i).getPaymentPosts().get(j)));
+                    response.add(new PaymentPostDTO(landlordModel.getPosts().get(i).getPaymentPosts().get(j)));
                 }
             }
             return response;

@@ -38,4 +38,7 @@ public class RenterModel extends UserModel implements Serializable {
     )
     private List<PostModel> posts;
 
+    @OneToMany(mappedBy = "rentalRenter")
+    private List<RentalRequestModel> renterRentals;
+
 }

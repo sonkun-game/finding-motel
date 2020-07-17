@@ -32,7 +32,7 @@
     display: block;
     align-content: center;
     margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 200px;
 }
 
 .logo-button{
@@ -174,31 +174,45 @@ width: 80%;
 height: 150px;
 margin: 20px auto;
 border: 1px solid #CFCFCF;
-background-color: antiquewhite;
+background-color: #fff0e7;
 box-shadow: 2px 3px #e6dada;
-border-radius: 10px;
-transition: 2s ease-out;
+border-radius: 1px;
 }
 
+.per-night{
+    width: 100%;
+    text-align: left;
+}
 
 .img-post-wishlist{
 height: 100%;
 max-height: 150px;
 max-width: 150px;
-
 }
 
+.icon-post-wishlist{
+    width: 3%;
+    padding-bottom: 7px;
+}
+
+.title-post-wishlist h4{
+    text-align: left;
+    color: red;
+    font-weight: bold;
+    font-size: 17px;
+}
 
 .img-post-wishlist img{
 width: 150px;
 height: 150px;
 display: block;
-border-radius: 10px 0px 0px 10px;
+border-radius: 1px 0px 0px 1px;
 }
 
 .title-post-wishlist{
     margin-left: 30px;
     margin-top: 7px;
+    margin-right: 40px;
     width: 100%;
 }
 
@@ -672,7 +686,7 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 }
 .table-container td,
 .table-container th {
-    min-width: 110px;
+    min-width: 97px;
     padding: 0.75rem 0.25rem !important;
 }
 .col-first{
@@ -680,6 +694,9 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 }
 
 
+.col-third{
+    min-width: 300px!important;
+}
 .user-infor{
     margin: 20px 0px;
 }
@@ -772,7 +789,25 @@ a:hover {
     background-color: #dddddd;
     border: none;
 }
-.collapse-table{
+.collapse-table {
     width: 100%;
 }
+.row-collapse:hover{
+    background: #f8f9fa !important;
+}
+
+.row-collapse{
+    overflow:hidden;
+    transition:max-height 2s ease-in-out;
+    height:auto;
+    max-height:600px;
+}
+.row-collapse:after{
+    max-height:0;
+}
+
+.fa-plus-circle{
+    padding-right: 10px !important;
+}
+
 

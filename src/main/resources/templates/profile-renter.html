@@ -3,6 +3,7 @@
 <head>
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
+    <link rel="stylesheet" th:href="@{custom-assets/css/post-detail.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <title>Quản lý tài khoản</title>
 </head>
@@ -43,7 +44,7 @@
                             <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
                         </div>
                         <div class="information-detail">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead class="thead-light">
                                 <tr>
                                     <th scope="col">STT</th>
@@ -58,7 +59,7 @@
                                 <tbody>
                                 <tr v-for="(rentalRequest, index) in listRentalRq">
                                     <th v-text="index + 1" scope="row"></th>
-                                    <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId" v-text="rentalRequest.postTitle"></a> </td>
+                                    <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId" v-text="rentalRequest.postTitle" target="_blank"></a> </td>
                                     <td v-text="rentalRequest.roomName"></td>
                                     <td v-text="rentalRequest.displayRequestDate"></td>
                                     <td v-text="rentalRequest.displayStartDate"></td>
@@ -84,9 +85,19 @@
                                         <img v-bind:src="itemWishList.post.images[0]" alt=""/>
                                     </div>
                                     <div class="title-post-wishlist">
-                                        <h3><a v-bind:href="'/post-detail?id=' + itemWishList.post.id" v-text="itemWishList.post.title"></a></h3>
+
+                                        <h4><a v-bind:href="'/post-detail?id=' + itemWishList.post.id" v-text="itemWishList.post.title" target="_blank"></a></h4>
                                         <div class="per-night">
+                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/money.png">  Giá cho thuê:</span>
                                             <span v-text="authenticationInstance.formatNumberToDisplay(itemWishList.post.price) + ' VNĐ/Tháng'"></span>
+                                        </div>
+                                        <div class="per-night">
+                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/square.png"> Diện tích:</span>
+                                            <span v-text="itemWishList.post.square + ' M&sup2'"></span>
+                                        </div>
+                                        <div class="per-night">
+                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/distance.png">  Khoảng cách:</span>
+                                            <span v-text="itemWishList.post.distance + ' Km'"></span>
                                         </div>
                                         <i v-on:click="removeFromWishList(itemWishList.id, userInfo.username)" class="fas fa-times-circle"></i>
                                     </div>

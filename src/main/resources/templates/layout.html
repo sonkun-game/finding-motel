@@ -35,12 +35,13 @@
             <div class="modal-body">
                 <label id="modalConfirmMessage"></label>
                 <div class="group-btn">
-                    <button @click="executeConfirm(false)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy bỏ
-                    </button>
                     <button @click="executeConfirm(true)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
                     </button>
+                    <button @click="executeConfirm(false)" value="0"
+                            class="btn-hover btn-default-cancel">Hủy bỏ
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -378,11 +379,11 @@
             <div class="modal-body">
                 <label id="confirm-content" v-text="messageConfirm"></label>
                 <div class="group-btn">
-                    <button @click="yesNoConfirmClick($event)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy bỏ
-                    </button>
                     <button @click="yesNoConfirmClick($event)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
+                    </button>
+                    <button @click="yesNoConfirmClick($event)" value="0"
+                            class="btn-hover btn-default-cancel">Hủy bỏ
                     </button>
                 </div>
             </div>

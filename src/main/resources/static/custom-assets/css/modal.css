@@ -206,7 +206,7 @@ textarea{
     margin-top: 0px !important;
 }
 #my-modal-notification{
-    z-index: 99999!important;
+    z-index: 999999!important;
 }
 .notification-content{
     margin: 10px 0;

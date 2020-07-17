@@ -26,9 +26,9 @@ var postDetailInstance = new Vue({
     },
     methods: {
         viewDetail: function () {
-            var query = window.location.search;
-            var url = new URLSearchParams(query);
-            var id = url.get('id');
+            let query = window.location.search;
+            let url = new URLSearchParams(query);
+            let id = url.get('id');
 
             fetch("https://localhost:8081/api-post-detail?id=" + id, {
                 method: 'POST',
@@ -49,9 +49,12 @@ var postDetailInstance = new Vue({
             }
             document.getElementById("reportModal").style.display = 'block';
             this.reportContent = ""
+            document.body.setAttribute("class", "loading-hidden-screen")
         },
         closeModalReport() {
             document.getElementById("reportModal").style.display = 'none';
+
+            document.body.removeAttribute("class")
         },
         sendReport() {
             let currentDate = new Date();
@@ -85,9 +88,11 @@ var postDetailInstance = new Vue({
                 return
             }
             document.getElementById("myModal_chooseRoom").style.display = 'block';
+            document.body.setAttribute("class", "loading-hidden-screen")
         },
         closeModalChooseRoom() {
             document.getElementById("myModal_chooseRoom").style.display = 'none';
+            document.body.removeAttribute("class")
         },
         showModalConfirmSentRental() {
             this.confirmAction = this.sentRentalRequest;
@@ -175,6 +180,47 @@ var postDetailInstance = new Vue({
             modalConfirmInstance.messageConfirm = 'Bạn có muốn gửi báo cáo này không?';
             modalConfirmInstance.showModal()
             sessionStorage.setItem("confirmAction", "send-report")
+        },
+        handleActionWishList(post){
+            if(this.userInfo == null){
+                window.location.href = "/dang-nhap"
+            }else {
+                if(post.inWishList){
+                    // this.removeFromWishList(post.wishListId, this.userInfo.username)
+                }else {
+                    this.addWishlist(post, this.userInfo.username)
+
+                }
+            }
+        },
+        addWishlist : function(post, username){
+            let request = {
+                "postId" : post.id,
+                "renterUsername" : username
+            }
+            fetch("/api-add-wishlist", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data != null && data.msgCode == "wishlist002"){
+                        window.location.href = "/dang-nhap"
+                    }else if(data != null && data.msgCode == "wishlist000"){
+                        authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
+                        this.post.inWishList = true
+                        this.post.wishListId = data.wishList.id
+                    }else {
+                        modalMessageInstance.message = "Lỗi hệ thống!"
+                        modalMessageInstance.showModal()
+                        return null
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         },
     },
     created() {

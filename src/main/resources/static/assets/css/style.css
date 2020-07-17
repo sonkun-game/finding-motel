@@ -2024,7 +2024,7 @@ label {
     position: absolute !important;
     top: 13px;
     right: 30px;
-    color: whitesmoke;
+    color: #b64949;
 }
 
 .full{
@@ -2042,7 +2042,7 @@ label {
 .fa-heart:hover{
     transform: scale(1.1);
     -webkit-transition: transform 0.5s ease-in-out;
-    color: #ff3737;
+    color: #ec4b4b;
 }
 
 .login-icon{

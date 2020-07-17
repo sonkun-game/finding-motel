@@ -177,6 +177,7 @@ border: 1px solid #CFCFCF;
 background-color: antiquewhite;
 box-shadow: 2px 3px #e6dada;
 border-radius: 10px;
+transition: 2s ease-out;
 }
 
 

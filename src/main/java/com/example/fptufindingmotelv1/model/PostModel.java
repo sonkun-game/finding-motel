@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "POST")
-
 public class PostModel implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -69,8 +68,8 @@ public class PostModel implements Serializable{
     @OneToMany( mappedBy = "postReport")
     private List<ReportModel> reports;
 
-    @ManyToMany(mappedBy = "posts")
-    private List<RenterModel> renters;
+    @OneToMany(mappedBy = "wishListPost")
+    private List<WishListModel> wishLists;
 
     @OneToMany(mappedBy = "postPayment")
     private List<PaymentPostModel> paymentPosts;

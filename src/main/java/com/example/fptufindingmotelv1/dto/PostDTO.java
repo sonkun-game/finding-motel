@@ -26,13 +26,13 @@ public class PostDTO {
     private int roomNUmber;
     private String createDate;
     private String description;
-    private Date expireDate;
     private boolean isVisible;
     private String title;
     private String color;
-    private String isLord;
+    private boolean inWishList;
     private List<String> images;
     private List<RoomDTO> listRoom;
+    private String wishListId;
 
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -47,7 +47,6 @@ public class PostDTO {
         this.roomNUmber = postModel.getRoomNumber();
         this.createDate = sdf.format(postModel.getCreateDate());
         this.description = postModel.getDescription();
-        this.expireDate = postModel.getExpireDate();
         this.isVisible = postModel.isVisible();
         this.title = postModel.getTitle();
         this.images = new ArrayList<>();

@@ -34,7 +34,6 @@ var forgotInstance = new Vue({
                 this.showMsg = false
                 this.stepScreen = 2
                 this.inputOtp = ""
-                this.inputPhoneNum = ""
                 // this.otpCode = ""
             }
         },

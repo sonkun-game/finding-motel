@@ -78,17 +78,17 @@
                             <h1 class="title-name uppercase">Danh sách yêu thích</h1>
                         </div>
                         <div class="information-detail">
-                            <div class="post-wishlist" v-for="post in wishList" :key="wishList.id">
-                                <a v-bind:href="'/post-detail?id=' + post.id">
+                            <div class="post-wishlist" v-for="itemWishList in wishList" :key="wishList.id" v-bind:id="itemWishList.id">
+                                <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
                                     <div class="img-post-wishlist">
-                                        <img v-bind:src="post.images[0]" alt=""/>
+                                        <img v-bind:src="itemWishList.post.images[0]" alt=""/>
                                     </div>
                                     <div class="title-post-wishlist">
-                                        <h3><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></h3>
+                                        <h3><a v-bind:href="'/post-detail?id=' + itemWishList.post.id" v-text="itemWishList.post.title"></a></h3>
                                         <div class="per-night">
-                                            <span v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
+                                            <span v-text="authenticationInstance.formatNumberToDisplay(itemWishList.post.price) + ' VNĐ/Tháng'"></span>
                                         </div>
-                                        <i v-on:click="removeFromWishList(post.id)" class="fas fa-times-circle"></i>
+                                        <i v-on:click="removeFromWishList(itemWishList.id, userInfo.username)" class="fas fa-times-circle"></i>
                                     </div>
                                 </a>
                             </div>

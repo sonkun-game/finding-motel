@@ -415,7 +415,7 @@
                                         </tr>
 
                                         <tr v-bind:id="room.roomId" v-show="room.requestNumber > 0" class="row-collapse collapse">
-                                            <td colspan="5">
+                                            <td v-bind:colspan="task == 5 ? 5 : 6">
                                                 <table class="collapse-table table-bordered table-hover">
                                                     <thead class="thead-light">
                                                     <tr>

@@ -454,6 +454,7 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
                         this.listRoomRequest.listRentalRequest = data.listRequest
+
                     }
                 }).catch(error => {
                 console.log(error);

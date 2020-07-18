@@ -63,7 +63,10 @@ public class ManageRequestServiceImpl implements ManageRequestService{
                     request.setRentalStatus(statusCancel);
                 }
             }
+            StatusModel statusRoom = statusRepository.findByIdAndType(2, 1);
+            roomModel.setStatus(statusRoom);
             rentalRequestRepository.saveAll(renter.getRenterRentals());
+            roomRepository.save(roomModel);
             List<RentalRequestModel> response = rentalRequestRepository.saveAll(roomModel.getRoomRentals());
             return response;
         }catch (Exception e){

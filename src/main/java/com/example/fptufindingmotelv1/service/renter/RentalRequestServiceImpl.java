@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @Service
@@ -34,24 +35,41 @@ public class RentalRequestServiceImpl implements RentalRequestService {
     @Autowired
     UserRepository userRepository;
 
-    public boolean checkExitRentalRequest(RentalRequestDTO rentalRequestDTO) {
+    public String checkExitRentalRequest(RentalRequestDTO rentalRequestDTO) {
         try {
             RenterModel renterModel = (RenterModel) userRepository.findByUsername(rentalRequestDTO.getRenterUsername());
             RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
             RentalRequestModel rentalRequestModel = rentalRequestRepository
                     .findByRentalRenterAndRentalRoom(renterModel, roomModel);
-            return rentalRequestModel != null;
+            if(rentalRequestModel != null &&
+                    rentalRequestModel.getRentalStatus().getId() == 9){
+                return "Bạn đã thuê phòng này!";
+            }
+            else if(rentalRequestModel != null &&
+                    rentalRequestModel.getRentalStatus().getId() == 7){
+                    return "Bạn đã yêu cầu thuê phòng này!";
+            }else {
+                if(rentalRequestModel == null){
+                    List<RentalRequestModel> requestModels =
+                            rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername());
+                    if(requestModels != null && requestModels.size() > 0){
+                        return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
+                    }
+                }
+                return "000";
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
     @Override
     public JSONObject sentRentalRequest(RentalRequestDTO rentalRequestDTO) {
         try {
-            if (checkExitRentalRequest(rentalRequestDTO)) {
-                return responseMsg("111", "Bạn đã yêu cầu thuê phòng này!", null);
+            String message = checkExitRentalRequest(rentalRequestDTO);
+            if (message != null && !message.equals("000")) {
+                return responseMsg("111", message, null);
             }
             RentalRequestModel rentalRequestModel = new RentalRequestModel();
             RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();

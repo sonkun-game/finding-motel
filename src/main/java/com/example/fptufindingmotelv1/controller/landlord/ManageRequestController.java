@@ -48,10 +48,16 @@ public class ManageRequestController {
                     roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
                 }
             }
-            if(requestNumber > 0){
+            if(rentalRequestDTO.getStatusId() != null){
+                if(requestNumber > 0){
+                    roomDTO.setRequestNumber(requestNumber);
+                    roomDTOS.add(roomDTO);
+                }
+            }else {
                 roomDTO.setRequestNumber(requestNumber);
                 roomDTOS.add(roomDTO);
             }
+
         }
         response.put("msgCode", roomModels != null ? "request000" : "sys999");
         response.put("listRoomRequest", roomDTOS);

@@ -1,7 +1,8 @@
 .pagination-centered {
     display: block;
-    margin: 20px auto;
+    margin: auto;
     text-align: center;
+    padding-bottom: 20px;
 }
 
 .pagination{
@@ -16,11 +17,16 @@
 
 .pointer-disabled {
     pointer-events: none;
-    background-color: #dca73a;
+    background-color: #dca73a!important;
 }
 
 .page-link{
     color: black !important;
+    background-color: unset;
+}
+
+.page-link-container{
+    background-color: #ffffff;
 }
 
 .page-link:hover{

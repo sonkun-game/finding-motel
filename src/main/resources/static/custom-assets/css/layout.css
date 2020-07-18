@@ -159,3 +159,6 @@ main{
     width: fit-content;
     margin: auto;
 }
+.pointer-disabled {
+    pointer-events: none;
+}

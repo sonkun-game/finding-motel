@@ -1,22 +1,17 @@
 package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.model.CustomUserDetails;
-import com.example.fptufindingmotelv1.model.PagerModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.RenterModel;
-import com.example.fptufindingmotelv1.repository.InstructionRepository;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.RenterRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
-import com.example.fptufindingmotelv1.service.displayall.PostService;
-import com.example.fptufindingmotelv1.service.displayall.RenterService;
+import com.example.fptufindingmotelv1.repository.WishListRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
-import com.restfb.json.JsonObject;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,20 +28,20 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    PostService postService;
-
-    @Autowired
     RoleRepository roleRepository;
 
     @Autowired
     PostRepository postRepository;
 
     @Autowired
-    RenterService renterService;
+    RenterRepository renterRepository;
+
+    @Autowired
+    WishListRepository wishListRepository;
 
     @ResponseBody
-    @PostMapping(value = {"/api-get-pager","/api-get-posts"})
-    public JSONObject getParam(@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> page,
+    @PostMapping(value = {"/api-get-posts"})
+    public JSONObject getPosts(@RequestParam(name = "page", defaultValue = "1") Optional<Integer> page,
                              @RequestParam(name = "pageSize")  Optional<Integer> size,
                              @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
 
@@ -60,54 +55,47 @@ public class HomeController {
         int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
         int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
 
-        Pageable pageable = PageRequest.of(evalPage, evalPageSize,sortable);
-        List<PostModel> postList =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize, sortable);
+        List<PostModel> listPostModel =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
 
-        // Pass PostModel List to PostDTO
+        int total = listPostModel.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), total);
+
+        List<PostModel> sublistPostModel = new ArrayList<>();
+        if (start <= end) {
+            sublistPostModel = listPostModel.subList(start, end);
+        }
+
         List<PostDTO> postDTOs = new ArrayList<>();
-        PostDTO postDTO = null;
+        PostDTO postDTO;
         // check login
-        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
-            // get username
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-
-            if(userDetails.getUserModel().getRole().getId() != 1){
-                for (int i = 0; i< postList.size(); i++){
-                    postDTO = new PostDTO(postList.get(i));
-                    postDTO.setIsLord("display:none");
-                    postDTOs.add(postDTO);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth instanceof UsernamePasswordAuthenticationToken
+                && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
+            RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
+            for (PostModel post:
+                    sublistPostModel) {
+                postDTO = new PostDTO(post);
+                WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
+                if(wishListModel != null){
+                    postDTO.setInWishList(true);
+                    postDTO.setWishListId(wishListModel.getId());
+                }else {
+                    postDTO.setInWishList(false);
                 }
-            } else {
-                RenterModel renter = renterService.findOne(userDetails.getUserModel().getUsername());
-                // Set color for DTO
-                for (int j = 0; j < postList.size(); j++) {
-                    postDTO = new PostDTO(postList.get(j));
-                    if (renter.getPosts().contains(postList.get(j))) {
-                        postDTO.setColor("color: red");
-                    } else {
-                        postDTO.setColor("color: white");
-                    }
-                    postDTOs.add(postDTO);
-                }
+                postDTOs.add(postDTO);
             }
         } else {
-            for (int i = 0; i < postList.size(); i++) {
-                postDTO = new PostDTO(postList.get(i));
-                postDTO.setIsLord("display:none");
+            for (PostModel post:
+                    sublistPostModel) {
+                postDTO = new PostDTO(post);
+                postDTO.setInWishList(false);
                 postDTOs.add(postDTO);
             }
         }
 
-        int total = postDTOs.size();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), total);
-        //Collections.reverse(postDTOs);
-        List<PostDTO> sublist = new ArrayList<>();
-        if (start <= end) {
-            sublist = postDTOs.subList(start, end);
-        }
-        Page<PostDTO> listDTO = new PageImpl<>(sublist, pageable, postDTOs.size());
+        Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
         jsonObject.put("pageSize",evalPageSize);
         jsonObject.put("page",listDTO);
 
@@ -130,9 +118,27 @@ public class HomeController {
     @ResponseBody
     @PostMapping(value = "/api-post-detail")
     public PostDTO viewPost(@PathParam("id") String id){
-        PostModel postModel= postService.findOne(id);
-        PostDTO response= new PostDTO(postModel);
-        return response;
+        PostModel postModel = postRepository.findById(id).get();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth instanceof UsernamePasswordAuthenticationToken
+                && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
+            RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
+            WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(postModel, renter);
+            PostDTO response = new PostDTO(postModel);
+
+            if(wishListModel != null){
+                response.setInWishList(true);
+                response.setWishListId(wishListModel.getId());
+            }else {
+                response.setInWishList(false);
+            }
+            return response;
+        } else {
+            PostDTO response = new PostDTO(postModel);
+            response.setInWishList(false);
+            return response;
+        }
+
     }
 
     @GetMapping("/huong-dan")

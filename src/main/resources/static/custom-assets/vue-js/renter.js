@@ -26,28 +26,43 @@ var renterInstance = new Vue({
     },
     methods: {
         getWishlist(){
+
             fetch("/api-get-wishlist", {
                 method: 'POST',
+
 
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null){
-                        this.wishList = data
+                    if(data != null && data.msgCode == "wishlist000"){
+                        this.wishList = data.wishList
                     }
                 }).catch(error => {
                 console.log(error);
             })
         },
-        removeFromWishList(postId){
-            fetch("/api-remove-from-wishlist?postId="+postId, {
-                method: 'GET',
+        removeFromWishList(wishListId, username){
+            let request = {
+                "id" : wishListId,
+                "renterUsername" : username
+            }
+            fetch("/api-remove-from-wishlist", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
 
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null){
-                        this.wishList = data
+                    if(data != null && data.msgCode == "wishlist000"){
+                        this.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích");
+
+                        setTimeout(() => {
+                            this.wishList = data.wishList
+                        }, 2000);
+
                     }
                 }).catch(error => {
                 console.log(error);
@@ -62,11 +77,12 @@ var renterInstance = new Vue({
             //show modal
             document.getElementById("modalConfirm").style.display = 'block';
             document.getElementById("modalConfirmMessage").innerHTML = 'Bạn có chắc chắn hủy yêu cầu không?';
-
+            document.body.setAttribute("class", "loading-hidden-screen")
         },
         closeModalCancelRequest() {
             //close modal
             document.getElementById("modalConfirm").style.display = 'none';
+            document.body.removeAttribute("class")
         },
         executeConfirm(yesNo) {
             this.closeModalCancelRequest();
@@ -80,9 +96,11 @@ var renterInstance = new Vue({
         showModalNotify(msg) {
             document.getElementById("my-modal-notification").style.display = 'block';
             document.getElementById("modalNotifyMessage").innerHTML = msg;
+            document.body.setAttribute("class", "loading-hidden-screen")
             setTimeout(function () {
+                document.body.removeAttribute("class")
                 document.getElementById("my-modal-notification").style.display = 'none';
-            }, 3000);
+            }, 2000);
         },
         searchRentalRequest() {
             let rentalRequest = {

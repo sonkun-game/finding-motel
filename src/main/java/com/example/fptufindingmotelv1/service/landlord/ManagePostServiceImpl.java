@@ -58,6 +58,9 @@ public class ManagePostServiceImpl implements ManagePostService{
     @Autowired
     private RentalRequestRepository rentalRequestRepository;
 
+    @Autowired
+    private WishListRepository wishListRepository;
+
     @Override
     public List<PaymentPackageModel> getListPaymentPackage() {
         try {
@@ -226,13 +229,10 @@ public class ManagePostServiceImpl implements ManagePostService{
         PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
 
         // delete wishlist have post
-        for (RenterModel renter:
-             postModel.getRenters()) {
-            renter.getPosts().remove(postModel);
+        for (WishListModel wishListModel:
+             postModel.getWishLists()) {
+            wishListRepository.delete(wishListModel);
         }
-        renterRepository.saveAll(postModel.getRenters());
-
-        postModel.getRenters().clear();
 
         // delete images of post
         for (ImageModel image:

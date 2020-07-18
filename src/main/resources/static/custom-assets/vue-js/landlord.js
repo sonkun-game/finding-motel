@@ -333,11 +333,13 @@ var landlordInstance = new Vue({
             if(postIndex != null){
                 this.postIndex = postIndex
             }
+            document.body.setAttribute("class", "loading-hidden-screen")
             document.getElementById("myModal_Extend").style.display = 'block';
         },
         closeModalExtend() {
             this.editMode = false
             document.getElementById("myModal_Extend").style.display = 'none';
+            document.body.removeAttribute("class")
         },
         extendTimePost(){
             let request = {

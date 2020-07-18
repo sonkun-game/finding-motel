@@ -307,7 +307,7 @@
                             <h1 class="title-name uppercase">Quản lý bài đăng</h1>
                         </div>
                         <div class="information-detail">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead class="thead-light">
                                 <tr>
                                     <th scope="col">STT</th>
@@ -323,11 +323,12 @@
                                 <tr v-for="(post, index) in listPost">
 
                                     <th scope="row" v-text="index + 1"></th>
-                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title"></a></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title" target="_blank"></a></td>
                                     <td>
                                         <i class="fas fa-eye" v-on:click="handleViewRoom(post)" data-toggle="tooltip" data-html="true" title="Xem phòng"></i>
                                         <span v-text="post.roomNumber"></span>
                                     </td>
+
                                     <td v-text="post.createDate"></td>
                                     <td v-text="post.expireDate"></td>
                                     <td>
@@ -353,7 +354,7 @@
                             <h1 class="title-name uppercase">Lịch sử thanh toán</h1>
                         </div>
                         <div class="information-detail">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Mã giao dịch</th>
@@ -381,8 +382,7 @@
                             <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
                         </div>
                         <div class="information-detail">
-
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-hover">
                                 <thead class="thead-light">
                                     <tr>
                                         <th  width="2%"></th>
@@ -395,19 +395,19 @@
                                 <tbody>
                                     <template v-for="(room, index) in listRoomRequest">
                                         <tr>
-                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId"><i class="fas fa-plus-circle"></i></td>
+                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId"><i class="fas fa-plus-circle"></i></td>
                                             <td v-text="index + 1"></td>
                                             <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
-                                            <td v-text="room.roomName">Room 1</td>
+                                            <td v-text="room.roomName"></td>
                                             <td v-text="room.requestNumber"></td>
+
                                         </tr>
 
-                                        <tr v-bind:id="room.roomId" class="table collapse table-bordered">
+                                        <tr v-bind:id="room.roomId" class="row-collapse collapse">
                                             <td colspan="5">
-                                                <table class="collapse-table">
+                                                <table class="collapse-table table-bordered table-hover">
                                                     <thead class="thead-light">
                                                     <tr>
-                                                        <th width="2%"></th>
                                                         <th width="2%">STT</th>
                                                         <th width="25%">Tên người thuê</th>
                                                         <th width="15%">Ngày yêu cầu</th>
@@ -418,7 +418,6 @@
                                                     </thead>
                                                     <tbody>
                                                     <tr v-for="(request, index) in room.listRentalRequest">
-                                                        <td></td>
                                                         <td v-text="index + 1"></td>
                                                         <td v-text="request.renterUsername"></td>
                                                         <td v-text="request.displayRequestDate"></td>
@@ -440,10 +439,6 @@
 
                         </div>
                     </div>
-
-
-
-
                     <!--   Modal extend -->
                     <div id="myModal_Extend" class="modal">
                         <!-- Modal content -->
@@ -496,6 +491,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--Nạp tiền -->
+
                 </div>
             </div>
         </div>

@@ -1,79 +1,111 @@
-
 var postInstance = new Vue({
     el: '#postPage',
     data: {
-        page:{},
+        userInfo: {},
+        page : {},
         postList: [],
-        pager:{},
-        posts:{},
-        endPage:null,
-        pages:null,
+        pager : {},
+        posts : {},
+        endPage : 0,
+        pages : 0,
+        pageSize : 0,
+        postIndex : -1,
+    },
+    beforeMount(){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
     },
     methods : {
-        addWishlist : function(event){
-            console.log(event.target.id)
-            var status= "";
-            var id=event.target.id
-            if(event.target.style.color === "red"){
-                event.target.style.color = "white";
-                status="remove";
-            } else if(event.target.style.color === "white"){
-                event.target.style.color = "red";
-                status="add";
+        addWishlist : function(post, username){
+            let request = {
+                "postId" : post.id,
+                "renterUsername" : username
             }
-            fetch("https://localhost:8081/api-add-wishlist?id="+id+"&status="+status, {
+            fetch("/api-add-wishlist", {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
 
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
-                    this.id=data
-                    this.status=data
-                }).catch(error => {
-                console.log(error);
-            })
-        },
-        getPager : function(){
-            fetch("https://localhost:8081/api-get-pager", {
-                method: 'POST',
-
-            }).then(response => response.json())
-                .then((data) => {
-                    console.log(data);
-                    this.page=data.page;
-                    this.endPage=data.endPage;
+                    if(data != null && data.msgCode == "wishlist002"){
+                        window.location.href = "/dang-nhap"
+                    }else if(data != null && data.msgCode == "wishlist000"){
+                        authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
+                        this.postList[this.postIndex].inWishList = true
+                        this.postList[this.postIndex].wishListId = data.wishList.id
+                    }else {
+                        modalMessageInstance.message = "Lỗi hệ thống!"
+                        modalMessageInstance.showModal()
+                        return null
+                    }
                 }).catch(error => {
                 console.log(error);
             })
         },
         getAll : function(){
-            var query = window.location.search;
-            var url = new URLSearchParams(query);
-            var pages =url.get('pages');
-            if(pages==null){
-                return 1;
+            let query = window.location.search
+            let url = new URLSearchParams(query)
+            let page = url.get('page')
+            if(page == null){
+                page = 1
             }
-            fetch("https://localhost:8081/api-get-posts?pages="+pages, {
+            fetch("https://localhost:8081/api-get-posts?page="+page, {
                 method: 'POST',
 
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    this.pageSize=data.pageSize;
+                    this.pageSize = data.pageSize;
                   //  this.pages=data;
-                    this.page=data.page;
-                    this.endPage= data.endPage;
+                    this.postList = data.page.content;
+                    this.page = data.page
+                    this.endPage = data.endPage;
 
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
+        handleActionWishList(post){
+            this.postIndex = this.postList.indexOf(post)
+            if(this.userInfo == null){
+                window.location.href = "/dang-nhap"
+            }else {
+                if(post.inWishList){
+                    this.removeFromWishList(post.wishListId, this.userInfo.username)
+                }else {
+                    this.addWishlist(post, this.userInfo.username)
+
+                }
+            }
+        },
+        removeFromWishList(wishListId, username){
+            let request = {
+                "id" : wishListId,
+                "renterUsername" : username
+            }
+            fetch("/api-remove-from-wishlist", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == "wishlist000"){
+                        authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
+                        this.postList[this.postIndex].inWishList = false
+                        this.postList[this.postIndex].wishListId = null
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     },
     created(){
-        this.getPager();
         this.getAll();
-    },
-    mounted(){
-
     }
 })

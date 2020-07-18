@@ -60,7 +60,17 @@ var authenticationInstance = new Vue({
             if (number != null){
                 return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             }
-        }
+        },
+        showModalNotify(msg, time) {
+            document.getElementById("my-modal-notification").style.display = 'block';
+            document.getElementById("modalNotifyMessage").innerHTML = msg;
+            document.body.setAttribute("class", "loading-hidden-screen")
+            setTimeout(function () {
+                document.body.removeAttribute("class")
+                document.getElementById("my-modal-notification").style.display = 'none';
+            }, time);
+        },
+
     },
     mounted(){
         // if(localStorage.getItem("userInfo")){
@@ -120,9 +130,11 @@ var modalMessageInstance = new Vue({
     methods : {
         closeModal(){
             document.getElementById("message-modal").style.display = 'none';
+            document.body.removeAttribute("class")
         },
         showModal(){
             document.getElementById("message-modal").style.display = 'block';
+            document.body.setAttribute("class", "loading-hidden-screen")
         }
     }
 
@@ -141,9 +153,11 @@ var modalConfirmInstance = new Vue({
     methods : {
         closeModal(){
             document.getElementById("confirm-modal").style.display = 'none';
+            document.body.removeAttribute("class")
         },
         showModal(){
             document.getElementById("confirm-modal").style.display = 'block';
+            document.body.setAttribute("class", "loading-hidden-screen")
         },
         yesNoConfirmClick(event) {
             document.getElementById("confirm-modal").style.display = 'none';

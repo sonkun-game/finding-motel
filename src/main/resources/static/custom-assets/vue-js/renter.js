@@ -104,7 +104,7 @@ var renterInstance = new Vue({
         },
         searchRentalRequest() {
             let rentalRequest = {
-                "renterUsername": null,
+                "renterUsername": this.userInfo.username,
                 "roomId": null,
                 "requestDate": null,
                 "statusId": null,

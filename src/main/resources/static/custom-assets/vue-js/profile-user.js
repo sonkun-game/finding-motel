@@ -39,23 +39,13 @@ var profileInstance = new Vue({
                         localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
                         authenticationInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
                         basicInfoInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-                        this.showNotifyModal()
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                     }else if(data != null && data.msgCode == "sys999"){
                         alert("failed")
                     }
                 }).catch(error => {
                 console.log(error);
             })
-        },
-        showNotifyModal(){
-            let modal_save = document.getElementById("my-modal-notification")
-            modal_save.style.display = "block";
-            setTimeout(() => modal_save.style.display = "none", 2000);
-            window.onclick = function(event) {
-                if (event.target == modal_save) {
-                    modal_save.style.display = "block";
-                }
-            }
         },
         showModalChangePhone(){
             let modal_phone = document.getElementById("my-modal-phone");
@@ -165,7 +155,7 @@ var profileInstance = new Vue({
                 .then((data) => {
                     if(data != null && data.msgCode == "user000"){
                         localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
-                        this.showNotifyModal()
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         let modal_phone = document.getElementById("my-modal-phone");
                         setTimeout(() => modal_phone.style.display = "none", 2000);
                     }else if(data != null && data.msgCode == "sys999"){
@@ -191,7 +181,11 @@ var profileInstance = new Vue({
                             this.showMsg = true
                             this.message = data.message
                         }else{
-                            this.showNotifyModal()
+                            this.userInfo.havePassword = true
+                            userTaskInstance.userInfo.havePassword = true
+                            authenticationInstance.userInfo.havePassword = true
+                            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+                            authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                             setTimeout(() => {
                                 this.task = 0
                                 userTaskInstance.task = 0
@@ -261,7 +255,7 @@ var basicInfoInstance = new Vue({
                     "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                 modalMessageInstance.showModal()
             }else{
-                localStorage.setItem("task", 13)
+                localStorage.setItem("task", 16)
                 window.location.href = "dang-tin"
             }
 

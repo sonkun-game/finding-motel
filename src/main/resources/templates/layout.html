@@ -111,7 +111,7 @@
 
                                             <ul class="submenu">
                                                 <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
-                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)">Đổi mật khẩu</a></li>
+                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)" v-text="userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'"></a></li>
 
                                                 <!-- DROPDOWN RENTER -->
                                                 <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a></li>
@@ -320,13 +320,13 @@
     </div>
     <div th:fragment="user-task" class="information" id="user-task">
         <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information"><img src="assets/img/logo/infor.png" class="logo-button">Thông tin tài khoản</button>
-        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">Đổi mật khẩu</button>
+        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">{{userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'}}</button>
 <!--        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>-->
         <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích</button>
         <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
 
         <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4 || task == 15 || task == 16}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
         <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
         <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
 
@@ -342,7 +342,7 @@
 <!--    Change Password Tab-->
     <div th:fragment="change-password" v-else-if="task == 1" id="change-pass">
         <div class="title">
-            <h1 class="title-name uppercase">đổi mật khẩu</h1>
+            <h1 class="title-name uppercase" v-text="userInfo.havePassword ? 'đổi mật khẩu' : 'Thêm mật khẩu'"></h1>
         </div>
         <div class="information-detail">
             <div class="msg-notification">
@@ -350,7 +350,7 @@
                     {{message}}
                 </span>
             </div>
-            <div class="detail">
+            <div class="detail" v-if="userInfo.havePassword">
                 <p class="label">Mật khẩu cũ:</p>
                 <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
             </div>

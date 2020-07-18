@@ -53,7 +53,7 @@
                                     <th scope="col">Ngày tạo</th>
                                     <th scope="col">Ngày bắt đầu</th>
                                     <th scope="col">Tình trạng</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Tác vụ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -65,7 +65,7 @@
                                     <td v-text="rentalRequest.displayStartDate"></td>
                                     <td v-text="rentalRequest.statusDisplay"></td>
                                     <td>
-                                        <button v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalCancelRequest(rentalRequest.id, $event)" class="table-button">Hủy</button>
+                                        <button v-if="rentalRequest.statusId == 7" v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalCancelRequest(rentalRequest.id, $event)" class="table-button">Hủy</button>
                                     </td>
                                 </tr>
                                 </tbody>

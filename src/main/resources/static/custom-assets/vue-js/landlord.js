@@ -52,7 +52,20 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getListRoomRequest(7)
+        }else if(this.task == 15){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            let post = JSON.parse(sessionStorage.getItem("selectedPost"))
+            this.getListRoomRequest(null, post.id)
         }
+        else if(this.task == 16){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getInitNewPost()
+            let post = JSON.parse(sessionStorage.getItem("selectedPost"))
+            this.handleEditPost(post)
+        }
+
     },
     methods: {
         showModalConfirm(post, confirmType) {
@@ -270,6 +283,7 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
             this.typeOfPost = post.typeId
             this.title = post.title
@@ -282,7 +296,10 @@ var landlordInstance = new Vue({
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
-            userTaskInstance.activeBtn(13)
+            userTaskInstance.task = 16
+            noteInstance.task = 16
+            this.task = 16
+            localStorage.setItem("task", 16)
         },
         editPost(){
             let request = {
@@ -321,7 +338,7 @@ var landlordInstance = new Vue({
             })
         },
         showModalExtend(post, postIndex) {
-            if(post.banned){
+            if(post != null && post.banned){
                 modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
                 modalMessageInstance.showModal()
                 return
@@ -437,6 +454,7 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
                         this.listRoomRequest.listRentalRequest = data.listRequest
+
                     }
                 }).catch(error => {
                 console.log(error);
@@ -466,9 +484,11 @@ var landlordInstance = new Vue({
             })
         },
         handleViewRoom(post){
-            userTaskInstance.task = 5
-            noteInstance.task = 5
-            this.task = 5
+            userTaskInstance.task = 15
+            noteInstance.task = 15
+            this.task = 15
+            localStorage.setItem("task", 15)
+            sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.getListRoomRequest(null, post.id)
         }
     }

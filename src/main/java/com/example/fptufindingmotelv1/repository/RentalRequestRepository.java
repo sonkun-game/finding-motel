@@ -16,16 +16,20 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
 
     RentalRequestModel findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
     @Query(value = "select r from RentalRequestModel r " +
-            "where (r.rentalRoom.postRoom.landlord.username = :landlordId)" +
+            "where 1 = 1 " +
+            "and (:landlordId is null or r.rentalRoom.postRoom.landlord.username = :landlordId)" +
+            "and (:statusId is null or r.rentalStatus.id = :statusId)" +
+            "and (:renterId is null or r.rentalRenter.username = :renterId)" +
             "")
-    List<RentalRequestModel> getListRequest(String landlordId);
+    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId);
 
 
     @Query(value = "select rr from RentalRequestModel rr " +
             "where (:id is null or rr.id like :id )" +
-            "and (:renterUsername is null or rr.rentalRenter.username like %:renterUsername%)" +
+            "and (:renterUsername is null or rr.rentalRenter.username = :renterUsername)" +
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
-            "and (:statusId is null or rr.rentalStatus.id = :statusId)")
+            "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
+            "order by rr.requestDate desc")
     ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId);
 
     @Query(value = "select count(rr) from RentalRequestModel rr " +
@@ -34,4 +38,5 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
     int getRequestNumber(String landlordUsername, Long statusId);
 
     List<RentalRequestModel> findAllByRentalRoom(RoomModel room);
+
 }

@@ -49,6 +49,7 @@ public class UserDTO {
 
     private int requestNumber;
 
+    private boolean havePassword;
 
     public UserDTO(UserModel userModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -60,6 +61,7 @@ public class UserDTO {
         this.ggAccount = userModel.getGgAccount();
         this.phoneNumber = userModel.getPhoneNumber();
         this.displayName = userModel.getDisplayName();
+        this.havePassword = userModel.getPassword() != null && !userModel.getPassword().isEmpty();
         if (userModel instanceof RenterModel) {
             this.genderDisplay = ((RenterModel) userModel).isGender() ? "Nam" : "Nữ";
             this.gender = ((RenterModel) userModel).isGender();

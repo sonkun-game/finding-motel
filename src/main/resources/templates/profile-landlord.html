@@ -73,7 +73,7 @@
                 <div id="landlord-manager" class="col sidebar-right col-table">
 
                     <!-- Đăng tin -->
-                    <div v-if="task == 13" id="post-new-room">
+                    <div v-if="task == 13 || task == 16" id="post-new-room">
                         <div class="title">
                             <h1 class="title-name uppercase" v-text="editMode ? 'Cập nhật bài đăng' : 'Đăng tin'"></h1>
                         </div>
@@ -377,34 +377,45 @@
 
                     <!-- Quản lý yêu cầu -->
 
-                    <div id="request-manager" v-if="task == 5">
+                    <div id="request-manager" v-if="task == 5 || task == 15">
                         <div class="title">
-                            <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                            <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
                         </div>
                         <div class="information-detail">
                             <table class="table table-bordered table-hover">
                                 <thead class="thead-light">
-                                    <tr>
+                                    <tr v-if="task == 5">
                                         <th  width="2%"></th>
                                         <th  width="2%">STT</th>
                                         <th  width="48%">Tên phòng trọ</th>
                                         <th  width="28%">Phòng</th>
                                         <th  width="20%">Yêu cầu thuê phòng</th>
                                     </tr>
+                                    <tr v-else-if="task == 15">
+                                        <th  width="2%"></th>
+                                        <th  width="2%">STT</th>
+                                        <th  width="38%">Tên phòng trọ</th>
+                                        <th  width="23%">Phòng</th>
+                                        <th  width="15%">Tình trạng</th>
+                                        <th  width="20%">Yêu cầu thuê phòng</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <template v-for="(room, index) in listRoomRequest">
                                         <tr>
-                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId"><i class="fas fa-plus-circle"></i></td>
+                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">
+                                                <i class="fas fa-plus-circle" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                            </td>
                                             <td v-text="index + 1"></td>
                                             <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
                                             <td v-text="room.roomName"></td>
+                                            <td v-if="task == 15" v-text="room.displayStatus"></td>
                                             <td v-text="room.requestNumber"></td>
 
                                         </tr>
 
-                                        <tr v-bind:id="room.roomId" class="row-collapse collapse">
-                                            <td colspan="5">
+                                        <tr v-bind:id="room.roomId" v-show="room.requestNumber > 0" class="row-collapse collapse">
+                                            <td v-bind:colspan="task == 5 ? 5 : 6">
                                                 <table class="collapse-table table-bordered table-hover">
                                                     <thead class="thead-light">
                                                     <tr>

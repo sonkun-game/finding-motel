@@ -268,7 +268,7 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == "post000"){
-                        profileInstance.showNotifyModal()
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
                             this.$set(this.listPost, this.postIndex, data.post)
                         }, 2000);
@@ -325,7 +325,7 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'post000'){
-                        profileInstance.showNotifyModal()
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() =>
                         {
                             userTaskInstance.activeBtn(4)
@@ -376,7 +376,7 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'post000'){
-                        profileInstance.showNotifyModal()
+                        authenticationInstance.showModalNotify("Gia hạn thành công", 2000)
                         setTimeout(() => {
                             localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
@@ -405,7 +405,7 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'post000'){
-                        profileInstance.showNotifyModal()
+                        authenticationInstance.showModalNotify("Đã xóa bài đăng", 2000)
                         setTimeout(() => this.viewListPost(), 2000);
                     }
                 }).catch(error => {

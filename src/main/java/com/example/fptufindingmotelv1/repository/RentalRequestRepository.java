@@ -20,8 +20,9 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:landlordId is null or r.rentalRoom.postRoom.landlord.username = :landlordId)" +
             "and (:statusId is null or r.rentalStatus.id = :statusId)" +
             "and (:renterId is null or r.rentalRenter.username = :renterId)" +
+            "and (:roomId is null or r.rentalRoom.id = :roomId)" +
             "")
-    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId);
+    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId, String roomId);
 
 
     @Query(value = "select rr from RentalRequestModel rr " +

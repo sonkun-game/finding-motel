@@ -25,6 +25,10 @@ var landlordInstance = new Vue({
         postIndex : "",
         listRoomRequest: [],
         selectedPost : {},
+        selectedRequest : {},
+        renterInfo : {},
+        selectedRoom : {},
+        roomIndex : "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -55,8 +59,8 @@ var landlordInstance = new Vue({
         }else if(this.task == 15){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            let post = JSON.parse(sessionStorage.getItem("selectedPost"))
-            this.getListRoomRequest(null, post.id)
+            this.selectedPost = JSON.parse(sessionStorage.getItem("selectedPost"))
+            this.getListRoomRequest(null, this.selectedPost.id)
         }
         else if(this.task == 16){
             let profileUser = document.getElementById("user-manager-content")
@@ -343,18 +347,17 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
-            this.editMode = true
             if(post != null){
                 this.postId = post.id
             }
             if(postIndex != null){
                 this.postIndex = postIndex
             }
+            this.duration = ""
             document.body.setAttribute("class", "loading-hidden-screen")
             document.getElementById("myModal_Extend").style.display = 'block';
         },
         closeModalExtend() {
-            this.editMode = false
             document.getElementById("myModal_Extend").style.display = 'none';
             document.body.removeAttribute("class")
         },
@@ -436,10 +439,10 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        acceptRentalRequest(rentalRequest){
+        acceptRentalRequest(){
             let request = {
-                'id' : rentalRequest.id,
-                'roomId' : rentalRequest.roomId,
+                'id' : this.selectedRequest.id,
+                'roomId' : this.selectedRequest.roomId,
             }
             let options = {
                 method: 'POST',
@@ -453,17 +456,20 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
-                        this.listRoomRequest.listRentalRequest = data.listRequest
+                        if(this.task == 5){
+                            this.getListRoomRequest(7)
+                        }else if(this.task == 15){
+                            this.getListRoomRequest(null, this.selectedPost.id)
+                        }
 
                     }
                 }).catch(error => {
                 console.log(error);
             })
         },
-        rejectRentalRequest(rentalRequest){
-            let index = this.listRoomRequest.listRentalRequest.indexOf(rentalRequest)
+        rejectRentalRequest(){
             let request = {
-                'id' : rentalRequest.id,
+                'id' : this.selectedRequest.id,
             }
             let options = {
                 method: 'POST',
@@ -477,7 +483,11 @@ var landlordInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
-                        this.$set(this.listRoomRequest.listRentalRequest, index, data.request)
+                        if(this.task == 5){
+                            this.getListRoomRequest(7)
+                        }else if(this.task == 15){
+                            this.getListRoomRequest(null, this.selectedPost.id)
+                        }
                     }
                 }).catch(error => {
                 console.log(error);
@@ -490,6 +500,89 @@ var landlordInstance = new Vue({
             localStorage.setItem("task", 15)
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.getListRoomRequest(null, post.id)
+        },
+        handleChangeRoomStatus(room, index){
+            this.roomIndex = index
+            this.selectedRoom = room
+            if(room.availableRoom){
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Đã cho thuê" không?';
+                sessionStorage.setItem("confirmAction", "change-status-room")
+                modalConfirmInstance.showModal()
+            }else {
+                let stayRentalRequest = null
+                for (let request of room.listRentalRequest) {
+                    if(request.statusId == 9){
+                        stayRentalRequest = request
+                        break
+                    }
+                }
+                if (stayRentalRequest == null){
+                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Còn trống" không?';
+                    sessionStorage.setItem("confirmAction", "change-status-room")
+                    modalConfirmInstance.showModal()
+                }else {
+                    this.renterInfo = stayRentalRequest.renterInfo
+                    this.selectedRequest = stayRentalRequest
+                    document.body.setAttribute("class", "loading-hidden-screen")
+                    document.getElementById("modalRequestDetail").style.display = 'block';
+                }
+            }
+        },
+        closeModalRequestDetail(){
+            document.body.removeAttribute("class")
+            document.getElementById("modalRequestDetail").style.display = 'none';
+        },
+        confirmModalRequestDetail(){
+            this.changeRoomStatus()
+            document.body.removeAttribute("class")
+            document.getElementById("modalRequestDetail").style.display = 'none';
+        },
+        handleProcessRequest(room, request, action){
+            this.selectedRoom = room;
+            this.selectedRequest = request;
+            if(action == 'accept'){
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn chấp nhận yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                sessionStorage.setItem("confirmAction", "accept-request")
+            }else if(action == 'reject'){
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn từ chối yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                sessionStorage.setItem("confirmAction", "reject-request")
+            }
+            modalConfirmInstance.showModal()
+        },
+        showRenterInfo(renterInfo){
+            this.renterInfo = renterInfo
+            document.body.setAttribute("class", "loading-hidden-screen")
+            document.getElementById("modalUserDetail").style.display = 'block';
+        },
+        closeModalUserDetail(){
+            document.body.removeAttribute("class")
+            document.getElementById("modalUserDetail").style.display = 'none';
+        },
+        collapseRequestTable(room, index){
+            room.openCollapse = !room.openCollapse
+            this.$set(this.listRoomRequest, index, room)
+        },
+        changeRoomStatus(){
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(this.selectedRoom)
+            }
+            fetch("/api-change-room-status", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'request000'){
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
+                        setTimeout(() => {
+                            this.$set(this.listRoomRequest, this.roomIndex, data.room)
+                        }, 2000);
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         }
     }
 })

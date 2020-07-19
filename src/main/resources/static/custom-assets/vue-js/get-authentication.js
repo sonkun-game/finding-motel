@@ -160,6 +160,7 @@ var modalConfirmInstance = new Vue({
             document.body.setAttribute("class", "loading-hidden-screen")
         },
         yesNoConfirmClick(event) {
+            document.body.removeAttribute("class")
             document.getElementById("confirm-modal").style.display = 'none';
             let modalConfirmClick = event.target.value;
             if (modalConfirmClick != null && modalConfirmClick.length > 0 && modalConfirmClick == '1') {
@@ -170,6 +171,12 @@ var modalConfirmInstance = new Vue({
                     landlordInstance.deletePost()
                 }else if(confirmAction == "hide-post"){
                     landlordInstance.changeStatusPost()
+                }else if(confirmAction == "accept-request"){
+                    landlordInstance.acceptRentalRequest()
+                }else if(confirmAction == "reject-request"){
+                    landlordInstance.rejectRentalRequest()
+                }else if(confirmAction == "change-status-room"){
+                    landlordInstance.changeRoomStatus()
                 }
                 sessionStorage.removeItem("confirmAction")
             }

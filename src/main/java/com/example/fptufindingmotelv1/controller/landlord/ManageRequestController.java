@@ -89,4 +89,25 @@ public class ManageRequestController {
         response.put("request", new RentalRequestDTO(rentalRequestModel));
         return response;
     }
+
+    @ResponseBody
+    @PostMapping("/api-change-room-status")
+    public JSONObject changeRoomStatus(@RequestBody RoomDTO roomDTO) {
+        JSONObject response = new JSONObject();
+        RoomModel roomModel = manageRequestService.changeRoomStatus(roomDTO);
+
+        RoomDTO room = new RoomDTO(0,roomModel);
+        List<RentalRequestDTO> rentalRequestDTOs = new ArrayList<>();
+        int requestNumber = 0;
+        for (RentalRequestModel request:
+             roomModel.getRoomRentals()) {
+            rentalRequestDTOs.add(new RentalRequestDTO(request));
+            requestNumber ++;
+        }
+        room.setRequestNumber(requestNumber);
+        room.setListRentalRequest(rentalRequestDTOs);
+        response.put("msgCode", roomModel != null ? "request000" : "sys999");
+        response.put("room", room);
+        return response;
+    }
 }

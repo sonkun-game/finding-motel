@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.service.landlord;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
+import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
@@ -82,6 +83,42 @@ public class ManageRequestServiceImpl implements ManageRequestService{
             StatusModel statusReject = statusRepository.findByIdAndType(10, 3);
             rentalRequestModel.setRentalStatus(statusReject);
             return rentalRequestRepository.save(rentalRequestModel);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public RoomModel changeRoomStatus(RoomDTO roomDTO) {
+        try {
+            RoomModel roomModel = roomRepository.findById(roomDTO.getRoomId()).get();
+            if(roomModel.getStatus().getId() == 1){
+
+                StatusModel statusRoom = statusRepository.findByIdAndType(2, 1);
+                roomModel.setStatus(statusRoom);
+                roomModel = roomRepository.save(roomModel);
+                StatusModel statusCancel = statusRepository.findByIdAndType(8, 3);
+                if(roomModel.getRoomRentals() != null && roomModel.getRoomRentals().size() > 0){
+                    for (RentalRequestModel request:
+                         roomModel.getRoomRentals()) {
+                        request.setRentalStatus(statusCancel);
+                    }
+                    rentalRequestRepository.saveAll(roomModel.getRoomRentals());
+                }
+            }else if(roomModel.getStatus().getId() == 2){
+                StatusModel statusRoom = statusRepository.findByIdAndType(1, 1);
+                roomModel.setStatus(statusRoom);
+                roomModel = roomRepository.save(roomModel);
+                StatusModel statusExpire = statusRepository.findByIdAndType(11, 3);
+                List<RentalRequestModel> requestModels = rentalRequestRepository.getListRequest(
+                        null, 9L, null, roomModel.getId());
+                if(requestModels != null && requestModels.size() > 0){
+                    requestModels.get(0).setRentalStatus(statusExpire);
+                    rentalRequestRepository.save(requestModels.get(0));
+                }
+            }
+            return roomModel;
         }catch (Exception e){
             e.printStackTrace();
             return null;

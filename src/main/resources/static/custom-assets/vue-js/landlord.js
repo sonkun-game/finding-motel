@@ -300,6 +300,7 @@ var landlordInstance = new Vue({
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
+            this.getListRoomRequest(null, post.id)
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
@@ -502,31 +503,34 @@ var landlordInstance = new Vue({
             this.getListRoomRequest(null, post.id)
         },
         handleChangeRoomStatus(room, index){
-            this.roomIndex = index
-            this.selectedRoom = room
-            if(room.availableRoom){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Đã cho thuê" không?';
-                sessionStorage.setItem("confirmAction", "change-status-room")
-                modalConfirmInstance.showModal()
-            }else {
-                let stayRentalRequest = null
-                for (let request of room.listRentalRequest) {
-                    if(request.statusId == 9){
-                        stayRentalRequest = request
-                        break
-                    }
-                }
-                if (stayRentalRequest == null){
-                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Còn trống" không?';
+            if(this.editMode){
+                this.roomIndex = index
+                this.selectedRoom = room
+                if(room.availableRoom){
+                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Đã cho thuê" không?';
                     sessionStorage.setItem("confirmAction", "change-status-room")
                     modalConfirmInstance.showModal()
                 }else {
-                    this.renterInfo = stayRentalRequest.renterInfo
-                    this.selectedRequest = stayRentalRequest
-                    document.body.setAttribute("class", "loading-hidden-screen")
-                    document.getElementById("modalRequestDetail").style.display = 'block';
+                    let stayRentalRequest = null
+                    for (let request of room.listRentalRequest) {
+                        if(request.statusId == 9){
+                            stayRentalRequest = request
+                            break
+                        }
+                    }
+                    if (stayRentalRequest == null){
+                        modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Còn trống" không?';
+                        sessionStorage.setItem("confirmAction", "change-status-room")
+                        modalConfirmInstance.showModal()
+                    }else {
+                        this.renterInfo = stayRentalRequest.renterInfo
+                        this.selectedRequest = stayRentalRequest
+                        document.body.setAttribute("class", "loading-hidden-screen")
+                        document.getElementById("modalRequestDetail").style.display = 'block';
+                    }
                 }
             }
+
         },
         closeModalRequestDetail(){
             document.body.removeAttribute("class")

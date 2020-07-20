@@ -49,7 +49,7 @@
                     <div th:replace="layout :: user-task"></div>
 
                 </div>
-                <div class="col-menu note" v-if="task == 13" id="note-wrapper">
+                <div class="col-menu note" v-if="task == 13 || task == 16" id="note-wrapper">
                     <div class="note-body">
                         <h4>Lưu ý khi đăng tin</h4>
                         <ul>
@@ -110,7 +110,7 @@
                                         <h4>Giá cho thuê</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-40-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>VNĐ</span>
                                         </div>
@@ -122,7 +122,7 @@
                                         <h4>Diện tích</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>M&sup2</span>
                                         </div>
@@ -135,7 +135,7 @@
                                         <h4>Khoảng cách (So với Đại Học FPT)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>KM</span>
                                         </div>
@@ -147,8 +147,8 @@
                                     </div>
                                     <div class="input-information">
                                         <input v-bind:disabled="editMode" type="number" min="0" max="100" @focusout="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>PHÒNG</span>
+                                        <div class="input-group-append btn-add-container" v-if="editMode">
+                                            <button class="btn-hover btn-add-room" >Thêm Phòng</button>
                                         </div>
                                     </div>
                                 </div>
@@ -166,14 +166,17 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="room in listRoom">
-                                                <th scope="row" v-text="room.index"></th>
+                                            <tr v-for="(room, index) in editMode ? listRoomRequest : listRoom">
+                                                <th scope="row" v-text="index + 1"></th>
                                                 <th scope="row" v-text="room.roomName"></th>
                                                 <th scope="row">
+                                                    <span>Đã cho thuê</span>
                                                     <label class="switch">
-                                                        <input type="checkbox" v-model="room.availableRoom">
+                                                        <input type="checkbox" v-if="editMode" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                                        <input type="checkbox" v-else v-model="room.availableRoom">
                                                         <span class="slider round"></span>
                                                     </label>
+                                                    <span>Còn trống</span>
                                                 </th>
                                             </tr>
                                             </tbody>
@@ -382,7 +385,10 @@
                             <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
                         </div>
                         <div class="information-detail">
-                            <table class="table table-bordered table-hover">
+                            <div v-if="listRoomRequest == null || listRoomRequest.length == 0">
+                                <span>Không có yêu cầu thuê trọ nào</span>
+                            </div>
+                            <table v-else class="table table-bordered table-hover">
                                 <thead class="thead-light">
                                     <tr v-if="task == 5">
                                         <th  width="2%"></th>

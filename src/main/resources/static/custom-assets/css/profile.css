@@ -490,12 +490,22 @@ input:focus, textarea:focus, select:focus {
     background-color: #dca73a;
     color: white;
 }
-.half-width{
+.width-40-pct{
     width: 40%!important;
     border-radius: unset!important;
     border-bottom-left-radius: 6px!important;
     border-top-left-radius: 6px!important;
     height: 34px;
+}
+.half-width{
+    width: 50%!important;
+    border-radius: 6px!important;
+    height: 34px;
+}
+.btn-add-container{
+    width: fit-content!important;
+    margin-left: 20px;
+    border-radius: 6px!important;
 }
 .input-group-append span{
     margin: auto;
@@ -657,6 +667,15 @@ input[type=number].hide-arrow::-webkit-outer-spin-button {
 }
 .btn-extend{
     height: 30px;
+    background: #dca73a;
+    display: block;
+    border: medium none;
+    border-radius: 3px;
+    color: white;
+    margin: auto;
+}
+.btn-add-room{
+    height: 34px;
     background: #dca73a;
     display: block;
     border: medium none;

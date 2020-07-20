@@ -58,7 +58,7 @@ public class RentalRequestServiceImpl implements RentalRequestService {
                 return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
             }
             return "000";
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;

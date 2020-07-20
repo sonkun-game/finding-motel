@@ -168,7 +168,7 @@
                             </div>
                         </div>
                         <div class="room-caption">
-                            <h3><a v-bind:href="'/post-detail?id='+post.id" v-text="post.title"></a></h3>
+                            <h3><a v-bind:href="'/post-detail?id='+post.id" v-text="post.title" data-toggle="tooltip" data-placement="bottom" v-bind:title="post.title"></a></h3>
                             <div class="per-night">
                                 <span v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
                             </div>
@@ -195,13 +195,6 @@
                     </li>
                 </ul>
             </nav>
-            <!--<nav th:if="posts.totalPages != 1" class="form-group col-md-11 pagination-centered">
-                <ul class="pagination">
-                    <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                        <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
-                    </li>
-                </ul>
-           </nav>-->
 <!--            modal notification-->
             <div th:replace="layout :: notification"></div>
 

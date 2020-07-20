@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="search-container">
-                                        <label class="search-box-label">Người đăng</label>
+                                        <label class="search-box-label">Người báo cáo</label>
                                         <input v-model="inputRenterId" class="search-box" type="text" name="search"/>
                                     </div>
                                 </div>
@@ -506,17 +506,17 @@
                                            class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
-                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
                                     <p class="left-modal">Ngày sinh:</p>
                                     <input :value="userDetail.dob" class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
-                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
                                     <p class="left-modal">Nghề nghiệp:</p>
                                     <input class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" value="Sinh viên" disabled/>
                                 </div>
-                                <div v-if="userDetail.role == '1'" class="infor-modal">
+                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
                                     <p class="left-modal">Giới tính:</p>
                                     <input class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" value="Nam" disabled/>
@@ -527,13 +527,13 @@
                                            class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
-                                <div v-if="userDetail.role == '2'" class="infor-modal">
+                                <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal">
                                     <p class="left-modal">Tài khoản:</p>
                                     <input :value="userDetail.amount"
                                            class="right-modal rounded-pill border-0 shadow-sm"
                                            type="text" disabled/>
                                 </div>
-                                <div v-if="userDetail.role == '2'" class="infor-modal-table">
+                                <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal-table">
                                     <p class="left-modal">Danh sách bài đăng:</p>
                                     <table class="table">
                                         <thead class="thead-light">

@@ -255,7 +255,7 @@ var basicInfoInstance = new Vue({
                     "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                 modalMessageInstance.showModal()
             }else{
-                localStorage.setItem("task", 16)
+                localStorage.setItem("task", 13)
                 window.location.href = "dang-tin"
             }
 

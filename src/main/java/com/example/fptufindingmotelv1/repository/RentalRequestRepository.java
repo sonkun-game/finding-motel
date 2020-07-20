@@ -14,14 +14,15 @@ import java.util.ArrayList;
 @Repository
 public interface RentalRequestRepository extends JpaRepository<RentalRequestModel, String> {
 
-    RentalRequestModel findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
+    List<RentalRequestModel> findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
     @Query(value = "select r from RentalRequestModel r " +
             "where 1 = 1 " +
             "and (:landlordId is null or r.rentalRoom.postRoom.landlord.username = :landlordId)" +
             "and (:statusId is null or r.rentalStatus.id = :statusId)" +
             "and (:renterId is null or r.rentalRenter.username = :renterId)" +
+            "and (:roomId is null or r.rentalRoom.id = :roomId)" +
             "")
-    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId);
+    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId, String roomId);
 
 
     @Query(value = "select rr from RentalRequestModel rr " +

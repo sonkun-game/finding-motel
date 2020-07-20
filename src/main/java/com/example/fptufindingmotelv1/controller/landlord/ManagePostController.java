@@ -148,4 +148,22 @@ public class ManagePostController {
         response.put("msgCode", isSuccess ? "post000" : "sys999");
         return response;
     }
+
+    @ResponseBody
+    @PostMapping("/api-increase-room")
+    public JSONObject increaseRoom(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        List<RoomModel> roomModels = managePostService.increaseRoom(postRequestDTO);
+
+        List<RoomDTO> roomDTOS = new ArrayList<>();
+        for (RoomModel room:
+             roomModels) {
+            roomDTOS.add(new RoomDTO(0, room));
+        }
+
+
+        response.put("msgCode", roomModels != null ? "post000" : "sys999");
+        response.put("listNewRoom", roomDTOS);
+        return response;
+    }
 }

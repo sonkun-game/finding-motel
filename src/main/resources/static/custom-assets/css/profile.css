@@ -839,3 +839,6 @@ a:hover {
     opacity: 1;
     height: fit-content;
 }
+.rounded-pill{
+    border: 1px solid #c2b3d2!important;
+}

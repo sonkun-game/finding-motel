@@ -304,6 +304,36 @@ public class ManagePostServiceImpl implements ManagePostService{
         return null;
     }
 
+    @Override
+    public List<RoomModel> increaseRoom(PostRequestDTO postRequestDTO) {
+        try {
+            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
+            // save list room
+            List<RoomModel> listRoom = new ArrayList<>();
+            for (RoomDTO room:
+                    postRequestDTO.getListRoom()) {
+                RoomModel roomModel = new RoomModel();
+                roomModel.setPostRoom(postModel);
+                roomModel.setName(room.getRoomName());
+                StatusModel status;
+                if(room.isAvailableRoom()){
+                    status = statusRepository.findByIdAndType(1, 1);
+                }else{
+                    status = statusRepository.findByIdAndType(2, 1);
+                }
+                roomModel.setStatus(status);
+                listRoom.add(roomModel);
+            }
+            listRoom = roomRepository.saveAll(listRoom);
+            postModel.setRoomNumber(postModel.getRoomNumber() + postRequestDTO.getListRoom().size());
+            postRepository.save(postModel);
+            return listRoom;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<ImageModel> uploadImages(List<String> uploadImages, PostModel post){
         List<ImageModel> imageList = new ArrayList<>();
         for (int i = 0; i < uploadImages.size(); i++) {

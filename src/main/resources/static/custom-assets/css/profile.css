@@ -806,8 +806,17 @@ a:hover {
     max-height:0;
 }
 
-.fa-plus-circle{
+.fa-angle-double-down, .fa-angle-double-right{
     padding-right: 10px !important;
 }
-
-
+.request-collapse{
+    height: 0px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 600ms, visibility 600ms;
+}
+.requestCollapseShow{
+    visibility: visible;
+    opacity: 1;
+    height: fit-content;
+}

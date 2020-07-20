@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.service.landlord;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
+import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 
@@ -12,4 +13,6 @@ public interface ManageRequestService {
     List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO);
 
     RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO);
+
+    RoomModel changeRoomStatus(RoomDTO roomDTO);
 }

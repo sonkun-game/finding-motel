@@ -19,7 +19,7 @@ public class RoomDTO {
     private String postTitle;
     private int requestNumber;
     private List<RentalRequestDTO> listRentalRequest;
-
+    private boolean openCollapse;
 
     public RoomDTO() {
     }
@@ -34,5 +34,6 @@ public class RoomDTO {
         this.postId = roomModel.getPostRoom().getId();
         this.postTitle = roomModel.getPostRoom().getTitle();
         this.listRentalRequest = new ArrayList<>();
+        this.openCollapse = false;
     }
 }

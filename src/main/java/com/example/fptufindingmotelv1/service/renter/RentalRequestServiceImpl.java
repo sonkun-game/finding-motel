@@ -51,7 +51,7 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             }else {
                 if(rentalRequestModel == null){
                     List<RentalRequestModel> requestModels =
-                            rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername());
+                            rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername(), null);
                     if(requestModels != null && requestModels.size() > 0){
                         return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
                     }

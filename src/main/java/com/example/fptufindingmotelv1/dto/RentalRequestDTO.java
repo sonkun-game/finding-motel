@@ -22,6 +22,7 @@ public class RentalRequestDTO {
     private String landlordUsername;
     private String postTitle;
     private String roomName;
+    private UserDTO renterInfo;
 
     public RentalRequestDTO() {
     }
@@ -41,5 +42,6 @@ public class RentalRequestDTO {
         this.roomName = rentalRequestModel.getRentalRoom().getName();
         this.displayRequestDate = sdf.format(rentalRequestModel.getRequestDate());
         this.displayStartDate = sdfOnlyDate.format(rentalRequestModel.getStartDate());
+        this.renterInfo = new UserDTO(rentalRequestModel.getRentalRenter());
     }
 }

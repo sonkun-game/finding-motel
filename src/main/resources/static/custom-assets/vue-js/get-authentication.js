@@ -8,7 +8,7 @@ var authenticationInstance = new Vue({
     },
     methods: {
         logout(){
-            fetch("https://localhost:8081/api-logout",{
+            fetch("/api-logout",{
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ var authenticationInstance = new Vue({
                         localStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
-                        window.location.href = "https://localhost:8081/"
+                        window.location.href = "/"
                     }
                 }).catch(error => {
                 console.log(error);
@@ -86,7 +86,7 @@ var authenticationInstance = new Vue({
         // }
         let accessToken = this.$cookies.get("access_token")
         let tokenProvider = this.$cookies.get("token_provider")
-        fetch("https://localhost:8081/api-get-authentication",{
+        fetch("/api-get-authentication",{
             method : 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ var postInstance = new Vue({
             if(page == null){
                 page = 1
             }
-            fetch("https://localhost:8081/api-get-posts?page="+page, {
+            fetch("/api-get-posts?page="+page, {
                 method: 'POST',
 
             }).then(response => response.json())

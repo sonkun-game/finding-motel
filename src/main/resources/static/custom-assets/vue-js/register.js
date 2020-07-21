@@ -36,10 +36,10 @@ var registerVue = new Vue({
         let code = this.$route.query.code
         let url = this.$route.fullPath + ""
         if((code != null || code != undefined) && url.includes("google")){
-            let apiUrl = "https://localhost:8081/api-get-google-login?code="+code
+            let apiUrl = "/api-get-google-login?code="+code
             this.getLogin(apiUrl, "google")
         }else if((code != null || code != undefined) && url.includes("facebook")){
-            let apiUrl = "https://localhost:8081/api-get-facebook-login?code="+code
+            let apiUrl = "/api-get-facebook-login?code="+code
             this.getLogin(apiUrl, "facebook")
         }
 
@@ -53,7 +53,7 @@ var registerVue = new Vue({
         },
         isExistUsername() {
             if (this.username != null && this.username.length !== 0) {
-                fetch("https://localhost:8081/check-existed-username", {
+                fetch("/check-existed-username", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ var registerVue = new Vue({
         },
         isExistPhone() {
             if (this.phone != null && this.phone.length != 0) {
-                fetch("https://localhost:8081/check-existed-phone", {
+                fetch("/check-existed-phone", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ var registerVue = new Vue({
                 console.log(JSON.stringify(registerModel));
                 loadingInstance.isHidden = false
                 document.body.setAttribute("class", "loading-hidden-screen")
-                fetch("https://localhost:8081/register", {
+                fetch("/register", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -119,11 +119,11 @@ var registerVue = new Vue({
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
                             let accessToken = localStorage.getItem("accessToken")
-                            let apiUrl = "https://localhost:8081/api-get-google-profile?accessToken="+accessToken
+                            let apiUrl = "/api-get-google-profile?accessToken="+accessToken
                             this.getLogin(apiUrl, "google")
                         } else if (data.code == '003') {
                             let accessToken = localStorage.getItem("accessToken")
-                            let apiUrl = "https://localhost:8081/api-get-facebook-profile?accessToken="+accessToken
+                            let apiUrl = "/api-get-facebook-profile?accessToken="+accessToken
                             this.getLogin(apiUrl, "facebook")
                         }
                     }).catch(error => {
@@ -185,7 +185,7 @@ var registerVue = new Vue({
                         localStorage.removeItem("accessToken")
                         this.$cookies.set("access_token", data.accessToken)
                         this.$cookies.set("token_provider", tokenProvider)
-                        window.location.href = "https://localhost:8081/"
+                        window.location.href = "/"
                     }
                 }).catch(error => {
                 console.log(error);

@@ -222,6 +222,9 @@ var postDetailInstance = new Vue({
                 console.log(error);
             })
         },
+        getURL() {
+            return window.location.href;
+        }
     },
     created() {
 

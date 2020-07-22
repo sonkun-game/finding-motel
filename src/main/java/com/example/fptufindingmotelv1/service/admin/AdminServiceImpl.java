@@ -193,7 +193,7 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.searchPost(postSearchDTO.getLandlordUsername(),
                     postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
                     postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
-                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId());
+                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId(), null);
             ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
             for (PostModel p : posts) {
                 PostResponseDTO pr = new PostResponseDTO(p);

@@ -187,7 +187,7 @@
                                     <th scope="col">Tên bài đăng</th>
                                     <th scope="col">Chủ trọ</th>
                                     <th scope="col">Ngày đăng</th>
-                                    <th scope="col">Người đăng</th>
+                                    <th scope="col">Người báo cáo</th>
                                     <th scope="col">Chi tiết</th>
                                     <th scope="col">Trạng thái</th>
                                     <th scope="col">Tác vụ</th>
@@ -263,8 +263,7 @@
                                                 <select v-model="postType">
                                                     <option value="0">Tất cả</option>
                                                     <option value="1">Phòng trọ</option>
-                                                    <option value="2">Nhà nguyên căn</option>
-                                                    <option value="3">Căn hộ</option>
+                                                    <option value="2">Căn hộ</option>
                                                 </select>
                                             </form>
                                         </div>
@@ -357,7 +356,7 @@
                                 <div class="col-4">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
-                                            <span>Chủ trọ:</span>
+                                            <span>Tên bài đăng:</span>
                                         </div>
                                         <div class="search-container">
                                             <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
@@ -444,14 +443,15 @@
                             <div class="modal-body">
                                 <label id="modalDelContent"></label>
                                 <div class="group-btn">
-                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">
-                                        Hủy
-                                        bỏ
-                                    </button>
                                     <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">
                                         Đồng
                                         ý
                                     </button>
+                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">
+                                        Hủy
+                                        bỏ
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -467,13 +467,14 @@
                             <div class="modal-body">
                                 <label id="modalBanContent"></label>
                                 <div class="group-btn">
-                                    <button @click="yesNoConfirmBanClick($event)" value="0"
-                                            class="btn-hover btn-default-cancel">Hủy
-                                        bỏ
-                                    </button>
+
                                     <button @click="yesNoConfirmBanClick($event)" value="1"
                                             class="btn-hover btn-default-cancel">Đồng
                                         ý
+                                    </button>
+                                    <button @click="yesNoConfirmBanClick($event)" value="0"
+                                            class="btn-hover btn-default-cancel">Hủy
+                                        bỏ
                                     </button>
                                 </div>
                             </div>

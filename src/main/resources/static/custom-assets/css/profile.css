@@ -436,7 +436,7 @@ height: fit-content;
 background-color: #fff3cd;
 padding: 0!important;
 position: absolute;
-top: 670px;
+    top: 800px;
 bottom: 200px;
 }
 
@@ -838,4 +838,7 @@ a:hover {
     visibility: visible;
     opacity: 1;
     height: fit-content;
+}
+.rounded-pill{
+    border: 1px solid #c2b3d2!important;
 }

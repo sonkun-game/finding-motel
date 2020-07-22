@@ -40,7 +40,7 @@
     <!-- slider Area End-->
 
     <!-- Booking Room Start-->
-    <div class="booking-area">
+    <div class="booking-area" id="filter-container">
         <div class="container">
             <div class="row ">
                 <div class="col-12">
@@ -55,11 +55,11 @@
                                 <div class="select-this">
                                     <form action="#">
                                         <div class="select-itms">
-                                            <select name="select" id="select1">
+                                            <select required name="select" id="select1">
                                                 <option value="0">Tất cả</option>
-                                                <option value="1">Phòng trọ</option>
-                                                <option value="2">Căn hộ</option>
-                                                <option value="3">Nhà nguyên căn</option>
+                                                <option v-for="type in listTypePost" v-bind:selected="type.id == typeId" v-bind:value="type.id" v-text="type.name"></option>
+<!--                                                <option value="3">Nhà nguyên căn</option>-->
+<!--                                                <option value="3">Nhà nguyên căn</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -73,17 +73,17 @@
                                     <form action="#">
                                         <div class="select-itms">
                                             <select name="select" id="select2">
-                                                <option value="1">Tất cả</option>
-                                                <option value="2">Dưới 1 triệu</option>
-                                                <option value="3">1 triệu - 1.5 triệu</option>
-                                                <option value="4"> 1.5 triệu - 2 triệu</option>
-                                                <option value="5">2 triệu - 2.5 triệu</option>
-                                                <option value="6">2.5 triệu - 3 triệu</option>
-                                                <option value="7">3 triệu - 3.5 triệu</option>
-                                                <option value="8">3.5 triệu - 4 triệu</option>
-                                                <option value="9">4 triệu - 4.5 triệu</option>
-                                                <option value="10">4.5 triệu - 5 triệu</option>
-                                                <option value="11">Trên 5 triệu</option>
+                                                <option value="0">Tất cả</option>
+                                                <option v-for="filterPrice in listFilterPrice" v-bind:selected="filterPrice.id == filterPriceId" v-bind:value="filterPrice.id" v-text="filterPrice.displayText"></option>
+<!--                                                <option value="3">1 triệu - 1.5 triệu</option>-->
+<!--                                                <option value="4"> 1.5 triệu - 2 triệu</option>-->
+<!--                                                <option value="5">2 triệu - 2.5 triệu</option>-->
+<!--                                                <option value="6">2.5 triệu - 3 triệu</option>-->
+<!--                                                <option value="7">3 triệu - 3.5 triệu</option>-->
+<!--                                                <option value="8">3.5 triệu - 4 triệu</option>-->
+<!--                                                <option value="9">4 triệu - 4.5 triệu</option>-->
+<!--                                                <option value="10">4.5 triệu - 5 triệu</option>-->
+<!--                                                <option value="11">Trên 5 triệu</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -96,18 +96,19 @@
                                 <div class="select-this">
                                     <form action="#">
                                         <div class="select-itms">
-                                            <select name="select" id="select3">
-                                                <option value="1">Tất cả</option>
-                                                <option value="2">Dưới 20m&sup2</option>
-                                                <option value="3">20m&sup2 - 30m&sup2</option>
-                                                <option value="4">30m&sup2 - 40m&sup2</option>
-                                                <option value="5">40m&sup2 - 50m&sup2</option>
-                                                <option value="6">50m&sup2 - 60m&sup2</option>
-                                                <option value="7">60m&sup2 - 70m&sup2</option>
-                                                <option value="8">70m&sup2 - 80m&sup2</option>
-                                                <option value="9">80m&sup2 - 90m&sup2</option>
-                                                <option value="10">90m&sup2 - 100m&sup2</option>
-                                                <option value="11">Trên 100m&sup2</option>
+                                            <select name="select" id="select3" >
+                                                <option value="0">Tất cả</option>
+                                                <option v-for="filterSquare in listFilterSquare" v-bind:selected="filterSquare.id == filterSquareId" v-bind:value="filterSquare.id" v-text="filterSquare.displayText"></option>
+<!--                                                <option value="2">Dưới 20m&sup2</option>-->
+<!--                                                <option value="3">20m&sup2 - 30m&sup2</option>-->
+<!--                                                <option value="4">30m&sup2 - 40m&sup2</option>-->
+<!--                                                <option value="5">40m&sup2 - 50m&sup2</option>-->
+<!--                                                <option value="6">50m&sup2 - 60m&sup2</option>-->
+<!--                                                <option value="7">60m&sup2 - 70m&sup2</option>-->
+<!--                                                <option value="8">70m&sup2 - 80m&sup2</option>-->
+<!--                                                <option value="9">80m&sup2 - 90m&sup2</option>-->
+<!--                                                <option value="10">90m&sup2 - 100m&sup2</option>-->
+<!--                                                <option value="11">Trên 100m&sup2</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -120,21 +121,22 @@
                                 <div class="select-this">
                                     <form action="#">
                                         <div class="select-itms">
-                                            <select name="select" id="select4">
-                                                <option value="1">Tất cả</option>
-                                                <option value="2">Dưới 1 km</option>
-                                                <option value="3">1 km - 2 km</option>
-                                                <option value="4">2 km - 3 km</option>
-                                                <option value="5"> 3 km - 4 km</option>
-                                                <option value="6">4 km - 5 km</option>
-                                                <option value="7">Trên 5 km</option>
+                                            <select name="select" id="select4" >
+                                                <option value="0">Tất cả</option>
+                                                <option v-for="filterDistance in listFilterDistance" v-bind:selected="filterDistance.id == filterDistanceId" v-bind:value="filterDistance.id" v-text="filterDistance.displayText"></option>
+<!--                                                <option value="2">Dưới 1 km</option>-->
+<!--                                                <option value="3">1 km - 2 km</option>-->
+<!--                                                <option value="4">2 km - 3 km</option>-->
+<!--                                                <option value="5"> 3 km - 4 km</option>-->
+<!--                                                <option value="6">4 km - 5 km</option>-->
+<!--                                                <option value="7">Trên 5 km</option>-->
                                             </select>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                             <div class="single-select-box pt-45 mb-30">
-                                <a href="#" class="btn select-btn">Tìm Kiếm</a>
+                                <a v-on:click="handleSearchClick()" class="btn select-btn">Tìm Kiếm</a>
                             </div>
 
                         </div>
@@ -146,7 +148,7 @@
     <!-- Booking Room End-->
     <section class="room-area">
         <div class="container" id="postPage">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" v-show="page.number + 1 == 1">
                 <div class="col-xl-8">
                     <!--font-back-tittle  -->
                     <div class="font-back-tittle mb-45">
@@ -168,7 +170,7 @@
                             </div>
                         </div>
                         <div class="room-caption">
-                            <h3><a v-bind:href="'/post-detail?id='+post.id" v-text="post.title"></a></h3>
+                            <h3><a v-bind:href="'/post-detail?id='+post.id" v-text="post.title" data-toggle="tooltip" data-placement="bottom" v-bind:title="post.title"></a></h3>
                             <div class="per-night">
                                 <span v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
                             </div>
@@ -178,18 +180,23 @@
             </div>
             <nav v-if="page.totalPages != 1" class="form-group col-md-11 pagination-centered">
                 <ul class="pagination">
+                    <li class="page-item" v-bind:class="(filterPostInstance.page - 1) < 1 ? 'pointer-disabled-only' : ''">
+                        <a class="page-link" v-bind:href="'/?page=' + ((filterPostInstance.page - 1) > 0 ? (filterPostInstance.page - 1) : 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
                     <li class="page-link-container" v-bind:class="page.number === (n-1) ? 'active pointer-disabled':''" v-for="n in endPage">
                         <a class="page-link" v-bind:href="'/?page='+n" v-text="n"></a>
                     </li>
-                </ul>
-            </nav>
-            <!--<nav th:if="posts.totalPages != 1" class="form-group col-md-11 pagination-centered">
-                <ul class="pagination">
-                    <li th:class="${posts.number == (page - 1)} ? 'active pointer-disabled'" th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                        <a class="page-link" th:href="@{/(pageSize=${selectedPageSize}, page=${page})}" th:text="${page}"></a>
+                    <li class="page-item" v-bind:class="(filterPostInstance.page + 1) > endPage ? 'pointer-disabled-only' : ''">
+                        <a class="page-link" v-bind:href="'/?page=' + ((filterPostInstance.page + 1) < endPage ? (filterPostInstance.page + 1) : endPage)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </li>
                 </ul>
-           </nav>-->
+            </nav>
 <!--            modal notification-->
             <div th:replace="layout :: notification"></div>
 

@@ -146,13 +146,14 @@
                                         <h4>Số lượng phòng:</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input v-bind:disabled="editMode" type="number" min="0" max="100" @focusout="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append btn-add-container" v-if="editMode">
-                                            <button class="btn-hover btn-add-room" >Thêm Phòng</button>
+                                            <button class="btn-hover btn-add-room" v-on:click="showAddRoomModal()">Thêm Phòng</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
+                                <div class="fill-information" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
                                     <div class="title">
                                         <h4>Trạng thái các phòng:</h4>
                                     </div>
@@ -518,6 +519,60 @@
                             </div>
                             <div class="modal-footer">
                                 <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--   Modal add rooms -->
+                    <div id="myModal_AddRoom" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information" v-if="editMode">
+                            <div class="modal-header">
+                                <h2>Thêm phòng</h2>
+                                <span @click="closeModalAddRoom()" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Số lượng phòng:</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
+                                    <div class="title">
+                                        <h4>Trạng thái các phòng:</h4>
+                                    </div>
+                                    <div class="input-information table-wrapper">
+                                        <table class="table tbl-room">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">STT</th>
+                                                <th scope="col">Phòng</th>
+                                                <th scope="col">Trạng thái</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(room, index) in listRoom">
+                                                <th scope="row" v-text="index + 1"></th>
+                                                <th scope="row" v-text="room.roomName"></th>
+                                                <th scope="row">
+                                                    <span>Đã cho thuê</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" v-model="room.availableRoom">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                    <span>Còn trống</span>
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button @click="increaseRoom()" class="btn-hover btn-default">Xác nhận</button>
                             </div>
                         </div>
                     </div>

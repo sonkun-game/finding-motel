@@ -159,7 +159,7 @@ main{
     width: fit-content;
     margin: auto;
 }
-.pointer-disabled {
+.pointer-disabled-only {
     pointer-events: none;
 }
 .pointer-enable {

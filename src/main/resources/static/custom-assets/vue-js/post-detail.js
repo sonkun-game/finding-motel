@@ -223,7 +223,14 @@ var postDetailInstance = new Vue({
             })
         },
     },
-    created() {
-
+    mounted() {
+        setTimeout(function () {
+            $('.flexslider').flexslider({
+                animation: "slide",
+                start: function(slider) {
+                    $('body').removeClass('loading');
+                }
+            });
+        }, 500)
     }
 })

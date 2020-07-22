@@ -2,6 +2,8 @@ package com.example.fptufindingmotelv1.dto;
 
 import lombok.Data;
 
+import java.util.Optional;
+
 @Data
 public class PostSearchDTO {
     private String postId;
@@ -15,4 +17,8 @@ public class PostSearchDTO {
     private Double squareMax;
     private Double squareMin;
     private Boolean visible;
+    private Long filterPriceId;
+    private Long filterSquareId;
+    private Long filterDistanceId;
+    private Optional<Integer> page;
 }

@@ -22,10 +22,12 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:squareMin is null or p.square >= :squareMin) " +
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
+            "and (:banned is null or p.banned = :banned)" +
+            "order by p.createDate desc " +
             "")
     List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
 
     @Query(value = "select top 5 * from POST p " +
             "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +

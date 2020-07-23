@@ -244,7 +244,7 @@
                                         </figure>
                                         <div class="infor">
                                             <div class="inner">
-                                                <span class="title-news" v-text="relatedPost.title"></span>
+                                                <span class="title-news" v-text="relatedPost.title" data-toggle="tooltip" data-placement="bottom" v-bind:title="relatedPost.title"></span>
                                                 <div class="clearfix">
                                                     <div class="price">
                                                         <span v-text="authenticationInstance.formatNumberToDisplay(relatedPost.price) + ' VNĐ/Tháng'"></span>

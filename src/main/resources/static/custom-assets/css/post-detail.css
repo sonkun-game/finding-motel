@@ -505,3 +505,14 @@ main{
 .location{
     margin-top: 13px;
 }
+
+.inner{
+    margin-top: 5px;
+}
+
+.title-news{
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    display: -webkit-box;
+}

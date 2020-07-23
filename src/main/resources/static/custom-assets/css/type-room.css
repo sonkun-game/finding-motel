@@ -1,0 +1,34 @@
+.container-fluid{
+    padding: 50px;
+}
+.title-search{
+    font-family: sans-serif;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+.title{
+    padding-top: 5px;
+    font-size: 20px;
+    color: #dac73a;
+}
+
+.nice-select{
+    display: none !important;
+}
+
+select {
+    border-radius: 5px;
+    display: block !important;
+    width: 160px;
+    height: 35px;
+    font-family: sans-serif;
+    border: 1px solid #aaa;
+}
+.search{
+    display: flex;
+    float: right;
+}
+
+.search-type{
+    margin-right: 10px;
+}

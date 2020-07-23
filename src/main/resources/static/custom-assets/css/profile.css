@@ -286,14 +286,6 @@ border: none;
 cursor: pointer;
 }
 
-select{
-display: block !important;
-}
-
-.nice-select{
-display: none !important;
-}
-
 .phone-number {
 display: flex;
 }

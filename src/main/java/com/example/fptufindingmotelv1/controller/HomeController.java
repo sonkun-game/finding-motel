@@ -238,4 +238,9 @@ public class HomeController {
     public String testAdmin() {
         return "Admin Access";
     }
+
+    @GetMapping("/loai-phong")
+    public String getType() {
+        return "type-room";
+    }
 }

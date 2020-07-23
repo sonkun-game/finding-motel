@@ -109,7 +109,7 @@ var renterInstance = new Vue({
                 "requestDate": null,
                 "statusId": null,
             }
-            fetch("https://localhost:8081/search-rental-request", {
+            fetch("/search-rental-request", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ var renterInstance = new Vue({
         },
         cancelRentalRequest(rentalId) {
             let statusId = 8;
-            fetch("https://localhost:8081/change-rental-request-status?rentalRequestId=" + rentalId
+            fetch("/change-rental-request-status?rentalRequestId=" + rentalId
                 + "&statusId=" + statusId, {
                 method: 'POST',
                 headers: {

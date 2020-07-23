@@ -30,7 +30,7 @@ var postDetailInstance = new Vue({
             let url = new URLSearchParams(query);
             let id = url.get('id');
 
-            fetch("https://localhost:8081/api-post-detail?id=" + id, {
+            fetch("/api-post-detail?id=" + id, {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
@@ -63,7 +63,7 @@ var postDetailInstance = new Vue({
                 "postId": this.postId,
                 "content": this.reportContent
             }
-            fetch("https://localhost:8081/sent-report", {
+            fetch("/sent-report", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ var postDetailInstance = new Vue({
                 "statusId": 7,
                 "postId": this.postId,
             }
-            fetch("https://localhost:8081/sent-rental-request", {
+            fetch("/sent-rental-request", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,6 +222,9 @@ var postDetailInstance = new Vue({
                 console.log(error);
             })
         },
+        getURL() {
+            return window.location.href;
+        }
     },
     mounted() {
         setTimeout(function () {

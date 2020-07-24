@@ -2788,7 +2788,7 @@ label {
 }
 
 .booking-area .booking-wrap {
-    padding: 39px 80px 20px 80px;
+    padding: 49px 50px 20px 50px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0px 8px 79px 0px rgba(0, 0, 0, 0.08);
@@ -7130,3 +7130,82 @@ h6 {
 [v-cloak] {
     display: none;
 }
+
+.fa-chevron-down{
+    height: 52px;
+    width: 52px;
+    border: 1px solid black;
+    border-radius: 4px;
+    font-size: 22px;
+    padding: 15px;
+}
+
+
+.fa-chevron-down:hover{
+    border-color: #dca73a;
+    transition: .25s ease-in-out;
+}
+
+.select-this-icon{
+    margin-top: 45px;
+}
+
+.list-service{
+    display: flex;
+}
+.service-item{
+    border: 1px solid;
+    padding: 0px 5px;
+    padding-top: 3px;
+    margin-right: 7px;
+}
+
+.custom-checkbox{
+    display: inline-block;
+    position:relative;
+    cursor:pointer;
+    font-size:13px;
+    user-select: none;
+    padding-left:27px;
+}
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.check-mark{
+    position:absolute;
+    top:0;
+    left:0;
+    width:20px;
+    height:20px;
+    background:#ddd;
+    border-radius:3px;
+}
+.custom-checkbox:hover .check-mark{
+    background:#dca73a;
+}
+.check-mark:after{
+    content:"";
+    position:absolute;
+    display:none;
+}
+.custom-checkbox .check-mark:after{
+    top:40%;
+    left:50%;
+    width: 7px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform:translate(-50%,-50%) rotate(45deg);
+}
+.custom-checkbox input:checked ~ .check-mark{
+    background:#dca73a;
+}
+.custom-checkbox input:checked ~ .check-mark:after{
+    display:block;
+}
+
+

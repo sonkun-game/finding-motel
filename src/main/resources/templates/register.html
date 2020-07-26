@@ -7,26 +7,29 @@
     <title>Đăng Ký</title>
 </head>
 <body>
-<main>
 
-    <div id="loading-wrapper">
-        <div v-show="!isHidden" id="loader-login">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b>Đăng Nhập</b>
-                    </div>
+<div id="loading-wrapper">
+    <div v-show="!isHidden" id="loader-login">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>Đăng Nhập</b>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <!--    inlude loading screen-->
-    <div th:replace="layout :: loader"></div>
+<div th:replace="layout :: loader"></div>
 
 <!--    include header-->
-    <header th:replace="layout :: header"></header>
+<header th:replace="layout :: header"></header>
+
+<main>
+
+
 
     <div class="container-fluid">
         <div class="row no-gutter">

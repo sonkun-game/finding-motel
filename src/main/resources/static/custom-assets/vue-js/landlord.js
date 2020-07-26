@@ -147,8 +147,13 @@ var landlordInstance = new Vue({
             })
         },
         generateRooms(){
+
             this.listRoom = []
-            for (let i = 0; i < parseInt(this.numberOfRoom); i++) {
+            let start = 0
+            if(this.listRoomRequest != null && this.listRoomRequest.length > 0){
+                start = this.listRoomRequest.length
+            }
+            for (let i = start; i < parseInt(this.numberOfRoom) + start; i++) {
                 let room = {
                     "index" : (i+1),
                     "roomName" : "Phòng " + (i+1),
@@ -287,6 +292,7 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            this.selectedPost = post
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
             this.typeOfPost = post.typeId
@@ -295,11 +301,12 @@ var landlordInstance = new Vue({
             this.price = post.price
             this.square = post.square
             this.distance = post.distance
-            this.numberOfRoom = post.roomNumber
-            this.listRoom = post.listRoom
+            // this.numberOfRoom = post.roomNumber
+            // this.listRoom = post.listRoom
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
+            this.getListRoomRequest(null, post.id)
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
@@ -502,6 +509,7 @@ var landlordInstance = new Vue({
             this.getListRoomRequest(null, post.id)
         },
         handleChangeRoomStatus(room, index){
+        
             this.roomIndex = index
             this.selectedRoom = room
             if(room.availableRoom){
@@ -527,6 +535,7 @@ var landlordInstance = new Vue({
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
             }
+
         },
         closeModalRequestDetail(){
             document.body.removeAttribute("class")
@@ -583,6 +592,47 @@ var landlordInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        showAddRoomModal(){
+            this.numberOfRoom = 0
+            document.body.setAttribute("class", "loading-hidden-screen")
+            document.getElementById("myModal_AddRoom").style.display = 'block';
+        },
+        closeModalAddRoom(){
+            document.body.removeAttribute("class")
+            document.getElementById("myModal_AddRoom").style.display = 'none';
+        },
+        increaseRoom(){
+            let request = {
+                "listRoom" : this.listRoom,
+                "postId" : this.postId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-increase-room", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == 'post000'){
+                        authenticationInstance.showModalNotify("Thêm phòng thành công", 2000)
+                        setTimeout(() => {
+                            document.body.removeAttribute("class")
+                            document.getElementById("myModal_AddRoom").style.display = 'none';
+                            for (let room of data.listNewRoom) {
+                                this.listRoomRequest.push(room)
+                            }
+                        }, 2000);
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+
+
         }
     }
 })

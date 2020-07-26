@@ -1,11 +1,12 @@
 package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.dto.PostDTO;
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.dto.PostSearchDTO;
+import com.example.fptufindingmotelv1.dto.TypePostDTO;
 import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.PostRepository;
-import com.example.fptufindingmotelv1.repository.RenterRepository;
-import com.example.fptufindingmotelv1.repository.RoleRepository;
-import com.example.fptufindingmotelv1.repository.WishListRepository;
+import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,71 +40,11 @@ public class HomeController {
     @Autowired
     WishListRepository wishListRepository;
 
-    @ResponseBody
-    @PostMapping(value = {"/api-get-posts"})
-    public JSONObject getPosts(@RequestParam(name = "page", defaultValue = "1") Optional<Integer> page,
-                             @RequestParam(name = "pageSize")  Optional<Integer> size,
-                             @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort){
+    @Autowired
+    ManagePostService managePostService;
 
-        JSONObject jsonObject= new JSONObject();
-        Sort sortable = null;
-        if (sort.equals("DESC")) {
-            sortable = Sort.by("createDate").descending();
-        }
-
-        // Paging
-        int evalPageSize = size.orElse(Constant.INITIAL_PAGE_SIZE);
-        int evalPage = (page.orElse(0) < 1) ? Constant.INITIAL_PAGE : page.get() - 1;
-
-        Pageable pageable = PageRequest.of(evalPage, evalPageSize, sortable);
-        List<PostModel> listPostModel =  postRepository.findByVisibleTrueAndBannedFalse(sortable);
-
-        int total = listPostModel.size();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), total);
-
-        List<PostModel> sublistPostModel = new ArrayList<>();
-        if (start <= end) {
-            sublistPostModel = listPostModel.subList(start, end);
-        }
-
-        List<PostDTO> postDTOs = new ArrayList<>();
-        PostDTO postDTO;
-        // check login
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof UsernamePasswordAuthenticationToken
-                && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-            RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-            for (PostModel post:
-                    sublistPostModel) {
-                postDTO = new PostDTO(post);
-                WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
-                if(wishListModel != null){
-                    postDTO.setInWishList(true);
-                    postDTO.setWishListId(wishListModel.getId());
-                }else {
-                    postDTO.setInWishList(false);
-                }
-                postDTOs.add(postDTO);
-            }
-        } else {
-            for (PostModel post:
-                    sublistPostModel) {
-                postDTO = new PostDTO(post);
-                postDTO.setInWishList(false);
-                postDTOs.add(postDTO);
-            }
-        }
-
-        Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
-        jsonObject.put("pageSize",evalPageSize);
-        jsonObject.put("page",listDTO);
-
-        PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
-        jsonObject.put("endPage",pager.getEndPage());
-        jsonObject.put("pager",pager);
-        return jsonObject;
-    }
+    @Autowired
+    FilterPostRepository filterPostRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> page){
@@ -148,6 +89,139 @@ public class HomeController {
     }
 
     @ResponseBody
+    @GetMapping("/api-get-init-home-page")
+    public JSONObject getInitHomePage(){
+        JSONObject response = new JSONObject();
+        try {
+            //get Post type
+            List<TypeModel> typePosts = managePostService.getListTypePost();
+            if(typePosts != null){
+                List<TypePostDTO> typePostDTOS = new ArrayList<>();
+                for (TypeModel typeModel:
+                        typePosts) {
+                    typePostDTOS.add(new TypePostDTO(typeModel));
+                }
+                response.put("listTypePost", typePostDTOS);
+            }
+            // get List filter post
+            // get List Price
+            List<FilterPostModel> listFilterPrice = filterPostRepository.findAllByType("PRICE");
+            if(listFilterPrice != null){
+                response.put("listFilterPrice", listFilterPrice);
+            }
+            // get List Square
+            List<FilterPostModel> listFilterSquare = filterPostRepository.findAllByType("SQUARE");
+            if(listFilterSquare != null){
+                response.put("listFilterSquare", listFilterSquare);
+            }
+            // get List Distance
+            List<FilterPostModel> listFilterDistance = filterPostRepository.findAllByType("DISTANCE");
+            if(listFilterDistance != null){
+                response.put("listFilterDistance", listFilterDistance);
+            }
+            response.put("msgCode", "home000");
+
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("msgCode", "sys999");
+            return response;
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/filter-post")
+    public JSONObject filterPost(@RequestBody PostSearchDTO postSearchDTO){
+        JSONObject response = new JSONObject();
+        try {
+            Double minPrice = null;
+            Double maxPrice = null;
+            Double minSquare = null;
+            Double maxSquare = null;
+            Double minDistance = null;
+            Double maxDistance = null;
+            if(postSearchDTO.getFilterPriceId() != null){
+                FilterPostModel filterPrice = filterPostRepository.findById(postSearchDTO.getFilterPriceId()).get();
+                minPrice = filterPrice.getMinValue();
+                maxPrice = filterPrice.getMaxValue();
+            }
+            if(postSearchDTO.getFilterSquareId() != null){
+                FilterPostModel filterSquare = filterPostRepository.findById(postSearchDTO.getFilterSquareId()).get();
+                minSquare = filterSquare.getMinValue();
+                maxSquare = filterSquare.getMaxValue();
+            }
+            if(postSearchDTO.getFilterDistanceId() != null){
+                FilterPostModel filterDistance = filterPostRepository.findById(postSearchDTO.getFilterDistanceId()).get();
+                minDistance = filterDistance.getMinValue();
+                maxDistance = filterDistance.getMaxValue();
+            }
+
+            ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.searchPost(null,
+                    null, maxPrice, minPrice,
+                    maxDistance, minDistance,
+                    maxSquare, minSquare, true, postSearchDTO.getTypeId(), false);
+
+
+            // Paging
+            int evalPageSize = Constant.INITIAL_PAGE_SIZE;
+            int evalPage = (postSearchDTO.getPage().orElse(0) < 1) ? Constant.INITIAL_PAGE : postSearchDTO.getPage().get() - 1;
+
+            Pageable pageable = PageRequest.of(evalPage, evalPageSize);
+
+            int total = listPostModel.size();
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), total);
+
+            List<PostModel> sublistPostModel = new ArrayList<>();
+            if (start <= end) {
+                sublistPostModel = listPostModel.subList(start, end);
+            }
+
+            List<PostDTO> postDTOs = new ArrayList<>();
+            PostDTO postDTO;
+            // check login
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth instanceof UsernamePasswordAuthenticationToken
+                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
+                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
+                for (PostModel post:
+                        sublistPostModel) {
+                    postDTO = new PostDTO(post);
+                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
+                    if(wishListModel != null){
+                        postDTO.setInWishList(true);
+                        postDTO.setWishListId(wishListModel.getId());
+                    }else {
+                        postDTO.setInWishList(false);
+                    }
+                    postDTOs.add(postDTO);
+                }
+            } else {
+                for (PostModel post:
+                        sublistPostModel) {
+                    postDTO = new PostDTO(post);
+                    postDTO.setInWishList(false);
+                    postDTOs.add(postDTO);
+                }
+            }
+
+            Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
+            response.put("pageSize", evalPageSize);
+            response.put("page", listDTO);
+
+            PagerModel pager = new PagerModel(listDTO.getTotalPages(), listDTO.getNumber(), Constant.BUTTONS_TO_SHOW);
+            response.put("endPage", pager.getEndPage());
+            response.put("pager", pager);
+            response.put("msgCode", "home000");
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("msgCode", "sys999");
+            return response;
+        }
+    }
+
+    @ResponseBody
     @GetMapping("/api-test-renter")
     public String testRenter() {
         return "Renter Access";
@@ -163,5 +237,10 @@ public class HomeController {
     @GetMapping("/api-test-admin")
     public String testAdmin() {
         return "Admin Access";
+    }
+
+    @GetMapping("/loai-phong")
+    public String getType() {
+        return "type-room";
     }
 }

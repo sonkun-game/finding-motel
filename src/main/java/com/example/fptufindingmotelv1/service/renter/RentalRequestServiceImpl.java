@@ -39,25 +39,26 @@ public class RentalRequestServiceImpl implements RentalRequestService {
         try {
             RenterModel renterModel = (RenterModel) userRepository.findByUsername(rentalRequestDTO.getRenterUsername());
             RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-            RentalRequestModel rentalRequestModel = rentalRequestRepository
+            List<RentalRequestModel> rentalRequestModels = rentalRequestRepository
                     .findByRentalRenterAndRentalRoom(renterModel, roomModel);
-            if(rentalRequestModel != null &&
-                    rentalRequestModel.getRentalStatus().getId() == 9){
-                return "Bạn đã thuê phòng này!";
-            }
-            else if(rentalRequestModel != null &&
-                    rentalRequestModel.getRentalStatus().getId() == 7){
-                    return "Bạn đã yêu cầu thuê phòng này!";
-            }else {
-                if(rentalRequestModel == null){
-                    List<RentalRequestModel> requestModels =
-                            rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername(), null);
-                    if(requestModels != null && requestModels.size() > 0){
-                        return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
-                    }
+            for (RentalRequestModel request:
+                 rentalRequestModels) {
+                if(request != null &&
+                        request.getRentalStatus().getId() == 9){
+                    return "Bạn đã thuê phòng này!";
                 }
-                return "000";
+                else if(request != null &&
+                        request.getRentalStatus().getId() == 7){
+                    return "Bạn đã yêu cầu thuê phòng này!";
+                }
             }
+            List<RentalRequestModel> requestModels =
+                    rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername(), null);
+            if(requestModels != null && requestModels.size() > 0){
+                return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
+            }
+            return "000";
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -70,28 +71,30 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             String message = checkExitRentalRequest(rentalRequestDTO);
             if (message != null && !message.equals("000")) {
                 return responseMsg("111", message, null);
-            }
-            RentalRequestModel rentalRequestModel = new RentalRequestModel();
-            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-            RenterModel renterModel = renterRepository.findByUsername(rentalRequestDTO.getRenterUsername());
-            StatusModel statusModel = statusRepository.findById(rentalRequestDTO.getStatusId()).get();
-            rentalRequestModel.setId(rentalRequestDTO.getId());
-            rentalRequestModel.setRentalRoom(roomModel);
-            rentalRequestModel.setRentalRenter(renterModel);
-            rentalRequestModel.setRentalStatus(statusModel);
+            }else if(message != null && message.equals("000")){
+                RentalRequestModel rentalRequestModel = new RentalRequestModel();
+                RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
+                RenterModel renterModel = renterRepository.findByUsername(rentalRequestDTO.getRenterUsername());
+                StatusModel statusModel = statusRepository.findById(rentalRequestDTO.getStatusId()).get();
+                rentalRequestModel.setId(rentalRequestDTO.getId());
+                rentalRequestModel.setRentalRoom(roomModel);
+                rentalRequestModel.setRentalRenter(renterModel);
+                rentalRequestModel.setRentalStatus(statusModel);
 
-            Date date = new Date();
-            Date createdDate = new Timestamp(date.getTime());
-            SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT_ONLY_DATE);
-            if(createdDate.after(rentalRequestDTO.getStartDate())){
-                return responseMsg("001", "Vui lòng chọn ngày bắt đầu sau ngày " + sdf.format(createdDate), null);
-            }
-            //set start date
-            rentalRequestModel.setStartDate(rentalRequestDTO.getStartDate());
-            rentalRequestModel.setRequestDate(createdDate);
+                Date date = new Date();
+                Date createdDate = new Timestamp(date.getTime());
+                SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT_ONLY_DATE);
+                if(createdDate.after(rentalRequestDTO.getStartDate())){
+                    return responseMsg("001", "Vui lòng chọn ngày bắt đầu sau ngày " + sdf.format(createdDate), null);
+                }
+                //set start date
+                rentalRequestModel.setStartDate(rentalRequestDTO.getStartDate());
+                rentalRequestModel.setRequestDate(createdDate);
 
-            rentalRequestRepository.save(rentalRequestModel);
-            return responseMsg("000", "Cập nhật thành công!", null);
+                rentalRequestRepository.save(rentalRequestModel);
+                return responseMsg("000", "Cập nhật thành công!", null);
+            }
+            return responseMsg("999", "Cập nhật không thành công!", null);
         } catch (Exception e) {
             e.printStackTrace();
             return responseMsg("999", "Cập nhật không thành công!", null);

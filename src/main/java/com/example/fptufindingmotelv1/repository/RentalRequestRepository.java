@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Repository
 public interface RentalRequestRepository extends JpaRepository<RentalRequestModel, String> {
 
-    RentalRequestModel findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
+    List<RentalRequestModel> findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
     @Query(value = "select r from RentalRequestModel r " +
             "where 1 = 1 " +
             "and (:landlordId is null or r.rentalRoom.postRoom.landlord.username = :landlordId)" +

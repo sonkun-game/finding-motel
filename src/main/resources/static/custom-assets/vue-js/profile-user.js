@@ -98,7 +98,7 @@ var profileInstance = new Vue({
         checkExistPhone() {
             if (this.inputPhoneNum != null && this.inputPhoneNum.length != 0) {
                 let phone = this.inputPhoneNum
-                fetch("https://localhost:8081/check-existed-phone", {
+                fetch("/check-existed-phone", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

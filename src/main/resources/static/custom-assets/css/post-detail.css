@@ -491,3 +491,28 @@ main{
 .slide-image-container{
     display: flex!important;
 }
+.description-content{
+    white-space: pre-line;
+    word-wrap: break-word;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.description-content p{
+    line-height: 1.3;
+}
+
+.location{
+    margin-top: 13px;
+}
+
+.inner{
+    margin-top: 5px;
+}
+
+.title-news{
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    display: -webkit-box;
+}

@@ -158,7 +158,7 @@ var admin = new Vue({
         },
         getUserById() {
             let username = document.getElementById("searchUserTxt").value;
-            fetch("https://localhost:8081/get-user-by-id?username=" + username, {
+            fetch("/get-user-by-id?username=" + username, {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
@@ -175,7 +175,7 @@ var admin = new Vue({
         },
         getListUser() {
 
-            fetch("https://localhost:8081/get-all-user", {
+            fetch("/get-all-user", {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
@@ -191,7 +191,7 @@ var admin = new Vue({
             })
         },
         banLanlord(username) {
-            fetch("https://localhost:8081/ban-landlord?username=" + username, {
+            fetch("/ban-landlord?username=" + username, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ var admin = new Vue({
             })
         },
         unbanLanlord(username) {
-            fetch("https://localhost:8081/unban-landlord?username=" + username, {
+            fetch("/unban-landlord?username=" + username, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ var admin = new Vue({
         },
 
         deleteReport(id) {
-            fetch("https://localhost:8081/delete-report?reportId=" + id, {
+            fetch("/delete-report?reportId=" + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -245,7 +245,7 @@ var admin = new Vue({
 
         getListPost() {
 
-            fetch("https://localhost:8081/get-post", {
+            fetch("/get-post", {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
@@ -260,7 +260,7 @@ var admin = new Vue({
         },
 
         deletePost(id) {
-            fetch("https://localhost:8081/delete-post?postId=" + id, {
+            fetch("/delete-post?postId=" + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -296,7 +296,7 @@ var admin = new Vue({
                 "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
                 "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
             }
-            fetch("https://localhost:8081/search-post", {
+            fetch("/search-post", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

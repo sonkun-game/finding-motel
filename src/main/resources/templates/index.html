@@ -46,11 +46,6 @@
                 <div class="col-12">
                     <form action="">
                         <div class="booking-wrap d-flex justify-content-between align-items-center">
-                            <div class="single-select-box mb-30">
-                                <div class="select-this-icon" data-toggle="tooltip" title="Tiện ích">
-                                    <i class="fas fa-chevron-down"></i>
-                                </div>
-                            </div>
 
                             <!-- Single Select Box -->
                             <div class="single-select-box mb-30">
@@ -63,8 +58,6 @@
                                             <select required name="select" id="select1">
                                                 <option value="0">Tất cả</option>
                                                 <option v-for="type in listTypePost" v-bind:selected="type.id == typeId" v-bind:value="type.id" v-text="type.name"></option>
-<!--                                                <option value="3">Nhà nguyên căn</option>-->
-<!--                                                <option value="3">Nhà nguyên căn</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -80,15 +73,6 @@
                                             <select name="select" id="select2">
                                                 <option value="0">Tất cả</option>
                                                 <option v-for="filterPrice in listFilterPrice" v-bind:selected="filterPrice.id == filterPriceId" v-bind:value="filterPrice.id" v-text="filterPrice.displayText"></option>
-<!--                                                <option value="3">1 triệu - 1.5 triệu</option>-->
-<!--                                                <option value="4"> 1.5 triệu - 2 triệu</option>-->
-<!--                                                <option value="5">2 triệu - 2.5 triệu</option>-->
-<!--                                                <option value="6">2.5 triệu - 3 triệu</option>-->
-<!--                                                <option value="7">3 triệu - 3.5 triệu</option>-->
-<!--                                                <option value="8">3.5 triệu - 4 triệu</option>-->
-<!--                                                <option value="9">4 triệu - 4.5 triệu</option>-->
-<!--                                                <option value="10">4.5 triệu - 5 triệu</option>-->
-<!--                                                <option value="11">Trên 5 triệu</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -104,16 +88,6 @@
                                             <select name="select" id="select3" >
                                                 <option value="0">Tất cả</option>
                                                 <option v-for="filterSquare in listFilterSquare" v-bind:selected="filterSquare.id == filterSquareId" v-bind:value="filterSquare.id" v-text="filterSquare.displayText"></option>
-<!--                                                <option value="2">Dưới 20m&sup2</option>-->
-<!--                                                <option value="3">20m&sup2 - 30m&sup2</option>-->
-<!--                                                <option value="4">30m&sup2 - 40m&sup2</option>-->
-<!--                                                <option value="5">40m&sup2 - 50m&sup2</option>-->
-<!--                                                <option value="6">50m&sup2 - 60m&sup2</option>-->
-<!--                                                <option value="7">60m&sup2 - 70m&sup2</option>-->
-<!--                                                <option value="8">70m&sup2 - 80m&sup2</option>-->
-<!--                                                <option value="9">80m&sup2 - 90m&sup2</option>-->
-<!--                                                <option value="10">90m&sup2 - 100m&sup2</option>-->
-<!--                                                <option value="11">Trên 100m&sup2</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -129,12 +103,6 @@
                                             <select name="select" id="select4" >
                                                 <option value="0">Tất cả</option>
                                                 <option v-for="filterDistance in listFilterDistance" v-bind:selected="filterDistance.id == filterDistanceId" v-bind:value="filterDistance.id" v-text="filterDistance.displayText"></option>
-<!--                                                <option value="2">Dưới 1 km</option>-->
-<!--                                                <option value="3">1 km - 2 km</option>-->
-<!--                                                <option value="4">2 km - 3 km</option>-->
-<!--                                                <option value="5"> 3 km - 4 km</option>-->
-<!--                                                <option value="6">4 km - 5 km</option>-->
-<!--                                                <option value="7">Trên 5 km</option>-->
                                             </select>
                                         </div>
                                     </form>
@@ -143,34 +111,7 @@
                             <div class="single-select-box pt-45 mb-30">
                                 <a v-on:click="handleSearchClick()" class="btn select-btn">Tìm Kiếm</a>
                             </div>
-                            <div class="service">
-                                <ul class="list-service">
-                                    <li class="service-item">
-                                        <label class="custom-checkbox">Có điều hòa
-                                            <input type="checkbox">
-                                            <span class="check-mark"></span>
-                                        </label>
-                                    </li>
-                                    <li class="service-item">
-                                        <label class="custom-checkbox">Có gác
-                                            <input type="checkbox">
-                                            <span class="check-mark"></span>
-                                        </label>
-                                    </li>
-                                    <li class="service-item">
-                                        <label class="custom-checkbox">Có nóng lạnh
-                                            <input type="checkbox">
-                                            <span class="check-mark"></span>
-                                        </label>
-                                    </li>
-                                    <li class="service-item">
-                                        <label class="custom-checkbox">Không ở chung với chủ
-                                            <input type="checkbox">
-                                            <span class="check-mark"></span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
+
                         </div>
                     </form>
                 </div>

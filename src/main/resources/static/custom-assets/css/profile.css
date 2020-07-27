@@ -834,3 +834,7 @@ a:hover {
 .rounded-pill{
     border: 1px solid #c2b3d2!important;
 }
+#map-canvas{
+    height: 400px;  /* The height is 400 pixels */
+    width: 100%;
+}

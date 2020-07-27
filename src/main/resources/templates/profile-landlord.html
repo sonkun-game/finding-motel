@@ -248,6 +248,12 @@
                                     </div>
                                 </div>
 
+                                <label>Address: <input id="map-search" class="controls" type="text" placeholder="Search Box" size="104"></label><br>
+                                <label>Lat: <input type="text" class="latitude"></label>
+                                <label>Long: <input type="text" class="longitude"></label>
+                                <label>City <input type="text" class="reg-input-city" placeholder="City"></label>
+                                <div id="map-canvas"></div>
+
 
                                 <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
                                 <div class="title">
@@ -717,6 +723,12 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT1IHF1gT-MK8Dsac6-9jeYv_pVjYuDyk&libraries=places&callback=initMap">
+</script>
+<script type="text/javascript" th:src="@{/custom-assets/vue-js/google-map.js}"></script>
+
 <!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

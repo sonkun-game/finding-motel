@@ -29,6 +29,11 @@ var landlordInstance = new Vue({
         renterInfo : {},
         selectedRoom : {},
         roomIndex : "",
+        fuLocation : {placeId : "ChIJbQilLLNUNDER5Der2CkuxqM"},
+        latMarkerEl : "",
+        longMarkerEl : "",
+        map : "",
+        inputAddress : ""
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -39,6 +44,7 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
+            this.initMap()
         }else if(this.task == 4){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -634,6 +640,164 @@ var landlordInstance = new Vue({
             })
 
 
+        },
+        initMap(){
+            let mapOptions, marker, searchBox,
+                infoWindow = '',
+                addressEl = document.querySelector( '#map-search' ),
+                element = document.getElementById( 'map-canvas' )
+            this.latMarkerEl = document.querySelector( '#latitude' )
+            this.longMarkerEl = document.querySelector( '#longitude' )
+            mapOptions = {
+                zoom: 16,
+                center: new google.maps.LatLng( 21.013237, 105.527018 ),
+                disableDefaultUI: false, // Disables the controls like zoom control on the map if set to true
+                scrollWheel: true, // If set to false disables the scrolling on the map.
+                draggable: true, // If set to false , you cannot move the map around.
+            }
+            // Create an object map with the constructor function Map()
+            this.map = new google.maps.Map( element, mapOptions ); // Till this like of code it loads up the map.
+
+            marker = new google.maps.Marker({
+                position: mapOptions.center,
+                map: this.map,
+                draggable: true
+            });
+
+            /**
+             * Creates a search box
+             */
+            searchBox = new google.maps.places.SearchBox( addressEl );
+
+            /**
+             * When the place is changed on search box, it takes the marker to the searched location.
+             */
+            google.maps.event.addListener( searchBox, 'places_changed', function () {
+                var places = searchBox.getPlaces(),
+                    bounds = new google.maps.LatLngBounds(),
+                    i, place,
+                    addresss = places[0].formatted_address;
+
+                for( i = 0; place = places[i]; i++ ) {
+                    bounds.extend( place.geometry.location );
+                    marker.setPosition( place.geometry.location );  // Set marker position new.
+                }
+
+                landlordInstance.map.fitBounds( bounds );  // Fit to the bound
+                landlordInstance.map.setZoom( 15 ); // This function sets the zoom to 15, meaning zooms to level 15.
+                // console.log( map.getZoom() );
+
+                landlordInstance.latMarkerEl.value = marker.getPosition().lat();
+                landlordInstance.longMarkerEl.value = marker.getPosition().lng();
+                landlordInstance.handleCalculateDistance()
+
+                // Closes the previous info window if it already exists
+                if ( infoWindow ) {
+                    infoWindow.close();
+                }
+                /**
+                 * Creates the info Window at the top of the marker
+                 */
+                infoWindow = new google.maps.InfoWindow({
+                    content: addresss
+                });
+
+                infoWindow.open( landlordInstance.map, marker );
+            } );
+
+
+            /**
+             * Finds the new position of the marker when the marker is dragged.
+             */
+            google.maps.event.addListener( marker, "dragend", function ( event ) {
+                let address, resultArray
+
+                console.log( 'i am dragged' );
+
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode( { latLng: marker.getPosition() }, function ( result, status ) {
+                    if ( 'OK' === status ) {  // This line can also be written like if ( status == google.maps.GeocoderStatus.OK ) {
+                        address = result[0].formatted_address;
+
+                        addressEl.value = address;
+                        landlordInstance.latMarkerEl.value = marker.getPosition().lat();
+                        landlordInstance.longMarkerEl.value = marker.getPosition().lng();
+                        landlordInstance.handleCalculateDistance()
+                    } else {
+                        console.log( 'Geocode was not successful for the following reason: ' + status );
+                    }
+
+                    // Closes the previous info window if it already exists
+                    if ( infoWindow ) {
+                        infoWindow.close();
+                    }
+
+                    /**
+                     * Creates the info Window at the top of the marker
+                     */
+                    infoWindow = new google.maps.InfoWindow({
+                        content: address
+                    });
+
+                    infoWindow.open( landlordInstance.map, marker );
+                } );
+            });
+        },
+        save_results(response, status) {
+
+            if (status != google.maps.DistanceMatrixStatus.OK) {
+                console.log(status)
+            } else {
+                if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
+                    console.log(response.rows[0].elements[0].status)
+                } else {
+                    let distance = response.rows[0].elements[0].distance;
+                    // let duration = response.rows[0].elements[0].duration;
+                    let distance_in_kilo = distance.value / 1000; // the kilo meter
+                    // let distance_in_mile = distance.value / 1609.34; // the mile
+                    this.distance = distance_in_kilo
+                }
+            }
+        },
+        calculateDistance(travel_mode, origin, destination) {
+            let DistanceMatrixService = new google.maps.DistanceMatrixService();
+            DistanceMatrixService.getDistanceMatrix(
+                {
+                    origins: [origin],
+                    destinations: [destination],
+                    travelMode: google.maps.TravelMode[travel_mode],
+                    // unitSystem: google.maps.UnitSystem.IMPERIAL, // miles and feet.
+                    unitSystem: google.maps.UnitSystem.metric, // kilometers and meters.
+                    avoidHighways: false,
+                    avoidTolls: false
+                }, landlordInstance.save_results);
+        },
+        displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {
+            landlordInstance.initMap()
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: travel_mode,
+                avoidTolls: true
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setMap(landlordInstance.map);
+                    directionsDisplay.setDirections(response);
+                } else {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay.setDirections(null);
+                    alert('Could not display directions due to: ' + status);
+                }
+            });
+        },
+        handleCalculateDistance(){
+            let origin = landlordInstance.latMarkerEl.value + ", " + landlordInstance.longMarkerEl.value;
+            let destination = landlordInstance.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
+            this.calculateDistance(travel_mode, origin, destination)
         }
     }
 })

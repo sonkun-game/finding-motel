@@ -356,6 +356,7 @@ var landlordInstance = new Vue({
             }
             if(post != null){
                 this.postId = post.id
+                this.editMode = true
             }
             if(postIndex != null){
                 this.postIndex = postIndex

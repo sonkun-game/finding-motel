@@ -170,9 +170,6 @@ var filterPostInstance = new Vue({
                         postInstance.postList = data.page.content;
                         postInstance.page = data.page
                         postInstance.endPage = data.endPage;
-                        if(this.page > data.endPage){
-                            window.location.href = "/?page=" + data.endPage
-                        }
                     }
                 }).catch(error => {
                 console.log(error);

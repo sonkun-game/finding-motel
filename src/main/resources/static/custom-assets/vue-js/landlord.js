@@ -220,7 +220,9 @@ var landlordInstance = new Vue({
                     'username' : this.userInfo.username,
                     'listRoom' : this.listRoom,
                     'listImage' : this.uploadImages,
-                    'paymentPackageId' : this.duration
+                    'paymentPackageId' : this.duration,
+                    'address' : this.inputAddress,
+                    'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
                 }
                 let options = {
                     method: 'POST',
@@ -676,7 +678,7 @@ var landlordInstance = new Vue({
                 var places = searchBox.getPlaces(),
                     bounds = new google.maps.LatLngBounds(),
                     i, place,
-                    addresss = places[0].formatted_address;
+                    address = places[0].formatted_address;
 
                 for( i = 0; place = places[i]; i++ ) {
                     bounds.extend( place.geometry.location );
@@ -699,7 +701,7 @@ var landlordInstance = new Vue({
                  * Creates the info Window at the top of the marker
                  */
                 infoWindow = new google.maps.InfoWindow({
-                    content: addresss
+                    content: address
                 });
 
                 infoWindow.open( landlordInstance.map, marker );
@@ -710,11 +712,9 @@ var landlordInstance = new Vue({
              * Finds the new position of the marker when the marker is dragged.
              */
             google.maps.event.addListener( marker, "dragend", function ( event ) {
-                let address, resultArray
+                let address
 
-                console.log( 'i am dragged' );
-
-                var geocoder = new google.maps.Geocoder();
+                let geocoder = new google.maps.Geocoder();
                 geocoder.geocode( { latLng: marker.getPosition() }, function ( result, status ) {
                     if ( 'OK' === status ) {  // This line can also be written like if ( status == google.maps.GeocoderStatus.OK ) {
                         address = result[0].formatted_address;

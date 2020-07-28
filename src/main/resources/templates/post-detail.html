@@ -6,7 +6,9 @@
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link href="assets/css/flex-slider.css" rel="stylesheet" type="text/css"/>
-    <meta charset="UTF-8">
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT1IHF1gT-MK8Dsac6-9jeYv_pVjYuDyk&libraries=places">
+    </script>
     <title>Chi tiết bài đăng</title>
 </head>
 <body>
@@ -103,42 +105,13 @@
                         <div class="address">
                             <span class="subtext">
                                 <i class="fas fa-map-marker-alt"></i>
-                                Gần cây xăng 39, Thạch Hòa, Thạch Thất, Hà Nội
+                                {{post.address}}
                             </span>
                         </div>
-                        <div class="map">
-                            Chỗ này là bản đồ
+                        <div class="map" id="map-canvas">
                         </div>
                     </div>
-                    <div class="service clearfix">
-                        <div class="title-name">
-                            <span>Các tiện ích:</span>
-                        </div>
-                        <div class="item-service clearfix">
-                            <ul class="list-service clearfix">
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Điều hòa</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Chỗ phơi quần áo</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">An ninh an toàn</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Tự do nấu nướng</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Giờ giấc thoải mái</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
                     <!-- Load Facebook SDK for JavaScript -->
                     <div id="fb-root"></div>
                     <script>(function (d, s, id) {

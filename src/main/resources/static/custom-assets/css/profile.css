@@ -385,7 +385,7 @@ border-radius: 2px;
 }
 
 textarea{
-width: 80%;
+width: 100%;
 border: 1px solid #aaa;
 }
 
@@ -469,6 +469,7 @@ input:focus, textarea:focus, select:focus {
     border: .1px solid rgba(81, 203, 238, 1) !important;
 }
 .input-information{
+    position: relative;
     margin-top: 5px;
     display: flex;
 }
@@ -833,4 +834,19 @@ a:hover {
 }
 .rounded-pill{
     border: 1px solid #c2b3d2!important;
+}
+#map-canvas{
+    height: 400px;  /* The height is 400 pixels */
+    width: 100%;
+}
+#map-search{
+    width: 80%;
+    margin-bottom: 10px;
+}
+.fa-search{
+    position: absolute;
+    padding-right: 10px;
+    right: 20%;
+    line-height: 34px;
+    pointer-events: none;
 }

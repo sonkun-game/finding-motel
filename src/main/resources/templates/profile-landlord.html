@@ -4,6 +4,9 @@
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT1IHF1gT-MK8Dsac6-9jeYv_pVjYuDyk&libraries=places">
+    </script>
     <title>Quản lý tài khoản</title>
 </head>
 <body>
@@ -107,42 +110,6 @@
                                 </div>
                                 <div class="fill-information">
                                     <div class="title">
-                                        <h4>Giá cho thuê</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>VNĐ</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Diện tích</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>M&sup2</span>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Khoảng cách (So với Đại Học FPT)</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>KM</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="fill-information">
-                                    <div class="title">
                                         <h4>Số lượng phòng:</h4>
                                     </div>
                                     <div class="input-information">
@@ -184,6 +151,68 @@
                                         </table>
                                     </div>
                                 </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Giá cho thuê</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>VNĐ</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Diện tích</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>M&sup2</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Khoảng cách (So với Đại Học FPT)</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <div class="input-group-append">
+                                            <span>KM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Địa chỉ</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input type="text" v-model="inputAddress" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                    </div>
+                                </div>
+
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Bản đồ</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+
+                                    <input type="hidden" id="latitude">
+                                    <input type="hidden" id="longitude">
+<!--                                    <button id="show-route" v-on:click.prevent="handleCalculateDistance">Show Direction</button>-->
+                                    <div id="map-canvas"></div>
+                                </div>
+
+
+
                                 <div class="fill-information">
                                     <div class="title">
                                         <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
@@ -247,7 +276,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
                                 <div class="title">
@@ -717,6 +745,7 @@
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+
 <!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

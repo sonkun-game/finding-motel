@@ -73,7 +73,11 @@ var landlordInstance = new Vue({
             profileUser.classList.add("invisible")
             this.getInitNewPost()
             let post = JSON.parse(sessionStorage.getItem("selectedPost"))
-            this.handleEditPost(post)
+            this.setFieldEditMode(post)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
         }
 
     },
@@ -300,6 +304,17 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            this.setFieldEditMode(post)
+            userTaskInstance.task = 16
+            noteInstance.task = 16
+            this.task = 16
+            localStorage.setItem("task", 16)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
+        },
+        setFieldEditMode(post){
             this.selectedPost = post
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
@@ -311,14 +326,11 @@ var landlordInstance = new Vue({
             this.distance = post.distance
             // this.numberOfRoom = post.roomNumber
             // this.listRoom = post.listRoom
+            this.inputAddress = post.address
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
             this.getListRoomRequest(null, post.id)
-            userTaskInstance.task = 16
-            noteInstance.task = 16
-            this.task = 16
-            localStorage.setItem("task", 16)
         },
         editPost(){
             let request = {
@@ -331,6 +343,8 @@ var landlordInstance = new Vue({
                 'distance' : this.distance,
                 'username' : this.userInfo.username,
                 'listImage' : this.uploadImages,
+                'address' : this.inputAddress,
+                'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
             }
             let options = {
                 method: 'POST',
@@ -791,13 +805,21 @@ var landlordInstance = new Vue({
             });
         },
         handleCalculateDistance(){
-            let origin = landlordInstance.latMarkerEl.value + ", " + landlordInstance.longMarkerEl.value;
-            let destination = landlordInstance.fuLocation;
+            let origin = this.latMarkerEl.value + ", " + this.longMarkerEl.value;
+            let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
             let directionsService = new google.maps.DirectionsService();
             this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
             this.calculateDistance(travel_mode, origin, destination)
+        },
+        handleDisplayDirection(){
+            let origin = this.selectedPost.mapLocation;
+            let destination = this.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
         }
     }
 })

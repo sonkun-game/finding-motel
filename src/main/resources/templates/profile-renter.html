@@ -66,6 +66,7 @@
                                     <td v-text="rentalRequest.statusDisplay"></td>
                                     <td>
                                         <button v-if="rentalRequest.statusId == 7" v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalCancelRequest(rentalRequest.id, $event)" class="table-button">Hủy</button>
+                                        <button v-if="rentalRequest.statusId == 9" @click="showModalCancelRequest(rentalRequest.id, $event)" data-toggle="tooltip" data-html="true" title="Kết thúc hợp đồng thuê trọ" class="table-button" >Hết hạn</button>
                                     </td>
                                 </tr>
                                 </tbody>

@@ -31,8 +31,8 @@ var authenticationInstance = new Vue({
                 return null
             }
             let condition = {
-                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số và kí tự đặc biệt",
-                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&_-|]).{8,}$/
+                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số",
+                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
             }
             if(!condition.regex.test(password)){
                 return condition.message

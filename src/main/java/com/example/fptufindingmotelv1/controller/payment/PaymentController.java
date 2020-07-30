@@ -56,8 +56,9 @@ public class PaymentController {
         return null;
     }
 
+    @ResponseBody
     @RequestMapping(value = "/save-payment")
-    public void savePayment(@RequestParam(value = "partnerCode") String partnerCode,
+    public JSONObject savePayment(@RequestParam(value = "partnerCode") String partnerCode,
                             @RequestParam("accessKey") String accessKey,
                             @RequestParam("requestId") String requestId,
                             @RequestParam("orderId") String orderId,
@@ -74,7 +75,7 @@ public class PaymentController {
         momoResponseDTO.setAmount(amount);
         momoResponseDTO.setTransId(transId);
         momoResponseDTO.setSignature(signature);
-        paymentService.savePayment(momoResponseDTO);
+        return paymentService.savePayment(momoResponseDTO);
     }
 
     @ResponseBody

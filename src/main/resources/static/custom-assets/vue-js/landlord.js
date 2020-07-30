@@ -804,6 +804,57 @@ var landlordInstance = new Vue({
             let directionsService = new google.maps.DirectionsService();
             this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
             this.calculateDistance(travel_mode, origin, destination)
+        },
+        checkPaymentAmount() {
+            if (this. paymentAmount != "" && this.paymentAmount  < 1000 || this.paymentAmount > 1000000 ) {
+                document.getElementById("notify_paymentAmount").innerHTML="Số tiền phải từ 1.000vnđ -> 1.000.000vnđ.";
+            } else {
+                document.getElementById("notify_paymentAmount").innerHTML="Bạn phải nhập số tiền muốn nạp.";
+            }
+            // paymentAmountTxt
+            if (this.paymentAmount.length == 0 || this.paymentAmount  < 1000 || this.paymentAmount > 1000000) {
+                document.getElementById("notify_paymentAmount").classList.remove("invisible");
+                document.getElementById("paymentAmountTxt").classList.add("border-error");
+            } else {
+                document.getElementById("notify_paymentAmount").classList.add("invisible");
+                document.getElementById("paymentAmountTxt").classList.remove("border-error");
+                this.getMomoPredata();
+            }
+        },
+        getMomoPredata() {
+            fetch("/get-momo-predata", {
+                method: 'POST',
+                body: this.paymentAmount
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        this.sentMomo(data.data);
+                    }
+                })
+        },
+        sentMomo(momoRequest) {
+            fetch("https://test-payment.momo.vn/gw_payment/transactionProcessor", {
+                method: 'POST',
+                body: JSON.stringify(momoRequest)
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (data.errorCode == 0) {
+                        window.location.href = data.payUrl;
+                    }
+                })
+        },
+        getRespone: function () {
+            fetch("payment")
+                .then(response => response.json())
+                .then((data) => {
+
+                })
+        },
+        showModal: function () {
+            this.showModal = false;
+            this.$http.get
         }
     }
 })

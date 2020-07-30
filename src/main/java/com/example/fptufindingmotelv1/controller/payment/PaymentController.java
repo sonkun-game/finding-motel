@@ -1,11 +1,17 @@
 package com.example.fptufindingmotelv1.controller.payment;
 
+import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import com.example.fptufindingmotelv1.dto.PaymentDTO;
 import com.example.fptufindingmotelv1.dto.PaymentPostDTO;
 import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
+import com.example.fptufindingmotelv1.service.payment.PaymentService;
+import com.restfb.json.Json;
+import com.restfb.json.JsonObject;
+import com.restfb.types.Payment;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,17 +33,20 @@ public class PaymentController {
     @Autowired
     LandlordRepository landlordRepository;
 
+    @Autowired
+    PaymentService paymentService;
+
     @ResponseBody
     @RequestMapping(value = "/api-get-history-payment-post")
-    public List<PaymentPostDTO> getHistoryPaymentPost(){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+    public List<PaymentPostDTO> getHistoryPaymentPost() {
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
             //Get username of landlord
             LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
             List<PaymentPostDTO> response = new ArrayList<>();
-            for(int i=0;i<landlordModel.getPosts().size();i++){
-                for(int j=0;j<landlordModel.getPosts().get(i).getPaymentPosts().size();j++){
+            for (int i = 0; i < landlordModel.getPosts().size(); i++) {
+                for (int j = 0; j < landlordModel.getPosts().get(i).getPaymentPosts().size(); j++) {
                     //Add to list PaymentPostDTO
                     response.add(new PaymentPostDTO(landlordModel.getPosts().get(i).getPaymentPosts().get(j)));
                 }
@@ -47,23 +56,39 @@ public class PaymentController {
         return null;
     }
 
-    @RequestMapping(value = "/save-payment", method = RequestMethod.GET)
-    public String savePayment(PaymentDTO paymentDTO) {
-        return "redirect:/payment";
+    @RequestMapping(value = "/save-payment")
+    public void savePayment(@RequestParam(value = "partnerCode") String partnerCode,
+                            @RequestParam("accessKey") String accessKey,
+                            @RequestParam("requestId") String requestId,
+                            @RequestParam("orderId") String orderId,
+                            @RequestParam("signature") String signature,
+                            @RequestParam("amount") String amount,
+                            @RequestParam("transId") String transId,
+                            @RequestParam("errorCode") String errorCode) {
+        MomoResponseDTO momoResponseDTO = new MomoResponseDTO();
+        momoResponseDTO.setPartnerCode(partnerCode);
+        momoResponseDTO.setAccessKey(accessKey);
+        momoResponseDTO.setRequestId(requestId);
+        momoResponseDTO.setOrderId(orderId);
+        momoResponseDTO.setErrorCode(errorCode);
+        momoResponseDTO.setAmount(amount);
+        momoResponseDTO.setTransId(transId);
+        momoResponseDTO.setSignature(signature);
+        paymentService.savePayment(momoResponseDTO);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-momo-request", method = RequestMethod.POST)
-    public MomoModel sentRequestMomo(@RequestBody String amountValue) {
+    @RequestMapping(value = "/get-momo-predata", method = RequestMethod.POST)
+    public JSONObject sentRequestMomo(@RequestBody String amountValue) {
         String partnerCode = "MOMO1J5T20200521";
         String accessKey = "Y09NiKaRm3Utzc6x";
         String requestType = "captureMoMoWallet";
-        String requestId = createUniquieID();
+        String requestId = "request_" + createUniquieID();
         String amount = amountValue;
-        String orderId = "lehuy113";
+        String orderId = "order_" + createUniquieID();
         String orderInfo = "Momo pay for user";
-        String returnUrl = "http://localhost:8080/notifyPayStatus";
-        String notifyUrl = "http://localhost:8080/notifyPayStatus";
+        String returnUrl = "https://localhost:8081/save-payment";
+        String notifyUrl = "https://localhost:8081/save-payment";
         String extraData = "";
         String rawSign = "partnerCode=" + partnerCode + "&accessKey=" + accessKey
                 + "&requestId=" + requestId + "&amount=" + amount + "&orderId=" + orderId
@@ -73,7 +98,10 @@ public class PaymentController {
         String signature = getSignature(rawSign);
         MomoModel momoModel = new MomoModel(partnerCode, accessKey, requestType, requestId, amount, orderId, orderInfo
                 , returnUrl, notifyUrl, extraData, signature);
-        return momoModel;
+        JSONObject response = new JSONObject();
+        response.put("code", "000");
+        response.put("data", momoModel);
+        return response;
     }
 
     public String getSignature(String rawSign) {
@@ -101,7 +129,7 @@ public class PaymentController {
     }
 
     private String createUniquieID() {
-        return "ffm" + UUID.randomUUID().toString();
+        return "ffm_" + UUID.randomUUID().toString();
     }
 
 }

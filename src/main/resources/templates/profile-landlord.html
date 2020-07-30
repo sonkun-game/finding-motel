@@ -346,16 +346,16 @@
                             </div>
                         </div>
                         <div class="">
-                            <p v-bind:class="{invisible: paymentValid}" style="color: red;">
-                               Bạn phải nhập số tiền muốn nạp!
+                            <p id="notify_paymentAmount" class="invisible" style="color: red;">
+
                             </p>
                             <p>
                                 Số tiền:
                             </p>
-                            <input v-bind:class="{border_error: (paymentAmount.length = 0)}" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ">
+                            <input @focusout="" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ">
                         </div>
                         <div>
-                            <button v-on:click="" class="btn">
+                            <button v-on:click="checkPaymentAmount" class="btn">
                                 Thanh Toán
                             </button>
                         </div>

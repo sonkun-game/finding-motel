@@ -1,8 +1,10 @@
 package com.example.fptufindingmotelv1.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class MomoModel {
     private String partnerCode;
     private String accessKey;
@@ -29,4 +31,6 @@ public class MomoModel {
         this.extraData = extraData;
         this.signature = signature;
     }
+
+
 }

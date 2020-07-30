@@ -47,8 +47,8 @@ public class PaymentController {
         return null;
     }
 
-    @RequestMapping(value = "/saveayment", method = RequestMethod.GET)
-    public String sentNotify(Model model, @RequestParam(value = "errorCode") String errorCode, @RequestParam(value = "localMessage") String localMess) {
+    @RequestMapping(value = "/save-payment", method = RequestMethod.GET)
+    public String savePayment(PaymentDTO paymentDTO) {
         return "redirect:/payment";
     }
 

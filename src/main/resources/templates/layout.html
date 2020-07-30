@@ -426,7 +426,7 @@
                 <span style="font-weight: 700" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></span>
             </li>
         </ul>
-        <a v-if="userInfo.role == 'LANDLORD'" href="" class="btn-payment mr-2">Nạp tiền</a>
+        <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePayment()" href="" class="btn-payment mr-2">Nạp tiền</a>
         <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
     </div>
 

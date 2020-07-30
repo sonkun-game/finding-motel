@@ -33,7 +33,10 @@ var landlordInstance = new Vue({
         latMarkerEl : "",
         longMarkerEl : "",
         map : "",
-        inputAddress : ""
+        inputAddress : "",
+        //
+        paymentAmount : "",
+        paymentValid : false,
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -74,6 +77,9 @@ var landlordInstance = new Vue({
             this.getInitNewPost()
             let post = JSON.parse(sessionStorage.getItem("selectedPost"))
             this.handleEditPost(post)
+        } else if (this.task == 8) {
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
         }
 
     },

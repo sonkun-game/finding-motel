@@ -19,7 +19,7 @@ public class ForgotPasswordController {
     private ForgotPasswordService forgotPasswordService;
 
     @GetMapping("/forgot")
-    public String getForgot(Model model){
+    public String getForgot(){
         return "forgot";
     }
 

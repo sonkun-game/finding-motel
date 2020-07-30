@@ -99,6 +99,8 @@ public class ManagePostServiceImpl implements ManagePostService{
             postModel.setBanned(false);
             postModel.setRoomNumber(postRequestDTO.getRoomNumber());
             postModel.setType(typeModel);
+            postModel.setAddress(postRequestDTO.getAddress());
+            postModel.setMapLocation(postRequestDTO.getMapLocation());
             PaymentPackageModel packageModel
                     = paymentPackageRepository.findById(postRequestDTO.getPaymentPackageId()).get();
             Date date = new Date();
@@ -280,6 +282,8 @@ public class ManagePostServiceImpl implements ManagePostService{
             postModel.setSquare(postRequestDTO.getSquare());
             postModel.setTitle(postRequestDTO.getTitle());
             postModel.setType(typeModel);
+            postModel.setAddress(postRequestDTO.getAddress());
+            postModel.setMapLocation(postRequestDTO.getMapLocation());
 
 
             for (int i = 0; i < postModel.getImages().size(); i++) {

@@ -13,7 +13,8 @@ var postDetailInstance = new Vue({
         //action
         confirmAction : null,
         relatedPosts: [],
-
+        map : "",
+        fuLocation : {placeId : "ChIJbQilLLNUNDER5Der2CkuxqM"},
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -37,6 +38,7 @@ var postDetailInstance = new Vue({
                     console.log(data);
                     this.post = data;
                     this.listImage = this.post.images
+                    this.handleDisplayDirection()
 
                 }).catch(error => {
                 console.log(error);
@@ -224,9 +226,49 @@ var postDetailInstance = new Vue({
         },
         getURL() {
             return window.location.href;
+        },
+        initMap(){
+            let mapOptions,
+                element = document.getElementById( 'map-canvas' )
+            mapOptions = {
+                zoom: 16,
+                center: new google.maps.LatLng( 21.013237, 105.527018 ),
+                disableDefaultUI: false, // Disables the controls like zoom control on the map if set to true
+                scrollWheel: true, // If set to false disables the scrolling on the map.
+                draggable: true, // If set to false , you cannot move the map around.
+            }
+            // Create an object map with the constructor function Map()
+            this.map = new google.maps.Map( element, mapOptions ); // Till this like of code it loads up the map.
+
+        },
+        displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: travel_mode,
+                avoidTolls: true
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setMap(postDetailInstance.map);
+                    directionsDisplay.setDirections(response);
+                } else {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay.setDirections(null);
+                    alert('Could not display directions due to: ' + status);
+                }
+            });
+        },
+        handleDisplayDirection(){
+            let origin = this.post.mapLocation;
+            let destination = this.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
         }
     },
     mounted() {
+        this.initMap()
         setTimeout(function () {
             $('.flexslider').flexslider({
                 animation: "slide",

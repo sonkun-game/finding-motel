@@ -76,7 +76,11 @@ var landlordInstance = new Vue({
             profileUser.classList.add("invisible")
             this.getInitNewPost()
             let post = JSON.parse(sessionStorage.getItem("selectedPost"))
-            this.handleEditPost(post)
+            this.setFieldEditMode(post)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
         } else if (this.task == 8) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -226,7 +230,9 @@ var landlordInstance = new Vue({
                     'username' : this.userInfo.username,
                     'listRoom' : this.listRoom,
                     'listImage' : this.uploadImages,
-                    'paymentPackageId' : this.duration
+                    'paymentPackageId' : this.duration,
+                    'address' : this.inputAddress,
+                    'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
                 }
                 let options = {
                     method: 'POST',
@@ -304,6 +310,17 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            this.setFieldEditMode(post)
+            userTaskInstance.task = 16
+            noteInstance.task = 16
+            this.task = 16
+            localStorage.setItem("task", 16)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
+        },
+        setFieldEditMode(post){
             this.selectedPost = post
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
@@ -315,14 +332,11 @@ var landlordInstance = new Vue({
             this.distance = post.distance
             // this.numberOfRoom = post.roomNumber
             // this.listRoom = post.listRoom
+            this.inputAddress = post.address
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
             this.getListRoomRequest(null, post.id)
-            userTaskInstance.task = 16
-            noteInstance.task = 16
-            this.task = 16
-            localStorage.setItem("task", 16)
         },
         editPost(){
             let request = {
@@ -335,6 +349,8 @@ var landlordInstance = new Vue({
                 'distance' : this.distance,
                 'username' : this.userInfo.username,
                 'listImage' : this.uploadImages,
+                'address' : this.inputAddress,
+                'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
             }
             let options = {
                 method: 'POST',
@@ -682,7 +698,7 @@ var landlordInstance = new Vue({
                 var places = searchBox.getPlaces(),
                     bounds = new google.maps.LatLngBounds(),
                     i, place,
-                    addresss = places[0].formatted_address;
+                    address = places[0].formatted_address;
 
                 for( i = 0; place = places[i]; i++ ) {
                     bounds.extend( place.geometry.location );
@@ -705,7 +721,7 @@ var landlordInstance = new Vue({
                  * Creates the info Window at the top of the marker
                  */
                 infoWindow = new google.maps.InfoWindow({
-                    content: addresss
+                    content: address
                 });
 
                 infoWindow.open( landlordInstance.map, marker );
@@ -716,11 +732,9 @@ var landlordInstance = new Vue({
              * Finds the new position of the marker when the marker is dragged.
              */
             google.maps.event.addListener( marker, "dragend", function ( event ) {
-                let address, resultArray
+                let address
 
-                console.log( 'i am dragged' );
-
-                var geocoder = new google.maps.Geocoder();
+                let geocoder = new google.maps.Geocoder();
                 geocoder.geocode( { latLng: marker.getPosition() }, function ( result, status ) {
                     if ( 'OK' === status ) {  // This line can also be written like if ( status == google.maps.GeocoderStatus.OK ) {
                         address = result[0].formatted_address;
@@ -797,13 +811,21 @@ var landlordInstance = new Vue({
             });
         },
         handleCalculateDistance(){
-            let origin = landlordInstance.latMarkerEl.value + ", " + landlordInstance.longMarkerEl.value;
-            let destination = landlordInstance.fuLocation;
+            let origin = this.latMarkerEl.value + ", " + this.longMarkerEl.value;
+            let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
             let directionsService = new google.maps.DirectionsService();
             this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
             this.calculateDistance(travel_mode, origin, destination)
+        },
+        handleDisplayDirection(){
+            let origin = this.selectedPost.mapLocation;
+            let destination = this.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
         },
         checkPaymentAmount() {
             if (this. paymentAmount != "" && this.paymentAmount  < 1000 || this.paymentAmount > 1000000 ) {

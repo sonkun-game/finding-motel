@@ -33,6 +33,8 @@ public class PostDTO {
     private List<String> images;
     private List<RoomDTO> listRoom;
     private String wishListId;
+    private String address;
+    private String mapLocation;
 
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -49,6 +51,8 @@ public class PostDTO {
         this.description = postModel.getDescription();
         this.isVisible = postModel.isVisible();
         this.title = postModel.getTitle();
+        this.address = postModel.getAddress();
+        this.mapLocation = postModel.getMapLocation();
         this.images = new ArrayList<>();
         for (ImageModel image:
                 postModel.getImages()) {

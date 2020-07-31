@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,4 +37,7 @@ public class UserModel implements Serializable {
 
     @Column(name = "DISPLAY_NAME")
     private String displayName;
+
+    @OneToMany(mappedBy = "userNotification")
+    private List<NotificationModel> notifications;
 }

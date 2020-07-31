@@ -34,6 +34,8 @@
             </div>
             <div class="modal-body">
                 <label id="modalConfirmMessage"></label>
+            </div>
+            <div class="modal-footer">
                 <div class="group-btn">
                     <button @click="executeConfirm(true)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
@@ -41,7 +43,6 @@
                     <button @click="executeConfirm(false)" value="0"
                             class="btn-hover btn-default-cancel">Hủy bỏ
                     </button>
-
                 </div>
             </div>
         </div>
@@ -85,7 +86,7 @@
                                 <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-lg-10 pdr-40px">
+                        <div class="col-xl-10 col-lg-10">
                             <!-- main-menu -->
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
@@ -99,15 +100,15 @@
                                         </li>
                                         <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
-                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
+                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a></li>
                                                 <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN USER -->
-                                        <li v-else class="login-icon">
-                                             <i v-cloak class="ti-user ti-user-header overflow-dots">
-                                                 <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
-                                            </i>
+                                        <li v-else class="login-icon" @mouseover="handleMouseOverProfile">
+                                             <i v-cloak class="ti-user ti-user-header overflow-dots"></i>
+                                            <div class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </div>
+
 
                                             <ul class="submenu">
                                                 <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
@@ -131,7 +132,37 @@
                                                 <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
                                             </ul>
                                         </li>
+                                        <li v-if="authenticated" class="">
+                                            <div class="bell-container">
+                                                <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">
+                                                    <div  class="notification-number" v-text="notificationNumber"></div>
+                                                    <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>
+                                                    <i class="fas fa-caret-up" v-if="isShowNotification"></i>
+                                                </div>
 
+
+                                                <div class="notification-container" id="notification-container" v-if="isShowNotification">
+
+                                                    <div class="notification-header">
+                                                        <span>Thông báo</span>
+                                                    </div>
+                                                    <div class="notification-body">
+                                                        <div class="no-notification" v-if="listNotification.length == 0">Không có thông báo</div>
+                                                        <ul v-else class="notification-list">
+                                                            <li v-for="(notification, index) in listNotification" v-on:click="handleClickNotification(notification, index)" v-bind:class="notification.seen ? 'seen-notification' : ''">
+                                                                <div class="notify-content">
+                                                                    <a v-html="notification.content"></a>
+                                                                </div>
+                                                                <div class="notify-date">
+                                                                    <span v-text="notification.displayDate"></span>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>
@@ -378,6 +409,8 @@
             </div>
             <div class="modal-body">
                 <label id="confirm-content" v-text="messageConfirm"></label>
+            </div>
+            <div class="modal-footer">
                 <div class="group-btn">
                     <button @click="yesNoConfirmClick($event)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
@@ -428,6 +461,84 @@
         </ul>
         <a v-if="userInfo.role == 'LANDLORD'" href="" class="btn-payment mr-2">Nạp tiền</a>
         <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
+    </div>
+
+    <!--Modal rental request detail-->
+    <div th:fragment="modal-request-detail" id="modalRequestDetail" class="modal">
+        <!-- Modal content -->
+        <div class="view-information">
+            <div class="modal-header">
+                <h2>Thông tin phòng trọ</h2>
+                <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="infor-modal">
+                    <p class="left-modal">Tên phòng:</p>
+                    <input :value="selectedRequest.roomName"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Yêu cầu thuê phòng:</p>
+                    <input :value="selectedRequest.id"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Ngày yêu cầu:</p>
+                    <input :value="selectedRequest.displayRequestDate"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Ngày bắt đầu:</p>
+                    <input :value="selectedRequest.displayStartDate"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Tên đăng nhập:</p>
+                    <input :value="renterInfo.username"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Tên hiển thị:</p>
+                    <input :value="renterInfo.displayName"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Số điện thoại:</p>
+                    <input :value="renterInfo.phoneNumber"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Ngày sinh:</p>
+                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Nghề nghiệp:</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.career" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Giới tính:</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.genderDisplay" disabled/>
+                </div>
+                <div v-html="message">
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Xác Nhận</button>
+                <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
+            </div>
+        </div>
     </div>
 
 </body>

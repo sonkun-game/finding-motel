@@ -168,3 +168,90 @@ main{
 .table td, .table th {
     vertical-align: middle!important;
 }
+.bell-container{
+    padding-left: 10px;
+}
+.fa-bell{
+    font-size: 25px;
+    color: #2B96CC;
+    cursor: pointer;
+}
+.notification-number{
+    position: absolute;
+    right: -3px;
+    top: -6px;
+    font-size: 12px;
+    color: white;
+    background-color: #dc3545;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.notification-container{
+    position: absolute;
+    min-width: 450px;
+    background: #fff;
+    right: -7px;
+    top: 150%;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.05);
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+.notification-header{
+    padding: 8px 0 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #e9ecef;
+}
+.notification-body ul.notification-list>li{
+    display: block;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.notification-body ul.notification-list>li a{
+    color: #262626;
+    font-weight: 400;
+    display: block;
+    font-size: 16px;
+    position: relative;
+    padding: 0!important;
+    line-height: 1.4;
+}
+.notification-body ul.notification-list>li:hover{
+    background-color: lightgray;
+}
+.notification-body ul.notification-list>li a:hover{
+    color: black!important;
+}
+.fa-caret-up{
+    position: absolute;
+    font-size: 40px;
+    right: -2px;
+    color: white;
+    line-height: 0;
+    top: 38px;
+    pointer-events: none;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+.bell-wrapper{
+    cursor: pointer;
+}
+.notify-date{
+    padding-left: 15px;
+    font-size: 12px;
+}
+.notify-content{
+    padding: 10px 15px 5px 15px;
+}
+.seen-notification{
+    background-color: #edf2fa;
+}
+.no-notification{
+    margin: 15px 0;
+    text-align: center;
+}

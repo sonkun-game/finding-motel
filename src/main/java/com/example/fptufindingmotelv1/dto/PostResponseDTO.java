@@ -36,6 +36,8 @@ public class PostResponseDTO {
     private List<String> listImage;
     private int reportNumber;
     private boolean banAvailable;
+    private String address;
+    private String mapLocation;
 
     public PostResponseDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -53,6 +55,8 @@ public class PostResponseDTO {
         this.postVisible = postModel.isVisible();
         this.banned = postModel.isBanned();
         this.title = postModel.getTitle();
+        this.address = postModel.getAddress();
+        this.mapLocation = postModel.getMapLocation();
         this.displayStatus = this.postVisible ? "Hiển thị" : "Không hiển thị";
         this.displayStatus = this.banned ? "Bị khóa" : this.displayStatus;
         this.listRoom = new ArrayList<>();

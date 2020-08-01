@@ -38,7 +38,14 @@ public class ManageRequestController {
             for (RentalRequestModel request:
                     roomModel.getRoomRentals()) {
 
-                if(rentalRequestDTO.getStatusId() == null){
+                if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() != null){
+                    if(request.getId().equals(rentalRequestDTO.getId())){
+                        requestNumber ++;
+                        roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
+                        roomDTO.setOpenCollapse(true);
+                    }
+                }
+                else if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() == null){
                     requestNumber ++;
                     roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
                 }

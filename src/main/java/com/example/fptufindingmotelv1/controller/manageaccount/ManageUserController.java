@@ -23,7 +23,7 @@ public class ManageUserController {
     private ManageUserService manageUserService;
 
     @GetMapping(value = {"/profile-user", "/quan-ly-tai-khoan"})
-    public String getProfileLandlord(Model model){
+    public String getProfileUser(){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();

@@ -62,6 +62,12 @@ public class PostModel implements Serializable{
     @Column(name = "IS_BANNED", nullable = false)
     private boolean banned;
 
+    @Column(name = "ADDRESS", nullable = false)
+    private String address;
+
+    @Column(name = "MAP_LOCATION")
+    private String mapLocation;
+
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 

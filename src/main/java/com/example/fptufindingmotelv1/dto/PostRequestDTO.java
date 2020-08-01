@@ -21,4 +21,6 @@ public class PostRequestDTO {
     private List<String> listImage;
     private long paymentPackageId;
     private Boolean isVisible;
+    private String address;
+    private String mapLocation;
 }

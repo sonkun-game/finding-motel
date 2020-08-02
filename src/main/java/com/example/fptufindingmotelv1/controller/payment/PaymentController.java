@@ -76,7 +76,7 @@ public class PaymentController {
         MomoResponseDTO momoResponseDTO = new MomoResponseDTO(partnerCode, accessKey, requestId, amount, orderId
                 , orderInfo, orderType, transId, errorCode, message, localMessage, payType, responseTime, extraData, signature);
         JSONObject resp = paymentService.validateAndSaveMomoPayment(momoResponseDTO);
-        return "profile-landlord?momoMessage=" + resp.get("message");
+        return "profile-landlord";
     }
 
 

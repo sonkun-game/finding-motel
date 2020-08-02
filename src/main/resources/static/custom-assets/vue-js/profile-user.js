@@ -334,6 +334,14 @@ var userTaskInstance = new Vue({
                         window.location.href = "/quan-ly-he-thong"
                     }
 
+                }else if(task == 19){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.getListPaymentPackage()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
                 }else if(task == 3){
                     renterInstance.task = task
                     renterInstance.getWishlist()

@@ -66,8 +66,8 @@ public class ManagePostServiceImpl implements ManagePostService{
         try {
             Sort sort = Sort.by("duration").ascending();
             return paymentPackageRepository.findAll(sort);
-        }catch (Exception exception){
-            System.err.println(exception);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }
@@ -76,8 +76,8 @@ public class ManagePostServiceImpl implements ManagePostService{
     public List<TypeModel> getListTypePost() {
         try {
             return typeRepository.findAll();
-        }catch (Exception exception){
-            System.err.println(exception);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

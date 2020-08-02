@@ -32,8 +32,8 @@ public class PaymentController {
                     .getAuthentication().getPrincipal();
             LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
             List<PaymentDTO> response = new ArrayList<>();
-            for (PaymentModel paymet: landlordModel.getPaymentModels()) {
-                response.add(new PaymentDTO(paymet));
+            for (PaymentModel payment: landlordModel.getPaymentModels()) {
+                response.add(new PaymentDTO(payment));
             }
             return response;
         }

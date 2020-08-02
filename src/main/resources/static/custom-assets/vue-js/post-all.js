@@ -200,10 +200,11 @@ var filterPostInstance = new Vue({
                     nice_Select.niceSelect();
                 }
             }, 100)
-            setTimeout(function () {
-                $('select').niceSelect('update');
-            }, 1000)
+
         });
+    },
+    updated(){
+        $('select').niceSelect('update');
     }
 
 })

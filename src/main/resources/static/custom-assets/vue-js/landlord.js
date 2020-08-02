@@ -33,7 +33,8 @@ var landlordInstance = new Vue({
         latMarkerEl : "",
         longMarkerEl : "",
         map : "",
-        inputAddress : ""
+        inputAddress : "",
+        message : "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -67,6 +68,12 @@ var landlordInstance = new Vue({
             profileUser.classList.add("invisible")
             this.selectedPost = JSON.parse(sessionStorage.getItem("selectedPost"))
             this.getListRoomRequest(null, this.selectedPost.id)
+        }
+        else if(this.task == 17){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            let notification = JSON.parse(sessionStorage.getItem("notification"))
+            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
         }
         else if(this.task == 16){
             let profileUser = document.getElementById("user-manager-content")
@@ -445,11 +452,13 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        getListRoomRequest(statusId, postId){
+        getListRoomRequest(statusId, postId, roomId, requestId){
             let request = {
                 'landlordUsername' : this.userInfo.username,
                 'statusId' : statusId,
                 'postId' : postId,
+                'roomId' : roomId,
+                'id' : requestId,
             }
             let options = {
                 method: 'POST',
@@ -464,6 +473,13 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
                         this.listRoomRequest = data.listRoomRequest
+                        for (let i = 0; i < this.listRoomRequest.length; i++) {
+                            this.listRoomRequest[i].listRentalRequest.sort(function (a, b) {
+                                let dateA = new Date(a.requestDate),
+                                    dateB = new Date(b.requestDate)
+                                return dateB - dateA;
+                            })
+                        }
                     }
                 }).catch(error => {
                 console.log(error);
@@ -490,6 +506,9 @@ var landlordInstance = new Vue({
                             this.getListRoomRequest(7)
                         }else if(this.task == 15){
                             this.getListRoomRequest(null, this.selectedPost.id)
+                        }else if(this.task == 17){
+                            let notification = JSON.parse(sessionStorage.getItem("notification"))
+                            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
                         }
 
                     }
@@ -517,6 +536,9 @@ var landlordInstance = new Vue({
                             this.getListRoomRequest(7)
                         }else if(this.task == 15){
                             this.getListRoomRequest(null, this.selectedPost.id)
+                        }else if(this.task == 17){
+                            let notification = JSON.parse(sessionStorage.getItem("notification"))
+                            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
                         }
                     }
                 }).catch(error => {
@@ -554,6 +576,9 @@ var landlordInstance = new Vue({
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
+                    this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
+                        "<p>Trạng thái của phòng sẽ được thay đổi thành \"Còn Trống\"</p>" +
+                        "<p>Người dùng \"" + this.renterInfo.username + "\" sẽ bị xóa khỏi phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }

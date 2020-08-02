@@ -36,6 +36,9 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     RentalRequestRepository rentalRequestRepository;
 
+    @Autowired
+    PaymentPackageRepository paymentPackageRepository;
+
     protected JSONObject getResponeMessage(String code, String msg) {
         JSONObject responeMsg = new JSONObject();
         responeMsg.put("code", code);
@@ -288,6 +291,24 @@ public class AdminServiceImpl implements AdminService {
             response.put("msgCode", "sys999");
             response.put("message", e.getMessage());
             return response;
+        }
+    }
+
+    @Override
+    public PaymentPackageModel savePaymentPackage(PaymentPackageDTO paymentPackageDTO) {
+        try {
+            PaymentPackageModel paymentPackageModel = new PaymentPackageModel();
+            if(paymentPackageDTO.getId() != null){
+                 paymentPackageModel =
+                        paymentPackageRepository.findById(paymentPackageDTO.getId()).get();
+            }
+            paymentPackageModel.setPackageName(paymentPackageDTO.getPackageName());
+            paymentPackageModel.setDuration(paymentPackageDTO.getDuration());
+            paymentPackageModel.setAmount(paymentPackageDTO.getAmount());
+            return paymentPackageRepository.save(paymentPackageModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -202,7 +202,7 @@
                                     </div>
                                     <div class="input-information">
                                         <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
-                                        <i class="fas fa-search"></i>
+                                        <i class="fas icon-search-map fa-search"></i>
                                     </div>
 
                                     <input type="hidden" id="latitude">
@@ -292,7 +292,7 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="package in listPaymentPackage">
-                                            <th scope="row" v-text="'Gói ' + package.id"></th>
+                                            <th scope="row" v-text="package.packageName"></th>
                                             <th scope="row" v-text="package.duration + ' Tháng'"></th>
                                             <th scope="row" v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
                                         </tr>

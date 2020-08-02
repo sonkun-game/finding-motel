@@ -331,14 +331,13 @@ display: none !important;
 }
 
 .search-container button {
-float: right;
-padding: 5px 10px;
-background: #ddd;
-font-size: 17px;
-border: none;
+    float: right;
+    padding: 0 10px;
+    background: #ddd;
+    border: none;
     border-radius: 5px;
-cursor: pointer;
-color: black;
+    cursor: pointer;
+    color: black;
 }
 
 .search-container button:hover {
@@ -474,10 +473,9 @@ input:focus, textarea:focus, select:focus {
     display: flex;
 }
 .input-group-append{
-    border: 1px solid #DDDDDD;
     width: 10%;
     line-height: inherit;
-    height: 35px;
+    height: 34px;
     border-bottom-right-radius: 6px;
     border-top-right-radius: 6px;
     background-color: #dca73a;
@@ -844,9 +842,30 @@ a:hover {
     margin-bottom: 10px;
 }
 .fa-search{
+    line-height: 34px;
+}
+.icon-search-map{
     position: absolute;
     padding-right: 10px;
     right: 20%;
     line-height: 34px;
     pointer-events: none;
+}
+.btn-container{
+    padding: 15px 0;
+}
+.btn-add-package{
+    padding: 0 20px!important;
+    height: 40px;
+    float: right;
+    margin-bottom: 15px;
+}
+.input-package-tbx{
+    width: 55%!important;
+    border-top-right-radius: 0px!important;
+    border-bottom-right-radius: 0px!important;
+}
+.input-package-append{
+    width: 15%;
+    height: 30px;
 }

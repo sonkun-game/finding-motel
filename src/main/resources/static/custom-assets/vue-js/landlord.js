@@ -840,30 +840,18 @@ var landlordInstance = new Vue({
             } else {
                 document.getElementById("notify_paymentAmount").classList.add("invisible");
                 document.getElementById("paymentAmountTxt").classList.remove("border-error");
-                this.getMomoPredata();
+                this.requestMomoPayment();
             }
         },
-        getMomoPredata() {
-            fetch("/get-momo-predata", {
+        requestMomoPayment() {
+            fetch("/request-momo-payment", {
                 method: 'POST',
                 body: this.paymentAmount
             })
                 .then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
-                        this.sentMomo(data.data);
-                    }
-                })
-        },
-        sentMomo(momoRequest) {
-            fetch("https://test-payment.momo.vn/gw_payment/transactionProcessor", {
-                method: 'POST',
-                body: JSON.stringify(momoRequest)
-            })
-                .then(response => response.json())
-                .then((data) => {
-                    if (data.errorCode == 0) {
-                        window.location.href = data.payUrl;
+                        window.location.href = data.momoPayUrl;
                     }
                 })
         },

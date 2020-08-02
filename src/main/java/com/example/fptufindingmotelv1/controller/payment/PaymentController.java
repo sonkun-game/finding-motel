@@ -56,81 +56,33 @@ public class PaymentController {
         return null;
     }
 
+
+    @RequestMapping(value = "/validate-save-momo-payment")
+    public String getMomoPaymentStatus(@RequestParam(value = "partnerCode") String partnerCode,
+                                           @RequestParam("accessKey") String accessKey,
+                                           @RequestParam("requestId") String requestId,
+                                           @RequestParam("amount") String amount,
+                                           @RequestParam("orderId") String orderId,
+                                           @RequestParam("orderInfo") String orderInfo,
+                                           @RequestParam("orderType") String orderType,
+                                           @RequestParam("transId") String transId,
+                                           @RequestParam("errorCode") String errorCode,
+                                           @RequestParam("message") String message,
+                                           @RequestParam("localMessage") String localMessage,
+                                           @RequestParam("payType") String payType,
+                                           @RequestParam("responseTime") String responseTime,
+                                           @RequestParam("extraData") String extraData,
+                                           @RequestParam("signature") String signature) {
+        MomoResponseDTO momoResponseDTO = new MomoResponseDTO(partnerCode, accessKey, requestId, amount, orderId
+                , orderInfo, orderType, transId, errorCode, message, localMessage, payType, responseTime, extraData, signature);
+        JSONObject resp = paymentService.validateAndSaveMomoPayment(momoResponseDTO);
+        return "profile-landlord?momoMessage=" + resp.get("message");
+    }
+
+
     @ResponseBody
-    @RequestMapping(value = "/save-payment")
-    public JSONObject savePayment(@RequestParam(value = "partnerCode") String partnerCode,
-                            @RequestParam("accessKey") String accessKey,
-                            @RequestParam("requestId") String requestId,
-                            @RequestParam("orderId") String orderId,
-                            @RequestParam("signature") String signature,
-                            @RequestParam("amount") String amount,
-                            @RequestParam("transId") String transId,
-                            @RequestParam("errorCode") String errorCode) {
-        MomoResponseDTO momoResponseDTO = new MomoResponseDTO();
-        momoResponseDTO.setPartnerCode(partnerCode);
-        momoResponseDTO.setAccessKey(accessKey);
-        momoResponseDTO.setRequestId(requestId);
-        momoResponseDTO.setOrderId(orderId);
-        momoResponseDTO.setErrorCode(errorCode);
-        momoResponseDTO.setAmount(amount);
-        momoResponseDTO.setTransId(transId);
-        momoResponseDTO.setSignature(signature);
-        return paymentService.savePayment(momoResponseDTO);
+    @RequestMapping(value = "/request-momo-payment", method = RequestMethod.POST)
+    public JSONObject sentMomoRequest(@RequestBody String amountValue) {
+        return paymentService.requestMomoPayment(amountValue);
     }
-
-    @ResponseBody
-    @RequestMapping(value = "/get-momo-predata", method = RequestMethod.POST)
-    public JSONObject sentRequestMomo(@RequestBody String amountValue) {
-        String partnerCode = "MOMO1J5T20200521";
-        String accessKey = "Y09NiKaRm3Utzc6x";
-        String requestType = "captureMoMoWallet";
-        String requestId = "request_" + createUniquieID();
-        String amount = amountValue;
-        String orderId = "order_" + createUniquieID();
-        String orderInfo = "Momo pay for user";
-        String returnUrl = "https://localhost:8081/save-payment";
-        String notifyUrl = "https://localhost:8081/save-payment";
-        String extraData = "";
-        String rawSign = "partnerCode=" + partnerCode + "&accessKey=" + accessKey
-                + "&requestId=" + requestId + "&amount=" + amount + "&orderId=" + orderId
-                + "&orderInfo=" + orderInfo + "&returnUrl=" + returnUrl + "&notifyUrl=" + notifyUrl
-                + "&extraData=" + extraData;
-
-        String signature = getSignature(rawSign);
-        MomoModel momoModel = new MomoModel(partnerCode, accessKey, requestType, requestId, amount, orderId, orderInfo
-                , returnUrl, notifyUrl, extraData, signature);
-        JSONObject response = new JSONObject();
-        response.put("code", "000");
-        response.put("data", momoModel);
-        return response;
-    }
-
-    public String getSignature(String rawSign) {
-        String key = "krEnQQAOs9oQexSsmbCETozJyTR6Gni9";
-        try {
-            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-            sha256_HMAC.init(new SecretKeySpec(key.getBytes(), "HmacSHA256"));
-            byte[] result = sha256_HMAC.doFinal(rawSign.getBytes());
-            return bytesToHex(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private static String bytesToHex(byte[] hash) {
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-
-    private String createUniquieID() {
-        return "ffm_" + UUID.randomUUID().toString();
-    }
-
 }

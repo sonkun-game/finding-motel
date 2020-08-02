@@ -4,5 +4,7 @@ import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import net.minidev.json.JSONObject;
 
 public interface PaymentService {
-    public JSONObject savePayment(MomoResponseDTO momoResponseDTO);
+    JSONObject savePayment(MomoResponseDTO momoResponseDTO);
+    JSONObject requestMomoPayment(String amount);
+    JSONObject validateAndSaveMomoPayment(MomoResponseDTO momoResponseDTO);
 }

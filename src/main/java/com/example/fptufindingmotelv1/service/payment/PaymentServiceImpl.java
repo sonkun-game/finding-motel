@@ -1,25 +1,36 @@
 package com.example.fptufindingmotelv1.service.payment;
 
 import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
+import com.example.fptufindingmotelv1.dto.MomoTransactionStatusRequestDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.MomoModel;
 import com.example.fptufindingmotelv1.model.PaymentModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import javax.xml.crypto.Data;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
 public class PaymentServiceImpl implements PaymentService{
+
+    @Autowired
+    private Environment env;
+
     @Autowired
     LandlordRepository landlordRepository;
 
@@ -43,7 +54,7 @@ public class PaymentServiceImpl implements PaymentService{
                     PaymentModel paymentModel = new PaymentModel();
                     paymentModel.setAmount(Float.parseFloat(momoResponseDTO.getAmount()));
                     paymentModel.setLandlordModel(landlordModel);
-                    paymentModel.setMomoId(momoResponseDTO.getRequestId());
+                    paymentModel.setMomoId(momoResponseDTO.getOrderId());
                     paymentModel.setPayDate(new Date());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
@@ -52,7 +63,7 @@ public class PaymentServiceImpl implements PaymentService{
                     landlordModel.setAmount(amount);
                 } else {
                     jsonObject.put("code", "001");
-                    jsonObject.put("message", "Nap tien khong thanh cong : " + momoResponseDTO.getErrorCode());
+                    jsonObject.put("message", "Nap tien khong thanh cong. - errorCode: " + momoResponseDTO.getErrorCode());
                 }
 
             }
@@ -62,4 +73,112 @@ public class PaymentServiceImpl implements PaymentService{
         }
         return jsonObject;
     }
+
+    @Override
+    public JSONObject requestMomoPayment(String amount) {
+        String partnerCode = env.getProperty("momo.partnerCode");
+        String accessKey = env.getProperty("momo.accessKey");
+        String requestType = env.getProperty("momo.requestType");
+        String requestId = "request_" + createUniquieID();
+        String orderId = "order_" + createUniquieID();
+        String orderInfo = "Momo pay for user";
+        String notifyUrl = env.getProperty("server.hosting.url") + "/validate-save-momo-payment";
+        String returnUrl = env.getProperty("server.hosting.url") + "/validate-save-momo-payment";
+        String extraData = "";
+        String rawSign = "partnerCode=" + partnerCode + "&accessKey=" + accessKey
+                + "&requestId=" + requestId + "&amount=" + amount + "&orderId=" + orderId
+                + "&orderInfo=" + orderInfo + "&returnUrl=" + returnUrl + "&notifyUrl=" + notifyUrl
+                + "&extraData=" + extraData;
+
+        String signature = getSignature(rawSign);
+        MomoModel momoModel = new MomoModel(partnerCode, accessKey, requestType, requestId, amount, orderId, orderInfo
+                , returnUrl, notifyUrl, extraData, signature);
+        //call momo request payment api
+        final String uri = env.getProperty("momo.pay.url");
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String result = restTemplate.postForObject(uri, momoModel ,String.class);
+            JSONParser parser = new JSONParser();
+            JSONObject momoResponse = (JSONObject) parser.parse(result);
+            if (momoResponse.get("errorCode").toString().equals(env.getProperty("momo.errorCode.success"))) {
+                JSONObject response = responseMsg("000", momoResponse.get("localMessage").toString(), null);
+                response.put("momoPayUrl", momoResponse.get("payUrl"));
+                return response;
+            } else {
+                return responseMsg("999", momoResponse.get("localMessage").toString(), null);
+            }
+        } catch (Exception e) {
+            return responseMsg("998", e.getMessage(), null);
+        }
+    }
+
+    @Override
+    public JSONObject validateAndSaveMomoPayment(MomoResponseDTO momoResponseDTO) {
+        MomoTransactionStatusRequestDTO momoTransactionStatusRequestDTO = new MomoTransactionStatusRequestDTO();
+        momoTransactionStatusRequestDTO.setPartnerCode(momoResponseDTO.getPartnerCode());
+        momoTransactionStatusRequestDTO.setAccessKey(momoResponseDTO.getAccessKey());
+        momoTransactionStatusRequestDTO.setRequestId(momoResponseDTO.getRequestId());
+        momoTransactionStatusRequestDTO.setOrderId(momoResponseDTO.getOrderId());
+        momoTransactionStatusRequestDTO.setRequestType(env.getProperty("momo.transaction.requestType"));
+        String rawSign = "partnerCode=" + momoTransactionStatusRequestDTO.getPartnerCode()
+                + "&accessKey=" + momoTransactionStatusRequestDTO.getAccessKey()
+                + "&requestId=" + momoTransactionStatusRequestDTO.getRequestId()
+                + "&orderId=" + momoTransactionStatusRequestDTO.getOrderId()
+                + "&requestType=" + momoTransactionStatusRequestDTO.getRequestType();
+        momoTransactionStatusRequestDTO.setSignature(getSignature(rawSign));
+        //call momo request payment api
+        final String uri = env.getProperty("momo.pay.url");
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String result = restTemplate.postForObject(uri, momoTransactionStatusRequestDTO ,String.class);
+            JSONParser parser = new JSONParser();
+            JSONObject momoResponse = (JSONObject) parser.parse(result);
+            if (momoResponse.get("errorCode").toString().equals(env.getProperty("momo.errorCode.success"))) {
+                JSONObject response = responseMsg("000", momoResponse.get("localMessage").toString(), null);
+                response.put("momoPayUrl", momoResponse.get("payUrl"));
+                return savePayment(momoResponseDTO);
+            } else {
+                return responseMsg("999", momoResponse.get("localMessage").toString(), null);
+            }
+        } catch (Exception e) {
+            return responseMsg("998", e.getMessage(), null);
+        }
+    }
+
+    public String getSignature(String rawSign) {
+        String secretKey = env.getProperty("momo.secretKey");
+        try {
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            sha256_HMAC.init(new SecretKeySpec(secretKey.getBytes(), "HmacSHA256"));
+            byte[] result = sha256_HMAC.doFinal(rawSign.getBytes());
+            return bytesToHex(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+
+    private String createUniquieID() {
+        return "ffm_" + UUID.randomUUID().toString();
+    }
+
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
+    }
+
 }

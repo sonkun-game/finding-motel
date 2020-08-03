@@ -87,7 +87,7 @@
                                                    maxlength="10" required>
                                         </div>
                                         <div class="register-btn-phone">
-                                            <button v-on:click="getOTP()" type="button" class="btn-primary">Mã xác nhận
+                                            <button v-on:click="getOTP()" type="button" class="btn-primary-otp">Mã xác nhận
                                             </button>
                                         </div>
                                     </div>
@@ -156,13 +156,15 @@
                                     <div class="row ">
                                         <div class="col-6 ">
                                             <a th:href="@{facebook-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-fb"> Facebook
+                                                <button type="button" class="btn btn-primary btn-block btn-fb">
+                                                    <img src="assets/img/logo/facebook.png">  Facebook
                                                 </button>
                                             </a>
                                         </div>
                                         <div class="col-6 ">
                                             <a th:href="@{google-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-gm">Gmail
+                                                <button type="button" class="btn btn-primary btn-block btn-gm">
+                                                    <img src="assets/img/logo/gmail.png">  Gmail
                                                 </button>
                                             </a>
                                         </div>

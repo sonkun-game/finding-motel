@@ -4,39 +4,41 @@
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/custom-assets/css/register.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <title>Đăng Kí</title>
+    <title>Đăng Ký</title>
 </head>
 <body>
+
+<!--    include header-->
+<header th:replace="layout :: header"></header>
+
+<div id="loading-wrapper">
+    <div v-show="!isHidden" id="loader-login">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>Đăng Nhập</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="preloader-register-social">
+    <div v-show="isShowLoader">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>FFM</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <main>
 
-    <div id="loading-wrapper">
-        <div v-show="!isHidden" id="loader-login">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b>Đăng Nhập</b>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="preloader-register-social">
-        <div v-show="isShowLoader">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b>FFM</b>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--    include header-->
-    <header th:replace="layout :: header"></header>
     <div class="container-fluid">
         <div class="row no-gutter">
             <!-- The image half -->
@@ -93,7 +95,7 @@
                                                    maxlength="10" required>
                                         </div>
                                         <div class="register-btn-phone">
-                                            <button v-on:click="getOTP()" type="button" class="btn-primary">Mã xác nhận
+                                            <button v-on:click="getOTP()" type="button" class="btn-primary-otp">Mã xác nhận
                                             </button>
                                         </div>
                                     </div>

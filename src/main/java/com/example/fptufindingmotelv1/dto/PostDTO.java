@@ -1,16 +1,12 @@
 package com.example.fptufindingmotelv1.dto;
 
 import com.example.fptufindingmotelv1.model.ImageModel;
-import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 @Data

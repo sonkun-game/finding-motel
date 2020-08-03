@@ -1,22 +1,18 @@
 package com.example.fptufindingmotelv1.model;
 
 import com.example.fptufindingmotelv1.dto.ReportRequestDTO;
-import com.example.fptufindingmotelv1.repository.RenterRepository;
-import com.restfb.types.Post;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 @Entity

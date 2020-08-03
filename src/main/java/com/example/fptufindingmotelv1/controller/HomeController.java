@@ -1,7 +1,6 @@
 package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
 import com.example.fptufindingmotelv1.model.*;
@@ -10,7 +9,10 @@ import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

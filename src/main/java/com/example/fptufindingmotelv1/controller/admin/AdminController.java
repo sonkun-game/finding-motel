@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.controller.admin;
 import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
+import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import com.restfb.json.Json;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private ManagePostService managePostService;
 
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
@@ -177,6 +181,37 @@ public class AdminController {
     @PostMapping(value = "/api-get-init-admin")
     public JSONObject getInitAdmin() {
         return adminService.getInitAdminManager();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api-get-list-payment-package")
+    public JSONObject getListPaymentPackage() {
+        try {
+            List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage();
+            List<PaymentPackageDTO> response = new ArrayList<>();
+            for (PaymentPackageModel paymentPackage:
+                 paymentPackageModels) {
+                response.add(new PaymentPackageDTO(paymentPackage));
+            }
+            return paymentPackageModels != null
+                    ? responseMsg("000", "Success!", response)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/api-save-payment-package")
+    public JSONObject savePaymentPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {
+        try {
+            PaymentPackageModel paymentPackageModel = adminService.savePaymentPackage(paymentPackageDTO);
+
+            return paymentPackageModel != null
+                    ? responseMsg("000", "Success!", new PaymentPackageDTO(paymentPackageModel))
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
     }
 }
 

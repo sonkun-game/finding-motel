@@ -214,15 +214,14 @@
                                 </div>
                             </div>
 
-                            <div class="fill-information">
-                                <div class="title">
-                                    <h4>Bản đồ</h4>
-                                </div>
-                                <div class="input-information">
-                                    <input id="map-search" placeholder="Tìm kiếm" type="text"
-                                           class="form-input-information rounded-pill border-0 shadow-sm">
-                                    <i class="fas fa-search"></i>
-                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Bản đồ</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <i class="fas icon-search-map fa-search"></i>
+                                    </div>
 
                                 <input type="hidden" id="latitude">
                                 <input type="hidden" id="longitude">
@@ -303,32 +302,31 @@
                                 </div>
                             </div>
 
-                            <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
-                            <div class="title">
-                                <h4>Bảng giá tham khảo</h4>
-                            </div>
-                            <div id="table-price">
-                                <table class="table">
-                                    <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">Gói</th>
-                                        <th scope="col">Thời hạn</th>
-                                        <th scope="col">Giá</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="package in listPaymentPackage">
-                                        <th scope="row" v-text="'Gói ' + package.id"></th>
-                                        <th scope="row" v-text="package.duration + ' Tháng'"></th>
-                                        <th scope="row"
-                                            v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
+                                <div class="title">
+                                    <h4>Bảng giá tham khảo</h4>
+                                </div>
+                                <div id="table-price">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Gói</th>
+                                            <th scope="col">Thời hạn</th>
+                                            <th scope="col">Giá</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="package in listPaymentPackage">
+                                            <th scope="row" v-text="package.packageName"></th>
+                                            <th scope="row" v-text="package.duration + ' Tháng'"></th>
+                                            <th scope="row" v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
                 <!--nạp tiền-->
@@ -420,61 +418,54 @@
 
                 <!-- Quản lý yêu cầu -->
 
-                <div id="request-manager" v-if="task == 5 || task == 15">
-                    <div class="title">
-                        <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
-                    </div>
-                    <div class="information-detail">
-                        <div v-if="listRoomRequest == null || listRoomRequest.length == 0">
-                            <span>Không có yêu cầu thuê trọ nào</span>
+                    <div id="request-manager" v-if="task == 5 || task == 15 || task == 17">
+                        <div class="title">
+                            <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
                         </div>
-                        <table v-else class="table table-bordered table-hover">
-                            <thead class="thead-light">
-                            <tr v-if="task == 5">
-                                <th width="2%"></th>
-                                <th width="2%">STT</th>
-                                <th width="48%">Tên phòng trọ</th>
-                                <th width="28%">Phòng</th>
-                                <th width="20%">Yêu cầu thuê phòng</th>
-                            </tr>
-                            <tr v-else-if="task == 15">
-                                <th width="2%"></th>
-                                <th width="2%">STT</th>
-                                <th width="30%">Tên phòng trọ</th>
-                                <th width="21%">Phòng</th>
-                                <th width="15%">Tình trạng</th>
-                                <th width="10%"></th>
-                                <th width="20%">Yêu cầu thuê phòng</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <template v-for="(room, index) in listRoomRequest">
-                                <tr>
-                                    <!--                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">-->
-                                    <!--                                                <i class="fas fa-angle-double-down" v-bind:class="{invisible: room.requestNumber == 0}"></i>-->
-                                    <!--                                            </td>-->
-                                    <td>
-                                        <i class="fas fa-angle-double-down" v-if="!room.openCollapse"
-                                           v-on:click="collapseRequestTable(room, index)"
-                                           v-bind:class="{invisible: room.requestNumber == 0}"></i>
-                                        <i class="fas fa-angle-double-right" v-else
-                                           v-on:click="collapseRequestTable(room, index)"
-                                           v-bind:class="{invisible: room.requestNumber == 0}"></i>
-                                    </td>
-                                    <td v-text="index + 1"></td>
-                                    <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a>
-                                    </td>
-                                    <td v-text="room.roomName"></td>
-                                    <td v-if="task == 15" v-text="room.displayStatus"></td>
-                                    <td v-if="task == 15">
-                                        <label class="switch">
-                                            <input type="checkbox"
-                                                   v-on:click.prevent="handleChangeRoomStatus(room, index)"
-                                                   v-model="room.availableRoom">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </td>
-                                    <td v-text="room.requestNumber"></td>
+                        <div class="information-detail">
+                            <div v-if="listRoomRequest == null || listRoomRequest.length == 0">
+                                <span>Không có yêu cầu thuê trọ nào</span>
+                            </div>
+                            <table v-else class="table table-bordered table-hover">
+                                <thead class="thead-light">
+                                    <tr v-if="task == 5">
+                                        <th  width="2%"></th>
+                                        <th  width="2%">STT</th>
+                                        <th  width="48%">Tên phòng trọ</th>
+                                        <th  width="28%">Phòng</th>
+                                        <th  width="20%">Yêu cầu thuê phòng</th>
+                                    </tr>
+                                    <tr v-else-if="task == 15 || task == 17">
+                                        <th  width="2%"></th>
+                                        <th  width="2%">STT</th>
+                                        <th  width="30%">Tên phòng trọ</th>
+                                        <th  width="21%">Phòng</th>
+                                        <th  width="15%">Tình trạng</th>
+                                        <th width="10%"></th>
+                                        <th  width="20%">Yêu cầu thuê phòng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-for="(room, index) in listRoomRequest">
+                                        <tr>
+<!--                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">-->
+<!--                                                <i class="fas fa-angle-double-down" v-bind:class="{invisible: room.requestNumber == 0}"></i>-->
+<!--                                            </td>-->
+                                            <td>
+                                                <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                                <i class="fas fa-angle-double-right" v-else v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                            </td>
+                                            <td v-text="index + 1"></td>
+                                            <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
+                                            <td v-text="room.roomName"></td>
+                                            <td v-if="task == 15  || task == 17" v-text="room.displayStatus"></td>
+                                            <td v-if="task == 15  || task == 17">
+                                                <label class="switch">
+                                                    <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+                                            <td v-text="room.requestNumber"></td>
 
                                 </tr>
 
@@ -638,138 +629,60 @@
                     </div>
                 </div>
 
-                <!--Modal user detail-->
-                <div id="modalUserDetail" class="modal">
-                    <!-- Modal content -->
-                    <div class="view-information">
-                        <div class="modal-header">
-                            <h2>Thông tin người dùng</h2>
-                            <span id="closeModalUserDetail" @click="closeModalUserDetail" class="close">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <div class="infor-modal">
-                                <p class="left-modal">Tên đăng nhập:</p>
-                                <input :value="renterInfo.username"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
+                    <!--Modal user detail-->
+                    <div id="modalUserDetail" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2>Thông tin người dùng</h2>
+                                <span id="closeModalUserDetail" @click="closeModalUserDetail" class="close">&times;</span>
                             </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Tên hiển thị:</p>
-                                <input :value="renterInfo.displayName"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Số điện thoại:</p>
-                                <input :value="renterInfo.phoneNumber"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Ngày sinh:</p>
-                                <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Nghề nghiệp:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" :value="renterInfo.career" disabled/>
-                            </div>
-                            <div v-if="userInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Giới tính:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" :value="renterInfo.gender" disabled/>
-                            </div>
+                            <div class="modal-body">
+                                <div class="infor-modal">
+                                    <p class="left-modal">Tên đăng nhập:</p>
+                                    <input :value="renterInfo.username"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Tên hiển thị:</p>
+                                    <input :value="renterInfo.displayName"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Số điện thoại:</p>
+                                    <input :value="renterInfo.phoneNumber"
+                                           class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                    <p class="left-modal">Ngày sinh:</p>
+                                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                    <p class="left-modal">Nghề nghiệp:</p>
+                                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" :value="renterInfo.career" disabled/>
+                                </div>
+                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                    <p class="left-modal">Giới tính:</p>
+                                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" :value="renterInfo.genderDisplay" disabled/>
+                                </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-hover btn-default" @click="closeModalUserDetail">Xác Nhận</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-hover btn-default" @click="closeModalUserDetail">Xác Nhận</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!--Modal user detail-->
-                <div id="modalRequestDetail" class="modal">
-                    <!-- Modal content -->
-                    <div class="view-information">
-                        <div class="modal-header">
-                            <h2>Thông tin phòng trọ</h2>
-                            <span id="closeModalRequestDetail" @click="closeModalRequestDetail"
-                                  class="close">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <div class="infor-modal">
-                                <p class="left-modal">Tên phòng:</p>
-                                <input :value="selectedRoom.roomName"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Yêu cầu thuê phòng:</p>
-                                <input :value="selectedRequest.id"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Ngày yêu cầu:</p>
-                                <input :value="selectedRequest.displayRequestDate"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Ngày bắt đầu:</p>
-                                <input :value="selectedRequest.displayStartDate"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Tên đăng nhập:</p>
-                                <input :value="renterInfo.username"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Tên hiển thị:</p>
-                                <input :value="renterInfo.displayName"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div class="infor-modal">
-                                <p class="left-modal">Số điện thoại:</p>
-                                <input :value="renterInfo.phoneNumber"
-                                       class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Ngày sinh:</p>
-                                <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" disabled/>
-                            </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Nghề nghiệp:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" :value="renterInfo.career" disabled/>
-                            </div>
-                            <div v-if="userInfo.role == 'RENTER'" class="infor-modal">
-                                <p class="left-modal">Giới tính:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" :value="renterInfo.gender" disabled/>
-                            </div>
-                            <div>
-                                <h3>Bạn có muốn làm mới phòng này?</h3>
-                                <p>Trạng thái của phòng sẽ được thay đổi thành "Còn trống"</p>
-                                <p>Người dùng "{{renterInfo.username}}" sẽ bị xóa khỏi phòng này</p>
-                            </div>
+                    <!--Modal rental request detail-->
+                    <div th:replace="layout :: modal-request-detail"></div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Xác Nhận</button>
-                            <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!--Nạp tiền -->
+                    <!--Nạp tiền -->
 
             </div>
         </div>
@@ -781,15 +694,9 @@
 <div th:replace="layout :: js-fragment"></div>
 
 <!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <!--<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>-->
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>

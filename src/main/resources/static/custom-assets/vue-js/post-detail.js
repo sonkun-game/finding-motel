@@ -269,13 +269,13 @@ var postDetailInstance = new Vue({
     },
     mounted() {
         this.initMap()
-        setTimeout(function () {
-            $('.flexslider').flexslider({
-                animation: "slide",
-                start: function(slider) {
-                    $('body').removeClass('loading');
-                }
-            });
-        }, 500)
+    },
+    updated(){
+        $('.flexslider').flexslider({
+            animation: "slide",
+            start: function(slider) {
+                $('body').removeClass('loading');
+            }
+        });
     }
 })

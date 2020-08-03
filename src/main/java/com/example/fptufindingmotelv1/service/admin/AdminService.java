@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import net.minidev.json.JSONObject;
@@ -34,4 +35,5 @@ public interface AdminService {
 
     JSONObject getInitAdminManager();
 
+    PaymentPackageModel savePaymentPackage(PaymentPackageDTO paymentPackageDTO);
 }

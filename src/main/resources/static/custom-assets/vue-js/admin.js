@@ -44,6 +44,12 @@ var admin = new Vue({
         inputStatusReport: 0,
         userIndex: -1,
         postIndex: -1,
+        listPaymentPackage : [],
+        inputPackageName : "",
+        inputDuration : "",
+        inputAmount : "",
+        selectedPaymentPackage : null,
+        packageIndex : -1,
     },
     beforeMount() {
         this.task = localStorage.getItem("task")
@@ -62,6 +68,11 @@ var admin = new Vue({
             profileUser.classList.add("invisible")
             this.searchReport()
             this.getInitAdmin()
+        }
+        else if (this.task == 19) {
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            this.getListPaymentPackage()
         }
     },
     methods: {
@@ -424,6 +435,72 @@ var admin = new Vue({
                         this.listReport = listReport
                     } else {
                         window.location.href = "/error";
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        getListPaymentPackage(){
+            fetch("/api-get-list-payment-package", {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data.code == "000"){
+                        this.listPaymentPackage = data.data
+                    }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        closeModalPackage(){
+            document.getElementById("modalPackage").style.display = 'none';
+            document.body.removeAttribute("class")
+        },
+        showModalPackage(package, index){
+            if(package != null && index != null){
+                this.packageIndex = index
+                this.selectedPaymentPackage = package
+                this.inputPackageName = package.packageName
+                this.inputDuration = package.duration
+                this.inputAmount = package.amount
+            }else {
+                this.selectedPaymentPackage = null
+                this.packageIndex = -1
+                this.inputPackageName = ""
+                this.inputDuration = ""
+                this.inputAmount = ""
+            }
+            document.getElementById("modalPackage").style.display = 'block';
+            document.body.setAttribute("class", "loading-hidden-screen")
+        },
+        savePaymentPackage(){
+            let request = {
+                "id": this.selectedPaymentPackage == null ? null : this.selectedPaymentPackage.id,
+                "duration": this.inputDuration,
+                "amount": this.inputAmount,
+                "packageName": this.inputPackageName,
+            }
+            fetch("/api-save-payment-package", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
+                        setTimeout(() => {
+                            if(this.packageIndex != -1){
+                                this.$set(this.listPaymentPackage, this.packageIndex, data.data)
+                            }else {
+                                this.listPaymentPackage.push(data.data)
+                            }
+                            this.closeModalPackage()
+                        }, 2000);
+                    } else {
+                        // todo
                     }
                 }).catch(error => {
                 console.log(error);

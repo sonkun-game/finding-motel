@@ -74,6 +74,8 @@
     border: medium none;
     border-radius: 3px;
 }
+
+
 .btn-primary-otp:hover{
     background: #dca73a !important;
 }
@@ -98,7 +100,13 @@
     border-radius: 3px;
 }
 
+.btn-fb img{
+    width: 20px;
+}
 
+.btn-gm img{
+    width: 20px;
+}
 
 .btn-otp{
     float: right !important;

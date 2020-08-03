@@ -35,6 +35,14 @@
 .btn-gm {
     background-color: #EA4335 !important;
 }
+
+.btn-fb img{
+    width: 20px;
+}
+
+.btn-gm img{
+    width: 20px;
+}
 .btn-login{
     width: 45% !important;
     display: block !important;

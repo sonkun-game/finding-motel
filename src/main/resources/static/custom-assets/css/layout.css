@@ -256,3 +256,11 @@ main{
     margin: 15px 0;
     text-align: center;
 }
+.logo img{
+    width: 80px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.footer-logo img{
+    width: 100px;
+}

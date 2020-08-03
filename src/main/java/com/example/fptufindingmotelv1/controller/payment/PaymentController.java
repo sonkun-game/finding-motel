@@ -1,28 +1,21 @@
 package com.example.fptufindingmotelv1.controller.payment;
 
+import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import com.example.fptufindingmotelv1.dto.PaymentDTO;
 import com.example.fptufindingmotelv1.dto.PaymentPostDTO;
-import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
 import com.example.fptufindingmotelv1.service.payment.PaymentService;
-import com.restfb.json.Json;
-import com.restfb.json.JsonObject;
-import com.restfb.types.Payment;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class PaymentController {

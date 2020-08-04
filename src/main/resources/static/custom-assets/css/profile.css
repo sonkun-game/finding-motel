@@ -238,12 +238,25 @@ color: #dca73a;
 
 .search-area{
     display: flex;
-width: 100%;
-height: auto;
-border: 1px solid #CFCFCF;
-border-radius: 4px;
-margin-top: 30px;
-box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+    width: 100%;
+    height: auto;
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
+    margin-top: 30px;
+    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+}
+
+.search-area ul{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 15px;
+}
+
+.search-area li{
+    width: 30%;
+    margin-right: 15px;
+    margin-bottom: 3px;
 }
 
 .choose-role{
@@ -275,15 +288,16 @@ font-size: 17px;
 }
 
 .btn-search{
-display: block;
-margin: 10px auto;
-border-radius: 4px;
-height: 30px;
-width: 60%;
-background-color: #dca73a;
-color: white;
-border: none;
-cursor: pointer;
+    display: block;
+    border-radius: 4px;
+    height: 40px;
+    width: 80%;
+    margin-top: 10px;
+    margin-left: 23px;
+    background-color: #dca73a;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 .phone-number {
@@ -357,7 +371,7 @@ font-family:  sans-serif;
 
 select{
 display: block !important;
-width: 200px;
+width: 270px;
 height: 35px;
 font-family:  sans-serif;
 border: 1px solid #aaa;
@@ -456,6 +470,7 @@ input, textarea, select {
     font-size: 16px;
     font-family: sans-serif;
     color: #495057;
+    width: 270px;
 }
 
 #searchUserTxt{
@@ -789,9 +804,26 @@ a:hover {
 .search-box-label{
     margin-bottom: 0px!important;
 }
-.search-form{
+.search-form {
+    display: flex;
+    width: 100%;
+    height: auto;
+    border: 1px solid #CFCFCF;
+    border-radius: 4px;
     margin-top: 30px;
+    padding: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
 }
+
+.search-form ul{
+    display: flex;
+}
+
+.search-form li{
+    width: 25%;
+    margin-right: 25px;
+}
+
 .search-box{
     width: 100%;
 }
@@ -868,4 +900,68 @@ a:hover {
 .input-package-append{
     width: 15%;
     height: 30px;
+}
+
+/* Normal desktop :1200px. */
+@media (min-width: 1200px) and (max-width: 1500px) {
+    .search-area {
+        padding: 34px 46px 20px 42px;
+    }
+    .form-dropdown select {
+        width: 100%;
+    }
+    .search-container input{
+        width: 100%;
+    }
+
+}
+
+
+/* Normal desktop :992px. */
+@media (min-width: 992px) and (max-width: 1200px) {
+    .search-area {
+        padding: 34px 46px 20px 42px;
+    }
+    .form-dropdown select {
+        width: 100%;
+    }
+    .search-container input{
+        width: 100%;
+    }
+}
+
+
+/* Tablet desktop :768px. */
+@media (min-width: 768px) and (max-width: 991px) {
+    .search-area {
+        flex-wrap: wrap;
+        margin: auto;
+    }
+    .search-area li {
+        width: 100%;
+    }
+}
+
+
+/* small mobile :320px. */
+@media (max-width: 767px) {
+
+    .search-area {
+        flex-wrap: wrap;
+    }
+    .search-area select {
+        width: 50%;
+     }
+}
+
+/* Large Mobile :480px. */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .container {width:450px}
+    .form-dropdown select {
+        width: 150px;
+    }
+    .search-area li {
+        width: 100%;
+
+    }
 }

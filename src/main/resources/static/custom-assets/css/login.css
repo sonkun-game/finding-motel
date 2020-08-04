@@ -33,19 +33,21 @@
 }
 
 .btn-gm {
-    background-color: #EA4335 !important;
+    background-color: #dc4e41 !important;
 }
 
 .btn-fb img{
     width: 20px;
+    padding-bottom: 5px;
 }
 
 .btn-gm img{
     width: 20px;
+    padding-bottom: 5px;
 }
 .btn-login{
     width: 45% !important;
     display: block !important;
     margin: auto !important;
-
+    padding: 35px;
 }

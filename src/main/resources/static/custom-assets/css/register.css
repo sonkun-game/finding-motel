@@ -26,7 +26,7 @@
 }
 
 .btn-gm {
-    background-color: #EA4335 !important;
+    background-color: #dc4e41 !important;
 }
 
 .form-group {
@@ -96,9 +96,18 @@
     margin: auto;
     border: medium none;
     border-radius: 3px;
+    padding: 31px;
 }
 
+.btn-fb img{
+    width: 20px;
+    padding-bottom: 5px;
+}
 
+.btn-gm img{
+    width: 20px;
+    padding-bottom: 5px;
+}
 
 .btn-otp{
     float: right !important;

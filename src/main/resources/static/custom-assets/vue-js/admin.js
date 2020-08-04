@@ -55,6 +55,7 @@ var admin = new Vue({
         listRole : [],
         selectedLandlord : {},
         paymentMethod : "",
+        reportDetail : "",
     },
     beforeMount() {
         this.task = localStorage.getItem("task")
@@ -387,6 +388,21 @@ var admin = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        closeModalReportDetail(){
+            document.getElementById("modalRepostDetail").style.display = 'none';
+            this.reportDetail = "";
+            document.body.removeAttribute("class")
+        },
+        showModalReportDetail(reportId){
+            for (let report of this.listReport) {
+                if (report.id == reportId) {
+                    this.reportDetail = report;
+                    break;
+                }
+            }
+            document.getElementById("modalRepostDetail").style.display = 'block';
+            document.body.setAttribute("class", "loading-hidden-screen")
         },
         getInitAdmin() {
             fetch("api-get-init-admin", {

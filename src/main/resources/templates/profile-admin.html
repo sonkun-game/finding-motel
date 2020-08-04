@@ -15,6 +15,9 @@
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
+<!--    inlude confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
@@ -50,30 +53,29 @@
                         </div>
                         <div class="choose-role">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-xl-3">
                                     <div class="filter-area">
                                         <div class="title-filter-area">
                                             <span>Vai trò:</span>
                                         </div>
                                         <div class="form-dropdown">
                                             <form action="#">
-                                                <select id="roleFilterCb" v-on:change="getListUser()">
+                                                <select v-on:change="searchUser()" v-model="inputRole">
                                                     <option selected value="0">Tất cả</option>
-                                                    <option value="RENTER">Người thuê</option>
-                                                    <option value="LANDLORD">Chủ trọ</option>
+                                                    <option v-for="(role, index) in listRole" v-bind:value="role.id" v-text="role.displayName"></option>
                                                 </select>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-                                <div class="col-3"></div>
-                                <div class="col-3">
+                                <div class="col-lg-3 d-none d-lg-block"></div>
+                                <div class="col-lg-3 d-none d-lg-block"></div>
+                                <div class="col-xl-3">
                                     <div class="search-container">
                                         <form action="#">
-                                            <input @focusout="getUserById()" id="searchUserTxt" type="text"
+                                            <input @focusout="searchUser()" v-model="inputSearchUser" type="text" class="input-search"
                                                    placeholder="Tìm kiếm..." name="search">
-                                            <button @click.prevent="getUserById()" type="submit"><i
+                                            <button @click.prevent="searchUser()" type="submit"><i
                                                     class="fa fa-search"></i></button>
                                         </form>
                                     </div>
@@ -447,11 +449,12 @@
                             <table class="table table-bordered">
                                 <thead class="thead-light">
                                 <tr>
-                                    <th scope="col">STT</th>
-                                    <th scope="col">Tên package</th>
-                                    <th scope="col">Thời hạn bài đăng</th>
-                                    <th scope="col">Giá</th>
-                                    <th scope="col">Tác vụ</th>
+                                    <th width="5%">STT</th>
+                                    <th width="20%">Tên package</th>
+                                    <th width="20%">Thời hạn bài đăng</th>
+                                    <th width="20%">Giá</th>
+                                    <th width="20%">Trạng thái</th>
+                                    <th width="15%">Tác vụ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -461,14 +464,66 @@
                                     <td v-text="package.duration + ' Tháng'"></td>
                                     <td v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VNĐ'"></td>
                                     <td>
+                                        <div v-bind:class="package.available ? 'status-show' : 'status-hide'" v-text="package.displayStatus"></div>
+                                    </td>
+                                    <td>
                                         <i v-on:click="showModalPackage(package, index)" class="fas fa-edit" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-eye-slash"  data-toggle="tooltip" data-html="true" title="Ẩn package"></i>
+                                        <i v-on:click="changeStatusPackage(package, index)" class="fas" v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"  data-toggle="tooltip" data-html="true" v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>
                                     </td>
                                 </tr>
 
                                 </tbody>
                             </table>
 
+                        </div>
+                    </div>
+
+<!--                    Nạp tiền cho chủ trọ-->
+                    <div id="addMoneyLandlord" v-if="task == 20">
+                        <div class="title">
+                            <h1 class="title-name uppercase">Nạp tiền cho chủ trọ</h1>
+                        </div>
+                        <div class="choose-role">
+                            <div class="row">
+                                <div class="col-3">
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3">
+                                    <div class="search-container">
+                                        <form action="#">
+                                            <input @focusout="searchUser()" v-model="inputSearchUser" type="text" class="input-search"
+                                                   placeholder="Tìm kiếm..." name="search">
+                                            <button @click.prevent="searchUser()" type="submit"><i
+                                                    class="fa fa-search"></i></button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="information-detail">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Tên đăng nhập</th>
+                                    <th scope="col">Tên hiển thị</th>
+                                    <th scope="col">Số điện thoại</th>
+                                    <th scope="col">Số dư</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="row-user" data-toggle="tooltip" data-html="true" title="Nạp tiền cho chủ trọ"
+                                    v-for="(user, index) in listUser" v-on:click="showModalAddMoney(user, index)">
+                                    <td><a id="myBtn">{{user.username}}</a></td>
+                                    <td>{{user.displayName}}</td>
+                                    <td>{{user.phoneNumber}}</td>
+                                    <td>{{authenticationInstance.formatNumberToDisplay(user.amount)}}</td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -637,6 +692,59 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--                    modal nạp tiền -->
+                    <div  id="modalAddMoney" class="modal">
+                        <!-- Modal content -->
+                        <div class="view-information">
+                            <div class="modal-header">
+                                <h2 >Nạp tiền</h2>
+                                <span @click="closeModalAddMoney" class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="infor-modal">
+                                    <p class="left-modal">Chủ trọ:</p>
+                                    <input v-bind:value="selectedLandlord.username" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Số dư hiện tại:</p>
+                                    <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                    <div class="input-group-append input-package-append">
+                                        <span>VNĐ</span>
+                                    </div>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Số dư sau khi nạp tiền:</p>
+                                    <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                           type="text" disabled/>
+                                    <div class="input-group-append input-package-append">
+                                        <span>VNĐ</span>
+                                    </div>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Số tiền:</p>
+                                    <input v-model="inputAmount" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                           type="text" />
+                                    <div class="input-group-append input-package-append">
+                                        <span>VNĐ</span>
+                                    </div>
+                                </div>
+                                <div class="infor-modal">
+                                    <p class="left-modal">Phương thức thanh toán:</p>
+                                    <input v-model="paymentMethod" class="right-modal rounded-pill border-0 shadow-sm"
+                                           type="text" />
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-hover btn-default" @click="handleButtonAddMoney">Nạp tiền</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

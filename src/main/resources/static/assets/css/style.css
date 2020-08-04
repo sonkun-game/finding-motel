@@ -2830,6 +2830,8 @@ label {
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2848,12 +2850,16 @@ label {
 @media only screen and (min-width: 576px) and (max-width: 767px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2887,7 +2893,7 @@ label {
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
     .booking-area .booking-wrap .nice-select {
-        width: 50%;
+        width: 80%;
     }
 }
 
@@ -2910,10 +2916,17 @@ label {
 @media only screen and (min-width: 576px) and (max-width: 767px) {
     .select-btn {
         width: 80%;
+        padding: 27px 0px;
     }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+    .select-btn {
+        width: 80%;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
     .select-btn {
         width: 80%;
     }

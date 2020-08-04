@@ -1,19 +1,15 @@
 package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.PaymentPackageModel;
-import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.model.*;
 import net.minidev.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface AdminService {
-     ArrayList<UserDTO> getListUser();
 
-     ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username);
+     List<UserDTO> searchUsers(UserDTO userDTO);
 
      ArrayList<LandlordModel> banLandlord(String username);
      ArrayList<LandlordModel> unbanLandlord(String username);
@@ -36,4 +32,8 @@ public interface AdminService {
     JSONObject getInitAdminManager();
 
     PaymentPackageModel savePaymentPackage(PaymentPackageDTO paymentPackageDTO);
+
+    PaymentPackageModel changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO);
+
+    LandlordModel addMoneyForLandlord(PaymentDTO paymentDTO);
 }

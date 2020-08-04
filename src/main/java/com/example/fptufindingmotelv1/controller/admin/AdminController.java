@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
@@ -24,6 +25,9 @@ public class AdminController {
     @Autowired
     private ManagePostService managePostService;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
         return "profile-admin";
@@ -45,34 +49,58 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-all-user")
-    public ArrayList<UserDTO> getAllUser() {
-        return adminService.getListUser();
+    @RequestMapping(value = "/api-search-user")
+    public JSONObject searchUser(@RequestBody UserDTO userDTO) {
+        try {
+            List<UserDTO> userDTOS = adminService.searchUsers(userDTO);
+            return userDTOS != null
+                    ? responseMsg("000", "Success!", userDTOS)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-user-by-id")
-    public ArrayList<UserDTO> getUserByUsernameOrDisplayName(@RequestParam(value = "username") String username) {
-        return adminService.searchUserByUsernameOrDisplayName(username);
+    @RequestMapping(value = "/api-get-all-role")
+    public JSONObject getAllRole() {
+        try {
+            List<RoleModel> roleModels = roleRepository.getAll();
+
+            return roleModels != null
+                    ? responseMsg("000", "Success!", roleModels)
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
     }
 
     @ResponseBody
     @RequestMapping(value = "/ban-landlord")
-    public ArrayList<UserDTO> banLandlord(@RequestParam(value = "username") String username) {
-        if (username != null && username.length() > 0) {
-            adminService.banLandlord(username);
+    public JSONObject banLandlord(@RequestParam(value = "username") String username) {
+        try {
+            if (username != null && username.length() > 0) {
+                adminService.banLandlord(username);
+            }
+
+            return responseMsg("000", "Success!", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
         }
-        return adminService.getListUser();
     }
 
     @ResponseBody
     @RequestMapping(value = "/unban-landlord")
-    public ArrayList<UserDTO> unbanLandlord(@RequestParam(value = "username") String username) {
-        if (username != null && username.length() > 0) {
-            adminService.unbanLandlord(username);
-            getAllUser();
+    public JSONObject unbanLandlord(@RequestParam(value = "username") String username) {
+        try {
+            if (username != null && username.length() > 0) {
+                adminService.unbanLandlord(username);
+            }
+
+            return responseMsg("000", "Success!", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
         }
-        return adminService.getListUser();
     }
 
     @ResponseBody
@@ -185,7 +213,7 @@ public class AdminController {
     @RequestMapping(value = "/api-get-list-payment-package")
     public JSONObject getListPaymentPackage() {
         try {
-            List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage();
+            List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage(null);
             List<PaymentPackageDTO> response = new ArrayList<>();
             for (PaymentPackageModel paymentPackage:
                  paymentPackageModels) {
@@ -206,6 +234,33 @@ public class AdminController {
 
             return paymentPackageModel != null
                     ? responseMsg("000", "Success!", new PaymentPackageDTO(paymentPackageModel))
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api-change-status-package")
+    public JSONObject changeStatusPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {
+        try {
+            PaymentPackageModel paymentPackageModel = adminService.changeStatusPaymentPackage(paymentPackageDTO);
+
+            return paymentPackageModel != null
+                    ? responseMsg("000", "Success!", new PaymentPackageDTO(paymentPackageModel))
+                    : responseMsg("001", "SYSTEM ERROR", null);
+        } catch (Exception e) {
+            return responseMsg("999", e.getMessage(), null);
+        }
+    }
+    @ResponseBody
+    @RequestMapping(value = "/api-add-money-for-landlord")
+    public JSONObject addMoneyForLandlord(@RequestBody PaymentDTO paymentDTO) {
+        try {
+            LandlordModel landlordModel = adminService.addMoneyForLandlord(paymentDTO);
+
+            return landlordModel != null
+                    ? responseMsg("000", "Success!", new UserDTO(landlordModel))
                     : responseMsg("001", "SYSTEM ERROR", null);
         } catch (Exception e) {
             return responseMsg("999", e.getMessage(), null);

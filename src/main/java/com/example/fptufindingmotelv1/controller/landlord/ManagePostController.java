@@ -63,7 +63,7 @@ public class ManagePostController {
     @PostMapping("/api-get-init-new-post")
     public JSONObject getInitNewPost(){
         JSONObject response = new JSONObject();
-        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage();
+        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage(true);
         if(paymentPackages != null){
             List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
             for (PaymentPackageModel paymentPackage:

@@ -458,7 +458,7 @@ input, textarea, select {
     color: #495057;
 }
 
-#searchUserTxt{
+.input-search{
     width: 80%;
 }
 
@@ -867,5 +867,10 @@ a:hover {
 }
 .input-package-append{
     width: 15%;
-    height: 30px;
+}
+.row-user:hover{
+    background-color: #dca73a;
+}
+.row-user{
+    cursor: pointer;
 }

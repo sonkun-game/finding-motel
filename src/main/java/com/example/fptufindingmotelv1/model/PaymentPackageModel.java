@@ -26,6 +26,9 @@ public class PaymentPackageModel implements Serializable {
     @Column(name = "PACKAGE_NAME")
     private String packageName;
 
+    @Column(name = "IS_AVAILABLE")
+    private boolean available;
+
     @OneToMany(mappedBy = "paymentPackage", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;
 }

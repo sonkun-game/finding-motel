@@ -23,9 +23,17 @@ public class RoleModel implements Serializable {
     @Column(name = "DISPLAY_NAME")
     private String displayName;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private List<UserModel> users;
 
     @OneToMany(mappedBy = "roleModel")
     private List<InstructionModel> instructions;
+
+    public RoleModel() {
+    }
+    public RoleModel(Long id, String roleName, String displayName) {
+        this.id = id;
+        this.roleName = roleName;
+        this.displayName = displayName;
+    }
 }

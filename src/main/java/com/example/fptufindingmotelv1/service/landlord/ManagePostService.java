@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ManagePostService {
 
-    List<PaymentPackageModel> getListPaymentPackage();
+    List<PaymentPackageModel> getListPaymentPackage(Boolean available);
     List<TypeModel> getListTypePost();
 
     PostModel saveNewPost(PostRequestDTO postRequestDTO);

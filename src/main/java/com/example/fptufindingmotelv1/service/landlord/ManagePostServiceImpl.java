@@ -62,10 +62,9 @@ public class ManagePostServiceImpl implements ManagePostService{
     private WishListRepository wishListRepository;
 
     @Override
-    public List<PaymentPackageModel> getListPaymentPackage() {
+    public List<PaymentPackageModel> getListPaymentPackage(Boolean available) {
         try {
-            Sort sort = Sort.by("duration").ascending();
-            return paymentPackageRepository.findAll(sort);
+            return paymentPackageRepository.getListPaymentPackage(available);
         }catch (Exception e){
             e.printStackTrace();
         }

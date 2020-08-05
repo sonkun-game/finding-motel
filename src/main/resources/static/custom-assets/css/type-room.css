@@ -1,5 +1,5 @@
 .container-fluid{
-    padding: 50px;
+    padding: 50px 0 0 0;
 }
 .title-search{
     font-family: sans-serif;
@@ -13,22 +13,13 @@
 }
 
 .nice-select{
-    display: none !important;
+    height: 36px;
+    line-height: 36px;
+    width: 100%;
 }
-
-select {
-    border-radius: 5px;
-    display: block !important;
-    width: 160px;
-    height: 35px;
-    font-family: sans-serif;
-    border: 1px solid #aaa;
+.nice-select:after{
+    margin-top: -18px;
 }
-.search{
-    display: flex;
-    float: right;
-}
-
-.search-type{
-    margin-right: 10px;
+.nice-select .list{
+    width: 110%;
 }

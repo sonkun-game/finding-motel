@@ -76,7 +76,7 @@
     </div>
     <header th:fragment="header">
         <!-- Header Start -->
-        <div id="header"  class="header-area header-sticky">
+        <div id="header" class="header-area header-sticky">
             <div class="main-header ">
                 <div class="container">
                     <div class="row align-items-center">
@@ -92,8 +92,8 @@
                                 <nav>
                                     <ul id="navigation">
                                         <li><a th:href="@{/}">TRANG CHỦ</a></li>
-                                        <li><a href="#">PHÒNG TRỌ</a></li>
-                                        <li><a href="#">CĂN HỘ</a></li>
+                                        <li><a th:href="@{/phong-tro}">PHÒNG TRỌ</a></li>
+                                        <li><a th:href="@{can-ho}">CĂN HỘ</a></li>
                                         <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
                                         <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
                                             <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
@@ -356,11 +356,6 @@
         <script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
         <!-- Jquery Mobile Menu -->
         <script th:src="@{/assets/js/jquery.slicknav.min.js}"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#navigation').slicknav();
-            });
-        </script>
 
         <!-- Jquery Slick , Owl-Carousel Plugins -->
         <script th:src="@{/assets/js/owl.carousel.min.js}"></script>

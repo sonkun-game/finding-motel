@@ -30,10 +30,14 @@
 
 .btn-fb {
     background-color: #4267b2 !important;
+    padding: 0;
+    height: 50px;
 }
 
 .btn-gm {
     background-color: #dc4e41 !important;
+    padding: 0;
+    height: 50px;
 }
 
 .btn-fb img{
@@ -49,5 +53,4 @@
     width: 45% !important;
     display: block !important;
     margin: auto !important;
-    padding: 35px;
 }

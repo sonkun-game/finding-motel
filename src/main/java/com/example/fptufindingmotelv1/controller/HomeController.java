@@ -1,7 +1,6 @@
 package com.example.fptufindingmotelv1.controller;
 
 import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
 import com.example.fptufindingmotelv1.model.*;
@@ -239,8 +238,8 @@ public class HomeController {
         return "Admin Access";
     }
 
-    @GetMapping("/loai-phong")
-    public String getType() {
-        return "type-room";
+    @GetMapping(value = {"/phong-tro", "/can-ho"})
+    public String getTypePostPage() {
+        return "type-post";
     }
 }

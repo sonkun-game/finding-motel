@@ -913,6 +913,12 @@ a:hover {
 }
 .input-package-append{
     width: 15%;
+}
+.row-user:hover{
+    background-color: #dca73a;
+}
+.row-user{
+    cursor: pointer;
     height: 30px;
 }
 

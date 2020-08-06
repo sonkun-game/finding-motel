@@ -2,8 +2,9 @@ package com.example.fptufindingmotelv1.controller.payment;
 
 import com.example.fptufindingmotelv1.dto.PaymentDTO;
 import com.example.fptufindingmotelv1.dto.PaymentPostDTO;
-import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.PaymentModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -23,727 +23,747 @@
 
 <main>
     <div class="container-fluid">
-<!--        <div class="container">-->
-            <div id="pageContent" class="row">
-                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
-                    <div th:replace="layout :: basic-user-infor"></div>
+        <!--        <div class="container">-->
+        <div id="pageContent" class="row">
+            <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
+                <div th:replace="layout :: basic-user-infor"></div>
 
-<!--                    <div class="avatar" id="basic-user-info">-->
-<!--                        <i class="ti-user profile-avatar"></i>-->
-<!--                        <p class="display-name" v-text="userInfo.displayName"></p>-->
-<!--                    </div>-->
-                    <div th:replace="layout :: user-task"></div>
-                </div>
+                <!--                    <div class="avatar" id="basic-user-info">-->
+                <!--                        <i class="ti-user profile-avatar"></i>-->
+                <!--                        <p class="display-name" v-text="userInfo.displayName"></p>-->
+                <!--                    </div>-->
+                <div th:replace="layout :: user-task"></div>
+            </div>
 
-                <div id="user-manager-content" class="col sidebar-right col-table">
-                    <!-- Thông tin tài khoản -->
-                    <div th:replace="layout :: profile-user"></div>
+            <div id="user-manager-content" class="col sidebar-right col-table">
+                <!-- Thông tin tài khoản -->
+                <div th:replace="layout :: profile-user"></div>
 
-                    <!-- Đổi mật khẩu -->
-                    <div th:replace="layout :: change-password"></div>
-                </div>
+                <!-- Đổi mật khẩu -->
+                <div th:replace="layout :: change-password"></div>
+            </div>
 
-                <div id="dataTable" class="col sidebar-right col-table">
+            <div id="dataTable" class="col sidebar-right col-table">
 
-                    <!-- Quản lý người dùng -->
+                <!-- Quản lý người dùng -->
 
-                    <div id="userTable" v-if="task == 9">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Quản lý người dùng</h1>
-                        </div>
-                        <div class="choose-role">
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Vai trò:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-on:change="searchUser()" v-model="inputRole">
-                                                    <option selected value="0">Tất cả</option>
-                                                    <option v-for="(role, index) in listRole" v-bind:value="role.id" v-text="role.displayName"></option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 d-none d-lg-block"></div>
-                                <div class="col-lg-3 d-none d-lg-block"></div>
-                                <div class="col-xl-3">
-                                    <div class="search-container">
-                                        <form action="#">
-                                            <input @focusout="searchUser()" v-model="inputSearchUser" type="text" class="input-search"
-                                                   placeholder="Tìm kiếm..." name="search">
-                                            <button @click.prevent="searchUser()" type="submit"><i
-                                                    class="fa fa-search"></i></button>
-                                        </form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">STT</th>
-                                    <th scope="col">Tên đăng nhập</th>
-                                    <th scope="col">Tên hiển thị</th>
-                                    <th scope="col">Vai trò</th>
-                                    <th scope="col">Báo cáo</th>
-                                    <th scope="col">Tác vụ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(user, index) in listUser">
-                                    <th scope="row">{{listUser.indexOf(user) + 1}}</th>
-                                    <td><a id="myBtn">{{user.username}}</a></td>
-                                    <td>{{user.displayName}}</td>
-                                    <td>{{user.roleName}}</td>
-                                    <td>
-                                        <i v-if="user.role == 'LANDLORD'" v-on:click="handleGetReport(null, user)" class="fas fa-eye" data-toggle="tooltip" data-html="true"
-                                           title="Xem báo cáo"></i>
-                                        <span v-if="user.role == 'LANDLORD'">{{user.reportNumber}}</span>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
-                                           id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
-                                        <i v-if="user.role == 'LANDLORD'"
-                                           v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
-                                           @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, $event)"
-                                           class="fas fa-lock" data-toggle="tooltip" data-html="true"
-                                           v-bind:title="user.banAvailable ? 'Khóa tài khoản' : ''">
-                                            {{user.unBanDate}}
-                                        </i>
-                                        <i v-if="user.role == 'LANDLORD'"
-                                           v-bind:class="{invisible: user.unBanDate == null}"
-                                           @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, $event)"
-                                           :aria-disabled="true"
-                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true" title="Mở khóa tài khoản">
-
-                                        </i>
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
+                <div id="userTable" v-if="task == 9">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý người dùng</h1>
                     </div>
-
-                    <!-- Báo cáo -->
-                    <div id="reportTable" v-if="task == 11">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Danh sách báo cáo</h1>
-                        </div>
-                        <div class="search-form">
-                            <ul>
-                                <li>
-                                    <div class="search-container">
-                                        <label class="search-box-label">Bài đăng</label>
-                                        <input v-model="inputPostTitle" class="search-box" type="text"name="search"/>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="search-container">
-                                        <label class="search-box-label">Người báo cáo</label>
-                                        <input v-model="inputRenterId" class="search-box" type="text" name="search"/>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="search-container">
-                                        <label class="search-box-label">Chủ trọ</label>
-                                        <input v-model="inputLandlordId" class="search-box" type="text" name="search"/>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Trạng thái</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <select class="search-box" v-model="inputStatusReport">
-                                                <option selected value="0">Tất cả</option>
-                                                <option v-for="status in listStatusReport" v-bind:value="status.id" v-text="status.displayStatus"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button v-on:click="searchReport()" class="btn btn-search">Tìm kiếm</button>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">STT</th>
-                                    <th scope="col">Tên bài đăng</th>
-                                    <th scope="col">Chủ trọ</th>
-                                    <th scope="col">Ngày đăng</th>
-                                    <th scope="col">Người báo cáo</th>
-                                    <th scope="col">Chi tiết</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Tác vụ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="report in listReport">
-                                    <th scope="row">{{listReport.indexOf(report) + 1}}</th>
-                                    <td><a v-bind:href="'/report-detail?id=' + report.id">{{report.postTitle}}</a></td>
-                                    <td>{{report.landlordName}}</td>
-                                    <td>{{report.reportDate}}</td>
-                                    <td>{{report.renterId}}</td>
-                                    <td>{{report.content}}</td>
-                                    <td>{{report.displayStatus}}</td>
-                                    <td>
-                                        <i class="fas fa-eye" onclick="modal_viewReport()" id="myIcon_viewReport"></i>
-                                        <div id="myModal_viewReport" class="modal">
-                                            <!-- Modal content -->
-                                            <div class="view-information">
-                                                <div class="modal-header">
-                                                    <h2>Chi tiết báo cáo</h2>
-                                                    <span class="close">&times;</span>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="infor-modal">
-                                                        <p class="left-modal">Tên bài đăng:</p>
-                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
-                                                               type="text" disabled/>
-                                                    </div>
-                                                    <div class="infor-modal">
-                                                        <p class="left-modal">Tên chủ trọ:</p>
-                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
-                                                               type="text" disabled/>
-                                                    </div>
-                                                    <div class="infor-modal">
-                                                        <p class="left-modal">Ngày báo cáo:</p>
-                                                        <input class="right-modal rounded-pill border-0 shadow-sm"
-                                                               type="text" disabled/>
-                                                    </div>
-                                                    <div class="infor-modal-table">
-                                                        <p class="left-modal">Nội dung báo cáo:</p>
-                                                        <textarea></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn-hover btn-default">Xác Nhận</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <i @click="showModalConfirmDelete(report.id, 'report')"
-                                           class="fas fa-trash-alt"> </i>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!--Quản lý bài đăng -->
-                    <div id="postTable" v-if="task == 10">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Quản lý bài đăng</h1>
-                        </div>
-                        <div class="search-area">
-                            <ul>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Loại phòng:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-model="postType">
-                                                    <option value="0">Tất cả</option>
-                                                    <option value="1">Phòng trọ</option>
-                                                    <option value="2">Căn hộ</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Giá:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-model="postPrice">
-                                                    <option value="0">Tất cả</option>
-                                                    <option value="1">Dưới 1 triệu</option>
-                                                    <option value="3">1 triệu - 1.5 triệu</option>
-                                                    <option value="4"> 1.5 triệu - 2 triệu</option>
-                                                    <option value="5">2 triệu - 2.5 triệu</option>
-                                                    <option value="6">2.5 triệu - 3 triệu</option>
-                                                    <option value="7">3 triệu - 3.5 triệu</option>
-                                                    <option value="8">3.5 triệu - 4 triệu</option>
-                                                    <option value="9">4 triệu - 4.5 triệu</option>
-                                                    <option value="10">4.5 triệu - 5 triệu</option>
-                                                    <option value="11">Trên 5 triệu</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Diện tích:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-model="postSquare">
-                                                    <option value="0">Tất cả</option>
-                                                    <option value="1">Dưới 20m&sup2</option>
-                                                    <option value="2">20m&sup2 - 30m&sup2</option>
-                                                    <option value="4">30m&sup2 - 40m&sup2</option>
-                                                    <option value="5">40m&sup2 - 50m&sup2</option>
-                                                    <option value="6">50m&sup2 - 60m&sup2</option>
-                                                    <option value="7">60m&sup2 - 70m&sup2</option>
-                                                    <option value="8">70m&sup2 - 80m&sup2</option>
-                                                    <option value="9">80m&sup2 - 90m&sup2</option>
-                                                    <option value="10">90m&sup2 - 100m&sup2</option>
-                                                    <option value="11">Trên 100m&sup2</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li >
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Khoảng cách:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-model="postDistance">
-                                                    <option value="0">Tất cả</option>
-                                                    <option value="1">Dưới 1 km</option>
-                                                    <option value="3">1 km - 2 km</option>
-                                                    <option value="4">2 km - 3 km</option>
-                                                    <option value="5"> 3 km - 4 km</option>
-                                                    <option value="6">4 km - 5 km</option>
-                                                    <option value="7">Trên 5 km</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Trạng thái:</span>
-                                        </div>
-                                        <div class="form-dropdown">
-                                            <form action="#">
-                                                <select v-model="postStatus">
-                                                    <option value="">Tất cả</option>
-                                                    <option value="0">Ẩn</option>
-                                                    <option value="1">Hiện</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="filter-area">
-                                        <div class="title-filter-area">
-                                            <span>Tên bài đăng:</span>
-                                        </div>
-                                        <div class="search-container">
-                                            <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
-                                                   placeholder="Tìm kiếm..."
-                                                   name="search">
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="area-search">
+                    <div class="choose-role">
+                        <div class="row">
+                            <div class="col-xl-3">
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <button @click="searchPost()" class="btn-search">Tìm kiếm</button>
+                                        <span>Vai trò:</span>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="information-detail table-container">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th class="col-first" scope="col">STT</th>
-                                    <th scope="col">Tác vụ</th>
-                                    <th scope="col">Báo cáo</th>
-                                    <th class="col-third" scope="col">Tên phòng trọ</th>
-                                    <th scope="col">Loại phòng</th>
-                                    <th scope="col">Giá</th>
-                                    <th scope="col">Diện tích</th>
-                                    <th scope="col">Khoảng cách</th>
-                                    <th scope="col">Ngày đăng</th>
-                                    <th scope="col">Ngày hết hạn</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Chủ sở hữu</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(post, index) in listPost">
-                                    <td class="col-first" scope="row">{{listPost.indexOf(post) + 1}}</td>
-                                    <td>
-                                        <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
-                                           title="Xem chi tiết"></i>
-                                        <i v-bind:class="{disable : !post.banAvailable}"
-                                           @click="showModalConfirmBan(post.id, 'post','ban', index, $event)"
-                                           class="fas fa-lock" data-toggle="tooltip" data-html="true"
-                                           v-bind:title="post.banAvailable ? 'Khóa bài đăng' : ''"
-                                           id="lockPostIcon"></i>
-<!--                                        <i v-bind:class="{invisible: !post.banned}"-->
-<!--                                           @click="showModalConfirmBan(post.id, 'post','unban', index, $event)"-->
-<!--                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true"-->
-<!--                                           title="Mở khóa bài đăng"-->
-<!--                                           id="unlockPostIcon"></i>-->
-                                    </td>
-                                    <td>
-                                        <i v-on:click="handleGetReport(post, null)" class="fas fa-eye" data-toggle="tooltip" data-html="true"
-                                           title="Xem báo cáo"></i>
-                                        {{post.reportNumber}}
-                                    </td>
-                                    <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
-                                    </td>
-                                    <td>{{post.typeName}}</td>
-                                    <td>{{post.price}}</td>
-                                    <td>{{post.square}} m&sup2</td>
-                                    <td>{{post.distance}} km</td>
-                                    <td>{{post.createDate}}</td>
-                                    <td>{{post.expireDate}}</td>
-                                    <td>
-                                        <div v-text="post.displayStatus" v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
-                                        </div>
-                                    </td>
-                                    <td>{{post.landlordName}}</td>
-
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Quản lý gói -->
-
-                    <div id="payment-package-table" v-if="task == 19">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Quản lý package</h1>
-                        </div>
-                        <div class="information-detail">
-                            <div class="btn-container">
-                                <button v-on:click="showModalPackage" class="btn btn-add-package rounded-pill shadow-sm">Thêm package</button>
-                            </div>
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th width="5%">STT</th>
-                                    <th width="20%">Tên package</th>
-                                    <th width="20%">Thời hạn bài đăng</th>
-                                    <th width="20%">Giá</th>
-                                    <th width="20%">Trạng thái</th>
-                                    <th width="15%">Tác vụ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(package, index) in listPaymentPackage">
-                                    <th scope="row" v-text="index + 1"></th>
-                                    <td v-text="package.packageName"></td>
-                                    <td v-text="package.duration + ' Tháng'"></td>
-                                    <td v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VNĐ'"></td>
-                                    <td>
-                                        <div v-bind:class="package.available ? 'status-show' : 'status-hide'" v-text="package.displayStatus"></div>
-                                    </td>
-                                    <td>
-                                        <i v-on:click="showModalPackage(package, index)" class="fas fa-edit" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i v-on:click="changeStatusPackage(package, index)" class="fas" v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"  data-toggle="tooltip" data-html="true" v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-
-<!--                    Nạp tiền cho chủ trọ-->
-                    <div id="addMoneyLandlord" v-if="task == 20">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Nạp tiền cho chủ trọ</h1>
-                        </div>
-                        <div class="choose-role">
-                            <div class="row">
-                                <div class="col-3">
-                                </div>
-                                <div class="col-3"></div>
-                                <div class="col-3"></div>
-                                <div class="col-3">
-                                    <div class="search-container">
+                                    <div class="form-dropdown">
                                         <form action="#">
-                                            <input @focusout="searchUser()" v-model="inputSearchUser" type="text" class="input-search"
-                                                   placeholder="Tìm kiếm..." name="search">
-                                            <button @click.prevent="searchUser()" type="submit"><i
-                                                    class="fa fa-search"></i></button>
+                                            <select v-on:change="searchUser()" v-model="inputRole">
+                                                <option selected value="0">Tất cả</option>
+                                                <option v-for="(role, index) in listRole" v-bind:value="role.id"
+                                                        v-text="role.displayName"></option>
+                                            </select>
                                         </form>
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Tên đăng nhập</th>
-                                    <th scope="col">Tên hiển thị</th>
-                                    <th scope="col">Số điện thoại</th>
-                                    <th scope="col">Số dư</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="row-user" data-toggle="tooltip" data-html="true" title="Nạp tiền cho chủ trọ"
-                                    v-for="(user, index) in listUser" v-on:click="showModalAddMoney(user, index)">
-                                    <td><a id="myBtn">{{user.username}}</a></td>
-                                    <td>{{user.displayName}}</td>
-                                    <td>{{user.phoneNumber}}</td>
-                                    <td>{{authenticationInstance.formatNumberToDisplay(user.amount)}}</td>
-
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Modal icon delete -->
-                    <div id="modalDelete" class="modal">
-                        <!-- Modal content -->
-                        <div class="message-confirm">
-                            <div class="modal-header">
-                                <h2>Xác Nhận</h2>
-                            </div>
-                            <div class="modal-body">
-                                <label id="modalDelContent"></label>
-                                <div class="group-btn">
-                                    <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">
-                                        Đồng
-                                        ý
-                                    </button>
-                                    <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">
-                                        Hủy
-                                        bỏ
-                                    </button>
-
+                            <div class="col-lg-3 d-none d-lg-block"></div>
+                            <div class="col-lg-3 d-none d-lg-block"></div>
+                            <div class="col-xl-3">
+                                <div class="search-container">
+                                    <form action="#">
+                                        <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
+                                               class="input-search"
+                                               placeholder="Tìm kiếm..." name="search">
+                                        <button @click.prevent="searchUser()" type="submit"><i
+                                                class="fa fa-search"></i></button>
+                                    </form>
                                 </div>
+
                             </div>
                         </div>
                     </div>
-
-                    <!-- Modal ban confirm -->
-                    <div id="modalBan" class="modal">
-                        <!-- Modal content -->
-                        <div class="message-confirm">
-                            <div class="modal-header">
-                                <h2>Xác Nhận</h2>
-                            </div>
-                            <div class="modal-body">
-                                <label id="modalBanContent"></label>
-                                <div class="group-btn">
-
-                                    <button @click="yesNoConfirmBanClick($event)" value="1"
-                                            class="btn-hover btn-default-cancel">Đồng
-                                        ý
-                                    </button>
-                                    <button @click="yesNoConfirmBanClick($event)" value="0"
-                                            class="btn-hover btn-default-cancel">Hủy
-                                        bỏ
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên đăng nhập</th>
+                                <th scope="col">Tên hiển thị</th>
+                                <th scope="col">Vai trò</th>
+                                <th scope="col">Báo cáo</th>
+                                <th scope="col">Tác vụ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(user, index) in listUser">
+                                <th scope="row">{{listUser.indexOf(user) + 1}}</th>
+                                <td><a id="myBtn">{{user.username}}</a></td>
+                                <td>{{user.displayName}}</td>
+                                <td>{{user.roleName}}</td>
+                                <td>
+                                    <i v-if="user.role == 'LANDLORD'" v-on:click="handleGetReport(null, user)"
+                                       class="fas fa-eye" data-toggle="tooltip" data-html="true"
+                                       title="Xem báo cáo"></i>
+                                    <span v-if="user.role == 'LANDLORD'">{{user.reportNumber}}</span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
+                                       id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
+                                    <i v-if="user.role == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
+                                       @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, $event)"
+                                       class="fas fa-lock" data-toggle="tooltip" data-html="true"
+                                       v-bind:title="user.banAvailable ? 'Khóa tài khoản' : ''">
+                                        {{user.unBanDate}}
+                                    </i>
+                                    <i v-if="user.role == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.unBanDate == null}"
+                                       @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, $event)"
+                                       :aria-disabled="true"
+                                       class="fas fa-unlock" data-toggle="tooltip" data-html="true"
+                                       title="Mở khóa tài khoản">
+                                    </i>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="listUser.length <= 0">Không có người dùng nào.</div>
                     </div>
-                    <!--Modal user detail-->
-                    <div id="modalUserDetail" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2>Thông tin người dùng</h2>
-                                <span id="closeModalUserDetail" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên đăng nhập:</p>
-                                    <input :value="userDetail.username"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên hiển thị:</p>
-                                    <input :value="userDetail.displayName"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số điện thoại:</p>
-                                    <input :value="userDetail.phoneNumber"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Ngày sinh:</p>
-                                    <input :value="userDetail.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Nghề nghiệp:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" value="Sinh viên" disabled/>
-                                </div>
-                                <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Giới tính:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" value="Nam" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Vai trò:</p>
-                                    <input :value="userDetail.roleName"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal">
-                                    <p class="left-modal">Tài khoản:</p>
-                                    <input :value="userDetail.amount"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal-table">
-                                    <p class="left-modal">Danh sách bài đăng:</p>
-                                    <table class="table">
-                                        <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">STT</th>
-                                            <th scope="col">Tên bài đăng</th>
-                                            <th scope="col">Ngày đăng</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>phòng 1</td>
-                                            <td>20-06-2020</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default">Xác Nhận</button>
-                            </div>
-                        </div>
-                    </div>
-
-<!--                    modal package -->
-                    <div  id="modalPackage" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2 v-text="selectedPaymentPackage == null ? 'Thêm package' : 'Sửa package'"></h2>
-                                <span @click="closeModalPackage" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên package:</p>
-                                    <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" />
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Thời hạn:</p>
-                                    <input v-model="inputDuration" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
-                                           type="text" />
-                                    <div class="input-group-append input-package-append">
-                                        <span>Tháng</span>
-                                    </div>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Giá:</p>
-                                    <input v-model="inputAmount" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
-                                           type="text" />
-                                    <div class="input-group-append input-package-append">
-                                        <span>VNĐ</span>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default" @click="savePaymentPackage">Xác Nhận</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--                    modal nạp tiền -->
-                    <div  id="modalAddMoney" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2 >Nạp tiền</h2>
-                                <span @click="closeModalAddMoney" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="infor-modal">
-                                    <p class="left-modal">Chủ trọ:</p>
-                                    <input v-bind:value="selectedLandlord.username" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số dư hiện tại:</p>
-                                    <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                    <div class="input-group-append input-package-append">
-                                        <span>VNĐ</span>
-                                    </div>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số dư sau khi nạp tiền:</p>
-                                    <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                    <div class="input-group-append input-package-append">
-                                        <span>VNĐ</span>
-                                    </div>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số tiền:</p>
-                                    <input v-model="inputAmount" class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
-                                           type="text" />
-                                    <div class="input-group-append input-package-append">
-                                        <span>VNĐ</span>
-                                    </div>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Phương thức thanh toán:</p>
-                                    <input v-model="paymentMethod" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" />
-                                </div>
-
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default" @click="handleButtonAddMoney">Nạp tiền</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
+
+                <!-- Báo cáo -->
+                <div id="reportTable" v-if="task == 11">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Danh sách báo cáo</h1>
+                    </div>
+                    <div class="search-form">
+                        <ul>
+                            <li>
+                                <div class="search-container">
+                                    <label class="search-box-label">Bài đăng</label>
+                                    <input v-model="inputPostTitle" class="search-box" type="text"name="search"/>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="search-container">
+                                    <label class="search-box-label">Người báo cáo</label>
+                                    <input v-model="inputRenterId" class="search-box" type="text" name="search"/>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="search-container">
+                                    <label class="search-box-label">Chủ trọ</label>
+                                    <input v-model="inputLandlordId" class="search-box" type="text" name="search"/>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Trạng thái</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <select class="search-box" v-model="inputStatusReport">
+                                            <option selected value="0">Tất cả</option>
+                                            <option v-for="status in listStatusReport" v-bind:value="status.id" v-text="status.displayStatus"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <button v-on:click="searchReport()" class="btn btn-search">Tìm kiếm</button>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên bài đăng</th>
+                                <th scope="col">Chủ trọ</th>
+                                <th scope="col">Ngày đăng</th>
+                                <th scope="col">Người báo cáo</th>
+                                <th scope="col">Chi tiết</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Tác vụ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="report in listReport">
+                                <th scope="row">{{listReport.indexOf(report) + 1}}</th>
+                                <td><a v-bind:href="'/post-detail?id=' + report.id">{{report.postTitle}}</a></td>
+                                <td>{{report.landlordName}}</td>
+                                <td>{{report.reportDate}}</td>
+                                <td>{{report.renterId}}</td>
+                                <td>{{report.content}}</td>
+                                <td>{{report.displayStatus}}</td>
+                                <td>
+                                    <i class="fas fa-eye" @click="showModalReportDetail(report.id)"
+                                       id="myIcon_viewReport"></i>
+                                    <i @click="showModalConfirmDelete(report.id, 'report')"
+                                       class="fas fa-trash-alt"> </i>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="listReport.length <= 0">Không có báo cáo nào.</div>
+                    </div>
+                </div>
+
+
+                <!--Quản lý bài đăng -->
+                <div id="postTable" v-if="task == 10">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý bài đăng</h1>
+                    </div>
+                    <div class="search-area">
+                        <ul>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Loại phòng:</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <form action="#">
+                                            <select v-model="postType">
+                                                <option value="0">Tất cả</option>
+                                                <option value="1">Phòng trọ</option>
+                                                <option value="2">Căn hộ</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Giá:</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <form action="#">
+                                            <select v-model="postPrice">
+                                                <option value="0">Tất cả</option>
+                                                <option value="1">Dưới 1 triệu</option>
+                                                <option value="3">1 triệu - 1.5 triệu</option>
+                                                <option value="4"> 1.5 triệu - 2 triệu</option>
+                                                <option value="5">2 triệu - 2.5 triệu</option>
+                                                <option value="6">2.5 triệu - 3 triệu</option>
+                                                <option value="7">3 triệu - 3.5 triệu</option>
+                                                <option value="8">3.5 triệu - 4 triệu</option>
+                                                <option value="9">4 triệu - 4.5 triệu</option>
+                                                <option value="10">4.5 triệu - 5 triệu</option>
+                                                <option value="11">Trên 5 triệu</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Diện tích:</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <form action="#">
+                                            <select v-model="postSquare">
+                                                <option value="0">Tất cả</option>
+                                                <option value="1">Dưới 20m&sup2</option>
+                                                <option value="2">20m&sup2 - 30m&sup2</option>
+                                                <option value="4">30m&sup2 - 40m&sup2</option>
+                                                <option value="5">40m&sup2 - 50m&sup2</option>
+                                                <option value="6">50m&sup2 - 60m&sup2</option>
+                                                <option value="7">60m&sup2 - 70m&sup2</option>
+                                                <option value="8">70m&sup2 - 80m&sup2</option>
+                                                <option value="9">80m&sup2 - 90m&sup2</option>
+                                                <option value="10">90m&sup2 - 100m&sup2</option>
+                                                <option value="11">Trên 100m&sup2</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            <li >
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Khoảng cách:</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <form action="#">
+                                            <select v-model="postDistance">
+                                                <option value="0">Tất cả</option>
+                                                <option value="1">Dưới 1 km</option>
+                                                <option value="3">1 km - 2 km</option>
+                                                <option value="4">2 km - 3 km</option>
+                                                <option value="5"> 3 km - 4 km</option>
+                                                <option value="6">4 km - 5 km</option>
+                                                <option value="7">Trên 5 km</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Trạng thái:</span>
+                                    </div>
+                                    <div class="form-dropdown">
+                                        <form action="#">
+                                            <select v-model="postStatus">
+                                                <option value="">Tất cả</option>
+                                                <option value="0">Ẩn</option>
+                                                <option value="1">Hiện</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="filter-area">
+                                    <div class="title-filter-area">
+                                        <span>Tên bài đăng:</span>
+                                    </div>
+                                    <div class="search-container">
+                                        <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
+                                               placeholder="Tìm kiếm..."
+                                               name="search">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="area-search">
+                            <div class="filter-area">
+                                <div class="title-filter-area">
+                                    <button @click="searchPost()" class="btn-search">Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="information-detail table-container">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th class="col-first" scope="col">STT</th>
+                                <th scope="col">Tác vụ</th>
+                                <th scope="col">Báo cáo</th>
+                                <th class="col-third" scope="col">Tên phòng trọ</th>
+                                <th scope="col">Loại phòng</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col">Diện tích</th>
+                                <th scope="col">Khoảng cách</th>
+                                <th scope="col">Ngày đăng</th>
+                                <th scope="col">Ngày hết hạn</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Chủ sở hữu</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(post, index) in listPost">
+                                <td class="col-first" scope="row">{{listPost.indexOf(post) + 1}}</td>
+                                <td>
+                                    <i v-bind:class="{disable : !post.banAvailable}"
+                                       @click="showModalConfirmBan(post.id, 'post','ban', index, $event)"
+                                       class="fas fa-lock" data-toggle="tooltip" data-html="true"
+                                       v-bind:title="post.banAvailable ? 'Khóa bài đăng' : ''"
+                                       id="lockPostIcon"></i>
+                                    <!--                                        <i v-bind:class="{invisible: !post.banned}"-->
+                                    <!--                                           @click="showModalConfirmBan(post.id, 'post','unban', index, $event)"-->
+                                    <!--                                           class="fas fa-unlock" data-toggle="tooltip" data-html="true"-->
+                                    <!--                                           title="Mở khóa bài đăng"-->
+                                    <!--                                           id="unlockPostIcon"></i>-->
+                                </td>
+                                <td>
+                                    <i v-on:click="handleGetReport(post, null)" class="fas fa-eye" data-toggle="tooltip"
+                                       data-html="true"
+                                       title="Xem báo cáo"></i>
+                                    {{post.reportNumber}}
+                                </td>
+                                <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
+                                </td>
+                                <td>{{post.typeName}}</td>
+                                <td>{{post.price}}</td>
+                                <td>{{post.square}} m&sup2</td>
+                                <td>{{post.distance}} km</td>
+                                <td>{{post.createDate}}</td>
+                                <td>{{post.expireDate}}</td>
+                                <td>
+                                    <div v-text="post.displayStatus"
+                                         v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
+                                    </div>
+                                </td>
+                                <td>{{post.landlordName}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="listPost.length <= 0">Không có bài đăng nào.</div>
+                    </div>
+                </div>
+
+                <!-- Quản lý gói -->
+
+                <div id="payment-package-table" v-if="task == 19">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý package</h1>
+                    </div>
+                    <div class="information-detail">
+                        <div class="btn-container">
+                            <button v-on:click="showModalPackage" class="btn btn-add-package rounded-pill shadow-sm">
+                                Thêm package
+                            </button>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="20%">Tên package</th>
+                                <th width="20%">Thời hạn bài đăng</th>
+                                <th width="20%">Giá</th>
+                                <th width="20%">Trạng thái</th>
+                                <th width="15%">Tác vụ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(package, index) in listPaymentPackage">
+                                <th scope="row" v-text="index + 1"></th>
+                                <td v-text="package.packageName"></td>
+                                <td v-text="package.duration + ' Tháng'"></td>
+                                <td v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VNĐ'"></td>
+                                <td>
+                                    <div v-bind:class="package.available ? 'status-show' : 'status-hide'"
+                                         v-text="package.displayStatus"></div>
+                                </td>
+                                <td>
+                                    <i v-on:click="showModalPackage(package, index)" class="fas fa-edit"
+                                       data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
+                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"
+                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"
+                                       data-toggle="tooltip" data-html="true"
+                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="listPaymentPackage.length <= 0">Không có gói nào.</div>
+                    </div>
+                </div>
+
+                <!--                    Nạp tiền cho chủ trọ-->
+                <div id="addMoneyLandlord" v-if="task == 20">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Nạp tiền cho chủ trọ</h1>
+                    </div>
+                    <div class="choose-role">
+                        <div class="row">
+                            <div class="col-3">
+                            </div>
+                            <div class="col-3"></div>
+                            <div class="col-3"></div>
+                            <div class="col-3">
+                                <div class="search-container">
+                                    <form action="#">
+                                        <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
+                                               class="input-search"
+                                               placeholder="Tìm kiếm..." name="search">
+                                        <button @click.prevent="searchUser()" type="submit"><i
+                                                class="fa fa-search"></i></button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Tên đăng nhập</th>
+                                <th scope="col">Tên hiển thị</th>
+                                <th scope="col">Số điện thoại</th>
+                                <th scope="col">Số dư</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-user" data-toggle="tooltip" data-html="true" title="Nạp tiền cho chủ trọ"
+                                v-for="(user, index) in listUser" v-on:click="showModalAddMoney(user, index)">
+                                <td><a id="myBtn">{{user.username}}</a></td>
+                                <td>{{user.displayName}}</td>
+                                <td>{{user.phoneNumber}}</td>
+                                <td>{{authenticationInstance.formatNumberToDisplay(user.amount)}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="listUser.length <= 0">Không có chủ trọ nào.</div>
+                    </div>
+                </div>
+
+                <!-- Modal icon delete -->
+                <div id="modalDelete" class="modal">
+                    <!-- Modal content -->
+                    <div class="message-confirm">
+                        <div class="modal-header">
+                            <h2>Xác Nhận</h2>
+                        </div>
+                        <div class="modal-body">
+                            <label id="modalDelContent"></label>
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="group-btn">
+                                <button @click="yesNoConfirmDelClick($event)" value="1"
+                                        class="btn-hover btn-default-cancel">Đồng ý
+                                </button>
+                                <button @click="yesNoConfirmDelClick($event)" value="0"
+                                        class="btn-hover btn-default-cancel">Hủy bỏ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal ban confirm -->
+                <div id="modalBan" class="modal">
+                    <!-- Modal content -->
+                    <div class="message-confirm">
+                        <div class="modal-header">
+                            <h2>Xác Nhận</h2>
+                        </div>
+                        <div class="modal-body">
+                            <label id="modalBanContent"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="group-btn">
+                                <button @click="yesNoConfirmBanClick($event)" value="1"
+                                        class="btn-hover btn-default-cancel">Đồng ý
+                                </button>
+                                <button @click="yesNoConfirmBanClick($event)" value="0"
+                                        class="btn-hover btn-default-cancel">Hủy bỏ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal user detail-->
+                <div id="modalUserDetail" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2>Thông tin người dùng</h2>
+                            <span id="closeModalUserDetail" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên đăng nhập:</p>
+                                <input :value="userDetail.username"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên hiển thị:</p>
+                                <input :value="userDetail.displayName"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Số điện thoại:</p>
+                                <input :value="userDetail.phoneNumber"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Ngày sinh:</p>
+                                <input :value="userDetail.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Nghề nghiệp:</p>
+                                <input class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" value="Sinh viên" disabled/>
+                            </div>
+                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Giới tính:</p>
+                                <input class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" value="Nam" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Vai trò:</p>
+                                <input :value="userDetail.roleName"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal">
+                                <p class="left-modal">Tài khoản:</p>
+                                <input :value="userDetail.amount"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal-table">
+                                <p class="left-modal">Danh sách bài đăng:</p>
+                                <table class="table">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Tên bài đăng</th>
+                                        <th scope="col">Ngày đăng</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>phòng 1</td>
+                                        <td>20-06-2020</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                    modal package -->
+                <div id="modalPackage" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm package' : 'Sửa package'"></h2>
+                            <span @click="closeModalPackage" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên package:</p>
+                                <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Thời hạn:</p>
+                                <input v-model="inputDuration"
+                                       class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                                <div class="input-group-append input-package-append">
+                                    <span>Tháng</span>
+                                </div>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Giá:</p>
+                                <input v-model="inputAmount"
+                                       class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                                <div class="input-group-append input-package-append">
+                                    <span>VNĐ</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default" @click="savePaymentPackage">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                    modal report detail -->
+                <div id="modalRepostDetail" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2>Chi tiết báo cáo</h2>
+                            <span @click="closeModalReportDetail" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên bài đăng:</p>
+                                <input :value="reportDetail.postTitle" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên chủ trọ:</p>
+                                <input :value="reportDetail.landlordName" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Ngày báo cáo:</p>
+                                <input :value="reportDetail.reportDate" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal-table">
+                                <p class="left-modal">Nội dung báo cáo:</p>
+                                <textarea v-text="reportDetail.content"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default" @click="closeModalReportDetail">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--                    modal nạp tiền -->
+                <div id="modalAddMoney" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2>Nạp tiền</h2>
+                            <span @click="closeModalAddMoney" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="infor-modal">
+                                <p class="left-modal">Chủ trọ:</p>
+                                <input v-bind:value="selectedLandlord.username"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Số dư hiện tại:</p>
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)"
+                                       class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                                <div class="input-group-append input-package-append">
+                                    <span>VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Số dư sau khi nạp tiền:</p>
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
+                                       class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                                <div class="input-group-append input-package-append">
+                                    <span>VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Số tiền:</p>
+                                <input v-model="inputAmount"
+                                       class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                                <div class="input-group-append input-package-append">
+                                    <span>VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Phương thức thanh toán:</p>
+                                <input v-model="paymentMethod" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default" @click="handleButtonAddMoney">Nạp tiền</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </div>
 
-<!--    </div>-->
+    <!--    </div>-->
 </main>
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>

@@ -4,7 +4,6 @@ import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;

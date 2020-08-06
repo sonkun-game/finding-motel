@@ -1,7 +1,9 @@
 package com.example.fptufindingmotelv1.service.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.PaymentPackageModel;
+import com.example.fptufindingmotelv1.model.PostModel;
 import net.minidev.json.JSONObject;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.model;
 
-import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

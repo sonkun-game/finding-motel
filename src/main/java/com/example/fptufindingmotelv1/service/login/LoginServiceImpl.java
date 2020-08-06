@@ -4,17 +4,14 @@ import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service

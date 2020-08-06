@@ -82,7 +82,7 @@
                         </div>
                         <div class="container-fluid">
                             <div class="container">
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-4">
                                     <div class="title">
                                         <h4>Loại phòng</h4>
                                     </div>
@@ -92,7 +92,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-12">
                                     <div class="title">
                                         <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
                                     </div>
@@ -100,7 +100,7 @@
                                         <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
                                     </div>
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-12">
                                     <div class="title">
                                         <h4>Thông tin chi tiết</h4>
                                     </div>
@@ -108,19 +108,25 @@
                                         <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
                                     </div>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Số lượng phòng:</h4>
+                                <div class="row">
+                                    <div class="fill-information col-lg-6">
+                                        <div class="title">
+                                            <h4>Số lượng phòng:</h4>
+                                        </div>
+                                        <div class="input-information">
+                                            <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information  rounded-pill border-0 shadow-sm">
+                                            <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
+
+                                        </div>
                                     </div>
-                                    <div class="input-information">
-                                        <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information half-width rounded-pill border-0 shadow-sm">
-                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                    <div class="col-lg-6">
                                         <div class="input-group-append btn-add-container" v-if="editMode">
                                             <button class="btn-hover btn-add-room" v-on:click="showAddRoomModal()">Thêm Phòng</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fill-information" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
+
+                                <div class="fill-information col-lg-12" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
                                     <div class="title">
                                         <h4>Trạng thái các phòng:</h4>
                                     </div>
@@ -151,24 +157,24 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-6">
                                     <div class="title">
                                         <h4>Giá cho thuê</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>VNĐ</span>
                                         </div>
 
                                     </div>
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-6">
                                     <div class="title">
                                         <h4>Diện tích</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>M&sup2</span>
                                         </div>
@@ -176,18 +182,18 @@
 
 
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-6">
                                     <div class="title">
                                         <h4>Khoảng cách (So với Đại Học FPT)</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
+                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                         <div class="input-group-append">
                                             <span>KM</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-12">
                                     <div class="title">
                                         <h4>Địa chỉ</h4>
                                     </div>
@@ -196,7 +202,7 @@
                                     </div>
                                 </div>
 
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-12">
                                     <div class="title">
                                         <h4>Bản đồ</h4>
                                     </div>
@@ -213,7 +219,7 @@
 
 
 
-                                <div class="fill-information">
+                                <div class="fill-information col-lg-12">
                                     <div class="title">
                                         <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
                                     </div>
@@ -232,7 +238,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fill-information" v-bind:class="{flexElement: editMode}">
+                                <div class="fill-information col-lg-12" v-bind:class="{flexElement: editMode}">
                                     <div class="title" v-show="!editMode">
                                         <h4>Thời hạn bài đăng</h4>
                                     </div>

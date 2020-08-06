@@ -14,7 +14,6 @@
 .sidebar-right{
     height: 100%;
     width: 100%;
-    padding-left: 30px;
 }
 
 /*.avatar{*/
@@ -359,10 +358,9 @@ background: #ccc;
 }
 
 .fill-information{
-width: 100%;
-height: auto;
-margin: 20px 0px;
-
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px;
 }
 
 .title h4{
@@ -382,19 +380,19 @@ display: none !important;
 }
 
 .form-input-information{
-width: 50% ;
-font-family:  sans-serif;
-font-size: inherit;
-border: 1px solid #aaa;
-border-radius: 2px;
+    width: 100% ;
+    font-family:  sans-serif;
+    font-size: inherit;
+    border: 1px solid #aaa;
+    border-radius: 2px;
 }
 
 .form-input-title-information{
-width: 100% ;
-font-family: sans-serif;
-font-size: inherit;
-border: 1px solid #aaa;
-border-radius: 2px;
+    width: 100% ;
+    font-family: sans-serif;
+    font-size: inherit;
+    border: 1px solid #aaa;
+    border-radius: 2px;
 }
 
 textarea{
@@ -502,7 +500,7 @@ input:focus, textarea:focus, select:focus {
     display: flex;
 }
 .input-group-append{
-    width: 10%;
+    width: 20%;
     line-height: inherit;
     height: 34px;
     border-bottom-right-radius: 6px;
@@ -510,8 +508,8 @@ input:focus, textarea:focus, select:focus {
     background-color: #dca73a;
     color: white;
 }
-.width-40-pct{
-    width: 40%!important;
+.width-80-pct{
+    width: 80%!important;
     border-radius: unset!important;
     border-bottom-left-radius: 6px!important;
     border-top-left-radius: 6px!important;
@@ -524,8 +522,9 @@ input:focus, textarea:focus, select:focus {
 }
 .btn-add-container{
     width: fit-content!important;
-    margin-left: 20px;
     border-radius: 6px!important;
+    position: absolute;
+    bottom: 20px;
 }
 .input-group-append span{
     margin: auto;
@@ -557,6 +556,8 @@ input:focus, textarea:focus, select:focus {
 }
 .row{
     position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .list-image{

@@ -31,22 +31,6 @@ public class PaymentController {
     PaymentService paymentService;
 
     @ResponseBody
-    @PostMapping(value = "/api-get-history-payment")
-    public List<PaymentDTO> getHistoryPaymentIntoAccount(){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
-            List<PaymentDTO> response = new ArrayList<>();
-            for (PaymentModel payment: landlordModel.getPaymentModels()) {
-                response.add(new PaymentDTO(payment));
-            }
-            return response;
-        }
-        return null;
-    }
-
-    @ResponseBody
     @PostMapping(value = "/api-get-history-payment-post")
     public List<PaymentPostDTO> getHistoryPaymentPost(){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){

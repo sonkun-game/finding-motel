@@ -366,8 +366,6 @@
                             <tr v-for="(post, index) in listPost">
                                 <td class="col-first" scope="row">{{listPost.indexOf(post) + 1}}</td>
                                 <td>
-                                    <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
-                                       title="Xem chi tiết"></i>
                                     <i v-bind:class="{disable : !post.banAvailable}"
                                        @click="showModalConfirmBan(post.id, 'post','ban', index, $event)"
                                        class="fas fa-lock" data-toggle="tooltip" data-html="true"

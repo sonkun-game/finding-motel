@@ -512,16 +512,16 @@
                         </div>
                         <div class="modal-body">
                             <label id="modalDelContent"></label>
-                            <div class="group-btn">
-                                <button @click="yesNoConfirmDelClick($event)" value="1" class="btn-default-cancel">
-                                    Đồng
-                                    ý
-                                </button>
-                                <button @click="yesNoConfirmDelClick($event)" value="0" class="btn-default-cancel">
-                                    Hủy
-                                    bỏ
-                                </button>
 
+                        </div>
+                        <div class="modal-footer">
+                            <div class="group-btn">
+                                <button @click="yesNoConfirmDelClick($event)" value="1"
+                                        class="btn-hover btn-default-cancel">Đồng ý
+                                </button>
+                                <button @click="yesNoConfirmDelClick($event)" value="0"
+                                        class="btn-hover btn-default-cancel">Hủy bỏ
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -536,15 +536,14 @@
                         </div>
                         <div class="modal-body">
                             <label id="modalBanContent"></label>
+                        </div>
+                        <div class="modal-footer">
                             <div class="group-btn">
-
                                 <button @click="yesNoConfirmBanClick($event)" value="1"
-                                        class="btn-hover btn-default-cancel">Đồng
-                                    ý
+                                        class="btn-hover btn-default-cancel">Đồng ý
                                 </button>
                                 <button @click="yesNoConfirmBanClick($event)" value="0"
-                                        class="btn-hover btn-default-cancel">Hủy
-                                    bỏ
+                                        class="btn-hover btn-default-cancel">Hủy bỏ
                                 </button>
                             </div>
                         </div>

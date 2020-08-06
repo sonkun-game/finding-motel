@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="information-detail">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">STT</th>
@@ -179,7 +179,7 @@
                         </ul>
                     </div>
                     <div class="information-detail">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">STT</th>
@@ -328,7 +328,7 @@
                                         <span>Tên bài đăng:</span>
                                     </div>
                                     <div class="search-container">
-                                        <input v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
+                                        <input class="search-post" v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
                                                placeholder="Tìm kiếm..."
                                                name="search">
                                     </div>
@@ -345,7 +345,7 @@
                     </div>
 
                     <div class="information-detail table-container">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th class="col-first" scope="col">STT</th>
@@ -416,7 +416,7 @@
                                 Thêm package
                             </button>
                         </div>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th width="5%">STT</th>
@@ -458,27 +458,21 @@
                         <h1 class="title-name uppercase">Nạp tiền cho chủ trọ</h1>
                     </div>
                     <div class="choose-role">
-                        <div class="row">
-                            <div class="col-3">
-                            </div>
-                            <div class="col-3"></div>
-                            <div class="col-3"></div>
-                            <div class="col-3">
+                        <ul>
+                            <li>
                                 <div class="search-container">
-                                    <form action="#">
-                                        <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
-                                               class="input-search"
-                                               placeholder="Tìm kiếm..." name="search">
-                                        <button @click.prevent="searchUser()" type="submit"><i
-                                                class="fa fa-search"></i></button>
-                                    </form>
+                                    <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
+                                           class="input-search"
+                                           placeholder="Tìm kiếm..." name="search">
+                                    <button @click.prevent="searchUser()" type="submit"><i
+                                            class="fa fa-search"></i></button>
                                 </div>
 
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                     <div class="information-detail">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Tên đăng nhập</th>

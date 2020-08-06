@@ -265,6 +265,13 @@ height: auto;
 margin-top: 30px;
 }
 
+.choose-role li{
+    width: 23%;
+    float: right;
+    margin-bottom: 20px;
+}
+
+
 .row-search{
 margin: 10px;
 width: 80%;
@@ -345,7 +352,6 @@ display: none !important;
 }
 
 .search-container button {
-    float: right;
     padding: 0 10px;
     background: #ddd;
     border: none;
@@ -914,9 +920,7 @@ a:hover {
 .input-package-append{
     width: 15%;
 }
-.row-user:hover{
-    background-color: #dca73a;
-}
+
 .row-user{
     cursor: pointer;
     height: 30px;
@@ -931,7 +935,10 @@ a:hover {
         width: 100%;
     }
     .search-container input{
-        width: 100%;
+        width: 83%;
+    }
+    .search-post{
+        width: 100% !important;
     }
 
 }

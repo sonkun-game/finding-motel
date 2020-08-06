@@ -241,8 +241,8 @@ public class HomeController {
         return "Admin Access";
     }
 
-    @GetMapping("/loai-phong")
-    public String getType() {
-        return "type-room";
+    @GetMapping(value = {"/phong-tro", "/can-ho"})
+    public String getTypePostPage() {
+        return "type-post";
     }
 }

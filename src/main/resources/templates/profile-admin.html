@@ -140,32 +140,26 @@
                         <h1 class="title-name uppercase">Danh sách báo cáo</h1>
                     </div>
                     <div class="search-form">
-                        <div class="row">
-                            <div class="col-3">
+                        <ul>
+                            <li>
                                 <div class="search-container">
                                     <label class="search-box-label">Bài đăng</label>
-                                    <input v-model="inputPostTitle" class="search-box" type="text" name="search"/>
+                                    <input v-model="inputPostTitle" class="search-box" type="text"name="search"/>
                                 </div>
-                            </div>
-                            <div class="col-3">
+                            </li>
+                            <li>
                                 <div class="search-container">
                                     <label class="search-box-label">Người báo cáo</label>
                                     <input v-model="inputRenterId" class="search-box" type="text" name="search"/>
                                 </div>
-                            </div>
-                            <div class="col-3">
+                            </li>
+                            <li>
                                 <div class="search-container">
                                     <label class="search-box-label">Chủ trọ</label>
                                     <input v-model="inputLandlordId" class="search-box" type="text" name="search"/>
                                 </div>
-
-                            </div>
-                            <div class="col-3">
-                                <button v-on:click="searchReport()" class="btn btn-search">Tìm kiếm</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
+                            </li>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Trạng thái</span>
@@ -173,17 +167,16 @@
                                     <div class="form-dropdown">
                                         <select class="search-box" v-model="inputStatusReport">
                                             <option selected value="0">Tất cả</option>
-                                            <option v-for="status in listStatusReport" v-bind:value="status.id"
-                                                    v-text="status.displayStatus"></option>
+                                            <option v-for="status in listStatusReport" v-bind:value="status.id" v-text="status.displayStatus"></option>
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-3"></div>
-                            <div class="col-3"></div>
-                            <div class="col-3">
-                            </div>
-                        </div>
+                            </li>
+                            <li>
+                                <button v-on:click="searchReport()" class="btn btn-search">Tìm kiếm</button>
+                            </li>
+
+                        </ul>
                     </div>
                     <div class="information-detail">
                         <table class="table table-bordered">
@@ -221,14 +214,15 @@
                     </div>
                 </div>
 
+
                 <!--Quản lý bài đăng -->
                 <div id="postTable" v-if="task == 10">
                     <div class="title">
                         <h1 class="title-name uppercase">Quản lý bài đăng</h1>
                     </div>
                     <div class="search-area">
-                        <div class="row row-search">
-                            <div class="col-4">
+                        <ul>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Loại phòng:</span>
@@ -243,8 +237,8 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            </li>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Giá:</span>
@@ -267,8 +261,8 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            </li>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Diện tích:</span>
@@ -291,8 +285,8 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            </li>
+                            <li >
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Khoảng cách:</span>
@@ -311,8 +305,8 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            </li>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Trạng thái:</span>
@@ -327,8 +321,8 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            </li>
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Tên bài đăng:</span>
@@ -339,8 +333,8 @@
                                                name="search">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                         <div class="area-search">
                             <div class="filter-area">
                                 <div class="title-filter-area">
@@ -349,6 +343,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="information-detail table-container">
                         <table class="table table-bordered">
                             <thead class="thead-light">

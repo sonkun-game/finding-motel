@@ -572,8 +572,6 @@ label {
     animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
     -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
     background: #fff;
-    padding-left: 85px;
-    padding-right: 85px;
 }
 
 
@@ -2049,12 +2047,9 @@ label {
     display: flex;
     background-color: #dca73a;
     color: white;
-    /* margin: -7px 0px; */
-    min-width: 45px;
-    height: 45px;
-    padding: 10px 10px 5px 12px;
     border: 1px solid #CFCFCF;
     border-radius: 5px;
+    padding: 8.5px;
 }
 
 .login-icon:hover{
@@ -2070,10 +2065,11 @@ label {
     font-size: 16px;
     font-family:  sans-serif;
     white-space: nowrap;
-    width: 50px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 5px 5px 5px 10px;
+    padding: 0 5px 0 5px;
+    float: right;
 }
 
 
@@ -2834,6 +2830,8 @@ label {
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2852,12 +2850,16 @@ label {
 @media only screen and (min-width: 576px) and (max-width: 767px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
     .booking-area .booking-wrap .single-select-box {
         width: 50%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -2891,7 +2893,7 @@ label {
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
     .booking-area .booking-wrap .nice-select {
-        width: 50%;
+        width: 80%;
     }
 }
 
@@ -2903,6 +2905,7 @@ label {
 
 .select-btn {
     padding: 27px 49px;
+    color: white !important;
 }
 
 @media (max-width: 767px) {
@@ -2914,10 +2917,17 @@ label {
 @media only screen and (min-width: 576px) and (max-width: 767px) {
     .select-btn {
         width: 80%;
+        padding: 27px 0px;
     }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+    .select-btn {
+        width: 80%;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
     .select-btn {
         width: 80%;
     }
@@ -7130,6 +7140,30 @@ h6 {
 [v-cloak] {
     display: none;
 }
+@media (min-width: 1200px){
+    .container {
+        max-width: 1140px;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px){
+    .container {
+        max-width: 978px;
+    }
+    .button-post{
+        display: none;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px){
+    .container {
+        max-width: 720px;
+    }
+}
+@media (min-width: 576px) and (max-width: 767px){
+    .container {
+        max-width: 540px;
+    }
+}
+
 
 
 

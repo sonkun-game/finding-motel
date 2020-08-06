@@ -31,4 +31,7 @@ public class StatusModel implements Serializable {
 
     @OneToMany(mappedBy = "rentalStatus")
     private List<RentalRequestModel> rentalRequest;
+
+    @OneToMany(mappedBy = "statusNotification")
+    private List<NotificationModel> notifications;
 }

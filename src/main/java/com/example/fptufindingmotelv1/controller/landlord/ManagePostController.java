@@ -9,10 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ManagePostController {
@@ -58,7 +63,7 @@ public class ManagePostController {
     @PostMapping("/api-get-init-new-post")
     public JSONObject getInitNewPost(){
         JSONObject response = new JSONObject();
-        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage();
+        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage(true);
         if(paymentPackages != null){
             List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
             for (PaymentPackageModel paymentPackage:

@@ -1,12 +1,12 @@
 package com.example.fptufindingmotelv1.model;
 
-import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,7 +39,14 @@ public class RentalRequestModel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
+    @Column(name = "CANCEL_DATE")
+    @Temporal(TemporalType.DATE)
+    private Date cancelDate;
+
     @ManyToOne
     @JoinColumn(name = "STATUS_ID")
     private StatusModel rentalStatus;
+
+    @OneToMany(mappedBy = "rentalRequestNotification")
+    private List<NotificationModel> notifications;
 }

@@ -4,11 +4,14 @@ import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Repository
@@ -30,14 +33,20 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:renterUsername is null or rr.rentalRenter.username = :renterUsername)" +
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
             "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
+            "and (:requestId is null or rr.id = :requestId)" +
             "order by rr.requestDate desc")
-    ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId);
+    ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId);
 
     @Query(value = "select count(rr) from RentalRequestModel rr " +
             "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +
             "and rr.rentalStatus.id = :statusId")
     int getRequestNumber(String landlordUsername, Long statusId);
 
-    List<RentalRequestModel> findAllByRentalRoom(RoomModel room);
-
+    @Transactional
+    @Modifying
+    @Query(value = "delete from RentalRequestModel r " +
+                "where r.cancelDate < :cancelDateExpire " +
+                "and r.rentalStatus.id = :statusId " +
+                "and r.rentalRenter.username = :renterUsername")
+    void removeRentalRequest(Date cancelDateExpire, Long statusId, String renterUsername);
 }

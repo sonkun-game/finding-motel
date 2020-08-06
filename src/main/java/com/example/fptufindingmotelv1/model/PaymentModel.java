@@ -29,8 +29,15 @@ public class PaymentModel implements Serializable {
     @Column(name = "MOMO_ID")
     private String momoId;
 
+    @Column(name = "PAYMENT_METHOD")
+    private String paymentMethod;
+
+    @Column(name = "NOTE")
+    private String note;
+
     @ManyToOne
     @JoinColumn(name = "LANDLORD_ID")
     private LandlordModel landlordModel;
+
 
 }

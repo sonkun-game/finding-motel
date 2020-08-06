@@ -74,7 +74,7 @@
 }
 
 .modal-body {
-    padding: 2px 16px !important;
+    padding: 10px 16px 10px 16px !important;
 }
 
 .modal-footer {
@@ -89,6 +89,7 @@
     cursor: pointer;
     background-color: #dca73a;
     color: white;
+    height: 34px;
 }
 
 textarea{
@@ -118,8 +119,7 @@ textarea{
     margin: auto;
     padding: 0;
     border: 1px solid #888;
-    width: 400px;
-    height: 200px;
+    width: 500px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -162,12 +162,12 @@ textarea{
 }
 
 .modal-body label{
-    margin-top: 15px ;
+    margin-top: .5rem;
     font-size: 18px;
 }
 
 .btn-default-cancel{
-    margin: 0px 20px;
+    margin: 0px 10px;
     border: 1px solid #dca73a;
     border-radius: 4px;
     cursor: pointer;
@@ -178,7 +178,7 @@ textarea{
 }
 
 .group-btn{
-    margin: 25px 0 0 65px;
+    margin: 10px 0 10px 0px;
 }
 
 .infor-modal{
@@ -203,7 +203,7 @@ textarea{
     width: 70%;
     border-radius: 6px;
     border: .5px solid;
-    height: 30px;
+    height: 34px;
     padding-left: 10px;
     margin-top: 0px !important;
 }

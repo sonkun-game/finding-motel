@@ -13,8 +13,8 @@ public class PaymentPackageModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "AMOUNT")
@@ -22,6 +22,12 @@ public class PaymentPackageModel implements Serializable {
 
     @Column(name = "DURATION")
     private int duration;
+
+    @Column(name = "PACKAGE_NAME")
+    private String packageName;
+
+    @Column(name = "IS_AVAILABLE")
+    private boolean available;
 
     @OneToMany(mappedBy = "paymentPackage", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;

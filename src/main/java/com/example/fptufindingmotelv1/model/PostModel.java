@@ -1,7 +1,10 @@
 package com.example.fptufindingmotelv1.model;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -61,6 +64,12 @@ public class PostModel implements Serializable{
 
     @Column(name = "IS_BANNED", nullable = false)
     private boolean banned;
+
+    @Column(name = "ADDRESS", nullable = false)
+    private String address;
+
+    @Column(name = "MAP_LOCATION")
+    private String mapLocation;
 
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;

@@ -312,7 +312,17 @@ var userTaskInstance = new Vue({
                 }else if(task == 9){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListUser()
+                        admin.inputRole = 0
+                        admin.searchUser()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
+                }else if(task == 20){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.inputRole = 2
+                        admin.searchUser()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -330,6 +340,14 @@ var userTaskInstance = new Vue({
                         admin.task = task
                         admin.searchReport()
                         admin.getInitAdmin()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
+                }else if(task == 19){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.getListPaymentPackage()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }

@@ -2,7 +2,6 @@ package com.example.fptufindingmotelv1.dto;
 
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,4 +20,6 @@ public class PostRequestDTO {
     private List<String> listImage;
     private long paymentPackageId;
     private Boolean isVisible;
+    private String address;
+    private String mapLocation;
 }

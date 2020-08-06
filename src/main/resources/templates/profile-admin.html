@@ -747,10 +747,14 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Phương thức thanh toán:</p>
-                                <input v-model="paymentMethod" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input v-model="paymentMethod" maxlength="50" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
-
+                            <div class="infor-modal">
+                                <p class="left-modal">Ghi chú:</p>
+                                <input v-model="adjustMoneyNote" maxlength="100" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text"/>
+                            </div>
 
                         </div>
                         <div class="modal-footer">

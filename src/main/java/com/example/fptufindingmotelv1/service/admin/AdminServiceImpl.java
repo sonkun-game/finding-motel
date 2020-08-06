@@ -328,6 +328,7 @@ public class AdminServiceImpl implements AdminService {
         paymentModel.setLandlordModel(landlordModel);
         paymentModel.setAmount(paymentDTO.getAmount());
         paymentModel.setPaymentMethod(paymentDTO.getPaymentMethod());
+        paymentModel.setNote(paymentDTO.getNote());
         paymentModel.setPayDate(payDate);
         paymentRepository.save(paymentModel);
         return landlordModel;

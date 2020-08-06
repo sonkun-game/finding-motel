@@ -56,6 +56,7 @@ var admin = new Vue({
         selectedLandlord : {},
         paymentMethod : "",
         reportDetail : "",
+        adjustMoneyNote : ""
     },
     beforeMount() {
         this.task = localStorage.getItem("task")
@@ -574,6 +575,7 @@ var admin = new Vue({
                 "landlord": this.selectedLandlord.username,
                 "amount": this.inputAmount,
                 "paymentMethod": this.paymentMethod,
+                "note" : this.adjustMoneyNote
             }
             fetch("/api-add-money-for-landlord", {
                 method: 'POST',

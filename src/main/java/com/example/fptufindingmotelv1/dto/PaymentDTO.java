@@ -14,6 +14,7 @@ public class PaymentDTO {
     private String momoId;
     private String landlord;
     private String paymentMethod;
+    private String note;
 
     public PaymentDTO(PaymentModel paymentModel){
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -23,6 +24,7 @@ public class PaymentDTO {
         this.momoId = paymentModel.getMomoId();
         this.landlord = paymentModel.getLandlordModel().getUsername();
         this.paymentMethod = paymentModel.getPaymentMethod();
+        this.note = paymentModel.getNote();
     }
 
     public PaymentDTO() {

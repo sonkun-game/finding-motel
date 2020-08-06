@@ -4,7 +4,6 @@ import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,11 +50,14 @@ public class UserDTO {
 
     private boolean havePassword;
 
+    private Long roleId;
+
     public UserDTO(UserModel userModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
         Date date = new Date();
         this.username = userModel.getUsername();
         this.role = userModel.getRole().getRoleName();
+        this.roleId = userModel.getRole().getId();
         this.roleName = userModel.getRole().getDisplayName();
         this.fbAccount = userModel.getFbAccount();
         this.ggAccount = userModel.getGgAccount();

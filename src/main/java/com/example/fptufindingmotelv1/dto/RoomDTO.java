@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.dto;
 
-import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import lombok.Data;
 

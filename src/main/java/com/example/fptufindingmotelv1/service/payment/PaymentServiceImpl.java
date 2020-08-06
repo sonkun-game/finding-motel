@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.payment;
 
 import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import com.example.fptufindingmotelv1.dto.MomoTransactionStatusRequestDTO;
+import com.example.fptufindingmotelv1.dto.PaymentDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.MomoModel;
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -48,19 +50,24 @@ public class PaymentServiceImpl implements PaymentService{
                 //Get username of landlord
                 LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
                 if (momoResponseDTO.getErrorCode().equalsIgnoreCase("0")) {
-                    jsonObject.put("code", "000");
-                    jsonObject.put("message", "Nap tien thanh cong.");
+
+                    jsonObject.put("addAmount", momoResponseDTO.getAmount());
                     //save payment
                     PaymentModel paymentModel = new PaymentModel();
                     paymentModel.setAmount(Float.parseFloat(momoResponseDTO.getAmount()));
                     paymentModel.setLandlordModel(landlordModel);
                     paymentModel.setMomoId(momoResponseDTO.getOrderId());
+                    paymentModel.setPaymentMethod("Momo");
                     paymentModel.setPayDate(new Date());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
                     float amount = landlordModel.getAmount();
                     amount += Float.parseFloat(momoResponseDTO.getAmount());
                     landlordModel.setAmount(amount);
+                    landlordRepository.save(landlordModel);
+                    jsonObject.put("code", "000");
+                    jsonObject.put("message", "Nạp tiền thành công");
+                    jsonObject.put("landlordAmount", landlordModel.getAmount());
                 } else {
                     jsonObject.put("code", "001");
                     jsonObject.put("message", "Nap tien khong thanh cong. - errorCode: " + momoResponseDTO.getErrorCode());
@@ -82,8 +89,8 @@ public class PaymentServiceImpl implements PaymentService{
         String requestId = "request_" + createUniquieID();
         String orderId = "order_" + createUniquieID();
         String orderInfo = "Momo pay for user";
-        String notifyUrl = env.getProperty("server.hosting.url") + "/validate-save-momo-payment";
-        String returnUrl = env.getProperty("server.hosting.url") + "/validate-save-momo-payment";
+        String notifyUrl = env.getProperty("server.hosting.url") + "/payment-momo";
+        String returnUrl = env.getProperty("server.hosting.url") + "/payment-momo";
         String extraData = "";
         String rawSign = "partnerCode=" + partnerCode + "&accessKey=" + accessKey
                 + "&requestId=" + requestId + "&amount=" + amount + "&orderId=" + orderId
@@ -142,6 +149,18 @@ public class PaymentServiceImpl implements PaymentService{
             }
         } catch (Exception e) {
             return responseMsg("998", e.getMessage(), null);
+        }
+    }
+
+    @Override
+    public List<PaymentModel> getPaymentsByLandlord(PaymentDTO paymentDTO) {
+        try {
+            List<PaymentModel> paymentModels =
+                    paymentRepository.getPaymentByLandlord(paymentDTO.getLandlord());
+            return paymentModels;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 

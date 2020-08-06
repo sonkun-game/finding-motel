@@ -38,6 +38,22 @@ var landlordInstance = new Vue({
         paymentAmount : "",
         paymentValid : false,
         message : "",
+        newestPayment : {},
+    },
+    created(){
+        let previousUrl = document.referrer
+        if(previousUrl.includes("test-payment.momo.vn") && previousUrl.includes("errorCode=0")){
+            let query = window.location.search;
+            let url = new URLSearchParams(query);
+            sessionStorage.setItem("momo-check", "1")
+            sessionStorage.setItem("partnerCode", url.get('partnerCode'))
+            sessionStorage.setItem("accessKey", url.get('accessKey'))
+            sessionStorage.setItem("requestId", url.get('requestId'))
+            sessionStorage.setItem("orderId", url.get('orderId'))
+            sessionStorage.setItem("amount", url.get('amount'))
+            sessionStorage.setItem("errorCode", url.get('errorCode'))
+            window.location.href = "/nap-tien"
+        }
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -91,6 +107,11 @@ var landlordInstance = new Vue({
         } else if (this.task == 8) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
+            if(window.location.href.includes("nap-tien")
+                && sessionStorage.getItem("momo-check") != null
+                && sessionStorage.getItem("momo-check") == "1"){
+                this.checkStatusAndSavePayment()
+            }
         }
 
     },
@@ -137,20 +158,6 @@ var landlordInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        },
-        getHistoryPayment(){
-            fetch("/api-get-history-payment", {
-                method: 'POST',
-
-            }).then(response => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if(data != null){
-                        this.listPayment = data
-                    }
-                }).catch(error => {
-                    console.log(error);
-                    })
         },
         getInitNewPost(){
             fetch("/api-get-init-new-post", {
@@ -890,7 +897,67 @@ var landlordInstance = new Vue({
         showModal: function () {
             this.showModal = false;
             this.$http.get
-        }
+        },
+        getHistoryPayment(){
+            let request = {
+                'landlord' : this.userInfo.username
+            }
+            fetch("/api-get-payment-by-landlord", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+            .then(response => response.json())
+            .then((data) => {
+                if (data != null && data.code == "000") {
+                    this.listPayment = data.data
+                }
+            })
+        },
+        formatDate(rawDate){
+            let dateFormatString = rawDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                + " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+        },
+        checkStatusAndSavePayment(){
+            let request = {
+                'partnerCode' : sessionStorage.getItem("partnerCode"),
+                'accessKey' : sessionStorage.getItem("accessKey"),
+                'requestId' : sessionStorage.getItem("requestId"),
+                'orderId' : sessionStorage.getItem("orderId"),
+                'amount' : sessionStorage.getItem("amount"),
+                'errorCode' : sessionStorage.getItem("errorCode"),
+            }
+            fetch("/api-check-status-payment", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (data != null && data.code == "000") {
+                        basicInfoInstance.userInfo.amount = data.landlordAmount
+                        authenticationInstance.showModalNotify("Quý khách đã nạp thành công <b>"
+                            + authenticationInstance.formatNumberToDisplay(data.addAmount)
+                            + " VND</b> vào tài khoản", 5000)
+                        sessionStorage.removeItem("momo-check")
+                        sessionStorage.removeItem("partnerCode")
+                        sessionStorage.removeItem("accessKey")
+                        sessionStorage.removeItem("requestId")
+                        sessionStorage.removeItem("orderId")
+                        sessionStorage.removeItem("amount")
+                        sessionStorage.removeItem("errorCode")
+                    }else if(data != null && data.code != "000"){
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
+                })
+        },
     }
 })
 var noteInstance = new Vue({

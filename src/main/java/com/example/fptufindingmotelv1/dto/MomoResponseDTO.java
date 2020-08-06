@@ -39,4 +39,7 @@ public class MomoResponseDTO {
         this.extraData = extraData;
         this.signature = signature;
     }
+
+    public MomoResponseDTO() {
+    }
 }

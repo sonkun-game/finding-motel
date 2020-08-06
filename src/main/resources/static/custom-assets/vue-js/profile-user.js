@@ -256,7 +256,7 @@ var basicInfoInstance = new Vue({
                 modalMessageInstance.showModal()
             } else {
                 localStorage.setItem("task", 13)
-                window.location.href = "dang-tin"
+                window.location.href = "/dang-tin"
             }
         },
         handlePayment() {
@@ -267,6 +267,7 @@ var basicInfoInstance = new Vue({
                 modalMessageInstance.showModal()
             } else {
                 localStorage.setItem("task", 8);
+                window.location.href = "/nap-tien"
             }
         }
     }
@@ -321,7 +322,17 @@ var userTaskInstance = new Vue({
                 }else if(task == 9){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListUser()
+                        admin.inputRole = 0
+                        admin.searchUser()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
+                }else if(task == 20){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.inputRole = 2
+                        admin.searchUser()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }

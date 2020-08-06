@@ -458,7 +458,7 @@ list-style-type: circle;
 margin-left: 15px;
 }
 
-input, textarea, select {
+input, select {
     -webkit-transition: all 0.30s ease-in-out;
     -moz-transition: all 0.30s ease-in-out;
     -ms-transition: all 0.30s ease-in-out;
@@ -471,6 +471,20 @@ input, textarea, select {
     font-family: sans-serif;
     color: #495057;
     width: 270px;
+}
+
+textarea{
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    border-radius: 6px!important;
+    border: 1px solid #DDDDDD;
+    padding: 4px 9px;
+    font-size: 16px;
+    font-family: sans-serif;
+    color: #495057;
 }
 
 #searchUserTxt{

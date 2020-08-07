@@ -278,6 +278,8 @@ var modalConfirmInstance = new Vue({
                     landlordInstance.rejectRentalRequest()
                 }else if(confirmAction == "change-status-room"){
                     landlordInstance.changeRoomStatus()
+                }else if(confirmAction == "add-money"){
+                    admin.addMoneyForLandlord()
                 }
                 sessionStorage.removeItem("confirmAction")
             }

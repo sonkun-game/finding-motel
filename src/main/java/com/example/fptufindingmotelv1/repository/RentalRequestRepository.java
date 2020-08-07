@@ -3,16 +3,15 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
-import com.example.fptufindingmotelv1.model.StatusModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 
 @Repository

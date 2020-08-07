@@ -1,8 +1,6 @@
 package com.example.fptufindingmotelv1.repository;
 
-import ch.qos.logback.core.boolex.EvaluationException;
 import com.example.fptufindingmotelv1.model.NotificationModel;
-import com.example.fptufindingmotelv1.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

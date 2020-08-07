@@ -1,7 +1,6 @@
 package com.example.fptufindingmotelv1.controller.manageaccount;
 
 import com.example.fptufindingmotelv1.dto.NotificationDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.NotificationModel;
 import com.example.fptufindingmotelv1.service.manageaccount.ManageNotificationService;
 import net.minidev.json.JSONObject;

@@ -4,21 +4,12 @@ import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -62,10 +53,9 @@ public class ManagePostServiceImpl implements ManagePostService{
     private WishListRepository wishListRepository;
 
     @Override
-    public List<PaymentPackageModel> getListPaymentPackage() {
+    public List<PaymentPackageModel> getListPaymentPackage(Boolean available) {
         try {
-            Sort sort = Sort.by("duration").ascending();
-            return paymentPackageRepository.findAll(sort);
+            return paymentPackageRepository.getListPaymentPackage(available);
         }catch (Exception e){
             e.printStackTrace();
         }

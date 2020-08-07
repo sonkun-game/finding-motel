@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.controller.viewdetailpost;
 
-import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.service.viewdetailpost.ViewDetailService;

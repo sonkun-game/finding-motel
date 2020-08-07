@@ -3,16 +3,12 @@ package com.example.fptufindingmotelv1.dto;
 import com.example.fptufindingmotelv1.model.ImageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
-import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 @Data

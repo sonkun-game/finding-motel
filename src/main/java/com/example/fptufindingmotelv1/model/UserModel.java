@@ -1,7 +1,5 @@
 package com.example.fptufindingmotelv1.model;
 
-import com.example.fptufindingmotelv1.dto.UserDTO;
-import com.example.fptufindingmotelv1.repository.RoleRepository;
 import lombok.Data;
 
 import javax.persistence.*;

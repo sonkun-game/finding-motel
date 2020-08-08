@@ -97,6 +97,8 @@ var filterPostInstance = new Vue({
         filterPriceId : 0,
         filterSquareId : 0,
         filterDistanceId : 0,
+        titleTypePostPage : "",
+        currentUrl : "",
     },
     methods : {
         getInitHomePage(){
@@ -137,18 +139,29 @@ var filterPostInstance = new Vue({
         },
         handleSearchClick(){
             this.getPageFromQuery()
-            sessionStorage.setItem("typeId", $("#select1").val())
-            sessionStorage.setItem("filterPriceId", $("#select2").val())
-            sessionStorage.setItem("filterSquareId", $("#select3").val())
-            sessionStorage.setItem("filterDistanceId", $("#select4").val())
+            let typeId = ""
+            let filterPriceId = $("#select2").val()
+            let filterSquareId = $("#select3").val()
+            let filterDistanceId = $("#select4").val()
+            if(this.currentUrl.includes("/phong-tro")){
+                typeId = 1
+            }else if(this.currentUrl.includes("/can-ho")){
+                typeId = 2
+            }else {
+                typeId = $("#select1").val()
+                sessionStorage.setItem("typeId", typeId)
+                sessionStorage.setItem("filterPriceId", filterPriceId)
+                sessionStorage.setItem("filterSquareId", filterSquareId)
+                sessionStorage.setItem("filterDistanceId", filterDistanceId)
+            }
             if(this.page != 1){
-                window.location.href = "/"
+                window.location.href = this.currentUrl
             }else {
                 let postRequestDTO = {
-                    "typeId": this.isNullSearchParam(parseInt($("#select1").val())),
-                    "filterPriceId": this.isNullSearchParam(parseInt($("#select2").val())),
-                    "filterSquareId": this.isNullSearchParam(parseInt($("#select3").val())),
-                    "filterDistanceId": this.isNullSearchParam(parseInt($("#select4").val())),
+                    "typeId": this.isNullSearchParam(parseInt(typeId)),
+                    "filterPriceId": this.isNullSearchParam(parseInt(filterPriceId)),
+                    "filterSquareId": this.isNullSearchParam(parseInt(filterSquareId)),
+                    "filterDistanceId": this.isNullSearchParam(parseInt(filterDistanceId)),
                     "page": this.page,
                 }
                 this.filterPost(postRequestDTO)
@@ -170,9 +183,6 @@ var filterPostInstance = new Vue({
                         postInstance.postList = data.page.content;
                         postInstance.page = data.page
                         postInstance.endPage = data.endPage;
-                        if(this.page > data.endPage){
-                            window.location.href = "/?page=" + data.endPage
-                        }
                     }
                 }).catch(error => {
                 console.log(error);
@@ -186,6 +196,23 @@ var filterPostInstance = new Vue({
         this.filterPriceId = parseInt(sessionStorage.getItem("filterPriceId"))
         this.filterSquareId = parseInt(sessionStorage.getItem("filterSquareId"))
         this.filterDistanceId = parseInt(sessionStorage.getItem("filterDistanceId"))
+        if(window.location.href.includes("phong-tro")){
+            this.typeId = 1
+            this.filterPriceId = 0
+            this.filterSquareId = 0
+            this.filterDistanceId = 0
+            this.titleTypePostPage = "Phòng trọ"
+            this.currentUrl = "/phong-tro"
+        }else if(window.location.href.includes("can-ho")){
+            this.typeId = 2
+            this.filterPriceId = 0
+            this.filterSquareId = 0
+            this.filterDistanceId = 0
+            this.titleTypePostPage = "Căn hộ"
+            this.currentUrl = "/can-ho"
+        }else {
+            this.currentUrl = "/"
+        }
         let request = {
             "typeId": this.isNullSearchParam(this.typeId),
             "filterPriceId": this.isNullSearchParam(this.filterPriceId),
@@ -203,10 +230,14 @@ var filterPostInstance = new Vue({
                     nice_Select.niceSelect();
                 }
             }, 100)
-            setTimeout(function () {
-                $('select').niceSelect('update');
-            }, 1000)
+
         });
+        $('select.select').change(function(){
+            filterPostInstance.handleSearchClick()
+        });
+    },
+    updated(){
+        $('select').niceSelect('update');
     }
 
 })

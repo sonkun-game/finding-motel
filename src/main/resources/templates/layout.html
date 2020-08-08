@@ -34,6 +34,8 @@
             </div>
             <div class="modal-body">
                 <label id="modalConfirmMessage"></label>
+            </div>
+            <div class="modal-footer">
                 <div class="group-btn">
                     <button @click="executeConfirm(true)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
@@ -41,7 +43,6 @@
                     <button @click="executeConfirm(false)" value="0"
                             class="btn-hover btn-default-cancel">Hủy bỏ
                     </button>
-
                 </div>
             </div>
         </div>
@@ -55,7 +56,7 @@
                 </div>
                 <div>
                     <div class="message-success-container">
-                        <label id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</label>
+                        <div id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</div>
                     </div>
                 </div>
             </div>
@@ -85,29 +86,29 @@
                                 <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
                             </div>
                         </div>
-                        <div class="col-xl-10 col-lg-10 pdr-40px">
+                        <div class="col-xl-10 col-lg-10">
                             <!-- main-menu -->
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
                                         <li><a th:href="@{/}">TRANG CHỦ</a></li>
-                                        <li><a href="#">PHÒNG TRỌ</a></li>
-                                        <li><a href="#">CĂN HỘ</a></li>
+                                        <li><a th:href="@{/phong-tro}">PHÒNG TRỌ</a></li>
+                                        <li><a th:href="@{can-ho}">CĂN HỘ</a></li>
                                         <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
                                         <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
                                             <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
                                         </li>
                                         <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
                                             <ul class="submenu">
-                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a>
+                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a></li>
                                                 <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
                                             </ul>
                                         </li>
                                         <!-- DROPDOWN USER -->
-                                        <li v-else class="login-icon">
-                                             <i v-cloak class="ti-user ti-user-header overflow-dots">
-                                                 <span class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </span>
-                                            </i>
+                                        <li v-else class="login-icon" @mouseover="handleMouseOverProfile">
+                                             <i v-cloak class="ti-user ti-user-header overflow-dots"></i>
+                                            <div class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </div>
+
 
                                             <ul class="submenu">
                                                 <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
@@ -121,17 +122,49 @@
                                                 <!-- DROPDOWN LANDLORD -->
                                                 <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
                                                 <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(5)" v-show="userInfo.role == 'LANDLORD'" v-text="'Xử lý yêu cầu thuê trọ (' + userInfo.requestNumber + ')'"></a></li>
-                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
+                                                <li><a th:href="@{/nap-tien}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
 
 
                                                 <!-- DROPDOWN ADMIN -->
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)" v-show="userInfo.role == 'ADMIN'">Quản lý package</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(20)" v-show="userInfo.role == 'ADMIN'">Nạp tiền cho chủ trọ</a></li>
                                                 <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
                                             </ul>
                                         </li>
+                                        <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">
+                                            <div class="bell-container">
+                                                <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">
+                                                    <div  class="notification-number" v-text="notificationNumber"></div>
+                                                    <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>
+                                                    <i class="fas fa-caret-up" v-if="isShowNotification"></i>
+                                                </div>
 
+
+                                                <div class="notification-container" id="notification-container" v-if="isShowNotification">
+
+                                                    <div class="notification-header">
+                                                        <span>Thông báo</span>
+                                                    </div>
+                                                    <div class="notification-body">
+                                                        <div class="no-notification" v-if="listNotification.length == 0">Không có thông báo</div>
+                                                        <ul v-else class="notification-list">
+                                                            <li v-for="(notification, index) in listNotification" v-on:click="handleClickNotification(notification, index)" v-bind:class="notification.seen ? 'seen-notification' : ''">
+                                                                <div class="notify-content">
+                                                                    <a v-html="notification.content"></a>
+                                                                </div>
+                                                                <div class="notify-date">
+                                                                    <span v-text="notification.displayDate"></span>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>
@@ -147,7 +180,111 @@
         </div>
         <!-- Header End -->
     </header>
+<!--    <header th:fragment="header">-->
+<!--        &lt;!&ndash; Header Start &ndash;&gt;-->
+<!--        <div class="header-area header-sticky">-->
+<!--            <div class="main-header ">-->
+<!--                <div class="container">-->
+<!--                    <div class="row align-items-center">-->
+<!--                        &lt;!&ndash; logo &ndash;&gt;-->
+<!--                        <div class="col-xl-2 col-lg-2">-->
+<!--                            <div class="logo">-->
+<!--                                <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-xl-10 col-lg-10">-->
+<!--                            &lt;!&ndash; main-menu &ndash;&gt;-->
+<!--                            <div class="main-menu f-right d-none d-lg-block">-->
+<!--                                <nav>-->
+<!--                                    <ul id="navigation">-->
+<!--                                        <li><a th:href="@{/}">TRANG CHỦ</a></li>-->
+<!--                                        <li><a href="#">PHÒNG TRỌ</a></li>-->
+<!--                                        <li><a href="#">CĂN HỘ</a></li>-->
+<!--                                        <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>-->
+<!--                                        <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">-->
+<!--                                            <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>-->
+<!--                                        </li>-->
+<!--                                        <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>-->
+<!--                                            <ul class="submenu">-->
+<!--                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a></li>-->
+<!--                                                <li><a th:href="@{dang-ky}">Đăng Ký</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+<!--                                        &lt;!&ndash; DROPDOWN USER &ndash;&gt;-->
+<!--                                        <li v-else class="login-icon" @mouseover="handleMouseOverProfile">-->
+<!--                                            <i v-cloak class="ti-user ti-user-header overflow-dots"></i>-->
+<!--                                            <div class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </div>-->
 
+
+<!--                                            <ul class="submenu">-->
+<!--                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)" v-text="userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'"></a></li>-->
+
+<!--                                                &lt;!&ndash; DROPDOWN RENTER &ndash;&gt;-->
+<!--                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>-->
+
+
+<!--                                                &lt;!&ndash; DROPDOWN LANDLORD &ndash;&gt;-->
+<!--                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(5)" v-show="userInfo.role == 'LANDLORD'" v-text="'Xử lý yêu cầu thuê trọ (' + userInfo.requestNumber + ')'"></a></li>-->
+<!--                                                <li><a th:href="@{/profile-user}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>-->
+
+
+<!--                                                &lt;!&ndash; DROPDOWN ADMIN &ndash;&gt;-->
+<!--                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>-->
+<!--                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)" v-show="userInfo.role == 'ADMIN'">Quản lý package</a></li>-->
+<!--                                                <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+<!--                                        <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">-->
+<!--                                            <div class="bell-container">-->
+<!--                                                <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">-->
+<!--                                                    <div  class="notification-number" v-text="notificationNumber"></div>-->
+<!--                                                    <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>-->
+<!--                                                    <i class="fas fa-caret-up" v-if="isShowNotification"></i>-->
+<!--                                                </div>-->
+
+
+<!--                                                <div class="notification-container" id="notification-container" v-if="isShowNotification">-->
+
+<!--                                                    <div class="notification-header">-->
+<!--                                                        <span>Thông báo</span>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="notification-body">-->
+<!--                                                        <div class="no-notification" v-if="listNotification.length == 0">Không có thông báo</div>-->
+<!--                                                        <ul v-else class="notification-list">-->
+<!--                                                            <li v-for="(notification, index) in listNotification" v-on:click="handleClickNotification(notification, index)" v-bind:class="notification.seen ? 'seen-notification' : ''">-->
+<!--                                                                <div class="notify-content">-->
+<!--                                                                    <a v-html="notification.content"></a>-->
+<!--                                                                </div>-->
+<!--                                                                <div class="notify-date">-->
+<!--                                                                    <span v-text="notification.displayDate"></span>-->
+<!--                                                                </div>-->
+<!--                                                            </li>-->
+<!--                                                        </ul>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </nav>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Mobile Menu &ndash;&gt;-->
+<!--                        <div class="col-12">-->
+<!--                            <div class="mobile_menu d-block d-lg-none"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; Header End &ndash;&gt;-->
+<!--    </header>-->
     <footer th:fragment="footer">
         <!-- Footer Start-->
         <div class="footer-area black-bg footer-padding">
@@ -158,7 +295,8 @@
                         <div class="single-footer-caption mb-30">
                             <!-- logo -->
                             <div class="footer-logo">
-                                <a href="index.html"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
+                                <a th:href="@{/}"><img th:src="@{assets/img/hero/logoft.png}" alt=""></a>
+
                             </div>
                             <div class="footer-social footer-social2">
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -323,10 +461,10 @@
         <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">{{userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'}}</button>
 <!--        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>-->
         <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích</button>
-        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
+        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2 || task == 18}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
 
         <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4 || task == 15 || task == 16}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
+        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4 || task == 15 || task == 16 || task == 17}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
         <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
         <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
 
@@ -335,6 +473,8 @@
         <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
         <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
         <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Danh sách báo cáo</button>
+        <button v-on:click="activeBtn(19)" v-bind:class="{active : task == 19}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Quản lý package</button>
+        <button v-on:click="activeBtn(20)" v-bind:class="{active : task == 20}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Nạp tiền cho chủ trọ</button>
         <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img src="assets/img/logo/logout.png" class="logo-button">Đăng xuất</button>
 
     </div>
@@ -377,7 +517,9 @@
                 <h2>Xác Nhận</h2>
             </div>
             <div class="modal-body">
-                <label id="confirm-content" v-text="messageConfirm"></label>
+                <label id="confirm-content" v-html="messageConfirm"></label>
+            </div>
+            <div class="modal-footer">
                 <div class="group-btn">
                     <button @click="yesNoConfirmClick($event)" value="1"
                             class="btn-hover btn-default-cancel">Đồng ý
@@ -426,8 +568,86 @@
                 <span style="font-weight: 700" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></span>
             </li>
         </ul>
-        <a v-if="userInfo.role == 'LANDLORD'" href="" class="btn-payment mr-2">Nạp tiền</a>
+        <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePayment()" class="btn-payment mr-2">Nạp tiền</a>
         <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
+    </div>
+
+    <!--Modal rental request detail-->
+    <div th:fragment="modal-request-detail" id="modalRequestDetail" class="modal">
+        <!-- Modal content -->
+        <div class="view-information">
+            <div class="modal-header">
+                <h2>Thông tin phòng trọ</h2>
+                <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="infor-modal">
+                    <p class="left-modal">Tên phòng:</p>
+                    <input :value="selectedRequest.roomName"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Yêu cầu thuê phòng:</p>
+                    <input :value="selectedRequest.id"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Ngày yêu cầu:</p>
+                    <input :value="selectedRequest.displayRequestDate"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Ngày bắt đầu:</p>
+                    <input :value="selectedRequest.displayStartDate"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Tên đăng nhập:</p>
+                    <input :value="renterInfo.username"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Tên hiển thị:</p>
+                    <input :value="renterInfo.displayName"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Số điện thoại:</p>
+                    <input :value="renterInfo.phoneNumber"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Ngày sinh:</p>
+                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Nghề nghiệp:</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.career" disabled/>
+                </div>
+                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                    <p class="left-modal">Giới tính:</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.genderDisplay" disabled/>
+                </div>
+                <div v-html="message">
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Xác Nhận</button>
+                <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
+            </div>
+        </div>
     </div>
 
 </body>

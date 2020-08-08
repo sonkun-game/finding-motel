@@ -39,7 +39,7 @@
                 <div id="renter-manager" class="col sidebar-right col-table">
                     <!-- Quản lý yêu cầu -->
 
-                    <div id="request-manager" v-if="task == 2">
+                    <div id="request-manager" v-if="task == 2 || task == 18">
                         <div class="title">
                             <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
                         </div>
@@ -65,7 +65,8 @@
                                     <td v-text="rentalRequest.displayStartDate"></td>
                                     <td v-text="rentalRequest.statusDisplay"></td>
                                     <td>
-                                        <button v-if="rentalRequest.statusId == 7" v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalCancelRequest(rentalRequest.id, $event)" class="table-button">Hủy</button>
+                                        <button v-if="rentalRequest.statusId == 7" v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'cancel', $event)" class="table-button">Hủy</button>
+                                        <button v-if="rentalRequest.statusId == 9" @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'expire', $event)" data-toggle="tooltip" data-html="true" title="Kết thúc hợp đồng thuê trọ" class="table-button" >Hết hạn</button>
                                     </td>
                                 </tr>
                                 </tbody>

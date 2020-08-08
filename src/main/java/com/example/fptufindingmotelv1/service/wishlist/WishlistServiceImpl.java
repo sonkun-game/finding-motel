@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.service.wishlist;
 
-import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.WishListDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PostModel;
@@ -8,7 +7,6 @@ import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.WishListModel;
 import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
-import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.repository.WishListRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

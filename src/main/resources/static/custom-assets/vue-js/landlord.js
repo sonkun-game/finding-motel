@@ -29,6 +29,31 @@ var landlordInstance = new Vue({
         renterInfo : {},
         selectedRoom : {},
         roomIndex : "",
+        fuLocation : {placeId : "ChIJbQilLLNUNDER5Der2CkuxqM"},
+        latMarkerEl : "",
+        longMarkerEl : "",
+        map : "",
+        inputAddress : "",
+        //
+        paymentAmount : "",
+        paymentValid : false,
+        message : "",
+        newestPayment : {},
+    },
+    created(){
+        let previousUrl = document.referrer
+        if(previousUrl.includes("test-payment.momo.vn") && previousUrl.includes("errorCode=0")){
+            let query = window.location.search;
+            let url = new URLSearchParams(query);
+            sessionStorage.setItem("momo-check", "1")
+            sessionStorage.setItem("partnerCode", url.get('partnerCode'))
+            sessionStorage.setItem("accessKey", url.get('accessKey'))
+            sessionStorage.setItem("requestId", url.get('requestId'))
+            sessionStorage.setItem("orderId", url.get('orderId'))
+            sessionStorage.setItem("amount", url.get('amount'))
+            sessionStorage.setItem("errorCode", url.get('errorCode'))
+            window.location.href = "/nap-tien"
+        }
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -39,6 +64,7 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
+            this.initMap()
         }else if(this.task == 4){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -62,12 +88,30 @@ var landlordInstance = new Vue({
             this.selectedPost = JSON.parse(sessionStorage.getItem("selectedPost"))
             this.getListRoomRequest(null, this.selectedPost.id)
         }
+        else if(this.task == 17){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            let notification = JSON.parse(sessionStorage.getItem("notification"))
+            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
+        }
         else if(this.task == 16){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
             let post = JSON.parse(sessionStorage.getItem("selectedPost"))
-            this.handleEditPost(post)
+            this.setFieldEditMode(post)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
+        } else if (this.task == 8) {
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            if(window.location.href.includes("nap-tien")
+                && sessionStorage.getItem("momo-check") != null
+                && sessionStorage.getItem("momo-check") == "1"){
+                this.checkStatusAndSavePayment()
+            }
         }
 
     },
@@ -114,20 +158,6 @@ var landlordInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        },
-        getHistoryPayment(){
-            fetch("/api-get-history-payment", {
-                method: 'POST',
-
-            }).then(response => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if(data != null){
-                        this.listPayment = data
-                    }
-                }).catch(error => {
-                    console.log(error);
-                    })
         },
         getInitNewPost(){
             fetch("/api-get-init-new-post", {
@@ -214,7 +244,9 @@ var landlordInstance = new Vue({
                     'username' : this.userInfo.username,
                     'listRoom' : this.listRoom,
                     'listImage' : this.uploadImages,
-                    'paymentPackageId' : this.duration
+                    'paymentPackageId' : this.duration,
+                    'address' : this.inputAddress,
+                    'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
                 }
                 let options = {
                     method: 'POST',
@@ -292,6 +324,17 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
+            this.setFieldEditMode(post)
+            userTaskInstance.task = 16
+            noteInstance.task = 16
+            this.task = 16
+            localStorage.setItem("task", 16)
+            setTimeout( () => {
+                this.initMap()
+                this.handleDisplayDirection()
+            }, 1000)
+        },
+        setFieldEditMode(post){
             this.selectedPost = post
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
@@ -303,14 +346,11 @@ var landlordInstance = new Vue({
             this.distance = post.distance
             // this.numberOfRoom = post.roomNumber
             // this.listRoom = post.listRoom
+            this.inputAddress = post.address
             this.uploadImages = post.listImage
             this.expireDate = post.expireDate
             this.postId = post.id
             this.getListRoomRequest(null, post.id)
-            userTaskInstance.task = 16
-            noteInstance.task = 16
-            this.task = 16
-            localStorage.setItem("task", 16)
         },
         editPost(){
             let request = {
@@ -323,6 +363,8 @@ var landlordInstance = new Vue({
                 'distance' : this.distance,
                 'username' : this.userInfo.username,
                 'listImage' : this.uploadImages,
+                'address' : this.inputAddress,
+                'mapLocation' : this.latMarkerEl.value + ", " + this.longMarkerEl.value
             }
             let options = {
                 method: 'POST',
@@ -356,6 +398,7 @@ var landlordInstance = new Vue({
             }
             if(post != null){
                 this.postId = post.id
+                this.editMode = true
             }
             if(postIndex != null){
                 this.postIndex = postIndex
@@ -422,11 +465,13 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        getListRoomRequest(statusId, postId){
+        getListRoomRequest(statusId, postId, roomId, requestId){
             let request = {
                 'landlordUsername' : this.userInfo.username,
                 'statusId' : statusId,
                 'postId' : postId,
+                'roomId' : roomId,
+                'id' : requestId,
             }
             let options = {
                 method: 'POST',
@@ -441,6 +486,13 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == 'request000'){
                         this.listRoomRequest = data.listRoomRequest
+                        for (let i = 0; i < this.listRoomRequest.length; i++) {
+                            this.listRoomRequest[i].listRentalRequest.sort(function (a, b) {
+                                let dateA = new Date(a.requestDate),
+                                    dateB = new Date(b.requestDate)
+                                return dateB - dateA;
+                            })
+                        }
                     }
                 }).catch(error => {
                 console.log(error);
@@ -467,6 +519,9 @@ var landlordInstance = new Vue({
                             this.getListRoomRequest(7)
                         }else if(this.task == 15){
                             this.getListRoomRequest(null, this.selectedPost.id)
+                        }else if(this.task == 17){
+                            let notification = JSON.parse(sessionStorage.getItem("notification"))
+                            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
                         }
 
                     }
@@ -494,6 +549,9 @@ var landlordInstance = new Vue({
                             this.getListRoomRequest(7)
                         }else if(this.task == 15){
                             this.getListRoomRequest(null, this.selectedPost.id)
+                        }else if(this.task == 17){
+                            let notification = JSON.parse(sessionStorage.getItem("notification"))
+                            this.getListRoomRequest(null, null, notification.roomId, notification.requestId)
                         }
                     }
                 }).catch(error => {
@@ -531,6 +589,9 @@ var landlordInstance = new Vue({
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
+                    this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
+                        "<p>Trạng thái của phòng sẽ được thay đổi thành \"Còn Trống\"</p>" +
+                        "<p>Người dùng \"" + this.renterInfo.username + "\" sẽ bị xóa khỏi phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
@@ -633,7 +694,270 @@ var landlordInstance = new Vue({
             })
 
 
-        }
+        },
+        initMap(){
+            let mapOptions, marker, searchBox,
+                infoWindow = '',
+                addressEl = document.querySelector( '#map-search' ),
+                element = document.getElementById( 'map-canvas' )
+            this.latMarkerEl = document.querySelector( '#latitude' )
+            this.longMarkerEl = document.querySelector( '#longitude' )
+            mapOptions = {
+                zoom: 16,
+                center: new google.maps.LatLng( 21.013237, 105.527018 ),
+                disableDefaultUI: false, // Disables the controls like zoom control on the map if set to true
+                scrollWheel: true, // If set to false disables the scrolling on the map.
+                draggable: true, // If set to false , you cannot move the map around.
+            }
+            // Create an object map with the constructor function Map()
+            this.map = new google.maps.Map( element, mapOptions ); // Till this like of code it loads up the map.
+
+            marker = new google.maps.Marker({
+                position: mapOptions.center,
+                map: this.map,
+                draggable: true
+            });
+
+            /**
+             * Creates a search box
+             */
+            searchBox = new google.maps.places.SearchBox( addressEl );
+
+            /**
+             * When the place is changed on search box, it takes the marker to the searched location.
+             */
+            google.maps.event.addListener( searchBox, 'places_changed', function () {
+                var places = searchBox.getPlaces(),
+                    bounds = new google.maps.LatLngBounds(),
+                    i, place,
+                    address = places[0].formatted_address;
+
+                for( i = 0; place = places[i]; i++ ) {
+                    bounds.extend( place.geometry.location );
+                    marker.setPosition( place.geometry.location );  // Set marker position new.
+                }
+
+                landlordInstance.map.fitBounds( bounds );  // Fit to the bound
+                landlordInstance.map.setZoom( 15 ); // This function sets the zoom to 15, meaning zooms to level 15.
+                // console.log( map.getZoom() );
+
+                landlordInstance.latMarkerEl.value = marker.getPosition().lat();
+                landlordInstance.longMarkerEl.value = marker.getPosition().lng();
+                landlordInstance.handleCalculateDistance()
+
+                // Closes the previous info window if it already exists
+                if ( infoWindow ) {
+                    infoWindow.close();
+                }
+                /**
+                 * Creates the info Window at the top of the marker
+                 */
+                infoWindow = new google.maps.InfoWindow({
+                    content: address
+                });
+
+                infoWindow.open( landlordInstance.map, marker );
+            } );
+
+
+            /**
+             * Finds the new position of the marker when the marker is dragged.
+             */
+            google.maps.event.addListener( marker, "dragend", function ( event ) {
+                let address
+
+                let geocoder = new google.maps.Geocoder();
+                geocoder.geocode( { latLng: marker.getPosition() }, function ( result, status ) {
+                    if ( 'OK' === status ) {  // This line can also be written like if ( status == google.maps.GeocoderStatus.OK ) {
+                        address = result[0].formatted_address;
+
+                        addressEl.value = address;
+                        landlordInstance.latMarkerEl.value = marker.getPosition().lat();
+                        landlordInstance.longMarkerEl.value = marker.getPosition().lng();
+                        landlordInstance.handleCalculateDistance()
+                    } else {
+                        console.log( 'Geocode was not successful for the following reason: ' + status );
+                    }
+
+                    // Closes the previous info window if it already exists
+                    if ( infoWindow ) {
+                        infoWindow.close();
+                    }
+
+                    /**
+                     * Creates the info Window at the top of the marker
+                     */
+                    infoWindow = new google.maps.InfoWindow({
+                        content: address
+                    });
+
+                    infoWindow.open( landlordInstance.map, marker );
+                } );
+            });
+        },
+        save_results(response, status) {
+
+            if (status != google.maps.DistanceMatrixStatus.OK) {
+                console.log(status)
+            } else {
+                if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
+                    console.log(response.rows[0].elements[0].status)
+                } else {
+                    let distance = response.rows[0].elements[0].distance;
+                    // let duration = response.rows[0].elements[0].duration;
+                    let distance_in_kilo = distance.value / 1000; // the kilo meter
+                    // let distance_in_mile = distance.value / 1609.34; // the mile
+                    this.distance = distance_in_kilo
+                }
+            }
+        },
+        calculateDistance(travel_mode, origin, destination) {
+            let DistanceMatrixService = new google.maps.DistanceMatrixService();
+            DistanceMatrixService.getDistanceMatrix(
+                {
+                    origins: [origin],
+                    destinations: [destination],
+                    travelMode: google.maps.TravelMode[travel_mode],
+                    // unitSystem: google.maps.UnitSystem.IMPERIAL, // miles and feet.
+                    unitSystem: google.maps.UnitSystem.metric, // kilometers and meters.
+                    avoidHighways: false,
+                    avoidTolls: false
+                }, landlordInstance.save_results);
+        },
+        displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay) {
+            landlordInstance.initMap()
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: travel_mode,
+                avoidTolls: true
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setMap(landlordInstance.map);
+                    directionsDisplay.setDirections(response);
+                } else {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay.setDirections(null);
+                    alert('Could not display directions due to: ' + status);
+                }
+            });
+        },
+        handleCalculateDistance(){
+            let origin = this.latMarkerEl.value + ", " + this.longMarkerEl.value;
+            let destination = this.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
+            this.calculateDistance(travel_mode, origin, destination)
+        },
+        handleDisplayDirection(){
+            let origin = this.selectedPost.mapLocation;
+            let destination = this.fuLocation;
+            let travel_mode = "DRIVING";
+            let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
+            let directionsService = new google.maps.DirectionsService();
+            this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
+        },
+        checkPaymentAmount() {
+            if (this. paymentAmount != "" && this.paymentAmount  < 1000 || this.paymentAmount > 1000000 ) {
+                document.getElementById("notify_paymentAmount").innerHTML="Số tiền phải từ 1.000vnđ -> 1.000.000vnđ.";
+            } else {
+                document.getElementById("notify_paymentAmount").innerHTML="Bạn phải nhập số tiền muốn nạp.";
+            }
+            // paymentAmountTxt
+            if (this.paymentAmount.length == 0 || this.paymentAmount  < 1000 || this.paymentAmount > 1000000) {
+                document.getElementById("notify_paymentAmount").classList.remove("invisible");
+                document.getElementById("paymentAmountTxt").classList.add("border-error");
+            } else {
+                document.getElementById("notify_paymentAmount").classList.add("invisible");
+                document.getElementById("paymentAmountTxt").classList.remove("border-error");
+                this.requestMomoPayment();
+            }
+        },
+        requestMomoPayment() {
+            fetch("/request-momo-payment", {
+                method: 'POST',
+                body: this.paymentAmount
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        window.location.href = data.momoPayUrl;
+                    }
+                })
+        },
+        getRespone: function () {
+            fetch("payment")
+                .then(response => response.json())
+                .then((data) => {
+
+                })
+        },
+        showModal: function () {
+            this.showModal = false;
+            this.$http.get
+        },
+        getHistoryPayment(){
+            let request = {
+                'landlord' : this.userInfo.username
+            }
+            fetch("/api-get-payment-by-landlord", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+            .then(response => response.json())
+            .then((data) => {
+                if (data != null && data.code == "000") {
+                    this.listPayment = data.data
+                }
+            })
+        },
+        formatDate(rawDate){
+            let dateFormatString = rawDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                + " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+        },
+        checkStatusAndSavePayment(){
+            let request = {
+                'partnerCode' : sessionStorage.getItem("partnerCode"),
+                'accessKey' : sessionStorage.getItem("accessKey"),
+                'requestId' : sessionStorage.getItem("requestId"),
+                'orderId' : sessionStorage.getItem("orderId"),
+                'amount' : sessionStorage.getItem("amount"),
+                'errorCode' : sessionStorage.getItem("errorCode"),
+            }
+            fetch("/api-check-status-payment", {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (data != null && data.code == "000") {
+                        basicInfoInstance.userInfo.amount = data.landlordAmount
+                        authenticationInstance.showModalNotify("Quý khách đã nạp thành công <b>"
+                            + authenticationInstance.formatNumberToDisplay(data.addAmount)
+                            + " VND</b> vào tài khoản", 5000)
+                        sessionStorage.removeItem("momo-check")
+                        sessionStorage.removeItem("partnerCode")
+                        sessionStorage.removeItem("accessKey")
+                        sessionStorage.removeItem("requestId")
+                        sessionStorage.removeItem("orderId")
+                        sessionStorage.removeItem("amount")
+                        sessionStorage.removeItem("errorCode")
+                    }else if(data != null && data.code != "000"){
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
+                })
+        },
     }
 })
 var noteInstance = new Vue({

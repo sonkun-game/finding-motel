@@ -1,16 +1,12 @@
 package com.example.fptufindingmotelv1.dto;
 
 import com.example.fptufindingmotelv1.model.ImageModel;
-import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -33,6 +29,8 @@ public class PostDTO {
     private List<String> images;
     private List<RoomDTO> listRoom;
     private String wishListId;
+    private String address;
+    private String mapLocation;
 
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -49,6 +47,8 @@ public class PostDTO {
         this.description = postModel.getDescription();
         this.isVisible = postModel.isVisible();
         this.title = postModel.getTitle();
+        this.address = postModel.getAddress();
+        this.mapLocation = postModel.getMapLocation();
         this.images = new ArrayList<>();
         for (ImageModel image:
                 postModel.getImages()) {

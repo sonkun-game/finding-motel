@@ -4,6 +4,9 @@
     <div th:replace="layout :: head"></div>
     <link rel="stylesheet" th:href="@{custom-assets/css/profile.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT1IHF1gT-MK8Dsac6-9jeYv_pVjYuDyk&libraries=places">
+    </script>
     <title>Quản lý tài khoản</title>
 </head>
 <body>
@@ -40,683 +43,736 @@
 
 <main>
     <div class="container-fluid">
-<!--        <div class="container">-->
-            <div class="row">
-                <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
+        <!--        <div class="container">-->
+        <div class="row">
+            <div class="col-lg-3 d-none d-lg-block bg-light sidebar-left col-menu">
 
-                    <div th:replace="layout :: basic-user-infor"></div>
+                <div th:replace="layout :: basic-user-infor"></div>
 
-                    <div th:replace="layout :: user-task"></div>
+                <div th:replace="layout :: user-task"></div>
 
+            </div>
+            <div class="col-menu note" v-if="task == 13 || task == 16" id="note-wrapper">
+                <div class="note-body">
+                    <h4>Lưu ý khi đăng tin</h4>
+                    <ul>
+                        <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
+                        <li>Tiêu đề tin không dài quá 100 kí tự.</li>
+                        <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
+                        <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
+                        <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
+                    </ul>
                 </div>
-                <div class="col-menu note" v-if="task == 13 || task == 16" id="note-wrapper">
-                    <div class="note-body">
-                        <h4>Lưu ý khi đăng tin</h4>
-                        <ul>
-                            <li>Nội dung phải viết bằng tiếng Việt có dấu.</li>
-                            <li>Tiêu đề tin không dài quá 100 kí tự.</li>
-                            <li>Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn.</li>
-                            <li>Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon tới đúng vị trí của tin rao.</li>
-                            <li>Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh để được giao dịch nhanh chóng!</li>
-                        </ul>
+            </div>
+            <div id="user-manager-content" class="col-9 sidebar-right col-table">
+                <!-- Thông tin tài khoản -->
+                <div th:replace="layout :: profile-user"></div>
+
+                <!-- Đổi mật khẩu -->
+                <div th:replace="layout :: change-password"></div>
+
+            </div>
+
+            <div id="landlord-manager" class="col sidebar-right col-table">
+
+                <!-- Đăng tin -->
+                <div v-if="task == 13 || task == 16" id="post-new-room">
+                    <div class="title">
+                        <h1 class="title-name uppercase" v-text="editMode ? 'Cập nhật bài đăng' : 'Đăng tin'"></h1>
                     </div>
-                </div>
-                <div id="user-manager-content" class="col-9 sidebar-right col-table">
-                    <!-- Thông tin tài khoản -->
-                    <div th:replace="layout :: profile-user"></div>
-
-                    <!-- Đổi mật khẩu -->
-                    <div th:replace="layout :: change-password"></div>
-
-                </div>
-
-                <div id="landlord-manager" class="col sidebar-right col-table">
-
-                    <!-- Đăng tin -->
-                    <div v-if="task == 13 || task == 16" id="post-new-room">
-                        <div class="title">
-                            <h1 class="title-name uppercase" v-text="editMode ? 'Cập nhật bài đăng' : 'Đăng tin'"></h1>
-                        </div>
-                        <div class="container-fluid">
-                            <div class="container">
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Loại phòng</h4>
-                                    </div>
-                                    <div class="form-dropdown input-information">
-                                        <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
-                                            <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
-                                        </select>
-                                    </div>
+                    <div class="container-fluid">
+                        <div class="container">
+                            <div class="fill-information col-lg-4">
+                                <div class="title">
+                                    <h4>Loại phòng</h4>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
-                                    </div>
+                                <div class="form-dropdown input-information">
+                                    <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
+                                        <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
+                                    </select>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Thông tin chi tiết</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
-                                    </div>
+                            </div>
+                            <div class="fill-information col-lg-12">
+                                <div class="title">
+                                    <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Giá cho thuê</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>VNĐ</span>
-                                        </div>
-
-                                    </div>
+                                <div class="input-information">
+                                    <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Diện tích</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>M&sup2</span>
-                                        </div>
-                                    </div>
-
-
+                            </div>
+                            <div class="fill-information col-lg-12">
+                                <div class="title">
+                                    <h4>Thông tin chi tiết</h4>
                                 </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Khoảng cách (So với Đại Học FPT)</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-40-pct rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append">
-                                            <span>KM</span>
-                                        </div>
-                                    </div>
+                                <div class="input-information">
+                                    <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
                                 </div>
-                                <div class="fill-information">
+                            </div>
+                            <div class="row">
+                                <div class="fill-information col-lg-6">
                                     <div class="title">
                                         <h4>Số lượng phòng:</h4>
                                     </div>
                                     <div class="input-information">
-                                        <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information half-width rounded-pill border-0 shadow-sm">
-                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
-                                        <div class="input-group-append btn-add-container" v-if="editMode">
-                                            <button class="btn-hover btn-add-room" v-on:click="showAddRoomModal()">Thêm Phòng</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="fill-information" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
-                                    <div class="title">
-                                        <h4>Trạng thái các phòng:</h4>
-                                    </div>
-                                    <div class="input-information table-wrapper">
-                                        <table class="table tbl-room">
-                                            <thead class="thead-light">
-                                            <tr>
-                                                <th scope="col">STT</th>
-                                                <th scope="col">Phòng</th>
-                                                <th scope="col">Trạng thái</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(room, index) in editMode ? listRoomRequest : listRoom">
-                                                <th scope="row" v-text="index + 1"></th>
-                                                <th scope="row" v-text="room.roomName"></th>
-                                                <th scope="row">
-                                                    <span>Đã cho thuê</span>
-                                                    <label class="switch">
-                                                        <input type="checkbox" v-if="editMode" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
-                                                        <input type="checkbox" v-else v-model="room.availableRoom">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                    <span>Còn trống</span>
-                                                </th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <div class="upload-file" v-on:click="openFileDialog">
-                                            <img class="upload-image" src="assets/img/logo/upload.png"/>
-                                        </div>
-                                        <input type="file" id="file-browse" style="display: none" multiple @change="processFile"/>
-                                    </div>
-                                    <div class="list-image input-information" v-show="uploadImages != undefined && uploadImages.length > 0">
-                                        <div class="image-item" v-for="image in uploadImages">
-                                            <div class="image">
-                                                <img v-bind:src="image">
-                                                <i v-on:click="removeImage(image)" class="fas fa-times-circle"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="fill-information" v-bind:class="{flexElement: editMode}">
-                                    <div class="title" v-show="!editMode">
-                                        <h4>Thời hạn bài đăng</h4>
-                                    </div>
-                                    <div class="input-information" v-show="!editMode">
-                                        <div class="form-check-inline" v-for="package in listPaymentPackage">
-                                            <label class="radio-container">
-                                                {{package.duration + ' tháng'}}
-                                                <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
+                                        <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information  rounded-pill border-0 shadow-sm">
+                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
 
                                     </div>
-                                    <div class="date-time-box col-6" v-show="editMode">
-                                        <span v-text="'Bài đăng có thời hạn đến: ' + expireDate"></span>
-                                    </div>
-                                    <div class="date-time-box col-6" v-show="editMode">
-                                        <button class="btn-hover btn-extend" v-on:click="showModalExtend()">Gia hạn bài đăng</button>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-group-append btn-add-container" v-if="editMode">
+                                        <button class="btn-hover btn-add-room" v-on:click="showAddRoomModal()">Thêm Phòng</button>
                                     </div>
                                 </div>
-                                <div v-show="!editMode" class="fill-information" v-if="duration != 0">
-                                    <div class="title">
-                                        <h4>Thông tin thanh toán</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <div id="table-checkout" class="table-checkout">
-                                            <table>
-                                                <tr>
-                                                    <td>Thành tiền:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tài khoản:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Số dư:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                            </div>
 
-
-                                <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
+                            <div class="fill-information col-lg-12" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
                                 <div class="title">
-                                    <h4>Bảng giá tham khảo</h4>
+                                    <h4>Trạng thái các phòng:</h4>
                                 </div>
-                                <div id="table-price">
-                                    <table class="table">
+                                <div class="input-information table-wrapper">
+                                    <table class="table tbl-room table-bordered">
                                         <thead class="thead-light">
                                         <tr>
-                                            <th scope="col">Gói</th>
-                                            <th scope="col">Thời hạn</th>
-                                            <th scope="col">Giá</th>
+                                            <th scope="col">STT</th>
+                                            <th scope="col">Phòng</th>
+                                            <th scope="col">Trạng thái</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="package in listPaymentPackage">
-                                            <th scope="row" v-text="'Gói ' + package.id"></th>
-                                            <th scope="row" v-text="package.duration + ' Tháng'"></th>
-                                            <th scope="row" v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
+                                        <tr v-for="(room, index) in editMode ? listRoomRequest : listRoom">
+                                            <th scope="row" v-text="index + 1"></th>
+                                            <th scope="row" v-text="room.roomName"></th>
+                                            <th scope="row">
+                                                <span>Đã cho thuê</span>
+                                                <label class="switch">
+                                                    <input type="checkbox" v-if="editMode" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                                    <input type="checkbox" v-else v-model="room.availableRoom">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <span>Còn trống</span>
+                                            </th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="fill-information col-lg-6">
+                                <div class="title">
+                                    <h4>Giá cho thuê</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <div class="input-group-append">
+                                        <span>VNĐ</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="fill-information col-lg-6">
+                                <div class="title">
+                                    <h4>Diện tích</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <div class="input-group-append">
+                                        <span>M&sup2</span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="fill-information col-lg-6">
+                                <div class="title">
+                                    <h4>Khoảng cách (So với Đại Học FPT)</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <div class="input-group-append">
+                                        <span>KM</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fill-information col-lg-12">
+                                <div class="title">
+                                    <h4>Địa chỉ</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input type="text" v-model="inputAddress" class="form-input-title-information rounded-pill border-0 shadow-sm">
+                                </div>
+                            </div>
+
+                            <div class="fill-information col-lg-12">
+                                <div class="title">
+                                    <h4>Bản đồ</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
+                                    <i class="fas icon-search-map fa-search"></i>
+                                </div>
+
+                                <input type="hidden" id="latitude">
+                                <input type="hidden" id="longitude">
+                                <!--                                    <button id="show-route" v-on:click.prevent="handleCalculateDistance">Show Direction</button>-->
+                                <div id="map-canvas"></div>
+                            </div>
+
+
+
+                            <div class="fill-information col-lg-12">
+                                <div class="title">
+                                    <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
+                                </div>
+                                <div class="input-information">
+                                    <div class="upload-file" v-on:click="openFileDialog">
+                                        <img class="upload-image" src="assets/img/logo/upload.png"/>
+                                    </div>
+                                    <input type="file" id="file-browse" style="display: none" multiple @change="processFile"/>
+                                </div>
+                                <div class="list-image input-information" v-show="uploadImages != undefined && uploadImages.length > 0">
+                                    <div class="image-item" v-for="image in uploadImages">
+                                        <div class="image">
+                                            <img v-bind:src="image">
+                                            <i v-on:click="removeImage(image)" class="fas fa-times-circle"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fill-information col-lg-12" v-bind:class="{flexElement: editMode}">
+                                <div class="title" v-show="!editMode">
+                                    <h4>Thời hạn bài đăng</h4>
+                                </div>
+                                <div class="input-information" v-show="!editMode">
+                                    <div class="form-check-inline" v-for="package in listPaymentPackage">
+                                        <label class="radio-container">
+                                            {{package.duration + ' tháng'}}
+                                            <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="date-time-box col-6" v-show="editMode">
+                                    <span v-text="'Bài đăng có thời hạn đến: ' + expireDate"></span>
+                                </div>
+                                <div class="date-time-box col-6" v-show="editMode">
+                                    <button class="btn-hover btn-extend" v-on:click="showModalExtend()">Gia hạn bài đăng</button>
+                                </div>
+                            </div>
+                            <div v-show="!editMode" class="fill-information" v-if="duration != 0">
+                                <div class="title">
+                                    <h4>Thông tin thanh toán</h4>
+                                </div>
+                                <div class="input-information">
+                                    <div id="table-checkout" class="table-checkout">
+                                        <table>
+                                            <tr>
+                                                <td>Thành tiền:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tài khoản:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Số dư:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 m-auto">
+                                <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
+                            </div>
+
+                            <div class="title col-lg-8">
+                                <h4>Bảng giá tham khảo</h4>
+                            </div>
+                            <div class="col-lg-8" id="table-price">
+                                <table class="table">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Gói</th>
+                                        <th scope="col">Thời hạn</th>
+                                        <th scope="col">Giá</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="package in listPaymentPackage">
+                                        <th scope="row" v-text="package.packageName"></th>
+                                        <th scope="row" v-text="package.duration + ' Tháng'"></th>
+                                        <th scope="row" v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VND'"></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--                 Lịch sử nạp tiền-->
+                <div v-if="task == 6">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Lịch sử nạp tiền</h1>
+                    </div>
+                    <div class="information-detail" id="history-payment">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Ngày giao dịch</th>
+                                <th>Số tiền</th>
+                                <th>Phương thức thanh toán</th>
+                                <th>Momo ID</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="payment in listPayment">
+                                <td v-text="formatDate(payment.payDate)"></td>
+                                <td v-text="authenticationInstance.formatNumberToDisplay(payment.amount) + ' VNĐ'"></td>
+                                <td v-text="payment.paymentMethod"></td>
+                                <td v-text="payment.momoId"></td>
+                                <td v-text="payment.note"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--                    Quản lý bài đăng-->
+                <div v-if="task == 4">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý bài đăng</h1>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên bài đăng</th>
+                                <th scope="col">Số phòng</th>
+                                <th scope="col">Ngày đăng</th>
+                                <th scope="col">Ngày hết hạn</th>
+                                <th scope="col">Tình trạng</th>
+                                <th scope="col">Tác vụ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(post, index) in listPost">
+
+                                <th scope="row" v-text="index + 1"></th>
+                                <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title" target="_blank"></a></td>
+                                <td>
+                                    <i class="fas fa-eye" v-on:click="handleViewRoom(post)" data-toggle="tooltip" data-html="true" title="Xem phòng"></i>
+                                    <span v-text="post.roomNumber"></span>
+                                </td>
+
+                                <td v-text="post.createDate"></td>
+                                <td v-text="post.expireDate"></td>
+                                <td>
+                                    <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
+                                    <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
+                                    <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                    <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
+
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--   Lịch sử thanh toán-->
+                <div v-if="task == 7">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Lịch sử thanh toán</h1>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Mã giao dịch</th>
+                                <th>Ngày giao dịch</th>
+                                <th>Mã bài đăng</th>
+                                <th>Gói</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="list in listPaymentPost">
+                                <td v-text="list.id"></td>
+                                <td v-text="list.payDate"></td>
+                                <td v-text="list.postId"></td>
+                                <td v-text="list.packageID"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quản lý yêu cầu -->
+
+                <div id="request-manager" v-if="task == 5 || task == 15 || task == 17">
+                    <div class="title">
+                        <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
+                    </div>
+                    <div class="information-detail">
+                        <div v-if="listRoomRequest == null || listRoomRequest.length == 0">
+                            <span>Không có yêu cầu thuê trọ nào</span>
+                        </div>
+                        <table v-else class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr v-if="task == 5">
+                                <th  width="2%"></th>
+                                <th  width="2%">STT</th>
+                                <th  width="48%">Tên phòng trọ</th>
+                                <th  width="28%">Phòng</th>
+                                <th  width="20%">Yêu cầu thuê phòng</th>
+                            </tr>
+                            <tr v-else-if="task == 15 || task == 17">
+                                <th  width="2%"></th>
+                                <th  width="2%">STT</th>
+                                <th  width="30%">Tên phòng trọ</th>
+                                <th  width="21%">Phòng</th>
+                                <th  width="15%">Tình trạng</th>
+                                <th width="10%"></th>
+                                <th  width="20%">Yêu cầu thuê phòng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-for="(room, index) in listRoomRequest">
+                                <tr>
+                                    <!--                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">-->
+                                    <!--                                                <i class="fas fa-angle-double-down" v-bind:class="{invisible: room.requestNumber == 0}"></i>-->
+                                    <!--                                            </td>-->
+                                    <td>
+                                        <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                        <i class="fas fa-angle-double-right" v-else v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                    </td>
+                                    <td v-text="index + 1"></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
+                                    <td v-text="room.roomName"></td>
+                                    <td v-if="task == 15  || task == 17" v-text="room.displayStatus"></td>
+                                    <td v-if="task == 15  || task == 17">
+                                        <label class="switch">
+                                            <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+                                    <td v-text="room.requestNumber"></td>
+
+                                </tr>
+
+                                <tr v-bind:id="room.roomId" v-show="room.requestNumber > 0" class="request-collapse" v-bind:class="{requestCollapseShow : room.openCollapse}">
+                                    <td v-bind:colspan="task == 5 ? 5 : 7" v-if="room.openCollapse">
+                                        <table class="collapse-table table-bordered table-hover">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="2%">STT</th>
+                                                <th width="25%">Tên người thuê</th>
+                                                <th width="15%">Ngày yêu cầu</th>
+                                                <th width="15%">Ngày bắt đầu</th>
+                                                <th width="15%">Trạng thái</th>
+                                                <th width="26%">Tác vụ</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(request, index) in room.listRentalRequest">
+                                                <td v-text="index + 1"></td>
+                                                <td>
+                                                    <a class="pointer-enable" v-on:click="showRenterInfo(request.renterInfo)" v-text="request.renterUsername"></a>
+                                                </td>
+                                                <td v-text="request.displayRequestDate"></td>
+                                                <td v-text="request.displayStartDate"></td>
+                                                <td v-text="request.statusDisplay"></td>
+                                                <td>
+                                                    <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
+                                                    <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </template>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <!--   Modal extend -->
+                <div id="myModal_Extend" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information" v-if="editMode">
+                        <div class="modal-header">
+                            <h2>Gia hạn bài đăng</h2>
+                            <span @click="closeModalExtend()" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="fill-information">
+                                <div class="title">
+                                    <h4>Thời hạn bài đăng</h4>
+                                </div>
+                                <div class="input-information">
+                                    <div class="form-check-inline col" v-for="package in listPaymentPackage">
+                                        <label class="radio-container">
+                                            {{package.duration + ' tháng'}}
+                                            <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fill-information" v-if="duration != 0">
+                                <div class="title">
+                                    <h4>Thông tin thanh toán</h4>
+                                </div>
+                                <div class="input-information">
+                                    <div id="table-checkout-modal" class="table-checkout">
+                                        <table>
+                                            <tr>
+                                                <td>Thành tiền:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tài khoản:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Số dư:</td>
+                                                <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--   Modal add rooms -->
+                <div id="myModal_AddRoom" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information" v-if="editMode">
+                        <div class="modal-header">
+                            <h2>Thêm phòng</h2>
+                            <span @click="closeModalAddRoom()" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="fill-information">
+                                <div class="title">
+                                    <h4>Số lượng phòng:</h4>
+                                </div>
+                                <div class="input-information">
+                                    <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                </div>
+                            </div>
+                            <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
+                                <div class="title">
+                                    <h4>Trạng thái các phòng:</h4>
+                                </div>
+                                <div class="input-information table-wrapper">
+                                    <table class="table tbl-room table-bordered">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">STT</th>
+                                            <th scope="col">Phòng</th>
+                                            <th scope="col">Trạng thái</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="(room, index) in listRoom">
+                                            <th scope="row" v-text="index + 1"></th>
+                                            <th scope="row" v-text="room.roomName"></th>
+                                            <th scope="row">
+                                                <span>Đã cho thuê</span>
+                                                <label class="switch">
+                                                    <input type="checkbox" v-model="room.availableRoom">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <span>Còn trống</span>
+                                            </th>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-
-<!--                 Lịch sử nạp tiền-->
-                    <div v-if="task == 6">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Lịch sử nạp tiền</h1>
-                        </div>
-                        <div class="information-detail" id="history-payment">
-                            <table class="table">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Mã giao dịch</th>
-                                        <th>Số tiền</th>
-                                        <th>Ngày giao dịch</th>
-                                        <th>Momo ID</th>
-                                        <th>Mã khách hàng</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="payment in listPayment">
-                                        <td v-text="payment.id"></td>
-                                        <td v-text="payment.amount+' VNĐ'"></td>
-                                        <td v-text="payment.payDate"></td>
-                                        <td v-text="payment.momoId"></td>
-                                        <td v-text="payment.landlord"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="modal-footer">
+                            <button @click="increaseRoom()" class="btn-hover btn-default">Xác nhận</button>
                         </div>
                     </div>
-
-<!--                    Quản lý bài đăng-->
-                    <div v-if="task == 4">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Quản lý bài đăng</h1>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">STT</th>
-                                    <th scope="col">Tên bài đăng</th>
-                                    <th scope="col">Số phòng</th>
-                                    <th scope="col">Ngày đăng</th>
-                                    <th scope="col">Ngày hết hạn</th>
-                                    <th scope="col">Tình trạng</th>
-                                    <th scope="col">Tác vụ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(post, index) in listPost">
-
-                                    <th scope="row" v-text="index + 1"></th>
-                                    <td><a v-bind:href="'/post-detail?id=' + post.id" v-text="post.title" target="_blank"></a></td>
-                                    <td>
-                                        <i class="fas fa-eye" v-on:click="handleViewRoom(post)" data-toggle="tooltip" data-html="true" title="Xem phòng"></i>
-                                        <span v-text="post.roomNumber"></span>
-                                    </td>
-
-                                    <td v-text="post.createDate"></td>
-                                    <td v-text="post.expireDate"></td>
-                                    <td>
-                                        <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                        <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                        <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
-                                        <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
-
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!--   Lịch sử thanh toán-->
-                    <div v-if="task == 7">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Lịch sử thanh toán</h1>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Mã giao dịch</th>
-                                        <th>Ngày giao dịch</th>
-                                        <th>Mã bài đăng</th>
-                                        <th>Gói</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="list in listPaymentPost">
-                                        <td v-text="list.id"></td>
-                                        <td v-text="list.payDate"></td>
-                                        <td v-text="list.postId"></td>
-                                        <td v-text="list.packageID"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Quản lý yêu cầu -->
-
-                    <div id="request-manager" v-if="task == 5 || task == 15">
-                        <div class="title">
-                            <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
-                        </div>
-                        <div class="information-detail">
-                            <div v-if="listRoomRequest == null || listRoomRequest.length == 0">
-                                <span>Không có yêu cầu thuê trọ nào</span>
-                            </div>
-                            <table v-else class="table table-bordered table-hover">
-                                <thead class="thead-light">
-                                    <tr v-if="task == 5">
-                                        <th  width="2%"></th>
-                                        <th  width="2%">STT</th>
-                                        <th  width="48%">Tên phòng trọ</th>
-                                        <th  width="28%">Phòng</th>
-                                        <th  width="20%">Yêu cầu thuê phòng</th>
-                                    </tr>
-                                    <tr v-else-if="task == 15">
-                                        <th  width="2%"></th>
-                                        <th  width="2%">STT</th>
-                                        <th  width="30%">Tên phòng trọ</th>
-                                        <th  width="21%">Phòng</th>
-                                        <th  width="15%">Tình trạng</th>
-                                        <th width="10%"></th>
-                                        <th  width="20%">Yêu cầu thuê phòng</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-for="(room, index) in listRoomRequest">
-                                        <tr>
-<!--                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">-->
-<!--                                                <i class="fas fa-angle-double-down" v-bind:class="{invisible: room.requestNumber == 0}"></i>-->
-<!--                                            </td>-->
-                                            <td>
-                                                <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
-                                                <i class="fas fa-angle-double-right" v-else v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
-                                            </td>
-                                            <td v-text="index + 1"></td>
-                                            <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
-                                            <td v-text="room.roomName"></td>
-                                            <td v-if="task == 15" v-text="room.displayStatus"></td>
-                                            <td v-if="task == 15">
-                                                <label class="switch">
-                                                    <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </td>
-                                            <td v-text="room.requestNumber"></td>
-
-                                        </tr>
-
-                                        <tr v-bind:id="room.roomId" v-show="room.requestNumber > 0" class="request-collapse" v-bind:class="{requestCollapseShow : room.openCollapse}">
-                                            <td v-bind:colspan="task == 5 ? 5 : 7" v-if="room.openCollapse">
-                                                <table class="collapse-table table-bordered table-hover">
-                                                    <thead class="thead-light">
-                                                    <tr>
-                                                        <th width="2%">STT</th>
-                                                        <th width="25%">Tên người thuê</th>
-                                                        <th width="15%">Ngày yêu cầu</th>
-                                                        <th width="15%">Ngày bắt đầu</th>
-                                                        <th width="15%">Trạng thái</th>
-                                                        <th width="26%">Tác vụ</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr v-for="(request, index) in room.listRentalRequest">
-                                                        <td v-text="index + 1"></td>
-                                                        <td>
-                                                            <a class="pointer-enable" v-on:click="showRenterInfo(request.renterInfo)" v-text="request.renterUsername"></a>
-                                                        </td>
-                                                        <td v-text="request.displayRequestDate"></td>
-                                                        <td v-text="request.displayStartDate"></td>
-                                                        <td v-text="request.statusDisplay"></td>
-                                                        <td>
-                                                            <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
-                                                            <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </template>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <!--   Modal extend -->
-                    <div id="myModal_Extend" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information" v-if="editMode">
-                            <div class="modal-header">
-                                <h2>Gia hạn bài đăng</h2>
-                                <span @click="closeModalExtend()" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Thời hạn bài đăng</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <div class="form-check-inline col" v-for="package in listPaymentPackage">
-                                            <label class="radio-container">
-                                                {{package.duration + ' tháng'}}
-                                                <input v-model="duration" type="radio" @change="calculateCost(package)" name="duration" v-bind:value="package.id">
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="fill-information" v-if="duration != 0">
-                                    <div class="title">
-                                        <h4>Thông tin thanh toán</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <div id="table-checkout-modal" class="table-checkout">
-                                            <table>
-                                                <tr>
-                                                    <td>Thành tiền:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(amountSelected) + ' VNĐ'"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tài khoản:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Số dư:</td>
-                                                    <td class="money-col" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount - amountSelected) + ' VNĐ'"></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--   Modal add rooms -->
-                    <div id="myModal_AddRoom" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information" v-if="editMode">
-                            <div class="modal-header">
-                                <h2>Thêm phòng</h2>
-                                <span @click="closeModalAddRoom()" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="fill-information">
-                                    <div class="title">
-                                        <h4>Số lượng phòng:</h4>
-                                    </div>
-                                    <div class="input-information">
-                                        <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
-                                    </div>
-                                </div>
-                                <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
-                                    <div class="title">
-                                        <h4>Trạng thái các phòng:</h4>
-                                    </div>
-                                    <div class="input-information table-wrapper">
-                                        <table class="table tbl-room">
-                                            <thead class="thead-light">
-                                            <tr>
-                                                <th scope="col">STT</th>
-                                                <th scope="col">Phòng</th>
-                                                <th scope="col">Trạng thái</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(room, index) in listRoom">
-                                                <th scope="row" v-text="index + 1"></th>
-                                                <th scope="row" v-text="room.roomName"></th>
-                                                <th scope="row">
-                                                    <span>Đã cho thuê</span>
-                                                    <label class="switch">
-                                                        <input type="checkbox" v-model="room.availableRoom">
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                    <span>Còn trống</span>
-                                                </th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button @click="increaseRoom()" class="btn-hover btn-default">Xác nhận</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--Modal user detail-->
-                    <div id="modalUserDetail" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2>Thông tin người dùng</h2>
-                                <span id="closeModalUserDetail" @click="closeModalUserDetail" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên đăng nhập:</p>
-                                    <input :value="renterInfo.username"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên hiển thị:</p>
-                                    <input :value="renterInfo.displayName"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số điện thoại:</p>
-                                    <input :value="renterInfo.phoneNumber"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Ngày sinh:</p>
-                                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Nghề nghiệp:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" :value="renterInfo.career" disabled/>
-                                </div>
-                                <div v-if="userInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Giới tính:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" :value="renterInfo.gender" disabled/>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default" @click="closeModalUserDetail">Xác Nhận</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--Modal user detail-->
-                    <div id="modalRequestDetail" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2>Thông tin phòng trọ</h2>
-                                <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên phòng:</p>
-                                    <input :value="selectedRoom.roomName"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Yêu cầu thuê phòng:</p>
-                                    <input :value="selectedRequest.id"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Ngày yêu cầu:</p>
-                                    <input :value="selectedRequest.displayRequestDate"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Ngày bắt đầu:</p>
-                                    <input :value="selectedRequest.displayStartDate"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên đăng nhập:</p>
-                                    <input :value="renterInfo.username"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Tên hiển thị:</p>
-                                    <input :value="renterInfo.displayName"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div class="infor-modal">
-                                    <p class="left-modal">Số điện thoại:</p>
-                                    <input :value="renterInfo.phoneNumber"
-                                           class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Ngày sinh:</p>
-                                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" disabled/>
-                                </div>
-                                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Nghề nghiệp:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" :value="renterInfo.career" disabled/>
-                                </div>
-                                <div v-if="userInfo.role == 'RENTER'" class="infor-modal">
-                                    <p class="left-modal">Giới tính:</p>
-                                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                                           type="text" :value="renterInfo.gender" disabled/>
-                                </div>
-                                <div>
-                                    <h3>Bạn có muốn làm mới phòng này?</h3>
-                                    <p>Trạng thái của phòng sẽ được thay đổi thành "Còn trống"</p>
-                                    <p>Người dùng "{{renterInfo.username}}" sẽ bị xóa khỏi phòng này</p>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Xác Nhận</button>
-                                <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--Nạp tiền -->
-
                 </div>
+
+                <!--Modal user detail-->
+                <div id="modalUserDetail" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2>Thông tin người dùng</h2>
+                            <span id="closeModalUserDetail" @click="closeModalUserDetail" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên đăng nhập:</p>
+                                <input :value="renterInfo.username"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Tên hiển thị:</p>
+                                <input :value="renterInfo.displayName"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div class="infor-modal">
+                                <p class="left-modal">Số điện thoại:</p>
+                                <input :value="renterInfo.phoneNumber"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Ngày sinh:</p>
+                                <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
+                            </div>
+                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Nghề nghiệp:</p>
+                                <input class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" :value="renterInfo.career" disabled/>
+                            </div>
+                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                                <p class="left-modal">Giới tính:</p>
+                                <input class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" :value="renterInfo.genderDisplay" disabled/>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default" @click="closeModalUserDetail">Xác Nhận</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Modal rental request detail-->
+                <div th:replace="layout :: modal-request-detail"></div>
+
+                <!--Nạp tiền -->
+
+                <!--nạp tiền-->
+                <div id="paymentPage" v-if="task == 8">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Nạp tiền</h1>
+                    </div>
+                    <div class="container payment-container">
+                        <div class="row payment-method">
+                            <div class="col-lg-4">
+                                <div>
+                                    <img class="img-logo-payment"
+                                         src="/assets/img/logo/logo-momo.jpg">
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <p id="notify_paymentAmount" class="invisible" style="color: red;">
+
+                                </p>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Số tiền:</h4>
+                                    </div>
+
+                                    <div class="input-information">
+                                        <input @focusout="" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                               class="form-input-information rounded-pill border-0 shadow-sm">
+                                    </div>
+                                </div>
+
+                                <div class="fill-information">
+                                    <div class="m-auto" style="width: fit-content">
+                                        <button v-on:click="checkPaymentAmount" class="btn">
+                                            Thanh Toán
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row payment-method">
+                            <div class="col-lg-4">
+                                <div>
+                                    <img class="img-logo-payment"
+                                         src="/assets/img/logo/money-transfer-banking.jpg">
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="row bank-information">
+                                    <div class="title col-4 pos-title">
+                                        <p>Ngân hàng:</p>
+                                    </div>
+                                    <div class="payment-information col-8">
+                                        <p>Ngân hàng Thương mại Cổ phần Tiên Phong: TPBank</p>
+                                    </div>
+                                </div>
+                                <div class="row bank-information">
+                                    <div class="title col-4 pos-title">
+                                        <p>Chủ tài khoản:</p>
+                                    </div>
+                                    <div class="payment-information col-8 uppercase">
+                                        <p>Dương thị kim oanh</p>
+                                    </div>
+                                </div>
+                                <div class="row bank-information">
+                                    <div class="title col-4 pos-title">
+                                        <p>Số tài khoản:</p>
+                                    </div>
+                                    <div class="payment-information col-8">
+                                        <p>30011222333</p>
+                                    </div>
+                                </div>
+                                <div class="row bank-information">
+                                    <div class="title col-4 pos-title">
+                                        <p>Chi nhánh: </p>
+                                    </div>
+                                    <div class="payment-information col-8">
+                                        <p>CN Đà Nẵng</p>
+                                    </div>
+                                </div>
+                                <div class="row bank-information">
+                                    <div class="title col-4 pos-title">
+                                        <p>Nội dung: </p>
+                                    </div>
+                                    <div class="payment-information col-8">
+                                        <h4>Nội dung chuyển khoản bạn ghi rõ:</h4>
+                                        <h6>NapTienFFM_TenDangNhap_SoDienThoai</h6>
+                                        <h6>(vd: NapTienFFM_Truongnq_0975153176)</h6>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-<!--    </div>-->
+    </div>
+    <!--    </div>-->
 </main>
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
+
 <!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

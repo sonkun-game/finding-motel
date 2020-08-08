@@ -244,21 +244,31 @@ var basicInfoInstance = new Vue({
     data: {
         userInfo: {},
     },
-    beforeMount(){
+    beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
     },
-    methods : {
-        handlePostNewRoom(){
-            if(this.userInfo.banned){
+    methods: {
+        handlePostNewRoom() {
+            if (this.userInfo.banned) {
                 modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
                     "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
                     "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                 modalMessageInstance.showModal()
-            }else{
+            } else {
                 localStorage.setItem("task", 13)
-                window.location.href = "dang-tin"
+                window.location.href = "/dang-tin"
             }
-
+        },
+        handlePayment() {
+            if (this.userInfo.banned) {
+                modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
+                    "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                modalMessageInstance.showModal()
+            } else {
+                localStorage.setItem("task", 8);
+                window.location.href = "/nap-tien"
+            }
         }
     }
 
@@ -312,7 +322,17 @@ var userTaskInstance = new Vue({
                 }else if(task == 9){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListUser()
+                        admin.inputRole = 0
+                        admin.searchUser()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
+                }else if(task == 20){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.inputRole = 2
+                        admin.searchUser()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -330,6 +350,14 @@ var userTaskInstance = new Vue({
                         admin.task = task
                         admin.searchReport()
                         admin.getInitAdmin()
+                    }else{
+                        window.location.href = "/quan-ly-he-thong"
+                    }
+
+                }else if(task == 19){
+                    if(this.$route.fullPath.includes("quan-ly-he-thong")){
+                        admin.task = task
+                        admin.getListPaymentPackage()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -375,7 +403,14 @@ var userTaskInstance = new Vue({
                         noteInstance.task = task
                         landlordInstance.task = task
                         landlordInstance.getListRoomRequest(7, null)
-                    }else{
+                    } else {
+                        window.location.href = "/quan-ly-bai-dang"
+                    }
+                } else if (task == 8) {
+                    if (this.$route.fullPath.includes("quan-ly-tai-khoan")) {
+                        noteInstance.task = task
+                        landlordInstance.task = task
+                    } else {
                         window.location.href = "/quan-ly-bai-dang"
                     }
                 }

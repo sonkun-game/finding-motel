@@ -27,4 +27,12 @@ public class ImageModel implements Serializable {
 
     @Column(name="FILE_TYPE",nullable = false)
     private String fileType;
+
+    public ImageModel() {
+    }
+    public ImageModel(String id, byte[] fileContent, String fileType) {
+        this.id = id;
+        this.fileContent = fileContent;
+        this.fileType = fileType;
+    }
 }

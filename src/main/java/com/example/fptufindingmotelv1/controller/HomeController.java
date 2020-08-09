@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.controller;
 import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
+import com.example.fptufindingmotelv1.dto.WishListDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
@@ -158,7 +159,7 @@ public class HomeController {
                 maxDistance = filterDistance.getMaxValue();
             }
 
-            ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.searchPost(null,
+            ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.filterPost(null,
                     null, maxPrice, minPrice,
                     maxDistance, minDistance,
                     maxSquare, minSquare, true, postSearchDTO.getTypeId(), false);
@@ -178,34 +179,41 @@ public class HomeController {
             if (start <= end) {
                 sublistPostModel = listPostModel.subList(start, end);
             }
-
             List<PostDTO> postDTOs = new ArrayList<>();
             PostDTO postDTO;
-            // check login
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth instanceof UsernamePasswordAuthenticationToken
-                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-                for (PostModel post:
-                        sublistPostModel) {
-                    postDTO = new PostDTO(post);
-                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
-                    if(wishListModel != null){
-                        postDTO.setInWishList(true);
-                        postDTO.setWishListId(wishListModel.getId());
-                    }else {
-                        postDTO.setInWishList(false);
-                    }
-                    postDTOs.add(postDTO);
-                }
-            } else {
-                for (PostModel post:
-                        sublistPostModel) {
-                    postDTO = new PostDTO(post);
-                    postDTO.setInWishList(false);
-                    postDTOs.add(postDTO);
-                }
+            for (PostModel post:
+                 sublistPostModel) {
+                postDTO = new PostDTO();
+                postDTO.setPostDTO(post);
+                postDTOs.add(postDTO);
             }
+//            List<PostDTO> postDTOs = new ArrayList<>();
+//            PostDTO postDTO;
+//            // check login
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            if (auth instanceof UsernamePasswordAuthenticationToken
+//                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
+//                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
+//                for (PostModel post:
+//                        sublistPostModel) {
+//                    postDTO = new PostDTO(post);
+//                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
+//                    if(wishListModel != null){
+//                        postDTO.setInWishList(true);
+//                        postDTO.setWishListId(wishListModel.getId());
+//                    }else {
+//                        postDTO.setInWishList(false);
+//                    }
+//                    postDTOs.add(postDTO);
+//                }
+//            } else {
+//                for (PostModel post:
+//                        sublistPostModel) {
+//                    postDTO = new PostDTO(post);
+//                    postDTO.setInWishList(false);
+//                    postDTOs.add(postDTO);
+//                }
+//            }
 
             Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
             response.put("pageSize", evalPageSize);
@@ -219,6 +227,32 @@ public class HomeController {
         } catch (Exception e) {
             e.printStackTrace();
             response.put("msgCode", "sys999");
+            return response;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/api-get-wish-list")
+    public JSONObject getWishListPost(@RequestBody WishListDTO wishListDTO) {
+        JSONObject response = new JSONObject();
+        try {
+            List<PostModel> listPostWishList = wishListRepository.getListPostByRenter(
+                    wishListDTO.getRenterUsername(), true, false);
+            List<PostDTO> postDTOs = new ArrayList<>();
+            PostDTO postDTO;
+            for (PostModel post:
+                    listPostWishList) {
+                postDTO = new PostDTO();
+                postDTO.setPostDTO(post);
+                postDTOs.add(postDTO);
+            }
+            response.put("code", "000");
+            response.put("data", postDTOs);
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("code", "999");
+            response.put("message", "Lỗi Hệ Thống");
             return response;
         }
     }

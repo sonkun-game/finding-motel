@@ -182,7 +182,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO) {
         try {
-            ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.searchPost(postSearchDTO.getLandlordUsername(),
+            ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.filterPost(postSearchDTO.getLandlordUsername(),
                     postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
                     postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
                     postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId(), null);

@@ -10,7 +10,7 @@ var postInstance = new Vue({
         pages : 0,
         pageSize : 0,
         postIndex : -1,
-
+        listPostOfRenter : [],
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -83,11 +83,13 @@ var postInstance = new Vue({
             })
         },
 
+
     },
 })
 var filterPostInstance = new Vue({
     el: '#filter-container',
     data: {
+        userInfo : {},
         listTypePost : [],
         listFilterPrice : [],
         listFilterSquare : [],
@@ -187,9 +189,31 @@ var filterPostInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
+        getWishListOfRenter(){
+            let request = {
+                "renterUsername" : this.userInfo.username
+            }
+            fetch("/api-get-wish-list", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.code == "000"){
+                        postInstance.listPostOfRenter = data.data
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     },
     created() {
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
         this.getInitHomePage()
         this.getPageFromQuery()
         this.typeId = parseInt(sessionStorage.getItem("typeId"))
@@ -221,6 +245,9 @@ var filterPostInstance = new Vue({
             "page": this.page,
         }
         this.filterPost(request)
+        if(this.userInfo.role == 'RENTER'){
+            this.getWishListOfRenter()
+        }
     },
     mounted(){
         window.addEventListener("load", function(event) {

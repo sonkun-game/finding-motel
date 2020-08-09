@@ -32,6 +32,9 @@ public class PostDTO {
     private String address;
     private String mapLocation;
 
+    public PostDTO() {
+    }
+
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.id = postModel.getId();
@@ -61,6 +64,19 @@ public class PostDTO {
             listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
         }
 
+    }
+    public void setPostDTO(PostModel postModel){
+        this.id = postModel.getId();
+        this.price = postModel.getPrice();
+        this.distance = postModel.getDistance();
+        this.square = postModel.getSquare();
+        this.description = postModel.getDescription();
+        this.title = postModel.getTitle();
+        this.address = postModel.getAddress();
+        this.images = new ArrayList<>();
+        String imageUrl = "data:image/"+ postModel.getImages().get(0).getFileType()+";base64,"
+                + Base64.getEncoder().encodeToString(postModel.getImages().get(0).getFileContent());
+        this.images.add(imageUrl);
     }
 
 }

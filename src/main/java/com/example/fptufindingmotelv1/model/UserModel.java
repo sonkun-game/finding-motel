@@ -38,4 +38,12 @@ public class UserModel implements Serializable {
 
     @OneToMany(mappedBy = "userNotification")
     private List<NotificationModel> notifications;
+
+    public UserModel() {
+    }
+
+    public UserModel(String username) {
+        this.username = username;
+    }
+
 }

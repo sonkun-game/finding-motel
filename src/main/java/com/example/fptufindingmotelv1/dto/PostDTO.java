@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class PostDTO {
     private String id;
+    private Long typeId;
     private String type;
     private String landlord;
     private String landlordDisplayName;
@@ -38,6 +39,7 @@ public class PostDTO {
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.id = postModel.getId();
+        this.typeId = postModel.getType().getId();
         this.type = postModel.getType().getName();
         this.landlord = postModel.getLandlord().getUsername();
         this.landlordDisplayName = postModel.getLandlord().getDisplayName();
@@ -59,11 +61,14 @@ public class PostDTO {
                     + Base64.getEncoder().encodeToString(image.getFileContent());
             images.add(imageUrl);
         }
-        this.listRoom = new ArrayList<>();
-        for (int i = 0; i < postModel.getRooms().size(); i++) {
-            listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
-        }
+//        this.listRoom = new ArrayList<>();
+//        for (int i = 0; i < postModel.getRooms().size(); i++) {
+//            listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
+//        }
 
+    }
+    public PostDTO(String id) {
+        this.id = id;
     }
     public void setPostDTO(PostModel postModel){
         this.id = postModel.getId();

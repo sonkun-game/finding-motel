@@ -34,8 +34,9 @@ var postInstance = new Vue({
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.msgCode == "wishlist000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
-                        this.postList[this.postIndex].inWishList = true
-                        this.postList[this.postIndex].wishListId = data.wishList.id
+                        filterPostInstance.getWishListOfRenter()
+                        // this.postList[this.postIndex].inWishList = true
+                        // this.postList[this.postIndex].wishListId = data.wishList.id
                     }else {
                         modalMessageInstance.message = "Lỗi hệ thống!"
                         modalMessageInstance.showModal()
@@ -50,18 +51,19 @@ var postInstance = new Vue({
             if(this.userInfo == null){
                 window.location.href = "/dang-nhap"
             }else {
-                if(post.inWishList){
-                    this.removeFromWishList(post.wishListId, this.userInfo.username)
+                if(this.listPostOfRenter.some(p => p.id == post.id)){
+                    this.removeFromWishList(post.id, this.userInfo.username)
                 }else {
                     this.addWishlist(post, this.userInfo.username)
 
                 }
             }
         },
-        removeFromWishList(wishListId, username){
+        removeFromWishList(postId, username){
             let request = {
-                "id" : wishListId,
-                "renterUsername" : username
+                "postId" : postId,
+                "renterUsername" : username,
+                "wishListScreen" : false,
             }
             fetch("/api-remove-from-wishlist", {
                 method: 'POST',
@@ -75,8 +77,7 @@ var postInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "wishlist000"){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
-                        this.postList[this.postIndex].inWishList = false
-                        this.postList[this.postIndex].wishListId = null
+                        filterPostInstance.getWishListOfRenter()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -206,6 +207,7 @@ var filterPostInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         postInstance.listPostOfRenter = data.data
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(data.data))
                     }
                 }).catch(error => {
                 console.log(error);
@@ -245,8 +247,12 @@ var filterPostInstance = new Vue({
             "page": this.page,
         }
         this.filterPost(request)
-        if(this.userInfo.role == 'RENTER'){
-            this.getWishListOfRenter()
+        if(this.userInfo != null && this.userInfo.role == 'RENTER'){
+            if(sessionStorage.getItem("listPostOfRenter") != null){
+                postInstance.listPostOfRenter = JSON.parse(sessionStorage.getItem("listPostOfRenter"))
+            }else {
+                this.getWishListOfRenter()
+            }
         }
     },
     mounted(){

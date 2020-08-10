@@ -12,25 +12,25 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<PostModel, String> {
 //    List<PostModel> findByVisibleTrueAndBannedFalse(Sort sort);
 
-//    @Query(value = "select p from PostModel p " +
-//            "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
-//            "and (:priceMax is null or p.price <= :priceMax) " +
-//            "and (:priceMin is null or p.price >= :priceMin) " +
-//            "and (:distanceMax is null or p.distance <= :distanceMax) " +
-//            "and (:distanceMin is null or p.distance >= :distanceMin) " +
-//            "and (:squareMax is null or p.square <= :squareMax) " +
-//            "and (:squareMin is null or p.square >= :squareMin) " +
-//            "and (:isVisible is null or p.visible = :isVisible)" +
-//            "and (:postType is null or p.type.id = :postType) " +
-//            "and (:banned is null or p.banned = :banned)" +
-//            "order by p.createDate desc " +
-//            "")
-//    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
-//                               Double distanceMax, Double distanceMin,
-//                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
+    @Query(value = "select p from PostModel p " +
+            "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
+            "and (:priceMax is null or p.price <= :priceMax) " +
+            "and (:priceMin is null or p.price >= :priceMin) " +
+            "and (:distanceMax is null or p.distance <= :distanceMax) " +
+            "and (:distanceMin is null or p.distance >= :distanceMin) " +
+            "and (:squareMax is null or p.square <= :squareMax) " +
+            "and (:squareMin is null or p.square >= :squareMin) " +
+            "and (:isVisible is null or p.visible = :isVisible)" +
+            "and (:postType is null or p.type.id = :postType) " +
+            "and (:banned is null or p.banned = :banned)" +
+            "order by p.createDate desc " +
+            "")
+    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
+                               Double distanceMax, Double distanceMin,
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
-            "p.description, p.title, p.address, MAX (im)) from PostModel p " +
+            "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +
             "join ImageModel im on p.id = im.post.id " +
             "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
             "and (:priceMax is null or p.price <= :priceMax) " +
@@ -49,13 +49,25 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
                                Double distanceMax, Double distanceMin,
                                Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
 
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
+            "p.description, p.title, p.address, p.mapLocation, p.createDate, " +
+            "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber) from PostModel p " +
+            "join TypeModel t on p.type.id = t.id " +
+            "join LandlordModel ll on p.landlord.username = ll.username " +
+            "where (:postId is null or p.id = :postId)" +
+            "")
+    PostModel getPostById(String postId);
 
 
-//    @Query(value = "select top 5 * from POST p " +
-//            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
-//            "and (p.ID != :postId)" +
-//            "or (p.TYPE_ID = :typeId and p.ID != :postId)" +
-//            "", nativeQuery = true)
-//    List<PostModel> getRelatedPost(String postId, String landlordId, Long typeId);
+
+    @Query(value = "select top 5 * from POST p " +
+            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
+            "and (:visible is null or p.IS_VISIBLE = :visible)" +
+            "and (:banned is null or p.IS_BANNED = :banned)" +
+            "and (p.ID != :postId)" +
+            "or (p.TYPE_ID = :typeId and p.ID != :postId)" +
+            "", nativeQuery = true)
+    List<PostModel> getRelatedPost(String postId, String landlordId,
+                                   Long typeId, Boolean visible, Boolean banned);
 
 }

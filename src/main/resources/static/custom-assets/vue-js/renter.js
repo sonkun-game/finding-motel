@@ -50,7 +50,8 @@ var renterInstance = new Vue({
         removeFromWishList(wishListId, username){
             let request = {
                 "id" : wishListId,
-                "renterUsername" : username
+                "renterUsername" : username,
+                "wishListScreen" : true,
             }
             fetch("/api-remove-from-wishlist", {
                 method: 'POST',

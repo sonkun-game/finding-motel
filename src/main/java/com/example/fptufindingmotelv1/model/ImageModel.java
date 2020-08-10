@@ -35,4 +35,7 @@ public class ImageModel implements Serializable {
         this.fileContent = fileContent;
         this.fileType = fileType;
     }
+    public ImageModel(String id) {
+        this.id = id;
+    }
 }

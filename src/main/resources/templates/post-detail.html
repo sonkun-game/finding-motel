@@ -45,16 +45,11 @@
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
-                        <button v-if="(userInfo == null || userInfo.role == 'RENTER') && !post.inWishList"
+                        <button v-if="(userInfo == null || userInfo.role == 'RENTER')"
                                 class="btn-save" v-on:click="handleActionWishList(post)" type="button"
-                                title="Lưu tin này">
+                                v-bind:title="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'">
                             <img src="assets/img/logo/bookmark.png">
-                            <span>Lưu tin này</span>
-                        </button>
-                        <button v-else-if="(userInfo == null || userInfo.role == 'RENTER') && post.inWishList"
-                                class="btn-save pointer-disabled" type="button" title="Đã lưu">
-                            <img src="assets/img/logo/bookmark.png">
-                            <span>Đã lưu</span>
+                            <span v-text="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'"></span>
                         </button>
                     </div>
                     <div class="title-area clearfix">
@@ -198,7 +193,7 @@
                                             <h4 class="font-weight-normal">Chọn phòng:</h4>
                                         </div>
                                         <div class="choose-room clearfix">
-                                            <ul class="list-select-room" v-for="room in post.listRoom">
+                                            <ul class="list-select-room" v-for="room in listRoomOfPost">
                                                 <li class="select-room"
                                                     v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
                                                     @click="setRoomIdRental(room.roomId, $event)">

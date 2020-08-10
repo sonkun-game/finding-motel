@@ -84,8 +84,13 @@ public class PostModel implements Serializable{
     public PostModel() {
     }
 
+    public PostModel(String id) {
+        this.id = id;
+    }
+
     public PostModel(String id, double price, double distance, double square,
-                     String description, String title, String address, ImageModel image) {
+                     String description, String title, String address,
+                     String imageId) {
         this.id = id;
         this.price = price;
         this.distance = distance;
@@ -94,29 +99,29 @@ public class PostModel implements Serializable{
         this.title = title;
         this.address = address;
         this.images = new ArrayList<>();
-        this.images.add(image);
+        this.images.add(new ImageModel(imageId));
     }
 
-    public PostModel(String id, TypeModel type, LandlordModel landlord, double price, double distance, double square, int roomNumber, Date createDate, String description, Date expireDate, boolean visible, String title, boolean banned, String address, String mapLocation, List<ImageModel> images, List<ReportModel> reports, List<WishListModel> wishLists, List<PaymentPostModel> paymentPosts, List<RoomModel> rooms) {
+    public PostModel(String id, double price, double distance, double square,
+                     String description, String title, String address,
+                     String mapLocation, Date createDate, Long typeId, String typeName,
+                     String landlordUsername, String landlordDisplayName, String landlordPhone
+                     ) {
         this.id = id;
-        this.type = type;
-        this.landlord = landlord;
         this.price = price;
         this.distance = distance;
         this.square = square;
-        this.roomNumber = roomNumber;
-        this.createDate = createDate;
         this.description = description;
-        this.expireDate = expireDate;
-        this.visible = visible;
         this.title = title;
-        this.banned = banned;
         this.address = address;
         this.mapLocation = mapLocation;
-        this.images = images;
-        this.reports = reports;
-        this.wishLists = wishLists;
-        this.paymentPosts = paymentPosts;
-        this.rooms = rooms;
+        this.createDate = createDate;
+        this.type = new TypeModel();
+        this.type.setId(typeId);
+        this.type.setName(typeName);
+        this.landlord = new LandlordModel();
+        this.landlord.setUsername(landlordUsername);
+        this.landlord.setDisplayName(landlordDisplayName);
+        this.landlord.setPhoneNumber(landlordPhone);
     }
 }

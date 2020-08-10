@@ -408,19 +408,19 @@
 
                 <div id="payment-package-table" v-if="task == 19">
                     <div class="title">
-                        <h1 class="title-name uppercase">Quản lý package</h1>
+                        <h1 class="title-name uppercase">Quản lý gói</h1>
                     </div>
                     <div class="information-detail">
                         <div class="btn-container">
                             <button v-on:click="showModalPackage" class="btn btn-add-package rounded-pill shadow-sm">
-                                Thêm package
+                                Thêm gói
                             </button>
                         </div>
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th width="5%">STT</th>
-                                <th width="20%">Tên package</th>
+                                <th width="20%">Tên gói</th>
                                 <th width="20%">Thời hạn bài đăng</th>
                                 <th width="15%">Giá</th>
                                 <th width="20%">Trạng thái</th>
@@ -640,7 +640,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Tên package:</p>
+                                <p class="left-modal">Tên gói:</p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>

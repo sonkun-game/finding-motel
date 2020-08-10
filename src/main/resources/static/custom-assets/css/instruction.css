@@ -24,8 +24,13 @@
 .tab-content .tab-pane{
     padding-top: 20px;
 }
- .nav-tabs .nav-link.active {
+.nav-tabs .nav-link.active {
     color: #ffffff;
     background-color: #dca73a;
     border-color: #DDDDDD;
+}
+
+.instruction-item p{
+    white-space: pre-line;
+    word-wrap: break-word;
 }

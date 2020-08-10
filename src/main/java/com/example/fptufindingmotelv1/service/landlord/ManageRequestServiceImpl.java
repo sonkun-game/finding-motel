@@ -24,9 +24,6 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     private RoomRepository roomRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
-
-    @Autowired
     private NotificationRepository notificationRepository;
 
     @Override
@@ -49,8 +46,8 @@ public class ManageRequestServiceImpl implements ManageRequestService{
         try {
             RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
             RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-            StatusModel statusAccept = statusRepository.findByIdAndType(9, 3);
-            StatusModel statusReject = statusRepository.findByIdAndType(10, 3);
+            StatusModel statusAccept = new StatusModel(9L);
+            StatusModel statusReject = new StatusModel(10L);
             for (RentalRequestModel request:
                  roomModel.getRoomRentals()) {
                 if(!request.getId().equals(rentalRequestModel.getId())
@@ -72,7 +69,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
             }
             Date date = new Date();
             Date cancelDate = new Timestamp(date.getTime());
-            StatusModel statusCancel = statusRepository.findByIdAndType(8, 3);
+            StatusModel statusCancel = new StatusModel(8L);
             RenterModel renter = rentalRequestModel.getRentalRenter();
             for (RentalRequestModel request:
                  renter.getRenterRentals()) {
@@ -82,7 +79,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
                     request.setCancelDate(cancelDate);
                 }
             }
-            StatusModel statusRoom = statusRepository.findByIdAndType(2, 1);
+            StatusModel statusRoom = new StatusModel(2L);
             roomModel.setStatus(statusRoom);
             rentalRequestRepository.saveAll(renter.getRenterRentals());
             roomRepository.save(roomModel);
@@ -98,7 +95,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     public RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO) {
         try {
             RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
-            StatusModel statusReject = statusRepository.findByIdAndType(10, 3);
+            StatusModel statusReject = new StatusModel(10L);
             rentalRequestModel.setRentalStatus(statusReject);
             String notificationContent = "Chủ trọ <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getLandlord().getUsername() +
                     "</b> đã từ chối yêu cầu thuê trọ vào <b>" + rentalRequestModel.getRentalRoom().getName() +
@@ -118,11 +115,11 @@ public class ManageRequestServiceImpl implements ManageRequestService{
             RoomModel roomModel = roomRepository.findById(roomDTO.getRoomId()).get();
             if(roomModel.getStatus().getId() == 1){
 
-                StatusModel statusRoom = statusRepository.findByIdAndType(2, 1);
+                StatusModel statusRoom = new StatusModel(2L);
                 roomModel.setStatus(statusRoom);
                 roomModel = roomRepository.save(roomModel);
                 if(roomModel.getRoomRentals() != null && roomModel.getRoomRentals().size() > 0){
-                    StatusModel statusReject = statusRepository.findByIdAndType(10, 3);
+                    StatusModel statusReject = new StatusModel(10L);
                     for (RentalRequestModel request:
                          roomModel.getRoomRentals()) {
                         request.setRentalStatus(statusReject);
@@ -135,13 +132,13 @@ public class ManageRequestServiceImpl implements ManageRequestService{
                     rentalRequestRepository.saveAll(roomModel.getRoomRentals());
                 }
             }else if(roomModel.getStatus().getId() == 2){
-                StatusModel statusRoom = statusRepository.findByIdAndType(1, 1);
+                StatusModel statusRoom = new StatusModel(1L);
                 roomModel.setStatus(statusRoom);
                 roomModel = roomRepository.save(roomModel);
                 List<RentalRequestModel> requestModels = rentalRequestRepository.getListRequest(
                         null, 9L, null, roomModel.getId());
                 if(requestModels != null && requestModels.size() > 0){
-                    StatusModel statusExpire = statusRepository.findByIdAndType(11, 3);
+                    StatusModel statusExpire = new StatusModel(11L);
                     requestModels.get(0).setRentalStatus(statusExpire);
                     rentalRequestRepository.save(requestModels.get(0));
                     String notificationContent = "Chủ trọ <b>" + roomModel.getPostRoom().getLandlord().getUsername() +
@@ -163,7 +160,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
             NotificationModel notificationModel = new NotificationModel();
             RenterModel renterModel = requestModel.getRentalRenter();
 
-            StatusModel statusNotification = statusRepository.findByIdAndType(12, 4);
+            StatusModel statusNotification = new StatusModel(12L);
 
             Date date = new Date();
             Date createdDate = new Timestamp(date.getTime());

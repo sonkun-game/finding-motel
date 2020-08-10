@@ -32,7 +32,7 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    RoleRepository roleRepository;
+    InstructionRepository instructionRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -59,8 +59,24 @@ public class HomeController {
 
     @GetMapping("/huong-dan")
     public String viewInstruction(Model model) {
-        model.addAttribute("customer",roleRepository.getOne((long) 2));
         return "instruction";
+    }
+
+    @ResponseBody
+    @GetMapping("/api-get-list-instruction")
+    public JSONObject getListInstruction(){
+        JSONObject response = new JSONObject();
+        try {
+            List<InstructionModel> instructions = instructionRepository.getAllInstruction();
+            response.put("code", "000");
+            response.put("data", instructions);
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("code", "999");
+            response.put("message", "Lỗi hệ thống");
+            return response;
+        }
     }
 
     @ResponseBody

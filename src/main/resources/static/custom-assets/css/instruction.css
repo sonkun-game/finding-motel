@@ -1,17 +1,12 @@
 .container-fluid{
     background-color: #f8f9fa!important;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding: 50px 0;
 }
 
-.main-content{
-    width: 70%;
-    height: auto;
-    margin: auto;
-}
+
 
 .content{
-    margin: 40px 0px;
+    padding: 20px 0px;
 }
 
 .li-1{
@@ -22,4 +17,15 @@
     font-family:  sans-serif;
     list-style-type: circle;
     margin-left: 15px;
+}
+.nav-link{
+    cursor: pointer;
+}
+.tab-content .tab-pane{
+    padding-top: 20px;
+}
+ .nav-tabs .nav-link.active {
+    color: #ffffff;
+    background-color: #dca73a;
+    border-color: #DDDDDD;
 }

@@ -271,3 +271,7 @@ main{
 .footer-logo img{
     width: 100px;
 }
+.none-data-message{
+    margin: auto;
+    padding-bottom: 50px;
+}

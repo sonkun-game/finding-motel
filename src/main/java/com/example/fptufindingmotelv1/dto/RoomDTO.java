@@ -35,4 +35,10 @@ public class RoomDTO {
         this.listRentalRequest = new ArrayList<>();
         this.openCollapse = false;
     }
+    public RoomDTO(RoomModel roomModel) {
+        this.roomId = roomModel.getId();
+        this.roomName = roomModel.getName();
+        this.statusId = roomModel.getStatus().getId();
+        this.availableRoom = roomModel.getStatus().getId() == 1 ? true : false;
+    }
 }

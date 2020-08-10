@@ -32,7 +32,7 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    RoleRepository roleRepository;
+    InstructionRepository instructionRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -49,46 +49,34 @@ public class HomeController {
     @Autowired
     FilterPostRepository filterPostRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> page){
         return "index";
     }
 
-    @GetMapping("/post-detail")
-    public String getPostDetail() {
-        return "post-detail";
+    @GetMapping("/huong-dan")
+    public String viewInstruction(Model model) {
+        return "instruction";
     }
 
     @ResponseBody
-    @PostMapping(value = "/api-post-detail")
-    public PostDTO viewPost(@PathParam("id") String id){
-        PostModel postModel = postRepository.findById(id).get();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof UsernamePasswordAuthenticationToken
-                && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-            RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-            WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(postModel, renter);
-            PostDTO response = new PostDTO(postModel);
-
-            if(wishListModel != null){
-                response.setInWishList(true);
-                response.setWishListId(wishListModel.getId());
-            }else {
-                response.setInWishList(false);
-            }
+    @GetMapping("/api-get-list-instruction")
+    public JSONObject getListInstruction(){
+        JSONObject response = new JSONObject();
+        try {
+            List<InstructionModel> instructions = instructionRepository.getAllInstruction();
+            response.put("code", "000");
+            response.put("data", instructions);
             return response;
-        } else {
-            PostDTO response = new PostDTO(postModel);
-            response.setInWishList(false);
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("code", "999");
+            response.put("message", "Lỗi hệ thống");
             return response;
         }
-
-    }
-
-    @GetMapping("/huong-dan")
-    public String viewInstruction(Model model) {
-        model.addAttribute("customer",roleRepository.getOne((long) 2));
-        return "instruction";
     }
 
     @ResponseBody
@@ -183,6 +171,9 @@ public class HomeController {
             PostDTO postDTO;
             for (PostModel post:
                  sublistPostModel) {
+                ImageModel imageModel = imageRepository.getImageById(post.getImages().get(0).getId());
+                post.getImages().get(0).setFileContent(imageModel.getFileContent());
+                post.getImages().get(0).setFileType(imageModel.getFileType());
                 postDTO = new PostDTO();
                 postDTO.setPostDTO(post);
                 postDTOs.add(postDTO);
@@ -242,9 +233,7 @@ public class HomeController {
             PostDTO postDTO;
             for (PostModel post:
                     listPostWishList) {
-                postDTO = new PostDTO();
-                postDTO.setPostDTO(post);
-                postDTOs.add(postDTO);
+                postDTOs.add(new PostDTO(post.getId()));
             }
             response.put("code", "000");
             response.put("data", postDTOs);

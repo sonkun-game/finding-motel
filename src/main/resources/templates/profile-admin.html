@@ -408,23 +408,24 @@
 
                 <div id="payment-package-table" v-if="task == 19">
                     <div class="title">
-                        <h1 class="title-name uppercase">Quản lý package</h1>
+                        <h1 class="title-name uppercase">Quản lý gói</h1>
                     </div>
                     <div class="information-detail">
                         <div class="btn-container">
                             <button v-on:click="showModalPackage" class="btn btn-add-package rounded-pill shadow-sm">
-                                Thêm package
+                                Thêm gói
                             </button>
                         </div>
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th width="5%">STT</th>
-                                <th width="20%">Tên package</th>
+                                <th width="20%">Tên gói</th>
                                 <th width="20%">Thời hạn bài đăng</th>
-                                <th width="20%">Giá</th>
+                                <th width="15%">Giá</th>
                                 <th width="20%">Trạng thái</th>
-                                <th width="15%">Tác vụ</th>
+                                <th width="10%"></th>
+                                <th width="10%">Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -436,14 +437,22 @@
                                 <td>
                                     <div v-bind:class="package.available ? 'status-show' : 'status-hide'"
                                          v-text="package.displayStatus"></div>
+
+                                </td>
+                                <td>
+                                    <label class="switch">
+                                        <input type="checkbox" v-on:click.prevent="changeStatusPackage(package, index)" v-model="package.available">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </td>
                                 <td>
                                     <i v-on:click="showModalPackage(package, index)" class="fas fa-edit"
                                        data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"
-                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"
-                                       data-toggle="tooltip" data-html="true"
-                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>
+
+<!--                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"-->
+<!--                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"-->
+<!--                                       data-toggle="tooltip" data-html="true"-->
+<!--                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>-->
                                 </td>
                             </tr>
                             </tbody>
@@ -631,7 +640,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Tên package:</p>
+                                <p class="left-modal">Tên gói:</p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>

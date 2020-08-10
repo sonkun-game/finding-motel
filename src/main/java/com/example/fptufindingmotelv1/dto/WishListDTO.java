@@ -15,6 +15,7 @@ public class WishListDTO {
     private String displayCreatedDate;
     private PostDTO post;
     private String postId;
+    private boolean wishListScreen;
 
     public WishListDTO(WishListModel wishListModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);

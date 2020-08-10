@@ -29,8 +29,25 @@ public class PaymentModel implements Serializable {
     @Column(name = "MOMO_ID")
     private String momoId;
 
+    @Column(name = "PAYMENT_METHOD")
+    private String paymentMethod;
+
+    @Column(name = "NOTE")
+    private String note;
+
     @ManyToOne
     @JoinColumn(name = "LANDLORD_ID")
     private LandlordModel landlordModel;
 
+    public PaymentModel() {
+    }
+    public PaymentModel(String id, float amount, Date payDate, String momoId,
+                        String paymentMethod, String note) {
+        this.id = id;
+        this.amount = amount;
+        this.payDate = payDate;
+        this.momoId = momoId;
+        this.paymentMethod = paymentMethod;
+        this.note = note;
+    }
 }

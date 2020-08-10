@@ -5,6 +5,6 @@ import net.minidev.json.JSONObject;
 
 public interface RentalRequestService {
     JSONObject sentRentalRequest(RentalRequestDTO rentalRequestDTO);
-    JSONObject changeStatus(String renterRequestId, Long statusId);
+    JSONObject changeStatus(String renterRequestId);
     JSONObject searchRentalRequest(RentalRequestDTO rentalRequestDTO);
 }

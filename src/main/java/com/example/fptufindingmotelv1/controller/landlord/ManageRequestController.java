@@ -1,13 +1,9 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
-import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
-import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
-import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import com.example.fptufindingmotelv1.service.landlord.ManageRequestService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +34,14 @@ public class ManageRequestController {
             for (RentalRequestModel request:
                     roomModel.getRoomRentals()) {
 
-                if(rentalRequestDTO.getStatusId() == null){
+                if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() != null){
+                    if(request.getId().equals(rentalRequestDTO.getId())){
+                        requestNumber ++;
+                        roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
+                        roomDTO.setOpenCollapse(true);
+                    }
+                }
+                else if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() == null){
                     requestNumber ++;
                     roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
                 }

@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.dto;
 
-import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import lombok.Data;
 
@@ -35,5 +34,11 @@ public class RoomDTO {
         this.postTitle = roomModel.getPostRoom().getTitle();
         this.listRentalRequest = new ArrayList<>();
         this.openCollapse = false;
+    }
+    public RoomDTO(RoomModel roomModel) {
+        this.roomId = roomModel.getId();
+        this.roomName = roomModel.getName();
+        this.statusId = roomModel.getStatus().getId();
+        this.availableRoom = roomModel.getStatus().getId() == 1 ? true : false;
     }
 }

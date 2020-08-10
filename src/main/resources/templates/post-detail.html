@@ -6,7 +6,9 @@
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link href="assets/css/flex-slider.css" rel="stylesheet" type="text/css"/>
-    <meta charset="UTF-8">
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT1IHF1gT-MK8Dsac6-9jeYv_pVjYuDyk&libraries=places">
+    </script>
     <title>Chi tiết bài đăng</title>
 </head>
 <body>
@@ -32,23 +34,22 @@
                         <div class="flexslider">
                             <ul class="slides">
                                 <li v-for="image of listImage" class="slide-image-container">
-                                    <img v-bind:src="image" />
+                                    <img v-bind:src="image"/>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="wish-list clearfix">
-                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save" v-on:click="showModalReport()" type="button" title="Báo cáo">
+                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save"
+                                v-on:click="showModalReport()" type="button" title="Báo cáo">
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
-                        <button v-if="(userInfo == null || userInfo.role == 'RENTER') && !post.inWishList" class="btn-save" v-on:click="handleActionWishList(post)" type="button" title="Lưu tin này">
+                        <button v-if="(userInfo == null || userInfo.role == 'RENTER')"
+                                class="btn-save" v-on:click="handleActionWishList(post)" type="button"
+                                v-bind:title="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'">
                             <img src="assets/img/logo/bookmark.png">
-                            <span>Lưu tin này</span>
-                        </button>
-                        <button v-else-if="(userInfo == null || userInfo.role == 'RENTER') && post.inWishList" class="btn-save pointer-disabled" type="button" title="Đã lưu">
-                            <img src="assets/img/logo/bookmark.png">
-                            <span>Đã lưu</span>
+                            <span v-text="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'"></span>
                         </button>
                     </div>
                     <div class="title-area clearfix">
@@ -61,19 +62,24 @@
                         <div class="content clearfix">
                             <ul class="list-overview clearfix">
                                 <li class="item">
-                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/house.png"> Loại phòng:</span>
+                                    <span class="item-name"><img class="icon-post-detail"
+                                                                 src="assets/img/logo/house.png"> Loại phòng:</span>
                                     <span class="item-value" v-text="post.type"></span>
                                 </li>
                                 <li class="item">
-                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/money.png"> Giá cho thuê:</span>
-                                    <span class="item-value" v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
+                                    <span class="item-name"><img class="icon-post-detail"
+                                                                 src="assets/img/logo/money.png"> Giá cho thuê:</span>
+                                    <span class="item-value"
+                                          v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
                                 </li>
                                 <li class="item">
-                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/square.png"> Diện tích:</span>
+                                    <span class="item-name"><img class="icon-post-detail"
+                                                                 src="assets/img/logo/square.png"> Diện tích:</span>
                                     <span class="item-value" v-text="post.square + 'M&sup2'"></span>
                                 </li>
                                 <li class="item">
-                                    <span class="item-name"><img class="icon-post-detail" src="assets/img/logo/distance.svg"> Khoảng cách:</span>
+                                    <span class="item-name"><img class="icon-post-detail"
+                                                                 src="assets/img/logo/distance.svg"> Khoảng cách:</span>
                                     <span class="item-value" v-text="post.distance + ' KM'"></span>
                                 </li>
                             </ul>
@@ -94,57 +100,42 @@
                         <div class="address">
                             <span class="subtext">
                                 <i class="fas fa-map-marker-alt"></i>
-                                Gần cây xăng 39, Thạch Hòa, Thạch Thất, Hà Nội
+                                {{post.address}}
                             </span>
                         </div>
-                        <div class="map">
-                            Chỗ này là bản đồ
+                        <div class="map" id="map-canvas">
                         </div>
                     </div>
-                    <div class="service clearfix">
-                        <div class="title-name">
-                            <span>Các tiện ích:</span>
-                        </div>
-                        <div class="item-service clearfix">
-                            <ul class="list-service clearfix">
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Điều hòa</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Chỗ phơi quần áo</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">An ninh an toàn</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Tự do nấu nướng</span>
-                                </li>
-                                <li class="sub-item">
-                                    <img class="icon-post-detail" src="assets/img/logo/tick.png">
-                                    <span class="sub-item-value">Giờ giấc thoải mái</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="share clearfix">
+
+                    <!-- Load Facebook SDK for JavaScript -->
+                    <div id="fb-root"></div>
+                    <script>(function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }(document, 'script', 'facebook-jssdk'));</script>
+                    <!-- share Facebook -->
+                    <div id="btn-share-fb" class="share clearfix">
                         <div class="title-name">
                             <span>Chia sẻ:</span>
-                            <button class="btn-share-fb" type="button">
-                                <img src="assets/img/logo/facebook.png">
-                                <span>Facebook</span>
-                            </button>
+                            <!-- Your share button code -->
+                            <div class="fb-share-button"
+                                 v-bind:data-href="getURL()"
+                                 data-layout="button_count">
+                            </div>
                         </div>
                     </div>
                     <div class="report clearfix" v-if="userInfo == null || userInfo.role == 'RENTER'">
                         <div class="report-area">
                             <p>
                                 <strong>Lưu ý:</strong>
-                                </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng cung cấp các thông tin đầy đủ,
-                                chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra sơ sót. Vì vậy rất mong
+                                </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng
+                                cung cấp các thông tin đầy đủ,
+                                chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra
+                                sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
                             <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
@@ -185,7 +176,7 @@
                             </div>
                         </div>
                         <div class="sent-request" v-if="userInfo == null || userInfo.role == 'RENTER'">
-                            <button @click="showModalChooseRoom()" class="btn btn-danger" >Gửi Yêu Cầu</button>
+                            <button @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
                         </div>
 
                         <!--Modal choose room-->
@@ -202,13 +193,15 @@
                                             <h4 class="font-weight-normal">Chọn phòng:</h4>
                                         </div>
                                         <div class="choose-room clearfix">
-                                            <ul class="list-select-room"  v-for="room in post.listRoom" >
-                                                <li class="select-room" v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}" @click="setRoomIdRental(room.roomId, $event)">
+                                            <ul class="list-select-room" v-for="room in listRoomOfPost">
+                                                <li class="select-room"
+                                                    v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
+                                                    @click="setRoomIdRental(room.roomId, $event)">
                                                     {{room.roomName}}
                                                 </li>
                                             </ul>
-<!--                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"-->
-<!--                                                 v-text="room.roomName"></div>-->
+                                            <!--                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"-->
+                                            <!--                                                 v-text="room.roomName"></div>-->
                                         </div>
                                     </div>
                                     <div class="room-number">
@@ -221,7 +214,9 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button @click="showModalConfirmSentRental()" class="btn-hover btn-default">Xác Nhận</button>
+                                    <button @click="showModalConfirmSentRental()" class="btn-hover btn-default">Xác
+                                        Nhận
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -244,7 +239,7 @@
                                         </figure>
                                         <div class="infor">
                                             <div class="inner">
-                                                <span class="title-news" v-text="relatedPost.title"></span>
+                                                <span class="title-news" v-text="relatedPost.title" data-toggle="tooltip" data-placement="bottom" v-bind:title="relatedPost.title"></span>
                                                 <div class="clearfix">
                                                     <div class="price">
                                                         <span v-text="authenticationInstance.formatNumberToDisplay(relatedPost.price) + ' VNĐ/Tháng'"></span>
@@ -254,74 +249,74 @@
                                         </div>
                                     </a>
                                 </li>
-<!--                                <li class="news">-->
-<!--                                    <a class="post-link clearfix" href="#">-->
-<!--                                        <figure class="thumb">-->
-<!--                                            <img src="assets/img/rooms/cohuong4.jpg">-->
-<!--                                        </figure>-->
-<!--                                        <div class="infor">-->
-<!--                                            <div class="inner">-->
-<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>-->
-<!--                                                <div class="clearfix">-->
-<!--                                                    <div class="price">-->
-<!--                                                        <span>1500000 vnđ/tháng</span>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li class="news">-->
-<!--                                    <a class="post-link clearfix" href="#">-->
-<!--                                        <figure class="thumb">-->
-<!--                                            <img src="assets/img/rooms/cohuong3.jpg">-->
-<!--                                        </figure>-->
-<!--                                        <div class="infor">-->
-<!--                                            <div class="inner">-->
-<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
-<!--                                                <div class="clearfix">-->
-<!--                                                    <div class="price">-->
-<!--                                                        <span>1500000 vnđ/tháng</span>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li class="news">-->
-<!--                                    <a class="post-link clearfix" href="#">-->
-<!--                                        <figure class="thumb">-->
-<!--                                            <img src="assets/img/rooms/cohuong2.jpg">-->
-<!--                                        </figure>-->
-<!--                                        <div class="infor">-->
-<!--                                            <div class="inner">-->
-<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
-<!--                                                <div class="clearfix">-->
-<!--                                                    <div class="price">-->
-<!--                                                        <span>1500000 vnđ/tháng</span>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li class="news">-->
-<!--                                    <a class="post-link clearfix" href="#">-->
-<!--                                        <figure class="thumb">-->
-<!--                                            <img src="assets/img/rooms/cohuong1.jpg">-->
-<!--                                        </figure>-->
-<!--                                        <div class="infor">-->
-<!--                                            <div class="inner">-->
-<!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
-<!--                                                <div class="clearfix">-->
-<!--                                                    <div class="price">-->
-<!--                                                        <span>1500000 vnđ/tháng</span>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </li>-->
+                                <!--                                <li class="news">-->
+                                <!--                                    <a class="post-link clearfix" href="#">-->
+                                <!--                                        <figure class="thumb">-->
+                                <!--                                            <img src="assets/img/rooms/cohuong4.jpg">-->
+                                <!--                                        </figure>-->
+                                <!--                                        <div class="infor">-->
+                                <!--                                            <div class="inner">-->
+                                <!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác</span>-->
+                                <!--                                                <div class="clearfix">-->
+                                <!--                                                    <div class="price">-->
+                                <!--                                                        <span>1500000 vnđ/tháng</span>-->
+                                <!--                                                    </div>-->
+                                <!--                                                </div>-->
+                                <!--                                            </div>-->
+                                <!--                                        </div>-->
+                                <!--                                    </a>-->
+                                <!--                                </li>-->
+                                <!--                                <li class="news">-->
+                                <!--                                    <a class="post-link clearfix" href="#">-->
+                                <!--                                        <figure class="thumb">-->
+                                <!--                                            <img src="assets/img/rooms/cohuong3.jpg">-->
+                                <!--                                        </figure>-->
+                                <!--                                        <div class="infor">-->
+                                <!--                                            <div class="inner">-->
+                                <!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+                                <!--                                                <div class="clearfix">-->
+                                <!--                                                    <div class="price">-->
+                                <!--                                                        <span>1500000 vnđ/tháng</span>-->
+                                <!--                                                    </div>-->
+                                <!--                                                </div>-->
+                                <!--                                            </div>-->
+                                <!--                                        </div>-->
+                                <!--                                    </a>-->
+                                <!--                                </li>-->
+                                <!--                                <li class="news">-->
+                                <!--                                    <a class="post-link clearfix" href="#">-->
+                                <!--                                        <figure class="thumb">-->
+                                <!--                                            <img src="assets/img/rooms/cohuong2.jpg">-->
+                                <!--                                        </figure>-->
+                                <!--                                        <div class="infor">-->
+                                <!--                                            <div class="inner">-->
+                                <!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+                                <!--                                                <div class="clearfix">-->
+                                <!--                                                    <div class="price">-->
+                                <!--                                                        <span>1500000 vnđ/tháng</span>-->
+                                <!--                                                    </div>-->
+                                <!--                                                </div>-->
+                                <!--                                            </div>-->
+                                <!--                                        </div>-->
+                                <!--                                    </a>-->
+                                <!--                                </li>-->
+                                <!--                                <li class="news">-->
+                                <!--                                    <a class="post-link clearfix" href="#">-->
+                                <!--                                        <figure class="thumb">-->
+                                <!--                                            <img src="assets/img/rooms/cohuong1.jpg">-->
+                                <!--                                        </figure>-->
+                                <!--                                        <div class="infor">-->
+                                <!--                                            <div class="inner">-->
+                                <!--                                                <span class="title-news">Phòng trọ sinh viên giá rẻ có gác, thang máy giờ tự do</span>-->
+                                <!--                                                <div class="clearfix">-->
+                                <!--                                                    <div class="price">-->
+                                <!--                                                        <span>1500000 vnđ/tháng</span>-->
+                                <!--                                                    </div>-->
+                                <!--                                                </div>-->
+                                <!--                                            </div>-->
+                                <!--                                        </div>-->
+                                <!--                                    </a>-->
+                                <!--                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -332,19 +327,18 @@
             <div th:replace="layout :: notification"></div>
         </div>
     </div>
-<!--    <div class="ads-left">-->
-<!--        <img src="assets/img/logo/banner.jpg">-->
-<!--    </div>-->
-<!--    <div class="ads-right">-->
-<!--        <img src="assets/img/logo/banner.jpg">-->
-<!--    </div>-->
+    <!--    <div class="ads-left">-->
+    <!--        <img src="assets/img/logo/banner.jpg">-->
+    <!--    </div>-->
+    <!--    <div class="ads-right">-->
+    <!--        <img src="assets/img/logo/banner.jpg">-->
+    <!--    </div>-->
 
 </main>
 
 <footer th:replace="layout :: footer"></footer>
 <div th:replace="layout :: js-fragment"></div>
 <script th:src="@{/assets/js/main.js}"></script>
-<script th:src="@{/assets/js/vendor/modal.js}"></script>
 <!--<script type="text/javascript" th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>-->
 <!--<script th:src="@{/assets/js/imagezoom.js}"></script>-->
 <script th:src="@{/assets/js/jquery.flexslider.js}"></script>

@@ -9,10 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ManagePostController {
@@ -20,7 +25,7 @@ public class ManagePostController {
     @Autowired
     private ManagePostService managePostService;
 
-    @GetMapping(value = {"/dang-tin"})
+    @GetMapping(value = {"/dang-tin", "/nap-tien"})
     public String getFucntionPage(Model model){
         Date date = new Date();
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
@@ -58,7 +63,7 @@ public class ManagePostController {
     @PostMapping("/api-get-init-new-post")
     public JSONObject getInitNewPost(){
         JSONObject response = new JSONObject();
-        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage();
+        List<PaymentPackageModel> paymentPackages = managePostService.getListPaymentPackage(true);
         if(paymentPackages != null){
             List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
             for (PaymentPackageModel paymentPackage:
@@ -146,6 +151,24 @@ public class ManagePostController {
         boolean isSuccess = managePostService.deletePost(postRequestDTO);
 
         response.put("msgCode", isSuccess ? "post000" : "sys999");
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-increase-room")
+    public JSONObject increaseRoom(@RequestBody PostRequestDTO postRequestDTO) {
+        JSONObject response = new JSONObject();
+        List<RoomModel> roomModels = managePostService.increaseRoom(postRequestDTO);
+
+        List<RoomDTO> roomDTOS = new ArrayList<>();
+        for (RoomModel room:
+             roomModels) {
+            roomDTOS.add(new RoomDTO(0, room));
+        }
+
+
+        response.put("msgCode", roomModels != null ? "post000" : "sys999");
+        response.put("listNewRoom", roomDTOS);
         return response;
     }
 }

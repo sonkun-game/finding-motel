@@ -7,26 +7,29 @@
     <title>Đăng Ký</title>
 </head>
 <body>
-<main>
 
-    <div id="loading-wrapper">
-        <div v-show="!isHidden" id="loader-login">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b>Đăng Nhập</b>
-                    </div>
+<div id="loading-wrapper">
+    <div v-show="!isHidden" id="loader-login">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>Đăng Nhập</b>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <!--    inlude loading screen-->
-    <div th:replace="layout :: loader"></div>
+<div th:replace="layout :: loader"></div>
 
 <!--    include header-->
-    <header th:replace="layout :: header"></header>
+<header th:replace="layout :: header"></header>
+
+<main>
+
+
 
     <div class="container-fluid">
         <div class="row no-gutter">
@@ -84,7 +87,7 @@
                                                    maxlength="10" required>
                                         </div>
                                         <div class="register-btn-phone">
-                                            <button v-on:click="getOTP()" type="button" class="btn-primary">Mã xác nhận
+                                            <button v-on:click="getOTP()" type="button" class="btn-primary-otp">Gửi mã
                                             </button>
                                         </div>
                                     </div>
@@ -153,13 +156,15 @@
                                     <div class="row ">
                                         <div class="col-6 ">
                                             <a th:href="@{facebook-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-fb"> Facebook
+                                                <button type="button" class="btn btn-primary btn-block btn-fb">
+                                                    <img src="assets/img/logo/facebook.png">  Facebook
                                                 </button>
                                             </a>
                                         </div>
                                         <div class="col-6 ">
                                             <a th:href="@{google-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-gm">Gmail
+                                                <button type="button" class="btn btn-primary btn-block btn-gm">
+                                                    <img src="assets/img/logo/gmail.png">  Gmail
                                                 </button>
                                             </a>
                                         </div>

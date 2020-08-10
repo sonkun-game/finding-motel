@@ -6,14 +6,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "POST")
 public class PostModel implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -62,6 +60,12 @@ public class PostModel implements Serializable{
     @Column(name = "IS_BANNED", nullable = false)
     private boolean banned;
 
+    @Column(name = "ADDRESS", nullable = false)
+    private String address;
+
+    @Column(name = "MAP_LOCATION")
+    private String mapLocation;
+
     @OneToMany(mappedBy = "post")
     private List<ImageModel> images;
 
@@ -77,4 +81,47 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "postRoom")
     private List<RoomModel> rooms;
 
+    public PostModel() {
+    }
+
+    public PostModel(String id) {
+        this.id = id;
+    }
+
+    public PostModel(String id, double price, double distance, double square,
+                     String description, String title, String address,
+                     String imageId) {
+        this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
+        this.description = description;
+        this.title = title;
+        this.address = address;
+        this.images = new ArrayList<>();
+        this.images.add(new ImageModel(imageId));
+    }
+
+    public PostModel(String id, double price, double distance, double square,
+                     String description, String title, String address,
+                     String mapLocation, Date createDate, Long typeId, String typeName,
+                     String landlordUsername, String landlordDisplayName, String landlordPhone
+                     ) {
+        this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
+        this.description = description;
+        this.title = title;
+        this.address = address;
+        this.mapLocation = mapLocation;
+        this.createDate = createDate;
+        this.type = new TypeModel();
+        this.type.setId(typeId);
+        this.type.setName(typeName);
+        this.landlord = new LandlordModel();
+        this.landlord.setUsername(landlordUsername);
+        this.landlord.setDisplayName(landlordDisplayName);
+        this.landlord.setPhoneNumber(landlordPhone);
+    }
 }

@@ -1,15 +1,14 @@
 package com.example.fptufindingmotelv1.controller.register;
 
 import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.register.RegisterService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.fptufindingmotelv1.model.UserModel;
 
 @Controller
 public class RegisterController {

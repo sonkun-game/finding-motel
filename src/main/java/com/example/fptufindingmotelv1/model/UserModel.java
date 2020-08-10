@@ -1,11 +1,10 @@
 package com.example.fptufindingmotelv1.model;
 
-import com.example.fptufindingmotelv1.dto.UserDTO;
-import com.example.fptufindingmotelv1.repository.RoleRepository;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,4 +35,15 @@ public class UserModel implements Serializable {
 
     @Column(name = "DISPLAY_NAME")
     private String displayName;
+
+    @OneToMany(mappedBy = "userNotification")
+    private List<NotificationModel> notifications;
+
+    public UserModel() {
+    }
+
+    public UserModel(String username) {
+        this.username = username;
+    }
+
 }

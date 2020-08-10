@@ -7,7 +7,10 @@ import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -36,6 +39,12 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     RentalRequestRepository rentalRequestRepository;
 
+    @Autowired
+    PaymentPackageRepository paymentPackageRepository;
+
+    @Autowired
+    PaymentRepository paymentRepository;
+
     protected JSONObject getResponeMessage(String code, String msg) {
         JSONObject responeMsg = new JSONObject();
         responeMsg.put("code", code);
@@ -44,42 +53,25 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<UserDTO> getListUser() {
+    public List<UserDTO> searchUsers(UserDTO userDTO) {
         try {
-            ArrayList<UserDTO> users = new ArrayList<>();
-            for (UserModel user : userRepository.findAll()) {
-                UserDTO userDTO = new UserDTO(user);
-                //add report number
-                if (user.getRole().getId() == 2) {
-                    boolean banAvailable = userDTO.getUnBanDate() == null
-                            && userDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
-                    userDTO.setBanAvailable(banAvailable);
+            List<UserDTO> users = new ArrayList<>();
+            List<UserModel>  userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId());
+            for (UserModel u : userModels) {
+                UserDTO user = new UserDTO(u);
+                //add report number and ban available
+                if (u.getRole().getId() == 2) {
+                    boolean banAvailable = user.getUnBanDate() == null
+                            && user.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
+                    user.setBanAvailable(banAvailable);
                 }
-                //add user to list
-                users.add(userDTO);
+                users.add(user);
             }
             return users;
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
+            return null;
         }
-        return null;
-    }
-
-
-    @Override
-    public ArrayList<UserDTO> searchUserByUsernameOrDisplayName(String username) {
-        ArrayList<UserDTO> users = new ArrayList<>();
-        for (UserModel user : userRepository.findByUsernameOrDisplayName(username)) {
-            UserDTO userDTO = new UserDTO(user);
-            //add report number and ban available
-            if (user.getRole().getId() == 2) {
-                boolean banAvailable = userDTO.getUnBanDate() == null
-                        && userDTO.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
-                userDTO.setBanAvailable(banAvailable);
-            }
-            users.add(userDTO);
-        }
-        return users;
     }
 
     @Override
@@ -193,7 +185,7 @@ public class AdminServiceImpl implements AdminService {
             ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.searchPost(postSearchDTO.getLandlordUsername(),
                     postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
                     postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
-                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId());
+                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId(), null);
             ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
             for (PostModel p : posts) {
                 PostResponseDTO pr = new PostResponseDTO(p);
@@ -289,5 +281,56 @@ public class AdminServiceImpl implements AdminService {
             response.put("message", e.getMessage());
             return response;
         }
+    }
+
+    @Override
+    public PaymentPackageModel savePaymentPackage(PaymentPackageDTO paymentPackageDTO) {
+        try {
+            PaymentPackageModel paymentPackageModel = new PaymentPackageModel();
+            if(paymentPackageDTO.getId() != null){
+                 paymentPackageModel =
+                        paymentPackageRepository.findById(paymentPackageDTO.getId()).get();
+            }
+            paymentPackageModel.setPackageName(paymentPackageDTO.getPackageName());
+            paymentPackageModel.setDuration(paymentPackageDTO.getDuration());
+            paymentPackageModel.setAmount(paymentPackageDTO.getAmount());
+            paymentPackageModel.setAvailable(true);
+            return paymentPackageRepository.save(paymentPackageModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public PaymentPackageModel changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO) {
+        try {
+            PaymentPackageModel paymentPackageModel =
+                    paymentPackageRepository.findById(paymentPackageDTO.getId()).get();
+            paymentPackageModel.setAvailable(!paymentPackageModel.isAvailable());
+            return paymentPackageRepository.save(paymentPackageModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    @Override
+    public LandlordModel addMoneyForLandlord(PaymentDTO paymentDTO) {
+        PaymentModel paymentModel = new PaymentModel();
+        LandlordModel landlordModel = landlordRepository.findByUsername(paymentDTO.getLandlord());
+        landlordModel.setAmount(landlordModel.getAmount() + paymentDTO.getAmount());
+        landlordModel = landlordRepository.save(landlordModel);
+
+        Date date = new Date();
+        Date payDate = new Timestamp(date.getTime());
+        paymentModel.setLandlordModel(landlordModel);
+        paymentModel.setAmount(paymentDTO.getAmount());
+        paymentModel.setPaymentMethod(paymentDTO.getPaymentMethod());
+        paymentModel.setNote(paymentDTO.getNote());
+        paymentModel.setPayDate(payDate);
+        paymentRepository.save(paymentModel);
+        return landlordModel;
     }
 }

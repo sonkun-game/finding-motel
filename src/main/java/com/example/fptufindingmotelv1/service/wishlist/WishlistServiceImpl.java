@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.service.wishlist;
 
-import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.WishListDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.PostModel;
@@ -8,7 +7,6 @@ import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.WishListModel;
 import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.repository.RenterRepository;
-import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.repository.WishListRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,15 +67,21 @@ public class WishlistServiceImpl implements WishlistService{
     @Override
     public List<WishListDTO> removeItem(WishListDTO wishListDTO) {
         try {
-            RenterModel renterModel = renterRepository.findByUsername(wishListDTO.getRenterUsername());
-            WishListModel wishListModel = wishListRepository.findById(wishListDTO.getId()).get();
-            wishListRepository.delete(wishListModel);
-            Sort sort = Sort.by("createdDate").descending();
-            List<WishListModel> wishListModels = wishListRepository.findAllByWishListRenter(renterModel, sort);
             List<WishListDTO> wishListDTOS = new ArrayList<>();
-            for (WishListModel wishlist:
-                    wishListModels) {
-                wishListDTOS.add(new WishListDTO(wishlist));
+            RenterModel renterModel = new RenterModel(wishListDTO.getRenterUsername());
+            if(wishListDTO.isWishListScreen()){
+                WishListModel wishListModel = wishListRepository.findById(wishListDTO.getId()).get();
+                wishListRepository.delete(wishListModel);
+                Sort sort = Sort.by("createdDate").descending();
+                List<WishListModel> wishListModels = wishListRepository.findAllByWishListRenter(renterModel, sort);
+                for (WishListModel wishlist:
+                        wishListModels) {
+                    wishListDTOS.add(new WishListDTO(wishlist));
+                }
+            }else {
+                PostModel postModel = new PostModel(wishListDTO.getPostId());
+                WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(postModel, renterModel);
+                wishListRepository.delete(wishListModel);
             }
             return wishListDTOS;
         }catch (Exception exception){
@@ -90,8 +94,8 @@ public class WishlistServiceImpl implements WishlistService{
     public JSONObject addPostToWishList(WishListDTO wishListDTO) {
         JSONObject response = new JSONObject();
         try {
-            RenterModel renterModel = renterRepository.findByUsername(wishListDTO.getRenterUsername());
-            PostModel postModel = postRepository.findById(wishListDTO.getPostId()).get();
+            RenterModel renterModel = new RenterModel(wishListDTO.getRenterUsername());
+            PostModel postModel = new PostModel(wishListDTO.getPostId());
             Date date = new Date();
             Date createdDate = new Timestamp(date.getTime());
 
@@ -101,7 +105,7 @@ public class WishlistServiceImpl implements WishlistService{
             wishListModel.setCreatedDate(createdDate);
             wishListModel = wishListRepository.save(wishListModel);
             response.put("msgCode", wishListModel != null ? "wishlist000" : "sys999");
-            response.put("wishList", new WishListDTO(wishListModel));
+//            response.put("wishList", new WishListDTO(wishListModel));
             return response;
         }catch (Exception exception){
             exception.printStackTrace();

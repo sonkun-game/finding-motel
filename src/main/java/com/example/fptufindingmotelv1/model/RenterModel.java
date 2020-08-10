@@ -3,7 +3,6 @@ package com.example.fptufindingmotelv1.model;
 import lombok.*;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -37,4 +36,7 @@ public class RenterModel extends UserModel implements Serializable {
     @OneToMany(mappedBy = "rentalRenter")
     private List<RentalRequestModel> renterRentals;
 
+    public RenterModel(String username) {
+        super(username);
+    }
 }

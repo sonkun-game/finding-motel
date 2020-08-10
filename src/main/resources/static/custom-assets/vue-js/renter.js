@@ -7,7 +7,7 @@ var renterInstance = new Vue({
         //init
         listRentalRq : null,
         confirmAction : null,
-        rentalRequestIdCancel : null,
+        selectedRentalRequestId : null,
     },
     beforeMount(){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -22,6 +22,12 @@ var renterInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getWishlist()
+        }
+        else if(this.task == 18){
+            let profileUser = document.getElementById("user-manager-content")
+            profileUser.classList.add("invisible")
+            let notification = JSON.parse(sessionStorage.getItem("notification"))
+            this.searchRentalRequest(notification.requestId);
         }
     },
     methods: {
@@ -44,7 +50,8 @@ var renterInstance = new Vue({
         removeFromWishList(wishListId, username){
             let request = {
                 "id" : wishListId,
-                "renterUsername" : username
+                "renterUsername" : username,
+                "wishListScreen" : true,
             }
             fetch("/api-remove-from-wishlist", {
                 method: 'POST',
@@ -68,26 +75,32 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalCancelRequest(rentalRequestIdCancel, event) {
+        showModalConfirmChangeStatusRequest(rentalRequestId, action, event) {
             if (event.target.className.indexOf("disable") != -1) {
                 return;
             }
-            this.rentalRequestIdCancel = rentalRequestIdCancel;
-            this.confirmAction = this.cancelRentalRequest;
+            this.selectedRentalRequestId = rentalRequestId;
+            this.confirmAction = this.changeRequestStatus;
             //show modal
+            if(action == "cancel"){
+                document.getElementById("modalConfirmMessage").innerHTML = 'Bạn có chắc chắn muốn hủy yêu cầu không?';
+            }else if(action == "expire"){
+                document.getElementById("modalConfirmMessage").innerHTML
+                    = '<h3>Bạn có muốn kết thúc quá trình thuê phòng này không?</h3>' +
+                '<p>Bạn sẽ có thể gửi yêu cầu thuê phòng vào phòng khác sau khi kết thúc thuê phòng này</p>';
+            }
             document.getElementById("modalConfirm").style.display = 'block';
-            document.getElementById("modalConfirmMessage").innerHTML = 'Bạn có chắc chắn hủy yêu cầu không?';
             document.body.setAttribute("class", "loading-hidden-screen")
         },
-        closeModalCancelRequest() {
+        closeModalConfirmChangeStatusRequest() {
             //close modal
             document.getElementById("modalConfirm").style.display = 'none';
             document.body.removeAttribute("class")
         },
         executeConfirm(yesNo) {
-            this.closeModalCancelRequest();
+            this.closeModalConfirmChangeStatusRequest();
             if (yesNo == true) {
-                this.confirmAction(this.rentalRequestIdCancel);
+                this.confirmAction(this.selectedRentalRequestId);
                 this.confirmAction = null;
             } else {
                 return;
@@ -102,14 +115,15 @@ var renterInstance = new Vue({
                 document.getElementById("my-modal-notification").style.display = 'none';
             }, 2000);
         },
-        searchRentalRequest() {
+        searchRentalRequest(requestId) {
             let rentalRequest = {
                 "renterUsername": this.userInfo.username,
                 "roomId": null,
                 "requestDate": null,
                 "statusId": null,
+                "id" : requestId,
             }
-            fetch("https://localhost:8081/search-rental-request", {
+            fetch("/search-rental-request", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,10 +142,8 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
-        cancelRentalRequest(rentalId) {
-            let statusId = 8;
-            fetch("https://localhost:8081/change-rental-request-status?rentalRequestId=" + rentalId
-                + "&statusId=" + statusId, {
+        changeRequestStatus(rentalId) {
+            fetch("/change-rental-request-status?rentalRequestId=" + rentalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,6 +161,6 @@ var renterInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
     }
 })

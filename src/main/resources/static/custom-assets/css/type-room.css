@@ -1,0 +1,25 @@
+.container-fluid{
+    padding: 50px 0 0 0;
+}
+.title-search{
+    font-family: sans-serif;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+.title{
+    padding-top: 5px;
+    font-size: 20px;
+    color: #dca73a;
+}
+
+.nice-select{
+    height: 36px;
+    line-height: 36px;
+    width: 100%;
+}
+.nice-select:after{
+    margin-top: -18px;
+}
+.nice-select .list{
+    width: 110%;
+}

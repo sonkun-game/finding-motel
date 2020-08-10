@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 loadingInstance.isHidden = false
                 document.body.setAttribute("class", "loading-hidden-screen")
-                fetch("https://localhost:8081/api-login", {
+                fetch("/api-login", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             this.$cookies.set("access_token", data.accessToken)
                             console.log(this.$cookies.get("access_token"))
-                            window.location.href = "https://localhost:8081/"
+                            window.location.href = "/"
                         } else {
                             this.message = data.message
                             this.showMsg = true

@@ -5,10 +5,13 @@ var authenticationInstance = new Vue({
         authenticated: false,
         task: 0,
         isShowBtn: true,
+        isShowNotification : false,
+        notificationNumber : -1,
+        listNotification : [],
     },
     methods: {
         logout(){
-            fetch("https://localhost:8081/api-logout",{
+            fetch("/api-logout",{
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -20,7 +23,7 @@ var authenticationInstance = new Vue({
                         localStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
-                        window.location.href = "https://localhost:8081/"
+                        window.location.href = "/"
                     }
                 }).catch(error => {
                 console.log(error);
@@ -31,8 +34,8 @@ var authenticationInstance = new Vue({
                 return null
             }
             let condition = {
-                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số và kí tự đặc biệt",
-                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&_-|]).{8,}$/
+                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số",
+                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
             }
             if(!condition.regex.test(password)){
                 return condition.message
@@ -70,7 +73,104 @@ var authenticationInstance = new Vue({
                 document.getElementById("my-modal-notification").style.display = 'none';
             }, time);
         },
+        showNotifications(){
+            if(!this.isShowNotification && this.listNotification.length == 0){
+                this.getListNotification()
+            }
+            document.addEventListener("click", function (event) {
+                if (authenticationInstance.isShowNotification){
+                    let notificationContainer = document.getElementById("notification-container");
+                    let bellContainer = document.getElementById("bell-wrapper")
+                    let el = event.target
+                    if(notificationContainer != null &&
+                        el instanceof Node && !notificationContainer.contains(el)
+                        && bellContainer != null && !bellContainer.contains(el)){
+                        authenticationInstance.isShowNotification = false
+                    }
+                }
 
+            })
+            this.isShowNotification = !this.isShowNotification
+        },
+        getNotificationNumber(){
+            let request = {
+                "username": this.userInfo.username,
+            }
+            fetch("/api-get-notification-number", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.msgCode == "notify000") {
+                        this.notificationNumber = data.notificationNumber
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        getListNotification(){
+            let request = {
+                "username": this.userInfo.username,
+            }
+            fetch("/api-get-notifications", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.msgCode == "notify000") {
+                        this.listNotification = data.listNotification
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        handleMouseOverProfile(){
+            if (authenticationInstance.isShowNotification){
+                authenticationInstance.isShowNotification = false
+            }
+        },
+        handleClickNotification(notification, index){
+            if(!notification.seen){
+                this.changeNotificationStatus(notification.id, index)
+            }
+            if(this.userInfo.role == 'LANDLORD'){
+                localStorage.setItem("task", 17)
+                sessionStorage.setItem("notification", JSON.stringify(notification))
+                window.location.href = "/quan-ly-bai-dang"
+            }else if(this.userInfo.role == 'RENTER'){
+                localStorage.setItem("task", 18)
+                sessionStorage.setItem("notification", JSON.stringify(notification))
+                window.location.href = "/quan-ly-tai-khoan"
+            }
+
+        },
+        changeNotificationStatus(notificationId, index){
+            let request = {
+                "id": notificationId,
+                "username": this.userInfo.username,
+            }
+            fetch("/api-change-notification-status", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.msgCode == "notify000") {
+                        this.$set(this.listNotification, index, data.notification)
+
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        }
     },
     mounted(){
         // if(localStorage.getItem("userInfo")){
@@ -86,7 +186,7 @@ var authenticationInstance = new Vue({
         // }
         let accessToken = this.$cookies.get("access_token")
         let tokenProvider = this.$cookies.get("token_provider")
-        fetch("https://localhost:8081/api-get-authentication",{
+        fetch("/api-get-authentication",{
             method : 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,6 +200,7 @@ var authenticationInstance = new Vue({
                     this.userInfo = data.userInfo
                     localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
+                    this.getNotificationNumber()
 
                     if(this.userInfo.banned && (document.referrer.includes("/dang-nhap")
                         || document.referrer.includes("/dang-ky")
@@ -177,6 +278,8 @@ var modalConfirmInstance = new Vue({
                     landlordInstance.rejectRentalRequest()
                 }else if(confirmAction == "change-status-room"){
                     landlordInstance.changeRoomStatus()
+                }else if(confirmAction == "add-money"){
+                    admin.addMoneyForLandlord()
                 }
                 sessionStorage.removeItem("confirmAction")
             }

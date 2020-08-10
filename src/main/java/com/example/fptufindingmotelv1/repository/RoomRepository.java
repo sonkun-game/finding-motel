@@ -24,4 +24,10 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "and (:roomId is null or r.id = :roomId)" +
             " order by r.name asc ")
     List<RoomModel> getListRoom(String landlordId, String postId, String roomId);
+
+    @Query(value = "select new RoomModel(r.id, r.name, s.id) from RoomModel r " +
+            "join StatusModel s on r.status.id = s.id " +
+            "where (:postId is null or r.postRoom.id = :postId)" +
+            "order by r.name asc ")
+    List<RoomModel> getListRoomByPostId(String postId);
 }

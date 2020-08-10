@@ -275,3 +275,7 @@ main{
     margin: auto;
     padding-bottom: 50px;
 }
+.renter-information-area{
+    border-top: 1px solid #DDDDDD;
+    padding-top: 10px;
+}

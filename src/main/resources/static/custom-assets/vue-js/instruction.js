@@ -3,7 +3,7 @@ var instructionInstance = new Vue({
     data: {
         userInfo: {},
         listInstruction : [],
-        roleSelected : 1,
+        roleSelected : 2,
     },
     created(){
         this.getListInstruction()

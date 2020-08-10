@@ -165,6 +165,7 @@ main{
 .message-success-container{
     width: fit-content;
     margin: auto;
+    padding: 5px 10px;
 }
 .pointer-disabled-only {
     pointer-events: none;

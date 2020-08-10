@@ -25,7 +25,7 @@ public class ManagePostController {
     @Autowired
     private ManagePostService managePostService;
 
-    @GetMapping(value = {"/dang-tin"})
+    @GetMapping(value = {"/dang-tin", "/nap-tien"})
     public String getFucntionPage(Model model){
         Date date = new Date();
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){

@@ -39,5 +39,15 @@ public class PaymentModel implements Serializable {
     @JoinColumn(name = "LANDLORD_ID")
     private LandlordModel landlordModel;
 
-
+    public PaymentModel() {
+    }
+    public PaymentModel(String id, float amount, Date payDate, String momoId,
+                        String paymentMethod, String note) {
+        this.id = id;
+        this.amount = amount;
+        this.payDate = payDate;
+        this.momoId = momoId;
+        this.paymentMethod = paymentMethod;
+        this.note = note;
+    }
 }

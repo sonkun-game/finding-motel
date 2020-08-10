@@ -162,7 +162,7 @@ font-family:  sans-serif !important;
 }
 
 .information-detail{
-margin-top: 30px;
+    padding-top: 50px;
     text-align: center;
 }
 
@@ -884,7 +884,7 @@ a:hover {
     height: fit-content;
 }
 .rounded-pill{
-    border: 1px solid #c2b3d2!important;
+    border: 1px solid #dddddd!important;
 }
 #map-canvas{
     height: 400px;  /* The height is 400 pixels */
@@ -925,6 +925,9 @@ a:hover {
 .row-user{
     cursor: pointer;
     height: 30px;
+}
+.border-error{
+    border-color: red;
 }
 
 /* Normal desktop :1200px. */
@@ -992,4 +995,32 @@ a:hover {
         width: 100%;
 
     }
+}
+.payment-method{
+    border-bottom: 1px solid #DDDDDD;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.payment-container{
+    padding-top: 30px;
+}
+.payment-method:last-child{
+    border-bottom: none;
+}
+.bank-information{
+    padding: 0px!important;
+    margin: 0px!important;
+}
+.pos-title{
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+}
+.pos-title p{
+    position: absolute;
+}
+.img-logo-payment{
+    max-height: 200px;
+    max-width: 200px;
+    width: 100%;
 }

@@ -64,46 +64,12 @@
                         </div>
                     </div>
 
-<!--                    <div class="col-6">-->
-<!--                        <ul class="search">-->
-<!--                            <li class="search-type">-->
-<!--                                <div class="form-dropdown">-->
-<!--                                    <form action="#">-->
-<!--                                        <select>-->
-<!--                                            <option value="0">Giá</option>-->
-<!--                                            <option v-for="filterPrice in listFilterPrice" v-bind:selected="filterPrice.id == filterPriceId" v-bind:value="filterPrice.id" v-text="filterPrice.displayText"></option>-->
-<!--                                        </select>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                            <li class="search-type">-->
-<!--                                <div class="form-dropdown">-->
-<!--                                    <form action="#">-->
-<!--                                        <select>-->
-<!--                                            <option value="0">Diện tích</option>-->
-<!--                                            <option v-for="filterSquare in listFilterSquare" v-bind:selected="filterSquare.id == filterSquareId" v-bind:value="filterSquare.id" v-text="filterSquare.displayText"></option>-->
-<!--                                        </select>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                            <li class="search-type">-->
-<!--                                <div class="form-dropdown">-->
-<!--                                    <form action="#">-->
-<!--                                        <select>-->
-<!--                                            <option value="0">Khoảng cách</option>-->
-<!--                                            <option v-for="filterDistance in listFilterDistance" v-bind:selected="filterDistance.id == filterDistanceId" v-bind:value="filterDistance.id" v-text="filterDistance.displayText"></option>-->
-<!--                                        </select>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
                 </div>
             </div>
             <section class="room-area">
                 <div class="container" id="postPage">
                     <div class="row" id="row">
-                        <div class="col-xl-4 col-lg-6 col-md-6" v-for="post in postList" v-bind:id="post.id">
+                        <div v-show="postList.length > 0" class="col-xl-4 col-lg-6 col-md-6" v-for="post in postList" v-bind:id="post.id">
                             <!-- Single Room -->
                             <div class="single-room mb-50">
                                 <div class="room-img">
@@ -120,8 +86,11 @@
                                 </div>
                             </div>
                         </div>
+                        <div v-show="postList.length == 0" class="none-data-message">
+                            Không có bài đăng
+                        </div>
                     </div>
-                    <nav v-if="page.totalPages != 1" class="form-group col-md-11 pagination-centered">
+                    <nav v-if="page.totalPages != 1 && postList.length > 0" class="form-group col-md-11 pagination-centered">
                         <ul class="pagination">
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Previous">

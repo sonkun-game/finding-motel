@@ -571,7 +571,7 @@ var landlordInstance = new Vue({
             this.roomIndex = index
             this.selectedRoom = room
             if(room.availableRoom){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Đã cho thuê" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.roomName + '</b> thành <b>Đã cho thuê</b> không?';
                 sessionStorage.setItem("confirmAction", "change-status-room")
                 modalConfirmInstance.showModal()
             }else {
@@ -583,15 +583,15 @@ var landlordInstance = new Vue({
                     }
                 }
                 if (stayRentalRequest == null){
-                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Còn trống" không?';
+                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.roomName + '</b> thành <b>Còn trống</b> không?';
                     sessionStorage.setItem("confirmAction", "change-status-room")
                     modalConfirmInstance.showModal()
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
                     this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
-                        "<p>Trạng thái của phòng sẽ được thay đổi thành \"Còn Trống\"</p>" +
-                        "<p>Người dùng \"" + this.renterInfo.username + "\" sẽ bị xóa khỏi phòng này</p>"
+                        "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
+                        "<p>Người dùng <b>" + this.renterInfo.username + "</b> sẽ bị xóa khỏi phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
@@ -611,10 +611,10 @@ var landlordInstance = new Vue({
             this.selectedRoom = room;
             this.selectedRequest = request;
             if(action == 'accept'){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn chấp nhận yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn chấp nhận yêu cầu thuê trọ của người dùng <b>' +request.renterUsername + '</b> không?';
                 sessionStorage.setItem("confirmAction", "accept-request")
             }else if(action == 'reject'){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn từ chối yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn từ chối yêu cầu thuê trọ của người dùng <b>' +request.renterUsername + '</b> không?';
                 sessionStorage.setItem("confirmAction", "reject-request")
             }
             modalConfirmInstance.showModal()

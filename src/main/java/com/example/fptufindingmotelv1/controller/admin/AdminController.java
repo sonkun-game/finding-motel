@@ -55,9 +55,9 @@ public class AdminController {
             List<UserDTO> userDTOS = adminService.searchUsers(userDTO);
             return userDTOS != null
                     ? responseMsg("000", "Success!", userDTOS)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -69,9 +69,9 @@ public class AdminController {
 
             return roleModels != null
                     ? responseMsg("000", "Success!", roleModels)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -79,13 +79,15 @@ public class AdminController {
     @RequestMapping(value = "/ban-landlord")
     public JSONObject banLandlord(@RequestParam(value = "username") String username) {
         try {
-            if (username != null && username.length() > 0) {
-                adminService.banLandlord(username);
+            if (username != null && !username.isEmpty()) {
+                LandlordModel landlordModel = adminService.banLandlord(username);
+                return landlordModel != null
+                        ? responseMsg("000", "Success!", null)
+                        : responseMsg("999", "Lỗi hệ thống!", null);
             }
-
-            return responseMsg("000", "Success!", null);
+            return responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -93,21 +95,17 @@ public class AdminController {
     @RequestMapping(value = "/unban-landlord")
     public JSONObject unbanLandlord(@RequestParam(value = "username") String username) {
         try {
-            if (username != null && username.length() > 0) {
-                adminService.unbanLandlord(username);
+            if (username != null && !username.isEmpty()) {
+                LandlordModel landlordModel = adminService.unbanLandlord(username);
+                return landlordModel != null
+                        ? responseMsg("000", "Success!", null)
+                        : responseMsg("999", "Lỗi hệ thống!", null);
             }
 
-            return responseMsg("000", "Success!", null);
+            return responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/get-report")
-    public ArrayList<ReportResponseDTO> getReport() {
-        ArrayList<ReportResponseDTO> reports = adminService.getListReport();
-        return reports;
     }
 
     @ResponseBody
@@ -117,7 +115,7 @@ public class AdminController {
             adminService.deleteReport(reportId);
             return responseMsg("000", "Success!", null);
         } catch (Exception e) {
-            return responseMsg("999", "System error!", null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -128,18 +126,7 @@ public class AdminController {
             ArrayList<PostResponseDTO> posts = adminService.getListPost();
             return responseMsg("000", "Success!", posts);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/delete-post")
-    public JSONObject deletePost(@RequestParam(value = "postId") String postId) {
-        try {
-            adminService.deletePost(postId);
-            return responseMsg("000", "Success!", null);
-        } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -150,9 +137,9 @@ public class AdminController {
             ArrayList<PostResponseDTO> posts = adminService.searchPost(postSearchDTO);
             return posts != null
                     ? responseMsg("000", "Success!", posts)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -163,22 +150,10 @@ public class AdminController {
             PostModel postModel = adminService.banPost(postId);
             return postModel != null
                     ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/api-un-ban-post")
-    public JSONObject unBanPost(@RequestParam String postId) {
-        try {
-            PostModel postModel = adminService.unBanPost(postId);
-            return postModel != null
-                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
-                    : responseMsg("001", "SYSTEM ERROR", null);
-        } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            e.printStackTrace();
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -197,9 +172,9 @@ public class AdminController {
             List<ReportResponseDTO> response = adminService.searchReport(reportRequestDTO);
             return response != null
                     ? responseMsg("000", "Success!", response)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -221,9 +196,9 @@ public class AdminController {
             }
             return paymentPackageModels != null
                     ? responseMsg("000", "Success!", response)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
     @ResponseBody
@@ -234,9 +209,9 @@ public class AdminController {
 
             return paymentPackageModel != null
                     ? responseMsg("000", "Success!", new PaymentPackageDTO(paymentPackageModel))
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -248,9 +223,9 @@ public class AdminController {
 
             return paymentPackageModel != null
                     ? responseMsg("000", "Success!", new PaymentPackageDTO(paymentPackageModel))
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
     @ResponseBody
@@ -261,9 +236,9 @@ public class AdminController {
 
             return landlordModel != null
                     ? responseMsg("000", "Success!", new UserDTO(landlordModel))
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         }
     }
 }

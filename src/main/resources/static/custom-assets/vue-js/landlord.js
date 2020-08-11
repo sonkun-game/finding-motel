@@ -56,8 +56,8 @@ var landlordInstance = new Vue({
         }
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     },
     mounted(){
         if(this.task == 13){
@@ -226,7 +226,7 @@ var landlordInstance = new Vue({
             this.uploadImages.splice(this.uploadImages.indexOf(image), 1)
         },
         calculateCost(package){
-            this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+            this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
             this.amountSelected = package.amount
         },
         handleAddNewPost(){
@@ -262,7 +262,7 @@ var landlordInstance = new Vue({
                     .then((data) => {
                         console.log(data);
                         if(data != null && data.msgCode == 'post000'){
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                             window.location.href = "/"
                         }
@@ -328,7 +328,7 @@ var landlordInstance = new Vue({
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
-            localStorage.setItem("task", 16)
+            sessionStorage.setItem("task", 16)
             setTimeout( () => {
                 this.initMap()
                 this.handleDisplayDirection()
@@ -382,7 +382,7 @@ var landlordInstance = new Vue({
                         setTimeout(() =>
                         {
                             userTaskInstance.activeBtn(4)
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                         }, 2000);
                     }
@@ -431,7 +431,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.msgCode == 'post000'){
                         authenticationInstance.showModalNotify("Gia hạn thành công", 2000)
                         setTimeout(() => {
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                             this.expireDate = data.post.expireDate
                             this.$set(this.listPost, this.postIndex, data.post)
@@ -562,7 +562,7 @@ var landlordInstance = new Vue({
             userTaskInstance.task = 15
             noteInstance.task = 15
             this.task = 15
-            localStorage.setItem("task", 15)
+            sessionStorage.setItem("task", 15)
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.getListRoomRequest(null, post.id)
         },
@@ -967,8 +967,8 @@ var noteInstance = new Vue({
         task: 0,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     }
 })
 var loadingInstance = new Vue({

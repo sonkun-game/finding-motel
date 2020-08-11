@@ -45,6 +45,12 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     PaymentRepository paymentRepository;
 
+    @Autowired
+    NotificationRepository notificationRepository;
+
+    @Autowired
+    RoomRepository roomRepository;
+
     protected JSONObject getResponeMessage(String code, String msg) {
         JSONObject responeMsg = new JSONObject();
         responeMsg.put("code", code);
@@ -75,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<LandlordModel> banLandlord(String username) {
+    public LandlordModel banLandlord(String username) {
         try {
             LandlordModel landlord = landlordRepository.findByUsername(username);
             if (landlord == null) {
@@ -97,16 +103,15 @@ public class AdminServiceImpl implements AdminService {
                     for (ReportModel report:
                          post.getReports()) {
                         if(report.getStatusReport().getId() == 3){
-                            StatusModel statusModel = statusRepository.findByIdAndType(5, 2);
+                            StatusModel statusModel = new StatusModel(5L);
                             report.setStatusReport(statusModel);
                         }else if(report.getStatusReport().getId() == 4){
-                            StatusModel statusModel = statusRepository.findByIdAndType(6, 2);
+                            StatusModel statusModel = new StatusModel(6L);
                             report.setStatusReport(statusModel);
                         }
                     }
                 }
-                landlordRepository.save(landlord);
-                return (ArrayList<LandlordModel>) landlordRepository.findAll();
+                return landlordRepository.save(landlord);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +121,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<LandlordModel> unbanLandlord(String username) {
+    public LandlordModel unbanLandlord(String username) {
         try {
             LandlordModel landlord = landlordRepository.findByUsername(username);
             if (landlord == null) {
@@ -127,8 +132,7 @@ public class AdminServiceImpl implements AdminService {
                         landlord.getPosts()) {
                     post.setVisible(true);
                 }
-                landlordRepository.save(landlord);
-                return (ArrayList<LandlordModel>) landlordRepository.findAll();
+                return landlordRepository.save(landlord);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,27 +155,6 @@ public class AdminServiceImpl implements AdminService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    public void deletePost(String id) {
-        postRepository.deleteById(id);
-    }
-
-    @Override
-    public ArrayList<ReportResponseDTO> getListReport() {
-        try {
-            ArrayList<ReportResponseDTO> requestDTOs = new ArrayList<>();
-            for (ReportModel report : reportRepository.findAll()) {
-                ReportResponseDTO reportRequest = new ReportResponseDTO(report);
-                requestDTOs.add(reportRequest);
-            }
-            return requestDTOs;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-
     }
 
     @Override
@@ -200,47 +183,59 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public PostModel banPost(String postId) {
-        try {
-            PostModel postModel = postRepository.findById(postId).get();
-            postModel.setBanned(true);
-            // delete rental request of room of post
-            for (RoomModel room:
-                    postModel.getRooms()) {
-                if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
-                    rentalRequestRepository.deleteAll(room.getRoomRentals());
-                }
-            }
-            for (ReportModel report:
-                    postModel.getReports()) {
-                if(report.getStatusReport().getId() == 3){
-                    StatusModel statusModel = statusRepository.findByIdAndType(4, 2);
-                    report.setStatusReport(statusModel);
-                }else if(report.getStatusReport().getId() == 5){
-                    StatusModel statusModel = statusRepository.findByIdAndType(6, 2);
-                    report.setStatusReport(statusModel);
-                }
-            }
-            postModel = postRepository.save(postModel);
-            return postModel;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+        PostModel postModel = postRepository.findById(postId).get();
+        postModel.setBanned(true);
 
-    @Override
-    public PostModel unBanPost(String postId) {
-        try {
-            PostModel postModel = postRepository.findById(postId).get();
-            postModel.setBanned(false);
-            postModel = postRepository.save(postModel);
-            return postModel;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        // delete rental request of room of post
+        StatusModel statusReject = new StatusModel(10L);
+        StatusModel statusExpire = new StatusModel(11L);
+        StatusModel statusRoomFree = new StatusModel(1L);
+        String notificationContent;
+        boolean isFreeRoom = true;
+
+        for (RoomModel room:
+                postModel.getRooms()) {
+
+            if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
+                for (RentalRequestModel request:
+                     room.getRoomRentals()) {
+                    if(request.getRentalStatus().getId() == 7){
+                        request.setRentalStatus(statusReject);
+                        notificationContent = "Yêu cầu thuê trọ vào <b>" + request.getRentalRoom().getName() +
+                                "</b> - <b>" + request.getRentalRoom().getPostRoom().getTitle() + "</b> đã bị từ chối do bài đăng đã bị khóa";
+                        // send notification to Renter
+                        sendNotification(request, notificationContent);
+                    }else if(request.getRentalStatus().getId() == 9){
+                        isFreeRoom = false;
+
+                        request.setRentalStatus(statusExpire);
+                        notificationContent = "Yêu cầu thuê trọ vào <b>" + request.getRentalRoom().getName() +
+                                "</b> - <b>" + request.getRentalRoom().getPostRoom().getTitle() + "</b> đã kết thúc do bài đăng đã bị khóa";
+                        // send notification to Renter
+                        sendNotification(request, notificationContent);
+                    }
+                }
+                if(!isFreeRoom){
+                    room.setStatus(statusRoomFree);
+                    roomRepository.save(room);
+                }
+            }
         }
+        StatusModel statusReportPost = new StatusModel(4L);
+        StatusModel statusReportAll = new StatusModel(6L);
+        for (ReportModel report:
+                postModel.getReports()) {
+            if(report.getStatusReport().getId() == 3){
+                report.setStatusReport(statusReportPost);
+            }else if(report.getStatusReport().getId() == 5){
+                report.setStatusReport(statusReportAll);
+            }
+        }
+        postModel = postRepository.save(postModel);
+        return postModel;
     }
 
     @Override
@@ -272,13 +267,13 @@ public class AdminServiceImpl implements AdminService {
                     listStatus) {
                 listStatusReport.add(new StatusDTO(status));
             }
-            response.put("msgCode", "admin000");
+            response.put("code", "000");
             response.put("listStatusReport", listStatusReport);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("msgCode", "sys999");
-            response.put("message", e.getMessage());
+            response.put("code", "999");
+            response.put("message", "Lỗi hệ thống!");
             return response;
         }
     }
@@ -332,5 +327,27 @@ public class AdminServiceImpl implements AdminService {
         paymentModel.setPayDate(payDate);
         paymentRepository.save(paymentModel);
         return landlordModel;
+    }
+    private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
+        try {
+            // send notification to Renter
+            NotificationModel notificationModel = new NotificationModel();
+            RenterModel renterModel = requestModel.getRentalRenter();
+
+            StatusModel statusNotification = new StatusModel(12L);
+
+            Date date = new Date();
+            Date createdDate = new Timestamp(date.getTime());
+
+            notificationModel.setUserNotification(renterModel);
+            notificationModel.setContent(content);
+            notificationModel.setStatusNotification(statusNotification);
+            notificationModel.setCreatedDate(createdDate);
+            notificationModel.setRentalRequestNotification(requestModel);
+            return notificationRepository.save(notificationModel);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

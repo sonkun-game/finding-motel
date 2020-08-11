@@ -30,4 +30,5 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "where (:postId is null or r.postRoom.id = :postId)" +
             "order by r.name asc ")
     List<RoomModel> getListRoomByPostId(String postId);
+
 }

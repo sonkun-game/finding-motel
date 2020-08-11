@@ -34,4 +34,11 @@ public class StatusModel implements Serializable {
 
     @OneToMany(mappedBy = "statusNotification")
     private List<NotificationModel> notifications;
+
+    public StatusModel() {
+    }
+
+    public StatusModel(Long id) {
+        this.id = id;
+    }
 }

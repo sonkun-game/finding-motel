@@ -32,18 +32,23 @@ public class ViewDetailController {
     @ResponseBody
     @PostMapping(value = "/api-post-detail")
     public JSONObject viewPost(@PathParam("id") String id){
-        JSONObject response = new JSONObject();
         try {
             PostModel postModel = viewDetailService.getPostDetail(id);
-
             PostDTO post = new PostDTO(postModel);
-            response.put("code", postModel != null ? "000" : "001");
-            response.put("data", post);
-            return response;
+            if(postModel == null){
+                return responseMsg("999", "Lỗi hệ thống!", null);
+            }
+            else if(!postModel.isVisible()){
+                return responseMsg("001", "Bài đăng đã bị ẩn bởi chủ trọ hoặc hết hạn hiển thị!", post);
+
+            }else if(postModel.isBanned()){
+                return responseMsg("001", "Bài đăng đã bị khóa!", post);
+            }
+
+            return responseMsg("000", "Success!", post);
         }catch (Exception e){
             e.printStackTrace();
-            response.put("code", "999");
-            return response;
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
 
     }
@@ -76,5 +81,13 @@ public class ViewDetailController {
         response.put("code", listRoomOfPost != null ? "000" : "999");
         response.put("data", roomDTOS);
         return response;
+    }
+
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
     }
 }

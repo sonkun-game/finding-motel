@@ -10,8 +10,8 @@ var renterInstance = new Vue({
         selectedRentalRequestId : null,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     },
     mounted(){
         if(this.task == 2){

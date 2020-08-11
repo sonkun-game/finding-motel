@@ -18,6 +18,7 @@ var postDetailInstance = new Vue({
         fuLocation : {placeId : "ChIJbQilLLNUNDER5Der2CkuxqM"},
         listPostOfRenter : [],
         listRoomOfPost : [],
+        disableFunctions : false,
     },
     beforeMount() {
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -42,6 +43,17 @@ var postDetailInstance = new Vue({
                         this.listImage = this.post.images
                         this.getRelatedPost(this.post.id, this.post.landlord, this.post.typeId)
                         this.handleDisplayDirection()
+                    }else if(data != null && data.code == "001"){
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
+                        this.disableFunctions = true;
+                        this.post = data.data;
+                        this.listImage = this.post.images
+                        this.getRelatedPost(this.post.id, this.post.landlord, this.post.typeId)
+                        this.handleDisplayDirection()
+                    }else {
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -78,10 +90,11 @@ var postDetailInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == '000') {
-                        this.showModalNotify("Gửi Thành Công")
+                        this.showModalNotify("Gửi Báo Cáo Thành Công")
                         setTimeout(() => this.closeModalReport(), 2000);
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {

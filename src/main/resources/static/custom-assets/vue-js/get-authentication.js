@@ -20,7 +20,7 @@ var authenticationInstance = new Vue({
                 .then((data) => {
                     console.log(data)
                     if(data != null && data.code === "msg001"){
-                        localStorage.removeItem("userInfo")
+                        sessionStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
                         window.location.href = "/"
@@ -43,7 +43,7 @@ var authenticationInstance = new Vue({
             return "valid"
         },
         getTaskPage(task){
-            localStorage.setItem("task", task)
+            sessionStorage.setItem("task", task)
             if(task == 13){
                 if(this.userInfo.banned){
                     modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
@@ -140,11 +140,11 @@ var authenticationInstance = new Vue({
                 this.changeNotificationStatus(notification.id, index)
             }
             if(this.userInfo.role == 'LANDLORD'){
-                localStorage.setItem("task", 17)
+                sessionStorage.setItem("task", 17)
                 sessionStorage.setItem("notification", JSON.stringify(notification))
                 window.location.href = "/quan-ly-bai-dang"
             }else if(this.userInfo.role == 'RENTER'){
-                localStorage.setItem("task", 18)
+                sessionStorage.setItem("task", 18)
                 sessionStorage.setItem("notification", JSON.stringify(notification))
                 window.location.href = "/quan-ly-tai-khoan"
             }
@@ -173,8 +173,8 @@ var authenticationInstance = new Vue({
         }
     },
     mounted(){
-        // if(localStorage.getItem("userInfo")){
-        //     this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        // if(sessionStorage.getItem("userInfo")){
+        //     this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         //     if(this.userInfo.role == "RENTER"){
         //         this.authenticationNum = 1;
         //     }else if(this.userInfo.role == "LANDLORD"){
@@ -198,9 +198,13 @@ var authenticationInstance = new Vue({
                 console.log(data)
                 if(data != null && data.userInfo != null){
                     this.userInfo = data.userInfo
-                    localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                    sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
                     this.getNotificationNumber()
+
+                    if(window.location.href.includes("/dang-nhap")){
+                        window.location.href = "/"
+                    }
 
                     if(this.userInfo.banned && (document.referrer.includes("/dang-nhap")
                         || document.referrer.includes("/dang-ky")
@@ -212,7 +216,7 @@ var authenticationInstance = new Vue({
                         modalMessageInstance.showModal()
                     }
                 }else {
-                    localStorage.removeItem("userInfo")
+                    sessionStorage.removeItem("userInfo")
                 }
             }).catch(error => {
             console.log(error);
@@ -226,7 +230,7 @@ var modalMessageInstance = new Vue({
         message: "",
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
     },
     methods : {
         closeModal(){
@@ -249,7 +253,7 @@ var modalConfirmInstance = new Vue({
         confirm : false,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
     },
     methods : {
         closeModal(){

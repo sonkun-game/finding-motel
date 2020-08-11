@@ -59,7 +59,7 @@ var admin = new Vue({
         adjustMoneyNote : ""
     },
     beforeMount() {
-        this.task = localStorage.getItem("task")
+        this.task = sessionStorage.getItem("task")
     },
     mounted() {
         if (this.task == 9) {
@@ -440,7 +440,7 @@ var admin = new Vue({
         },
         handleGetReport(post, user){
             userTaskInstance.task = 11
-            localStorage.setItem("task", 11)
+            sessionStorage.setItem("task", 11)
             this.task = 11
             this.getInitAdmin()
             if(post != null){

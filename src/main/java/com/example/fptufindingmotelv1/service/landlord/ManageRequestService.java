@@ -8,7 +8,7 @@ import com.example.fptufindingmotelv1.model.RoomModel;
 import java.util.List;
 
 public interface ManageRequestService {
-    List<RoomModel> getListRequest(RentalRequestDTO rentalRequestDTO);
+    List<RoomModel> getListRoomRequest(RentalRequestDTO rentalRequestDTO);
 
     List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO);
 

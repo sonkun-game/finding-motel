@@ -86,8 +86,8 @@ public class PaymentServiceImpl implements PaymentService{
         String partnerCode = env.getProperty("momo.partnerCode");
         String accessKey = env.getProperty("momo.accessKey");
         String requestType = env.getProperty("momo.requestType");
-        String requestId = "request_" + createUniquieID();
-        String orderId = "order_" + createUniquieID();
+        String requestId = "request_" + createUniqueID();
+        String orderId = "order_" + createUniqueID();
         String orderInfo = "Momo pay for user";
         String notifyUrl = env.getProperty("server.hosting.url") + "/payment-momo";
         String returnUrl = env.getProperty("server.hosting.url") + "/payment-momo";
@@ -188,7 +188,7 @@ public class PaymentServiceImpl implements PaymentService{
         return hexString.toString();
     }
 
-    private String createUniquieID() {
+    private String createUniqueID() {
         return "ffm_" + UUID.randomUUID().toString();
     }
 

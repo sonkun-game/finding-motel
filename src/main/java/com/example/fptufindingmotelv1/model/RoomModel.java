@@ -36,6 +36,10 @@ public class RoomModel implements Serializable {
     public RoomModel() {
     }
 
+    public RoomModel(String id) {
+        this.id = id;
+    }
+
     public RoomModel(String id, String name, Long statusId) {
         this.id = id;
         this.name = name;

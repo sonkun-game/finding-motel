@@ -15,6 +15,9 @@
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
+<!--    include message modal-->
+<div th:replace="layout :: message-modal"></div>
+
 <!--    inlude confirm modal-->
 <div th:replace="layout :: confirm-modal"></div>
 
@@ -393,7 +396,7 @@
                                 <td>{{post.expireDate}}</td>
                                 <td>
                                     <div v-text="post.displayStatus"
-                                         v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
+                                         v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'">
                                     </div>
                                 </td>
                                 <td>{{post.landlordName}}</td>
@@ -635,7 +638,7 @@
                     <!-- Modal content -->
                     <div class="view-information">
                         <div class="modal-header">
-                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm package' : 'Sửa package'"></h2>
+                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm gói' : 'Sửa gói'"></h2>
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">

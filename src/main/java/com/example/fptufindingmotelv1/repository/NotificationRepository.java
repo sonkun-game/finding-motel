@@ -2,8 +2,11 @@ package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.NotificationModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<NotificationModel, String> {
@@ -16,4 +19,11 @@ public interface NotificationRepository extends JpaRepository<NotificationModel,
             "where (ntf.userNotification.username = :username)" +
             "order by ntf.createdDate desc ")
     List<NotificationModel> getAllByUsername(String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from NotificationModel n " +
+            "where n.rentalRequestNotification.rentalRoom.postRoom.id = :postId " +
+            "")
+    void removeNotificationByPost(String postId);
 }

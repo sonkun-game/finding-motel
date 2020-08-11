@@ -187,8 +187,11 @@ var admin = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    if(data.code == "000"){
+                    if(data != null && data.code == "000"){
                         this.listUser = data.data
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -200,8 +203,11 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data.code == "000"){
+                    if(data != null && data.code == "000"){
                         this.listRole = data.data
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -216,11 +222,13 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.searchUser();
-                    // } else {
-                    //     window.location.href = "/error";
-                    // }
+                    if (data != null && data.code == "000") {
+                        authenticationInstance.showModalNotify("Đã khóa 1 tài khoản", 2000);
+                        this.searchUser();
+                    } else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
                 }).catch(error => {
                 console.log(error);
             })
@@ -233,11 +241,13 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    // if(data.status == 200){
-                    this.searchUser()
-                    // } else {
-                    //     window.location.href = "/error";
-                    // }
+                    if (data != null && data.code == "000") {
+                        authenticationInstance.showModalNotify("Đã mở khóa 1 tài khoản", 2000);
+                        this.searchUser();
+                    } else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
                 }).catch(error => {
                 console.log(error);
             })
@@ -251,10 +261,12 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == '000') {
+                    if (data != null && data.code == '000') {
+                        authenticationInstance.showModalNotify("Đã xóa 1 báo cáo", 2000);
                         this.searchReport();
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -267,10 +279,11 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         this.listPost = data.data;
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -322,10 +335,11 @@ var admin = new Vue({
                 body: JSON.stringify(postRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         this.listPost = data.data;
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -339,10 +353,12 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
+                        authenticationInstance.showModalNotify("Đã khóa bài đăng", 2000);
                         this.$set(this.listPost, this.postIndex, data.data)
                     } else {
-                        alert("Error" + data.code);
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -381,10 +397,11 @@ var admin = new Vue({
                 body: JSON.stringify(reportRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         this.listReport = data.data;
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -410,8 +427,11 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data.msgCode == "admin000"){
+                    if(data != null && data.code == "000"){
                         this.listStatusReport = data.listStatusReport
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -445,7 +465,7 @@ var admin = new Vue({
                 body: JSON.stringify(reportRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         let listReport = []
                         for (let report of data.data) {
                             if(post != null && (report.statusId == 3 || report.statusId == 5)){
@@ -456,7 +476,8 @@ var admin = new Vue({
                         }
                         this.listReport = listReport
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -467,8 +488,11 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data.code == "000"){
+                    if(data != null && data.code == "000"){
                         this.listPaymentPackage = data.data
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -511,7 +535,7 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
                             if(this.packageIndex != -1){
@@ -522,7 +546,8 @@ var admin = new Vue({
                             this.closeModalPackage()
                         }, 2000);
                     } else {
-                        // todo
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -540,10 +565,13 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
-                    if(data.code == "000"){
+                    if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout( () => this.$set(this.listPaymentPackage, index, data.data), 2000)
 
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -585,14 +613,15 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
-                    if (data.code == "000") {
+                    if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
                             this.$set(this.listUser, this.userIndex, data.data)
                             this.closeModalAddMoney()
                         }, 2000);
                     } else {
-                        // todo
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);

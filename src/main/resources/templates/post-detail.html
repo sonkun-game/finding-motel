@@ -40,12 +40,13 @@
                         </div>
                     </div>
                     <div class="wish-list clearfix">
-                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save"
+                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save" v-bind:disabled="disableFunctions"
                                 v-on:click="showModalReport()" type="button" title="Báo cáo">
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
                         <button v-if="(userInfo == null || userInfo.role == 'RENTER')"
+                                v-bind:disabled="disableFunctions"
                                 class="btn-save" v-on:click="handleActionWishList(post)" type="button"
                                 v-bind:title="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'">
                             <img src="assets/img/logo/bookmark.png">
@@ -138,7 +139,7 @@
                                 sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
-                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                            <button class="btn-report" v-on:click="showModalReport()" v-bind:disabled="disableFunctions" type="button" id="btnReport">
                                 <img src="assets/img/logo/alert.png">
                                 <span>Báo Cáo</span>
                             </button>
@@ -176,7 +177,7 @@
                             </div>
                         </div>
                         <div class="sent-request" v-if="userInfo == null || userInfo.role == 'RENTER'">
-                            <button @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
+                            <button v-bind:disabled="disableFunctions" @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
                         </div>
 
                         <!--Modal choose room-->

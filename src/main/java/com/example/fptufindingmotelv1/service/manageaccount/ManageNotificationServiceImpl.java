@@ -16,9 +16,6 @@ public class ManageNotificationServiceImpl implements ManageNotificationService{
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Autowired
-    private StatusRepository statusRepository;
-
     @Override
     public List<NotificationModel> getListNotification(NotificationDTO notificationDTO) {
         try {
@@ -45,7 +42,7 @@ public class ManageNotificationServiceImpl implements ManageNotificationService{
     public NotificationModel changeStatusNotification(NotificationDTO request) {
         try {
             NotificationModel notificationModel = notificationRepository.findById(request.getId()).get();
-            StatusModel statusNotificationSeen = statusRepository.findByIdAndType(13, 4);
+            StatusModel statusNotificationSeen = new StatusModel(13L);
             notificationModel.setStatusNotification(statusNotificationSeen);
             return notificationRepository.save(notificationModel);
         }catch (Exception e){

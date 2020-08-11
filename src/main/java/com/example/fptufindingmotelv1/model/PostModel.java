@@ -103,8 +103,8 @@ public class PostModel implements Serializable{
     }
 
     public PostModel(String id, double price, double distance, double square,
-                     String description, String title, String address,
-                     String mapLocation, Date createDate, Long typeId, String typeName,
+                     String description, String title, String address, boolean visible, boolean banned,
+                     String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
                      String landlordUsername, String landlordDisplayName, String landlordPhone
                      ) {
         this.id = id;
@@ -114,8 +114,11 @@ public class PostModel implements Serializable{
         this.description = description;
         this.title = title;
         this.address = address;
+        this.visible = visible;
+        this.banned = banned;
         this.mapLocation = mapLocation;
         this.createDate = createDate;
+        this.expireDate = expireDate;
         this.type = new TypeModel();
         this.type.setId(typeId);
         this.type.setName(typeName);

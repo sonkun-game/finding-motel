@@ -13,21 +13,16 @@ public interface AdminService {
 
      List<UserDTO> searchUsers(UserDTO userDTO);
 
-     ArrayList<LandlordModel> banLandlord(String username);
-     ArrayList<LandlordModel> unbanLandlord(String username);
+    LandlordModel banLandlord(String username);
+    LandlordModel unbanLandlord(String username);
 
      ArrayList<PostResponseDTO> getListPost();
-
-     void deletePost(String id);
-
-     ArrayList<ReportResponseDTO> getListReport();
 
      void deleteReport(String id);
 
     ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
 
     PostModel banPost(String postId);
-    PostModel unBanPost(String postId);
 
     List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO);
 

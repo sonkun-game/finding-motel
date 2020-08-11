@@ -397,18 +397,20 @@
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
-                                <th>Mã giao dịch</th>
+                                <th>Bài đăng</th>
                                 <th>Ngày giao dịch</th>
-                                <th>Mã bài đăng</th>
                                 <th>Gói</th>
+                                <th>Số tiền</th>
+                                <th>Thời hạn</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="list in listPaymentPost">
-                                <td v-text="list.id"></td>
-                                <td v-text="list.payDate"></td>
-                                <td v-text="list.postId"></td>
-                                <td v-text="list.packageID"></td>
+                            <tr v-for="paymentPost in listPaymentPost">
+                                <td><a v-bind:href="'/post-detail?id=' + paymentPost.postPayment.id" v-text="paymentPost.postPayment.title"></a> </td>
+                                <td v-text="formatDate(paymentPost.payDate)"></td>
+                                <td v-text="paymentPost.paymentPackage.packageName"></td>
+                                <td v-text="authenticationInstance.formatNumberToDisplay(paymentPost.paymentPackage.amount) + ' VNĐ'"></td>
+                                <td v-text="paymentPost.paymentPackage.duration + ' Tháng'"></td>
                             </tr>
                             </tbody>
                         </table>

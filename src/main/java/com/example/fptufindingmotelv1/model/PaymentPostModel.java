@@ -30,4 +30,22 @@ public class PaymentPostModel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PAYMENT_PACKAGE_ID")
     private PaymentPackageModel paymentPackage;
+
+    public PaymentPostModel() {
+    }
+
+    public PaymentPostModel(String id, Date payDate, Long paymentPackageId,
+                            float amount, int duration, String packageName,
+                            String postId, String postTitle) {
+        this.id = id;
+        this.payDate = payDate;
+        this.paymentPackage = new PaymentPackageModel();
+        this.paymentPackage.setId(paymentPackageId);
+        this.paymentPackage.setAmount(amount);
+        this.paymentPackage.setDuration(duration);
+        this.paymentPackage.setPackageName(packageName);
+        this.postPayment = new PostModel();
+        this.postPayment.setId(postId);
+        this.postPayment.setTitle(postTitle);
+    }
 }

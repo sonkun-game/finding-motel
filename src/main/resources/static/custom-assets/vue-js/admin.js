@@ -626,6 +626,15 @@ var admin = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        closeModalConfirm(){
+            document.getElementById("modalConfirm").style.display = 'none';
+        },
+        closeModalDel(){
+            document.getElementById("modalDelete").style.display = 'none';
+        },
+        closeModalBan(){
+            document.getElementById("modalBan").style.display = 'none';
         }
     }
 })

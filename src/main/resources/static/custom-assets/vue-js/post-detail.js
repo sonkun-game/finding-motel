@@ -125,6 +125,7 @@ var postDetailInstance = new Vue({
         closeModalConfirm() {
             //close modal
             document.getElementById("modalConfirm").style.display = 'none';
+            document.getElementById("modal-confirm").style.display = 'none';
         },
         executeConfirm(yesNo) {
             this.closeModalConfirm();

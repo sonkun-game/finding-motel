@@ -162,5 +162,8 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
+        closeModalConfirm(){
+            document.getElementById("modalConfirm").style.display = 'none';
+        },
     }
 })

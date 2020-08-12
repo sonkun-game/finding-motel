@@ -11,6 +11,7 @@ var forgotInstance = new Vue({
         otpRemainCount: 5,
         inputPassword: "",
         inputRePassword: "",
+        // OTP data below
         disableInputPhone : false,
         displayTimer : null,
         intervalID : null,

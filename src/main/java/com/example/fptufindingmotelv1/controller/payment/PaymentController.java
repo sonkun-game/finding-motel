@@ -32,22 +32,25 @@ public class PaymentController {
 
     @ResponseBody
     @PostMapping(value = "/api-get-history-payment-post")
-    public List<PaymentPostDTO> getHistoryPaymentPost(){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            //Get username of landlord
-            LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
-            List<PaymentPostDTO> response = new ArrayList<>();
-            for(int i=0;i<landlordModel.getPosts().size();i++){
-                for(int j=0;j<landlordModel.getPosts().get(i).getPaymentPosts().size();j++){
-                    //Add to list PaymentPostDTO
-                    response.add(new PaymentPostDTO(landlordModel.getPosts().get(i).getPaymentPosts().get(j)));
+    public JSONObject getHistoryPaymentPost(@RequestBody PaymentDTO paymentDTO){
+        try {
+            if(paymentDTO.getLandlord() == null && paymentDTO.getLandlord().isEmpty()){
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth instanceof UsernamePasswordAuthenticationToken
+                        && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof LandlordModel) {
+                    paymentDTO.setLandlord(((CustomUserDetails) auth.getPrincipal()).getUsername());
+                }else {
+                    return responseMsg("403", "Access denied", null);
                 }
             }
-            return response;
+            List<PaymentPostModel> paymentPostModels = paymentService.getListPaymentPostOfLandlord(paymentDTO);
+
+            return paymentPostModels != null
+                    ? responseMsg("000", "Success!", paymentPostModels)
+                    : responseMsg("999", "Lỗi hệ thống!", null);
+        } catch (Exception e) {
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
-        return null;
     }
 
 //
@@ -108,9 +111,9 @@ public class PaymentController {
 
             return paymentModels != null
                     ? responseMsg("000", "Success!", paymentModels)
-                    : responseMsg("001", "SYSTEM ERROR", null);
+                    : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
-            return responseMsg("999", e.getMessage(), null);
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
     public JSONObject responseMsg(String code, String message, Object data) {

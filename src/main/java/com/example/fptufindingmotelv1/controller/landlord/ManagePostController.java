@@ -46,7 +46,7 @@ public class ManagePostController {
     }
 
     @GetMapping(value = {"/quan-ly-bai-dang"})
-    public String getManagerPage(Model model){
+    public String getManagerPage(){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();

@@ -23,10 +23,10 @@ public class ManageRequestController {
 
     @ResponseBody
     @PostMapping("/api-view-list-request")
-    public JSONObject viewListRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
+    public JSONObject viewListRoomRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
         JSONObject response = new JSONObject();
         List<RoomDTO> roomDTOS = new ArrayList<>();
-        List<RoomModel> roomModels = manageRequestService.getListRequest(rentalRequestDTO);
+        List<RoomModel> roomModels = manageRequestService.getListRoomRequest(rentalRequestDTO);
         for (RoomModel roomModel:
              roomModels) {
             RoomDTO roomDTO = new RoomDTO(roomModels.indexOf(roomModel), roomModel);

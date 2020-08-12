@@ -11,63 +11,86 @@ var forgotInstance = new Vue({
         otpRemainCount: 5,
         inputPassword: "",
         inputRePassword: "",
+        disableInputPhone : false,
+        displayTimer : null,
+        intervalID : null,
     },
     methods: {
-        checkOTP() {
-            this.checkExistPhone()
-            if(this.showMsg){
-                return;
-            }
-            if(this.inputOtp == null || this.inputOtp.length == 0){
-                this.showMsg = true
-                this.message = "Vui lòng nhập mã OTP"
-                return
-            }
-            this.otpRemainCount--
-            if(this.otpCode != this.inputOtp && this.otpRemainCount > 0){
-                this.showMsg = true
-                this.message = "Mã OTP không hợp lệ, bạn còn lại "+this.otpRemainCount+" lần nhập lại mã"
-            }else if(this.otpCode != this.inputOtp && this.otpRemainCount <= 0){
-                this.showMsg = true
-                this.message = "Mã OTP đã hết hạn, bấm gửi mã để nhận mã mới"
-            }else {
-                this.showMsg = false
-                this.stepScreen = 2
-                this.inputOtp = ""
-                // this.otpCode = ""
-            }
-        },
         sendOTP() {
-            this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
-                "ApiKey=A64092B4036FCBE98DC11D133598BA&SecretKey=4EB8AA82ED932ADD24FB776E928BFE&SmsType=2&Brandname=Verify";
-            this.smsSendUrl += "&Phone=" + this.inputPhoneNum;
-            this.smsSendUrl += "&Content=Ma OTP cua ban la: " + this.otpCode;
-            fetch(this.smsSendUrl, {
-                method: 'GET'
-            }).then(response => response.json())
-                .then((data) => {
-                    this.smsResponse = data;
-                    this.otpRemainCount = 5
-                })
-        },
-        getOTP() {
             if (this.inputPhoneNum == null || this.inputPhoneNum.length == 0) {
                 this.showMsg = true
                 this.message = "Vui lòng nhập số điện thoại"
             } else {
                 if (this.inputPhoneNum.length == 10) {
                     this.showMsg = false
-                    fetch("/api/get-otp?otpLength=6", {
+                    fetch("/api-send-otp?phoneNumber="+this.inputPhoneNum, {
                         method: 'POST'
                     })
                         .then(response => response.json())
                         .then((data) => {
-                            this.otpCode = data;
-                            this.sendOTP();
+                            if(data != null && data.code == "001"){
+                                this.showMsg = true
+                                this.message = data.message
+                            }else if(data != null && data.CodeResult == "100"){
+                                this.disableInputPhone = true
+                                this.countDown()
+                            }else {
+                                this.showMsg = true
+                                this.message = "Chưa gửi được tin nhắn, Vui lòng bấm <b>Gửi mã</b> để gửi lại"
+                            }
                         })
                 } else {
                     this.showMsg = true
                     this.message = "Số điện thoại không hợp lệ"
+                }
+            }
+
+        },
+        countDown(){
+            var duration = 5 * 60;
+            var minutes, seconds;
+            this.intervalID = setInterval(() => {
+                 minutes = ((duration - duration % 60) / 60 < 10) ? "0" + (duration - duration % 60) / 60 : (duration - duration % 60) / 60 + "";
+                 seconds = (duration % 60 < 10) ? "0" + duration % 60 : duration % 60 + "";
+                 this.displayTimer = 'Đã gửi một mã xác thực đến số điện thoại của bạn, mã hết hiệu lực sau <b>' + minutes + ":" + seconds + '</b>';
+                 if(duration > 0){
+                     duration = duration - 1
+                 }else {
+                     clearInterval(this.intervalID)
+                     this.displayTimer = 'Mã xác thực đã hết hiệu lực, vui lòng gửi lại mã'
+                     this.disableInputPhone = false
+                 }
+            }, 1000)
+        },
+        validateOTP() {
+            if(this.inputOtp == null || this.inputOtp.length == 0){
+                this.showMsg = true
+                this.message = "Vui lòng nhập mã xác thực"
+                return
+            } else {
+                if (this.inputOtp.length == 6) {
+                    this.showMsg = false
+                    fetch("/api-validate-otp?phoneNumber=" + this.inputPhoneNum +
+                        "&inputOTP=" + this.inputOtp, {
+                        method: 'POST'
+                    })
+                        .then(response => response.json())
+                        .then((data) => {
+                            if(data != null && data.code == "000"){
+                                this.showMsg = false
+                                this.stepScreen = 2
+                                this.displayTimer = null
+                                clearInterval(this.intervalID)
+                                this.disableInputPhone = false
+                                this.inputOtp = ""
+                            }else if(data != null && data.code == "001"){
+                                this.showMsg = true
+                                this.message = data.message
+                            }
+                        })
+                } else {
+                    this.showMsg = true
+                    this.message = "Mã xác thực không hợp lệ"
                 }
             }
 

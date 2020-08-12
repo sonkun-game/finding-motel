@@ -193,7 +193,7 @@ var registerVue = new Vue({
                     .then(response => response.json())
                     .then((data) => {
                         this.otp = data;
-                        this.sendOTP();
+                        // this.sendOTP();
                     }).catch(error => {
                     console.log(error);
                 })

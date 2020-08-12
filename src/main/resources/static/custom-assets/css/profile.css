@@ -1024,3 +1024,7 @@ a:hover {
     max-width: 200px;
     width: 100%;
 }
+.require-text{
+    padding: 2px;
+    color: #da2929;
+}

@@ -27,7 +27,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     private NotificationRepository notificationRepository;
 
     @Override
-    public List<RoomModel> getListRequest(RentalRequestDTO rentalRequestDTO) {
+    public List<RoomModel> getListRoomRequest(RentalRequestDTO rentalRequestDTO) {
         try {
             if(rentalRequestDTO.getLandlordUsername() != null && !rentalRequestDTO.getLandlordUsername().isEmpty()){
                 LandlordModel landlordModel = landlordRepository.findByUsername(rentalRequestDTO.getLandlordUsername());

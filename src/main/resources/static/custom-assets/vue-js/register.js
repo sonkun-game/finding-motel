@@ -115,14 +115,14 @@ var registerVue = new Vue({
                     .then((data) => {
                         console.log(data);
                         if (data.code == '001') {
-                            localStorage.setItem("registeredUsername", this.username);
+                            sessionStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
-                            let accessToken = localStorage.getItem("accessToken")
+                            let accessToken = sessionStorage.getItem("accessToken")
                             let apiUrl = "/api-get-google-profile?accessToken="+accessToken
                             this.getLogin(apiUrl, "google")
                         } else if (data.code == '003') {
-                            let accessToken = localStorage.getItem("accessToken")
+                            let accessToken = sessionStorage.getItem("accessToken")
                             let apiUrl = "/api-get-facebook-profile?accessToken="+accessToken
                             this.getLogin(apiUrl, "facebook")
                         }
@@ -171,8 +171,8 @@ var registerVue = new Vue({
                 .then((data) => {
                     console.log(data)
                     if(data != null && data.msgCode === "msg003"){
-                        localStorage.setItem("newSocialUser", data.user)
-                        localStorage.setItem("accessToken", data.accessToken)
+                        sessionStorage.setItem("newSocialUser", data.user)
+                        sessionStorage.setItem("accessToken", data.accessToken)
                         this.displayName = data.user.displayName
                         if(tokenProvider == "google"){
                             this.ggAccount = data.user.ggAccount
@@ -182,7 +182,7 @@ var registerVue = new Vue({
                         preloaderInstance.isShowLoader = false
 
                     }else if (data != null && data.msgCode === "msg004"){
-                        localStorage.removeItem("accessToken")
+                        sessionStorage.removeItem("accessToken")
                         this.$cookies.set("access_token", data.accessToken)
                         this.$cookies.set("token_provider", tokenProvider)
                         window.location.href = "/"

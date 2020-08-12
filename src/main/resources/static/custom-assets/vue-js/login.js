@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (data.msgCode === "login000") {
                             this.showMsg = false
                             console.log(data)
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             this.$cookies.set("access_token", data.accessToken)
                             console.log(this.$cookies.get("access_token"))
                             window.location.href = "/"
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         computed: {
             fillRegisteredUsername() {
-                let registeredUsername = localStorage.getItem("registeredUsername");
+                let registeredUsername = sessionStorage.getItem("registeredUsername");
                 if (typeof (registeredUsername) !== 'undefined' && registeredUsername != null && registeredUsername.length > 0) {
                     this.username = registeredUsername;
                     return registeredUsername;

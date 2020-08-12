@@ -3,11 +3,9 @@ package com.example.fptufindingmotelv1.service.payment;
 import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import com.example.fptufindingmotelv1.dto.MomoTransactionStatusRequestDTO;
 import com.example.fptufindingmotelv1.dto.PaymentDTO;
-import com.example.fptufindingmotelv1.model.CustomUserDetails;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.MomoModel;
-import com.example.fptufindingmotelv1.model.PaymentModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
+import com.example.fptufindingmotelv1.repository.PaymentPostRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -38,6 +36,9 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Autowired
     PaymentRepository paymentRepository;
+
+    @Autowired
+    PaymentPostRepository paymentPostRepository;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
@@ -86,8 +87,8 @@ public class PaymentServiceImpl implements PaymentService{
         String partnerCode = env.getProperty("momo.partnerCode");
         String accessKey = env.getProperty("momo.accessKey");
         String requestType = env.getProperty("momo.requestType");
-        String requestId = "request_" + createUniquieID();
-        String orderId = "order_" + createUniquieID();
+        String requestId = "request_" + createUniqueID();
+        String orderId = "order_" + createUniqueID();
         String orderInfo = "Momo pay for user";
         String notifyUrl = env.getProperty("server.hosting.url") + "/payment-momo";
         String returnUrl = env.getProperty("server.hosting.url") + "/payment-momo";
@@ -164,6 +165,18 @@ public class PaymentServiceImpl implements PaymentService{
         }
     }
 
+    @Override
+    public List<PaymentPostModel> getListPaymentPostOfLandlord(PaymentDTO paymentDTO) {
+        try {
+            List<PaymentPostModel> paymentPostModels =
+                    paymentPostRepository.getPaymentPostByLandlord(paymentDTO.getLandlord());
+            return paymentPostModels;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String getSignature(String rawSign) {
         String secretKey = env.getProperty("momo.secretKey");
         try {
@@ -188,7 +201,7 @@ public class PaymentServiceImpl implements PaymentService{
         return hexString.toString();
     }
 
-    private String createUniquieID() {
+    private String createUniqueID() {
         return "ffm_" + UUID.randomUUID().toString();
     }
 

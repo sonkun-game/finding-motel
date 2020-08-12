@@ -40,7 +40,7 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public UserModel save(UserDTO userDTO) {
+    public UserModel register(UserDTO userDTO) {
         RoleModel roleModel = roleRepository.getOne(Long.parseLong(userDTO.getRole().trim()));
         UserModel userModel;
         if (roleModel != null && roleModel.getId() != null) {

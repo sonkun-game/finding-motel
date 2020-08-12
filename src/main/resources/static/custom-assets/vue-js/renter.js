@@ -65,7 +65,7 @@ var renterInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "wishlist000"){
                         this.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích");
-
+                        sessionStorage.removeItem("listPostOfRenter")
                         setTimeout(() => {
                             this.wishList = data.wishList
                         }, 2000);

@@ -28,16 +28,6 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Override
-    public char[] generateOTP(int length) {
-        char[] otp = new char[length];
-        String numbers = "0123456789";
-        Random rand = new Random();
-        for (int i = 0; i < length; i++) {
-            otp[i] = numbers.charAt(rand.nextInt(numbers.length()));
-        }
-        return otp;
-    }
 
     @Override
     public UserModel save(UserDTO userDTO) {

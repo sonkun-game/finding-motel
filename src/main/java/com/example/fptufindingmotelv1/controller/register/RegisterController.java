@@ -55,12 +55,6 @@ public class RegisterController {
         return userRepository.existsByPhoneNumber(phone);
     }
 
-
-    @ResponseBody
-    @RequestMapping(value = "/api/get-otp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public char[] getOTP(@RequestParam int otpLength) {
-        return registerService.generateOTP(otpLength);
-    }
 }
 
 

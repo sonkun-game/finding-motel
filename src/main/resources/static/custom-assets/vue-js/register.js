@@ -58,6 +58,10 @@ var registerVue = new Vue({
         checkOTP() {
             return this.otp == this.otpCode ? this.matchOTP = true : this.matchOTP = false;
         },
+        showWaitLoading() {
+            this.isShowContent = false;
+            this.isShowLoader = true;
+        },
         showErrorNotify(msg) {
             this.textContent = msg;
             this.isShowContent = true;
@@ -78,8 +82,7 @@ var registerVue = new Vue({
                 if (this.username.length < 6) {
                     this.showErrorNotify("Tên đăng nhập phải có ít nhất 6 kí tự!");
                 } else {
-                    this.isShowContent = false;
-                    this.isShowLoader = true;
+                    this.showWaitLoading();
                     fetch("/check-existed-username", {
                         method: 'POST',
                         headers: {
@@ -104,6 +107,7 @@ var registerVue = new Vue({
                 if (!this.phoneRegex.test(this.phone)) {
                     this.showErrorNotify("Hãy nhập đúng số điện thoại! Phải có 10 kí tự và là định dạng số.")
                 } else {
+                    this.showWaitLoading();
                     fetch("/check-existed-phone", {
                         method: 'POST',
                         headers: {

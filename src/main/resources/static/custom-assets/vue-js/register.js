@@ -89,7 +89,7 @@ var registerVue = new Vue({
                     }).then(response => response.json())
                         .then((data) => {
                             //if not existed return
-                            return !this.checkExited(data, "Tên đăng nhập đã tồn tại!");
+                            return !this.checkExited(data, "Tên đăng nhập đã được sử dụng!");
                         }).catch(error => {
                         console.log(error);
                     })
@@ -112,7 +112,7 @@ var registerVue = new Vue({
                         body: this.phone,
                     }).then(response => response.json())
                         .then((data) => {
-                            this.validPhone = !this.checkExited(data, "Số điện thoại đã tồn tại!");
+                            this.validPhone = !this.checkExited(data, "Số điện thoại đã được sử dụng!");
                             return this.validPhone;
                         }).catch(error => {
                         console.log(error);
@@ -190,7 +190,9 @@ var registerVue = new Vue({
                     .then((data) => {
                         this.otp = data;
                         this.sendOTP();
-                    })
+                    }).catch(error => {
+                    console.log(error);
+                })
             } else {
                 this.isValidPhone();
             }

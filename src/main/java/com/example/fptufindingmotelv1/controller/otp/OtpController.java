@@ -39,8 +39,8 @@ public class OtpController {
             return responseMsg("001", "Vui lòng nhập mã xác thực", null);
         }
         char[] otp = otpService.getOTP(phoneNumber);
-        if(otp == null){
-            return responseMsg("001", "Mã xác thực đã hết hạn, vui lòng gửi lại mã", null);
+        if(otp == null || otp.length == 0){
+            return responseMsg("002", "Mã xác thực đã hết hạn, vui lòng gửi lại mã", null);
         }else if(otp != null && String.valueOf(otp).equals(inputOTP)){
             otpService.clearOTP(phoneNumber);
             return responseMsg("000", "Success", null);

@@ -14,6 +14,7 @@ var forgotInstance = new Vue({
         disableInputPhone : false,
         displayTimer : null,
         intervalID : null,
+        expireDate : 0,
     },
     methods: {
         sendOTP() {
@@ -29,12 +30,15 @@ var forgotInstance = new Vue({
                         .then(response => response.json())
                         .then((data) => {
                             if(data != null && data.code == "001"){
+                                this.clearTimer()
                                 this.showMsg = true
                                 this.message = data.message
                             }else if(data != null && data.CodeResult == "100"){
                                 this.disableInputPhone = true
+                                this.expireDate = Date.now() + 1 * 60000
                                 this.countDown()
                             }else {
+                                this.clearTimer()
                                 this.showMsg = true
                                 this.message = "Chưa gửi được tin nhắn, Vui lòng bấm <b>Gửi mã</b> để gửi lại"
                             }
@@ -46,17 +50,26 @@ var forgotInstance = new Vue({
             }
 
         },
+        clearTimer(){
+            clearTimeout(this.intervalID)
+            this.displayTimer = null
+        },
         countDown(){
-            var duration = 5 * 60;
-            var minutes, seconds;
-            this.intervalID = setInterval(() => {
-                 minutes = ((duration - duration % 60) / 60 < 10) ? "0" + (duration - duration % 60) / 60 : (duration - duration % 60) / 60 + "";
-                 seconds = (duration % 60 < 10) ? "0" + duration % 60 : duration % 60 + "";
+
+            var duration = 5 * 60000;
+            var minutes, seconds, milliseconds;
+            this.intervalID = setTimeout(() => {
+                 var date = Date.now();
+                 duration = this.expireDate - date;
+
+                 minutes = ((duration - duration % 60000) / 60000 < 10) ? "0" + (duration - duration % 60000) / 60000 : (duration - duration % 60000) / 60000 + "";
+                 milliseconds = duration % 60000;
+                 seconds = ((milliseconds - milliseconds % 1000) / 1000 < 10) ? "0" + (milliseconds - milliseconds % 1000) / 1000 : (milliseconds - milliseconds % 1000) / 1000 + "";
+
                  this.displayTimer = 'Đã gửi một mã xác thực đến số điện thoại của bạn, mã hết hiệu lực sau <b>' + minutes + ":" + seconds + '</b>';
-                 if(duration > 0){
-                     duration = duration - 1
-                 }else {
-                     clearInterval(this.intervalID)
+                 requestAnimationFrame(this.countDown)
+                 if(duration <= 0){
+                     clearTimeout(this.intervalID)
                      this.displayTimer = 'Mã xác thực đã hết hiệu lực, vui lòng gửi lại mã'
                      this.disableInputPhone = false
                  }
@@ -79,11 +92,14 @@ var forgotInstance = new Vue({
                             if(data != null && data.code == "000"){
                                 this.showMsg = false
                                 this.stepScreen = 2
-                                this.displayTimer = null
-                                clearInterval(this.intervalID)
+                                this.clearTimer()
                                 this.disableInputPhone = false
                                 this.inputOtp = ""
                             }else if(data != null && data.code == "001"){
+                                this.showMsg = true
+                                this.message = data.message
+                            }else if(data != null && data.code == "002"){
+                                this.clearTimer()
                                 this.showMsg = true
                                 this.message = data.message
                             }

@@ -9,6 +9,6 @@ public class Constant {
     public static final int NUMBER_OF_BAN_DATE_POST = 3;
     public static final int NUMBER_OF_BAN_DATE_USER = 10;
     public static final String DATE_FORMAT_ONLY_DATE = "dd/MM/yyyy";
-    public static final Integer EXPIRE_MIN = 5;
+    public static final Integer EXPIRE_MIN = 1;
     public static final Integer OTP_LENGTH = 6;
 }

@@ -56,6 +56,7 @@
 .btn-otp{
     height: 35px;
     width: 100%;
+    margin: 10px auto;
     background-color: #dca73a;
     border-radius: 5px;
     border: medium none;

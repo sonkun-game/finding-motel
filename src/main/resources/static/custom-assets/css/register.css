@@ -22,11 +22,23 @@
 }
 
 .btn-fb {
+    width: 63% !important;
+    height: 50px;
+    padding: 10px;
+    margin: 0px 0px 0px 100px;
+    display: block;
+    border-radius: 3px;
     background-color: #4267b2 !important;
 }
 
 .btn-gm {
-    background-color: #dc4e41 !important;
+    background-color: #3ac55f !important;
+    width: 63% !important;
+    height: 50px;
+    padding: 10px;
+    margin: 0px 100px 0px 0px;
+    display: block;
+    border-radius: 3px;
 }
 
 .form-group {
@@ -89,14 +101,12 @@
 }
 
 .btn-confirm{
-    width: 50% !important;
-    height: 90%;
+    width: 30% !important;
     background: #dca73a;
     display: block;
     margin: auto;
     border: medium none;
     border-radius: 3px;
-    padding: 31px;
 }
 
 .btn-fb img{

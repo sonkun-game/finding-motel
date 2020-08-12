@@ -56,8 +56,8 @@ var landlordInstance = new Vue({
         }
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     },
     mounted(){
         if(this.task == 13){
@@ -226,7 +226,7 @@ var landlordInstance = new Vue({
             this.uploadImages.splice(this.uploadImages.indexOf(image), 1)
         },
         calculateCost(package){
-            this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+            this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
             this.amountSelected = package.amount
         },
         handleAddNewPost(){
@@ -262,7 +262,7 @@ var landlordInstance = new Vue({
                     .then((data) => {
                         console.log(data);
                         if(data != null && data.msgCode == 'post000'){
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                             window.location.href = "/"
                         }
@@ -328,7 +328,7 @@ var landlordInstance = new Vue({
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
-            localStorage.setItem("task", 16)
+            sessionStorage.setItem("task", 16)
             setTimeout( () => {
                 this.initMap()
                 this.handleDisplayDirection()
@@ -382,7 +382,7 @@ var landlordInstance = new Vue({
                         setTimeout(() =>
                         {
                             userTaskInstance.activeBtn(4)
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                         }, 2000);
                     }
@@ -431,7 +431,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.msgCode == 'post000'){
                         authenticationInstance.showModalNotify("Gia hạn thành công", 2000)
                         setTimeout(() => {
-                            localStorage.setItem("userInfo", JSON.stringify(data.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                             basicInfoInstance.userInfo = data.userInfo
                             this.expireDate = data.post.expireDate
                             this.$set(this.listPost, this.postIndex, data.post)
@@ -562,7 +562,7 @@ var landlordInstance = new Vue({
             userTaskInstance.task = 15
             noteInstance.task = 15
             this.task = 15
-            localStorage.setItem("task", 15)
+            sessionStorage.setItem("task", 15)
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.getListRoomRequest(null, post.id)
         },
@@ -571,7 +571,7 @@ var landlordInstance = new Vue({
             this.roomIndex = index
             this.selectedRoom = room
             if(room.availableRoom){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Đã cho thuê" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.roomName + '</b> thành <b>Đã cho thuê</b> không?';
                 sessionStorage.setItem("confirmAction", "change-status-room")
                 modalConfirmInstance.showModal()
             }else {
@@ -583,15 +583,15 @@ var landlordInstance = new Vue({
                     }
                 }
                 if (stayRentalRequest == null){
-                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái "' +room.roomName + '" thành "Còn trống" không?';
+                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.roomName + '</b> thành <b>Còn trống</b> không?';
                     sessionStorage.setItem("confirmAction", "change-status-room")
                     modalConfirmInstance.showModal()
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
                     this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
-                        "<p>Trạng thái của phòng sẽ được thay đổi thành \"Còn Trống\"</p>" +
-                        "<p>Người dùng \"" + this.renterInfo.username + "\" sẽ bị xóa khỏi phòng này</p>"
+                        "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
+                        "<p>Người dùng <b>" + this.renterInfo.username + "</b> sẽ bị xóa khỏi phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
@@ -611,10 +611,10 @@ var landlordInstance = new Vue({
             this.selectedRoom = room;
             this.selectedRequest = request;
             if(action == 'accept'){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn chấp nhận yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn chấp nhận yêu cầu thuê trọ của người dùng <b>' +request.renterUsername + '</b> không?';
                 sessionStorage.setItem("confirmAction", "accept-request")
             }else if(action == 'reject'){
-                modalConfirmInstance.messageConfirm = 'Bạn có muốn từ chối yêu cầu thuê trọ của người dùng "' +request.renterUsername + '" không?';
+                modalConfirmInstance.messageConfirm = 'Bạn có muốn từ chối yêu cầu thuê trọ của người dùng <b>' +request.renterUsername + '</b> không?';
                 sessionStorage.setItem("confirmAction", "reject-request")
             }
             modalConfirmInstance.showModal()
@@ -967,8 +967,8 @@ var noteInstance = new Vue({
         task: 0,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     }
 })
 var loadingInstance = new Vue({

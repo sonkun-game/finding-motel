@@ -27,9 +27,6 @@ public class RentalRequestServiceImpl implements RentalRequestService {
     RentalRequestRepository rentalRequestRepository;
 
     @Autowired
-    StatusRepository statusRepository;
-
-    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -74,8 +71,8 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             }else if(message != null && message.equals("000")){
                 RentalRequestModel rentalRequestModel = new RentalRequestModel();
                 RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-                RenterModel renterModel = renterRepository.findByUsername(rentalRequestDTO.getRenterUsername());
-                StatusModel statusModel = statusRepository.findById(rentalRequestDTO.getStatusId()).get();
+                RenterModel renterModel = new RenterModel(rentalRequestDTO.getRenterUsername());
+                StatusModel statusModel = new StatusModel(rentalRequestDTO.getStatusId());
                 rentalRequestModel.setId(rentalRequestDTO.getId());
                 rentalRequestModel.setRentalRoom(roomModel);
                 rentalRequestModel.setRentalRenter(renterModel);
@@ -113,15 +110,15 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             if(rentalRequestModel.getRentalStatus().getId() == 7){
                 Date date = new Date();
                 Date cancelDate = new Timestamp(date.getTime());
-                StatusModel statusCancel = statusRepository.findByIdAndType(8, 3);
+                StatusModel statusCancel = new StatusModel(8L);
                 rentalRequestModel.setRentalStatus(statusCancel);
                 rentalRequestModel.setCancelDate(cancelDate);
                 rentalRequestRepository.save(rentalRequestModel);
             }else if (rentalRequestModel.getRentalStatus().getId() == 9){
-                StatusModel statusRoom = statusRepository.findByIdAndType(1, 1);
+                StatusModel statusRoom = new StatusModel(1L);
                 rentalRequestModel.getRentalRoom().setStatus(statusRoom);
                 roomRepository.save(rentalRequestModel.getRentalRoom());
-                StatusModel statusExpire = statusRepository.findByIdAndType(11, 3);
+                StatusModel statusExpire = new StatusModel(11L);
                 rentalRequestModel.setRentalStatus(statusExpire);
                 rentalRequestModel = rentalRequestRepository.save(rentalRequestModel);
                 // send notification to Landlord
@@ -179,7 +176,7 @@ public class RentalRequestServiceImpl implements RentalRequestService {
             NotificationModel notificationModel = new NotificationModel();
             LandlordModel landlordModel = requestModel.getRentalRoom().getPostRoom().getLandlord();
 
-            StatusModel statusNotification = statusRepository.findByIdAndType(12, 4);
+            StatusModel statusNotification = new StatusModel(12L);
 
             Date date = new Date();
             Date createdDate = new Timestamp(date.getTime());

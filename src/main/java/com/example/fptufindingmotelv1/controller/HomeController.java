@@ -22,7 +22,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,11 +148,13 @@ public class HomeController {
                 minDistance = filterDistance.getMinValue();
                 maxDistance = filterDistance.getMaxValue();
             }
+            Date date = new Date();
+            Date currentDate = new Timestamp(date.getTime());
 
             ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.filterPost(null,
                     null, maxPrice, minPrice,
                     maxDistance, minDistance,
-                    maxSquare, minSquare, true, postSearchDTO.getTypeId(), false);
+                    maxSquare, minSquare, true, postSearchDTO.getTypeId(), false, currentDate);
 
 
             // Paging
@@ -227,8 +231,10 @@ public class HomeController {
     public JSONObject getWishListPost(@RequestBody WishListDTO wishListDTO) {
         JSONObject response = new JSONObject();
         try {
+            Date date = new Date();
+            Date currentDate = new Timestamp(date.getTime());
             List<PostModel> listPostWishList = wishListRepository.getListPostByRenter(
-                    wishListDTO.getRenterUsername(), true, false);
+                    wishListDTO.getRenterUsername(), true, false, currentDate);
             List<PostDTO> postDTOs = new ArrayList<>();
             PostDTO postDTO;
             for (PostModel post:

@@ -9,7 +9,7 @@ var instructionInstance = new Vue({
         this.getListInstruction()
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         if(this.userInfo != null && this.userInfo.role == 'RENTER'){
             this.roleSelected = 1
         }

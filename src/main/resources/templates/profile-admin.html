@@ -15,8 +15,8 @@
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
-<!--    inlude confirm modal-->
-<div th:replace="layout :: confirm-modal"></div>
+<!--    include message modal-->
+<div th:replace="layout :: message-modal"></div>
 
 <!--    include header-->
 <header th:replace="layout :: header"></header>
@@ -393,7 +393,7 @@
                                 <td>{{post.expireDate}}</td>
                                 <td>
                                     <div v-text="post.displayStatus"
-                                         v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
+                                         v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'">
                                     </div>
                                 </td>
                                 <td>{{post.landlordName}}</td>
@@ -510,6 +510,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalDel()" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalDelContent"></label>
@@ -534,6 +535,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalBan" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalBanContent"></label>
@@ -635,7 +637,7 @@
                     <!-- Modal content -->
                     <div class="view-information">
                         <div class="modal-header">
-                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm package' : 'Sửa package'"></h2>
+                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm gói' : 'Sửa gói'"></h2>
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">

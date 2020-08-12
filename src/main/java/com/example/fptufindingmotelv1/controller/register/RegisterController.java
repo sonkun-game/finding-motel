@@ -27,7 +27,7 @@ public class RegisterController {
     @PostMapping("/register")
     public String register(@RequestBody UserDTO userDTO) {
         JSONObject registerMsg = new JSONObject();
-        UserModel userModel = registerService.save(userDTO);
+        UserModel userModel = registerService.register(userDTO);
         if (userModel != null) {
             if (userModel.getFbAccount() != null && userModel.getFbAccount().length() != 0) {
                 registerMsg.put("code", "003");

@@ -28,7 +28,10 @@ public class RoomDTO {
         this.roomId = roomModel.getId();
         this.roomName = roomModel.getName();
         this.statusId = roomModel.getStatus().getId();
-        this.displayStatus = roomModel.getStatus().getStatus();
+        String statusString = this.statusId == 1 ? "Còn Trống" : "Đã Cho Thuê";
+        this.displayStatus = (roomModel.getStatus().getStatus() != null
+                && !roomModel.getStatus().getStatus().isEmpty())
+                ? roomModel.getStatus().getStatus() : statusString;
         this.availableRoom = roomModel.getStatus().getId() == 1 ? true : false;
         this.postId = roomModel.getPostRoom().getId();
         this.postTitle = roomModel.getPostRoom().getTitle();

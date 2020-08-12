@@ -9,7 +9,9 @@ import com.example.fptufindingmotelv1.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,6 +59,12 @@ public class ViewDetailServiceImpl implements ViewDetailService{
     public PostModel getPostDetail(String id) {
         try {
             PostModel postModel = postRepository.getPostById(id);
+            Date date = new Date();
+            Date currentDate = new Timestamp(date.getTime());
+            if(postModel.getExpireDate().before(currentDate) && postModel.isVisible()){
+                postModel.setVisible(false);
+                postRepository.updateVisiblePost(false, postModel.getId());
+            }
             postModel.setImages(imageRepository.getImageByPostId(id));
             return postModel;
         }catch (Exception e){

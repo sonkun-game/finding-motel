@@ -58,6 +58,10 @@ var registerVue = new Vue({
         checkOTP() {
             return this.otp == this.otpCode ? this.matchOTP = true : this.matchOTP = false;
         },
+        showWaitLoading() {
+            this.isShowContent = false;
+            this.isShowLoader = true;
+        },
         showErrorNotify(msg) {
             this.textContent = msg;
             this.isShowContent = true;
@@ -78,8 +82,7 @@ var registerVue = new Vue({
                 if (this.username.length < 6) {
                     this.showErrorNotify("Tên đăng nhập phải có ít nhất 6 kí tự!");
                 } else {
-                    this.isShowContent = false;
-                    this.isShowLoader = true;
+                    this.showWaitLoading();
                     fetch("/check-existed-username", {
                         method: 'POST',
                         headers: {
@@ -89,7 +92,7 @@ var registerVue = new Vue({
                     }).then(response => response.json())
                         .then((data) => {
                             //if not existed return
-                            return !this.checkExited(data, "Tên đăng nhập đã tồn tại!");
+                            return !this.checkExited(data, "Tên đăng nhập đã được sử dụng!");
                         }).catch(error => {
                         console.log(error);
                     })
@@ -104,6 +107,7 @@ var registerVue = new Vue({
                 if (!this.phoneRegex.test(this.phone)) {
                     this.showErrorNotify("Hãy nhập đúng số điện thoại! Phải có 10 kí tự và là định dạng số.")
                 } else {
+                    this.showWaitLoading();
                     fetch("/check-existed-phone", {
                         method: 'POST',
                         headers: {
@@ -112,7 +116,7 @@ var registerVue = new Vue({
                         body: this.phone,
                     }).then(response => response.json())
                         .then((data) => {
-                            this.validPhone = !this.checkExited(data, "Số điện thoại đã tồn tại!");
+                            this.validPhone = !this.checkExited(data, "Số điện thoại đã được sử dụng!");
                             return this.validPhone;
                         }).catch(error => {
                         console.log(error);
@@ -189,8 +193,10 @@ var registerVue = new Vue({
                     .then(response => response.json())
                     .then((data) => {
                         this.otp = data;
-                        this.sendOTP();
-                    })
+                        // this.sendOTP();
+                    }).catch(error => {
+                    console.log(error);
+                })
             } else {
                 this.isValidPhone();
             }

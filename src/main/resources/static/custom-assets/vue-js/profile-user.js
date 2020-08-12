@@ -16,9 +16,9 @@ var profileInstance = new Vue({
 
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         this.gender = this.userInfo.gender ? "1" : "0";
-        this.task = localStorage.getItem("task")
+        this.task = sessionStorage.getItem("task")
         authenticationInstance.isShowBtn = false
     },
     mounted(){
@@ -36,9 +36,9 @@ var profileInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if(data != null && data.msgCode == "user000"){
-                        localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
-                        authenticationInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-                        basicInfoInstance.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+                        sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+                        authenticationInstance.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+                        basicInfoInstance.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                     }else if(data != null && data.msgCode == "sys999"){
                         alert("failed")
@@ -154,7 +154,7 @@ var profileInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if(data != null && data.msgCode == "user000"){
-                        localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+                        sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo))
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         let modal_phone = document.getElementById("my-modal-phone");
                         setTimeout(() => modal_phone.style.display = "none", 2000);
@@ -184,7 +184,7 @@ var profileInstance = new Vue({
                             this.userInfo.havePassword = true
                             userTaskInstance.userInfo.havePassword = true
                             authenticationInstance.userInfo.havePassword = true
-                            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+                            sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo))
                             authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                             setTimeout(() => {
                                 this.task = 0
@@ -245,7 +245,7 @@ var basicInfoInstance = new Vue({
         userInfo: {},
     },
     beforeMount() {
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
     },
     methods: {
         handlePostNewRoom() {
@@ -255,7 +255,7 @@ var basicInfoInstance = new Vue({
                     "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                 modalMessageInstance.showModal()
             } else {
-                localStorage.setItem("task", 13)
+                sessionStorage.setItem("task", 13)
                 window.location.href = "/dang-tin"
             }
         },
@@ -266,7 +266,7 @@ var basicInfoInstance = new Vue({
                     "Chức năng Đăng Tin và Nạp Tiền bị khóa";
                 modalMessageInstance.showModal()
             } else {
-                localStorage.setItem("task", 8);
+                sessionStorage.setItem("task", 8);
                 window.location.href = "/nap-tien"
             }
         }
@@ -285,14 +285,14 @@ var userTaskInstance = new Vue({
         task: 0,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     },
     methods: {
         activeBtn : function (task) {
             this.task = task
             profileInstance.task = task
-            localStorage.setItem("task", task)
+            sessionStorage.setItem("task", task)
 
             if(task == 0 || task == 1){
                 if(this.$route.fullPath.includes("quan-ly-tai-khoan")){

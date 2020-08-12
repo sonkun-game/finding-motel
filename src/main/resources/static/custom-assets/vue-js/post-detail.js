@@ -21,7 +21,7 @@ var postDetailInstance = new Vue({
         disableFunctions : false,
     },
     beforeMount() {
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
         //get url param
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -367,7 +367,7 @@ var postDetailInstance = new Vue({
         });
     },
     created(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         if(this.userInfo != null && this.userInfo.role == 'RENTER'){
             if(sessionStorage.getItem("listPostOfRenter") != null){
                 this.listPostOfRenter = JSON.parse(sessionStorage.getItem("listPostOfRenter"))

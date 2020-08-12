@@ -13,7 +13,7 @@ var postInstance = new Vue({
         listPostOfRenter : [],
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
     },
     methods : {
         addWishlist : function(post, username){
@@ -215,7 +215,7 @@ var filterPostInstance = new Vue({
         },
     },
     created() {
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         this.getInitHomePage()
         this.getPageFromQuery()
         this.typeId = parseInt(sessionStorage.getItem("typeId"))

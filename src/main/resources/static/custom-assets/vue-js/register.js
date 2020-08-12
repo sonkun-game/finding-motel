@@ -2,6 +2,7 @@ var router = new VueRouter({
     mode: 'history',
     routes: []
 });
+
 var registerVue = new Vue({
     router,
     el: "#registerForm",
@@ -31,15 +32,21 @@ var registerVue = new Vue({
         invisible: 'invisible',
         border_error: 'border_error',
         errorText: 'errorText',
+        //error
+        textContent: "concac",
+        isShowContent: false,
+        isShowLoader: false,
+        phoneRegex: /^0[1-9][0-9]{8}$/,
+        validPhone: false,
     },
-    created(){
+    created() {
         let code = this.$route.query.code
         let url = this.$route.fullPath + ""
-        if((code != null || code != undefined) && url.includes("google")){
-            let apiUrl = "/api-get-google-login?code="+code
+        if ((code != null || code != undefined) && url.includes("google")) {
+            let apiUrl = "/api-get-google-login?code=" + code
             this.getLogin(apiUrl, "google")
-        }else if((code != null || code != undefined) && url.includes("facebook")){
-            let apiUrl = "/api-get-facebook-login?code="+code
+        } else if ((code != null || code != undefined) && url.includes("facebook")) {
+            let apiUrl = "/api-get-facebook-login?code=" + code
             this.getLogin(apiUrl, "facebook")
         }
 
@@ -51,45 +58,71 @@ var registerVue = new Vue({
         checkOTP() {
             return this.otp == this.otpCode ? this.matchOTP = true : this.matchOTP = false;
         },
-        isExistUsername() {
-            if (this.username != null && this.username.length !== 0) {
-                fetch("/check-existed-username", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: this.username,
-                }).then(response => response.json())
-                    .then((data) => {
-                        this.existedUsername = data;
-                    }).catch(error => {
-                    console.log(error);
-                })
-            } else {
-                this.existedUsername = false;
-            }
-
-            return this.existedUsername;
-
+        showErrorNotify(msg) {
+            this.textContent = msg;
+            this.isShowContent = true;
         },
-        isExistPhone() {
-            if (this.phone != null && this.phone.length != 0) {
-                fetch("/check-existed-phone", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: this.phone,
-                }).then(response => response.json())
-                    .then((data) => {
-                        this.existedPhone = data
-                    }).catch(error => {
-                    console.log(error);
-                })
+        checkExited(boolean, msg) {
+            setTimeout(() => {
+                this.isShowLoader = false;
+                if (boolean) {
+                    this.showErrorNotify(msg);
+                } else {
+                    this.isShowContent = false;
+                }
+            }, 1000);
+            return boolean;
+        },
+        isValidUsername() {
+            if (this.username != null && this.username.length !== 0) {
+                if (this.username.length < 6) {
+                    this.showErrorNotify("Tên đăng nhập phải có ít nhất 6 kí tự!");
+                } else {
+                    this.isShowContent = false;
+                    this.isShowLoader = true;
+                    fetch("/check-existed-username", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: this.username,
+                    }).then(response => response.json())
+                        .then((data) => {
+                            //if not existed return
+                            return !this.checkExited(data, "Tên đăng nhập đã tồn tại!");
+                        }).catch(error => {
+                        console.log(error);
+                    })
+                }
             } else {
-                this.existedPhone = false;
+                this.showErrorNotify("Tên đăng nhập không được để trống!");
+                return false;
             }
-            return this.existedPhone;
+        },
+        isValidPhone() {
+            if (this.phone != null && this.phone.length != 0) {
+                if (!this.phoneRegex.test(this.phone)) {
+                    this.showErrorNotify("Hãy nhập đúng số điện thoại! Phải có 10 kí tự và là định dạng số.")
+                } else {
+                    fetch("/check-existed-phone", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: this.phone,
+                    }).then(response => response.json())
+                        .then((data) => {
+                            this.validPhone = !this.checkExited(data, "Số điện thoại đã tồn tại!");
+                            return this.validPhone;
+                        }).catch(error => {
+                        console.log(error);
+                    })
+                }
+            } else {
+                this.showErrorNotify("Số điện thoại không được để trống!");
+                return false;
+            }
+
         },
         validRegister: function () {
             let registerModel = {
@@ -101,7 +134,7 @@ var registerVue = new Vue({
                 "password": this.password,
                 "displayName": this.displayName,
             };
-            if (this.checkMatchPwd() && this.checkOTP() && !this.isExistUsername() && !this.isExistPhone()) {
+            if (this.isValidUsername() && this.isValidPhone() && this.checkOTP() && this.checkMatchPwd()) {
                 console.log(JSON.stringify(registerModel));
                 loadingInstance.isHidden = false
                 document.body.setAttribute("class", "loading-hidden-screen")
@@ -115,15 +148,15 @@ var registerVue = new Vue({
                     .then((data) => {
                         console.log(data);
                         if (data.code == '001') {
-                            localStorage.setItem("registeredUsername", this.username);
+                            sessionStorage.setItem("registeredUsername", this.username);
                             window.location.href = "/dang-nhap";
                         } else if (data.code == '002') {
-                            let accessToken = localStorage.getItem("accessToken")
-                            let apiUrl = "/api-get-google-profile?accessToken="+accessToken
+                            let accessToken = sessionStorage.getItem("accessToken")
+                            let apiUrl = "/api-get-google-profile?accessToken=" + accessToken
                             this.getLogin(apiUrl, "google")
                         } else if (data.code == '003') {
-                            let accessToken = localStorage.getItem("accessToken")
-                            let apiUrl = "/api-get-facebook-profile?accessToken="+accessToken
+                            let accessToken = sessionStorage.getItem("accessToken")
+                            let apiUrl = "/api-get-facebook-profile?accessToken=" + accessToken
                             this.getLogin(apiUrl, "facebook")
                         }
                     }).catch(error => {
@@ -132,7 +165,7 @@ var registerVue = new Vue({
             }
         },
         sendOTP() {
-            this.smsSendUrl = "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
+            this.smsSendUrl = "https://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?" +
                 "ApiKey=A64092B4036FCBE98DC11D133598BA&SecretKey=4EB8AA82ED932ADD24FB776E928BFE&SmsType=2&Brandname=Verify";
             this.smsSendUrl += "&Phone=" + this.phone;//get from screen
             this.smsSendUrl += "&Content=Ma OTP cua ban la: " + this.otp;//get from screen
@@ -141,48 +174,49 @@ var registerVue = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     this.smsResponse = data;
+                    if (data.CodeResult == 100) {
+                        this.showErrorNotify("Mã OTP đã được gửi! Nếu đợi quá lâu xin thử lại.");
+                    } else {
+                        this.showErrorNotify(data.ErrorMessage + "");
+                    }
                 })
         },
         getOTP() {
-            if (this.phone == null || this.phone.length == 0) {
-                alert("Hãy nhập số điện thoại!");
-            } else {
-                if (this.phone.length == 10) {
-                    fetch("/api/get-otp?otpLength=6", {
-                        method: 'POST'
+            if (this.validPhone) {
+                fetch("/api/get-otp?otpLength=6", {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then((data) => {
+                        this.otp = data;
+                        this.sendOTP();
                     })
-                        .then(response => response.json())
-                        .then((data) => {
-                            this.otp = data;
-                            this.sendOTP();
-                        })
-                } else {
-                    alert("Hãy nhập số điện thoại chính xác!");
-                }
+            } else {
+                this.isValidPhone();
             }
         },
-        getLogin(url, tokenProvider){
-            fetch(url,{
-                method : 'POST',
+        getLogin(url, tokenProvider) {
+            fetch(url, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data)
-                    if(data != null && data.msgCode === "msg003"){
-                        localStorage.setItem("newSocialUser", data.user)
-                        localStorage.setItem("accessToken", data.accessToken)
+                    if (data != null && data.msgCode === "msg003") {
+                        sessionStorage.setItem("newSocialUser", data.user)
+                        sessionStorage.setItem("accessToken", data.accessToken)
                         this.displayName = data.user.displayName
-                        if(tokenProvider == "google"){
+                        if (tokenProvider == "google") {
                             this.ggAccount = data.user.ggAccount
-                        }else{
+                        } else {
                             this.fbAccount = data.user.fbAccount
                         }
                         preloaderInstance.isShowLoader = false
 
-                    }else if (data != null && data.msgCode === "msg004"){
-                        localStorage.removeItem("accessToken")
+                    } else if (data != null && data.msgCode === "msg004") {
+                        sessionStorage.removeItem("accessToken")
                         this.$cookies.set("access_token", data.accessToken)
                         this.$cookies.set("token_provider", tokenProvider)
                         window.location.href = "/"
@@ -198,6 +232,7 @@ var registerVue = new Vue({
         }
     }
 });
+
 var loadingInstance = new Vue({
     el: '#loading-wrapper',
     data: {

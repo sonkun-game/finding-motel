@@ -10,8 +10,8 @@ var renterInstance = new Vue({
         selectedRentalRequestId : null,
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
-        this.task = localStorage.getItem("task")
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        this.task = sessionStorage.getItem("task")
     },
     mounted(){
         if(this.task == 2){
@@ -65,7 +65,7 @@ var renterInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "wishlist000"){
                         this.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích");
-
+                        sessionStorage.removeItem("listPostOfRenter")
                         setTimeout(() => {
                             this.wishList = data.wishList
                         }, 2000);
@@ -161,6 +161,9 @@ var renterInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        closeModalConfirm(){
+            document.getElementById("modalConfirm").style.display = 'none';
         },
     }
 })

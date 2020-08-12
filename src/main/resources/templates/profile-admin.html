@@ -18,9 +18,6 @@
 <!--    include message modal-->
 <div th:replace="layout :: message-modal"></div>
 
-<!--    inlude confirm modal-->
-<div th:replace="layout :: confirm-modal"></div>
-
 <!--    include header-->
 <header th:replace="layout :: header"></header>
 
@@ -513,6 +510,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalDel()" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalDelContent"></label>
@@ -537,6 +535,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalBan" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalBanContent"></label>

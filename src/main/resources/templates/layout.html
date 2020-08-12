@@ -31,6 +31,7 @@
         <div class="message-confirm">
             <div class="modal-header">
                 <h2>Xác Nhận</h2>
+                <span @click="closeModalConfirm()" class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <label id="modalConfirmMessage"></label>
@@ -515,6 +516,7 @@
         <div class="message-confirm">
             <div class="modal-header">
                 <h2>Xác Nhận</h2>
+                <span @click="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <label id="confirm-content" v-html="messageConfirm"></label>

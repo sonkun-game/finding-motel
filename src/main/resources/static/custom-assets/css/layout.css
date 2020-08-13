@@ -9,10 +9,11 @@
 .msg-notification{
     padding: 12px 0;
     min-height: 48px;
+    display: flex;
 }
 .msg-notification span{
     font-size: 12px;
-    color: #ecba02;
+    color: #e21010;
 }
 button:disabled,
 button[disabled]{

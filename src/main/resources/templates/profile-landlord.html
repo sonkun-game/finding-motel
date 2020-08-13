@@ -533,7 +533,7 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Thời hạn bài đăng</h4>
+                                    <h4>Thời hạn bài đăng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
                                     <div class="form-check-inline col" v-for="package in listPaymentPackage">
@@ -586,7 +586,7 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Số lượng phòng:</h4>
+                                    <h4>Số lượng phòng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
@@ -703,7 +703,7 @@
                                 </p>
                                 <div class="fill-information">
                                     <div class="title">
-                                        <h4>Số tiền:</h4>
+                                        <h4>Số tiền<span class="require-text">*</span></h4>
                                     </div>
 
                                     <div class="input-information">

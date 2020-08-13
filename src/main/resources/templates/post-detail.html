@@ -152,7 +152,7 @@
                                               class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
-                                        <h4 class="font-weight-normal">Nội dung</h4>
+                                        <h4 class="font-weight-normal">Nội dung<span class="require-text">*</span></h4>
                                         <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
@@ -191,7 +191,7 @@
                                 <div class="modal-body">
                                     <div class="room-number">
                                         <div class="title-room">
-                                            <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                            <h4 class="font-weight-normal">Chọn phòng<span class="require-text">*</span></h4>
                                         </div>
                                         <div class="choose-room clearfix">
                                             <ul class="list-select-room" v-for="room in listRoomOfPost">
@@ -207,7 +207,7 @@
                                     </div>
                                     <div class="room-number">
                                         <div class="title-room">
-                                            <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                            <h4 class="font-weight-normal">Ngày bắt đầu<span class="require-text">*</span></h4>
                                         </div>
                                         <div class="choose-room">
                                             <input @input="setRequestDateRental($event.target.value)" type="date">

@@ -487,20 +487,21 @@
         </div>
         <div class="information-detail">
             <div class="msg-notification">
+                <p class="label"></p>
                 <span v-show="showMsg"  v-cloak>
                     {{message}}
                 </span>
             </div>
             <div class="detail" v-if="userInfo.havePassword">
-                <p class="label">Mật khẩu cũ:</p>
+                <p class="label">Mật khẩu cũ<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
             </div>
             <div class="detail-2">
-                <p class="label">Mật khẩu mới:</p>
+                <p class="label">Mật khẩu mới<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
             </div>
             <div class="detail-2">
-                <p class="label">Nhập lại mật khẩu:</p>
+                <p class="label">Nhập lại mật khẩu<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
             </div>
 

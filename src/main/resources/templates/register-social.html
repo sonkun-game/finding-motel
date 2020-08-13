@@ -57,23 +57,19 @@
                             <div class="col-lg-10  mx-auto">
                                 <h3 class="display-4">ĐĂNG KÝ</h3>
                                 <form id="registerForm">
-                                    <div class="">
-                                        <p v-bind:class="{invisible : !existedUsername}" class="errorText">Username đã
-                                            tồn tại!</p>
-                                    </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
-                                            <p>Tên đăng nhập: </p>
+                                            <p>Tên đăng nhập<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="register-input">
-                                            <input @focusout="isExistUsername" v-model="username" id="userName"
+                                            <input @focusout="isValidUsername" v-model="username" id="userName"
                                                    name="userName" type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
-                                            <p>Tên hiển thị: </p>
+                                            <p>Tên hiển thị<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="register-input">
                                             <input v-model="displayName" id="displayName" name="displayName"
@@ -81,16 +77,12 @@
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <p v-bind:class="{invisible : !existedPhone}" class="errorText">Số điện
-                                            thoại đã tồn tại!</p>
-                                    </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
-                                            <p>Số điện thoại: </p>
+                                            <p>Số điện thoại<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="register-input-phone">
-                                            <input @focusout="isExistPhone" v-model="phone" id="phone" name="phone"
+                                            <input @focusout="isValidPhone" v-model="phone" id="phone" name="phone"
                                                    type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
                                                    maxlength="10" required>
                                         </div>
@@ -101,7 +93,7 @@
                                     </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
-                                            <p>Mã xác nhận: </p>
+                                            <p>Mã xác nhận<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="register-input">
                                             <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
@@ -111,7 +103,7 @@
                                     </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
-                                            <p>Vai trò: </p>
+                                            <p>Vai trò<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="radio-container">Chủ trọ

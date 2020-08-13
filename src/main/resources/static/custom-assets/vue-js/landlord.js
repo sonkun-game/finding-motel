@@ -146,14 +146,25 @@ var landlordInstance = new Vue({
             modalConfirmInstance.showModal()
         },
         getHistoryPaymentPost(){
+            let request = {
+                'landlord' : this.userInfo.username
+            }
+
             fetch("/api-get-history-payment-post", {
                 method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
 
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null){
-                        this.listPaymentPost = data
+                    if(data != null && data.code == "000"){
+                        this.listPaymentPost = data.data
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -853,6 +864,8 @@ var landlordInstance = new Vue({
         },
         handleDisplayDirection(){
             let origin = this.selectedPost.mapLocation;
+            this.latMarkerEl.value = this.selectedPost.mapLocation.split(", ")[0];
+            this.longMarkerEl.value = this.selectedPost.mapLocation.split(", ")[1];
             let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
@@ -913,6 +926,9 @@ var landlordInstance = new Vue({
             .then((data) => {
                 if (data != null && data.code == "000") {
                     this.listPayment = data.data
+                }else {
+                    modalMessageInstance.message = data.message;
+                    modalMessageInstance.showModal()
                 }
             })
         },

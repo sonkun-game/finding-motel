@@ -864,6 +864,8 @@ var landlordInstance = new Vue({
         },
         handleDisplayDirection(){
             let origin = this.selectedPost.mapLocation;
+            this.latMarkerEl.value = this.selectedPost.mapLocation.split(", ")[0];
+            this.longMarkerEl.value = this.selectedPost.mapLocation.split(", ")[1];
             let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});

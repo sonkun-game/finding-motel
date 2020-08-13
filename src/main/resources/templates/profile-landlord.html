@@ -218,15 +218,17 @@
                                     <h4>Bản đồ<span class="require-text">*</span>
                                     </h4>
                                 </div>
-                                <div class="input-information">
-                                    <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
-                                    <i class="fas icon-search-map fa-search"></i>
-                                </div>
 
                                 <input type="hidden" id="latitude">
                                 <input type="hidden" id="longitude">
-                                <!--                                    <button id="show-route" v-on:click.prevent="handleCalculateDistance">Show Direction</button>-->
-                                <div id="map-canvas"></div>
+                                <div class="map-container">
+                                    <div class="input-information map-search">
+                                        <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <i class="fas icon-search-map fa-search"></i>
+                                    </div>
+                                    <div id="map-canvas"></div>
+                                </div>
+
                             </div>
 
 

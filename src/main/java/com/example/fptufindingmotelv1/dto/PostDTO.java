@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class PostDTO {
     private String id;
+    private Long typeId;
     private String type;
     private String landlord;
     private String landlordDisplayName;
@@ -32,9 +33,13 @@ public class PostDTO {
     private String address;
     private String mapLocation;
 
+    public PostDTO() {
+    }
+
     public PostDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.id = postModel.getId();
+        this.typeId = postModel.getType().getId();
         this.type = postModel.getType().getName();
         this.landlord = postModel.getLandlord().getUsername();
         this.landlordDisplayName = postModel.getLandlord().getDisplayName();
@@ -56,11 +61,27 @@ public class PostDTO {
                     + Base64.getEncoder().encodeToString(image.getFileContent());
             images.add(imageUrl);
         }
-        this.listRoom = new ArrayList<>();
-        for (int i = 0; i < postModel.getRooms().size(); i++) {
-            listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
-        }
+//        this.listRoom = new ArrayList<>();
+//        for (int i = 0; i < postModel.getRooms().size(); i++) {
+//            listRoom.add(new RoomDTO(i + 1, postModel.getRooms().get(i)));
+//        }
 
+    }
+    public PostDTO(String id) {
+        this.id = id;
+    }
+    public void setPostDTO(PostModel postModel){
+        this.id = postModel.getId();
+        this.price = postModel.getPrice();
+        this.distance = postModel.getDistance();
+        this.square = postModel.getSquare();
+        this.description = postModel.getDescription();
+        this.title = postModel.getTitle();
+        this.address = postModel.getAddress();
+        this.images = new ArrayList<>();
+        String imageUrl = "data:image/"+ postModel.getImages().get(0).getFileType()+";base64,"
+                + Base64.getEncoder().encodeToString(postModel.getImages().get(0).getFileContent());
+        this.images.add(imageUrl);
     }
 
 }

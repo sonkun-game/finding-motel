@@ -31,6 +31,7 @@
         <div class="message-confirm">
             <div class="modal-header">
                 <h2>Xác Nhận</h2>
+                <span @click="closeModalConfirm()" class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <label id="modalConfirmMessage"></label>
@@ -129,7 +130,7 @@
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)" v-show="userInfo.role == 'ADMIN'">Quản lý package</a></li>
+                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)" v-show="userInfo.role == 'ADMIN'">Quản lý gói</a></li>
                                                 <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(20)" v-show="userInfo.role == 'ADMIN'">Nạp tiền cho chủ trọ</a></li>
                                                 <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
                                             </ul>
@@ -413,7 +414,7 @@
                                 <div class="phone-number">
                                     <h4 class="title-phone">Số điện thoại: </h4>
                                     <input @focusout="checkExistPhone()" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm px-4" />
-                                    <button v-on:click="getOTP()" class="btn-hover btn-default-otp">Gửi mã xác nhận</button>
+                                    <button v-on:click="getOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
 
                                 </div>
                                 <div class="confirm-otp">
@@ -473,7 +474,7 @@
         <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
         <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
         <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Danh sách báo cáo</button>
-        <button v-on:click="activeBtn(19)" v-bind:class="{active : task == 19}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Quản lý package</button>
+        <button v-on:click="activeBtn(19)" v-bind:class="{active : task == 19}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Quản lý gói</button>
         <button v-on:click="activeBtn(20)" v-bind:class="{active : task == 20}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Nạp tiền cho chủ trọ</button>
         <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img src="assets/img/logo/logout.png" class="logo-button">Đăng xuất</button>
 
@@ -486,20 +487,21 @@
         </div>
         <div class="information-detail">
             <div class="msg-notification">
+                <p class="label"></p>
                 <span v-show="showMsg"  v-cloak>
                     {{message}}
                 </span>
             </div>
             <div class="detail" v-if="userInfo.havePassword">
-                <p class="label">Mật khẩu cũ:</p>
+                <p class="label">Mật khẩu cũ<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
             </div>
             <div class="detail-2">
-                <p class="label">Mật khẩu mới:</p>
+                <p class="label">Mật khẩu mới<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
             </div>
             <div class="detail-2">
-                <p class="label">Nhập lại mật khẩu:</p>
+                <p class="label">Nhập lại mật khẩu<span class="require-text">*</span></p>
                 <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
             </div>
 
@@ -515,6 +517,7 @@
         <div class="message-confirm">
             <div class="modal-header">
                 <h2>Xác Nhận</h2>
+                <span @click="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <label id="confirm-content" v-html="messageConfirm"></label>
@@ -577,22 +580,23 @@
         <!-- Modal content -->
         <div class="view-information">
             <div class="modal-header">
-                <h2>Thông tin phòng trọ</h2>
+                <h2>Thông tin yêu cầu thuê phòng</h2>
                 <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
             </div>
             <div class="modal-body">
+                <div class="infor-modal">
+                    <p class="left-modal">Bài đăng:</p>
+                    <input :value="selectedRequest.postTitle"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
                 <div class="infor-modal">
                     <p class="left-modal">Tên phòng:</p>
                     <input :value="selectedRequest.roomName"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Yêu cầu thuê phòng:</p>
-                    <input :value="selectedRequest.id"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
+
                 <div class="infor-modal">
                     <p class="left-modal">Ngày yêu cầu:</p>
                     <input :value="selectedRequest.displayRequestDate"
@@ -605,39 +609,43 @@
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Tên đăng nhập:</p>
-                    <input :value="renterInfo.username"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
+                <label>Người thuê</label>
+                <div class="renter-information-area">
+                    <div class="infor-modal">
+                        <p class="left-modal">Tên đăng nhập:</p>
+                        <input :value="renterInfo.username"
+                               class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" disabled/>
+                    </div>
+                    <div class="infor-modal">
+                        <p class="left-modal">Tên hiển thị:</p>
+                        <input :value="renterInfo.displayName"
+                               class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" disabled/>
+                    </div>
+                    <div class="infor-modal">
+                        <p class="left-modal">Số điện thoại:</p>
+                        <input :value="renterInfo.phoneNumber"
+                               class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" disabled/>
+                    </div>
+                    <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                        <p class="left-modal">Ngày sinh:</p>
+                        <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" disabled/>
+                    </div>
+                    <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                        <p class="left-modal">Nghề nghiệp:</p>
+                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" :value="renterInfo.career" disabled/>
+                    </div>
+                    <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                        <p class="left-modal">Giới tính:</p>
+                        <input class="right-modal rounded-pill border-0 shadow-sm"
+                               type="text" :value="renterInfo.genderDisplay" disabled/>
+                    </div>
                 </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Tên hiển thị:</p>
-                    <input :value="renterInfo.displayName"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Số điện thoại:</p>
-                    <input :value="renterInfo.phoneNumber"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                    <p class="left-modal">Ngày sinh:</p>
-                    <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                    <p class="left-modal">Nghề nghiệp:</p>
-                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" :value="renterInfo.career" disabled/>
-                </div>
-                <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                    <p class="left-modal">Giới tính:</p>
-                    <input class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" :value="renterInfo.genderDisplay" disabled/>
-                </div>
+
                 <div v-html="message">
 
                 </div>

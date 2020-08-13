@@ -11,7 +11,7 @@
 
 .display-4 {
     text-align: center;
-    margin-bottom: 70px !important;
+    padding-bottom: 40px;
     font-family: sans-serif;
     font-size: 2.5em !important;
     font-weight: 400;
@@ -22,11 +22,23 @@
 }
 
 .btn-fb {
+    width: 63% !important;
+    height: 50px;
+    padding: 10px;
+    margin: 0px 0px 0px 100px;
+    display: block;
+    border-radius: 3px;
     background-color: #4267b2 !important;
 }
 
 .btn-gm {
-    background-color: #dc4e41 !important;
+    background-color: #dc3545 !important;
+    width: 63% !important;
+    height: 50px;
+    padding: 10px;
+    margin: 0px 100px 0px 0px;
+    display: block;
+    border-radius: 3px;
 }
 
 .form-group {
@@ -51,7 +63,7 @@
 .register-btn-phone {
     width: 26%;
     float: right;
-    padding-left: 5px;
+    padding-left: 15px;
 }
 
 .btn-primary-otp {
@@ -89,14 +101,12 @@
 }
 
 .btn-confirm{
-    width: 50% !important;
-    height: 90%;
+    width: 30% !important;
     background: #dca73a;
     display: block;
     margin: auto;
     border: medium none;
     border-radius: 3px;
-    padding: 31px;
 }
 
 .btn-fb img{
@@ -122,5 +132,37 @@
 }
 
 .errorText {
-    color: red;
+    color: #e21010;
+    margin-bottom: 0px;
+}
+.lds-dual-ring {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 3px solid #dca73a;
+    border-color: #dca73a transparent #dca73a transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.error-line{
+    font-size: 13px;
+    min-height: 40px;
+}
+.error-line-text{
+    padding: 0 0 5px 0;
 }

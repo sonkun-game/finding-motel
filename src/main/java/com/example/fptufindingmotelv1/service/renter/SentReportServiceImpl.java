@@ -24,16 +24,13 @@ public class SentReportServiceImpl implements SentReportService {
     @Autowired
     PostRepository postRepository;
 
-    @Autowired
-    private StatusRepository statusRepository;
-
     @Override
     public void sendReport(ReportRequestDTO reportRequestDTO) {
         try {
             ReportModel reportModel = null;
             PostModel postModel = postRepository.getOne(reportRequestDTO.getPostId());
             RenterModel renterModel = renterRepository.getOne(reportRequestDTO.getRenterId());
-            StatusModel statusModel = statusRepository.findByIdAndType(3, 2);
+            StatusModel statusModel = new StatusModel(3L);
             reportModel = new ReportModel(renterModel, postModel, statusModel, reportRequestDTO);
             reportRepository.save(reportModel);
         } catch (Exception e) {

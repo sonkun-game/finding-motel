@@ -84,8 +84,11 @@
                         <div class="container">
                             <div class="fill-information col-lg-4">
                                 <div class="title">
-                                    <h4>Loại phòng</h4>
+                                    <h4>Loại phòng<span class="require-text">*</span>
+                                    </h4>
+
                                 </div>
+
                                 <div class="form-dropdown input-information">
                                     <select class="rounded-pill border-0 shadow-sm" v-model="typeOfPost">
                                         <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
@@ -94,7 +97,8 @@
                             </div>
                             <div class="fill-information col-lg-12">
                                 <div class="title">
-                                    <h4>Tiêu đề (ít hơn 100 ký tự)</h4>
+                                    <h4>Tiêu đề (ít hơn 100 ký tự)<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="text" v-model="title" class="form-input-title-information rounded-pill border-0 shadow-sm">
@@ -102,7 +106,8 @@
                             </div>
                             <div class="fill-information col-lg-12">
                                 <div class="title">
-                                    <h4>Thông tin chi tiết</h4>
+                                    <h4>Thông tin chi tiết<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <textarea v-model="detailInfo" class="rounded-pill border-0 shadow-sm"></textarea>
@@ -111,7 +116,8 @@
                             <div class="row">
                                 <div class="fill-information col-lg-6">
                                     <div class="title">
-                                        <h4>Số lượng phòng:</h4>
+                                        <h4>Số lượng phòng<span class="require-text">*</span>
+                                        </h4>
                                     </div>
                                     <div class="input-information">
                                         <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information  rounded-pill border-0 shadow-sm">
@@ -128,7 +134,8 @@
 
                             <div class="fill-information col-lg-12" v-if="(listRoom != undefined && listRoom.length > 0) || (listRoomRequest != undefined && listRoomRequest.length > 0)">
                                 <div class="title">
-                                    <h4>Trạng thái các phòng:</h4>
+                                    <h4>Trạng thái các phòng<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information table-wrapper">
                                     <table class="table tbl-room table-bordered">
@@ -159,7 +166,8 @@
                             </div>
                             <div class="fill-information col-lg-6">
                                 <div class="title">
-                                    <h4>Giá cho thuê</h4>
+                                    <h4>Giá cho thuê<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
@@ -171,7 +179,8 @@
                             </div>
                             <div class="fill-information col-lg-6">
                                 <div class="title">
-                                    <h4>Diện tích</h4>
+                                    <h4>Diện tích<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
@@ -184,7 +193,8 @@
                             </div>
                             <div class="fill-information col-lg-6">
                                 <div class="title">
-                                    <h4>Khoảng cách (So với Đại Học FPT)</h4>
+                                    <h4>Khoảng cách (So với Đại Học FPT)<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
@@ -195,7 +205,8 @@
                             </div>
                             <div class="fill-information col-lg-12">
                                 <div class="title">
-                                    <h4>Địa chỉ</h4>
+                                    <h4>Địa chỉ<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="text" v-model="inputAddress" class="form-input-title-information rounded-pill border-0 shadow-sm">
@@ -204,7 +215,8 @@
 
                             <div class="fill-information col-lg-12">
                                 <div class="title">
-                                    <h4>Bản đồ</h4>
+                                    <h4>Bản đồ<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
@@ -221,7 +233,8 @@
 
                             <div class="fill-information col-lg-12">
                                 <div class="title">
-                                    <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)</h4>
+                                    <h4>Hình ảnh (tối thiểu 3 hình, tối đa 10 hình)<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information">
                                     <div class="upload-file" v-on:click="openFileDialog">
@@ -240,7 +253,8 @@
                             </div>
                             <div class="fill-information col-lg-12" v-bind:class="{flexElement: editMode}">
                                 <div class="title" v-show="!editMode">
-                                    <h4>Thời hạn bài đăng</h4>
+                                    <h4>Thời hạn bài đăng<span class="require-text">*</span>
+                                    </h4>
                                 </div>
                                 <div class="input-information" v-show="!editMode">
                                     <div class="form-check-inline" v-for="package in listPaymentPackage">
@@ -372,7 +386,7 @@
                                 <td v-text="post.createDate"></td>
                                 <td v-text="post.expireDate"></td>
                                 <td>
-                                    <div v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                    <div v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
                                 </td>
                                 <td>
                                     <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
@@ -397,18 +411,20 @@
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
-                                <th>Mã giao dịch</th>
+                                <th>Bài đăng</th>
                                 <th>Ngày giao dịch</th>
-                                <th>Mã bài đăng</th>
                                 <th>Gói</th>
+                                <th>Số tiền</th>
+                                <th>Thời hạn</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="list in listPaymentPost">
-                                <td v-text="list.id"></td>
-                                <td v-text="list.payDate"></td>
-                                <td v-text="list.postId"></td>
-                                <td v-text="list.packageID"></td>
+                            <tr v-for="paymentPost in listPaymentPost">
+                                <td><a v-bind:href="'/post-detail?id=' + paymentPost.postPayment.id" v-text="paymentPost.postPayment.title"></a> </td>
+                                <td v-text="formatDate(paymentPost.payDate)"></td>
+                                <td v-text="paymentPost.paymentPackage.packageName"></td>
+                                <td v-text="authenticationInstance.formatNumberToDisplay(paymentPost.paymentPackage.amount) + ' VNĐ'"></td>
+                                <td v-text="paymentPost.paymentPackage.duration + ' Tháng'"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -517,7 +533,7 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Thời hạn bài đăng</h4>
+                                    <h4>Thời hạn bài đăng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
                                     <div class="form-check-inline col" v-for="package in listPaymentPackage">
@@ -570,7 +586,7 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Số lượng phòng:</h4>
+                                    <h4>Số lượng phòng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
                                     <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
@@ -687,7 +703,7 @@
                                 </p>
                                 <div class="fill-information">
                                     <div class="title">
-                                        <h4>Số tiền:</h4>
+                                        <h4>Số tiền<span class="require-text">*</span></h4>
                                     </div>
 
                                     <div class="input-information">

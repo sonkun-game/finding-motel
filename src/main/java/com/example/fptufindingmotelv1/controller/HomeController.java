@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.controller;
 import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.dto.TypePostDTO;
+import com.example.fptufindingmotelv1.dto.WishListDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
@@ -21,7 +22,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +34,7 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    RoleRepository roleRepository;
+    InstructionRepository instructionRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -48,46 +51,34 @@ public class HomeController {
     @Autowired
     FilterPostRepository filterPostRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomepage(@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> page){
         return "index";
     }
 
-    @GetMapping("/post-detail")
-    public String getPostDetail() {
-        return "post-detail";
+    @GetMapping("/huong-dan")
+    public String viewInstruction(Model model) {
+        return "instruction";
     }
 
     @ResponseBody
-    @PostMapping(value = "/api-post-detail")
-    public PostDTO viewPost(@PathParam("id") String id){
-        PostModel postModel = postRepository.findById(id).get();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof UsernamePasswordAuthenticationToken
-                && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-            RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-            WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(postModel, renter);
-            PostDTO response = new PostDTO(postModel);
-
-            if(wishListModel != null){
-                response.setInWishList(true);
-                response.setWishListId(wishListModel.getId());
-            }else {
-                response.setInWishList(false);
-            }
+    @GetMapping("/api-get-list-instruction")
+    public JSONObject getListInstruction(){
+        JSONObject response = new JSONObject();
+        try {
+            List<InstructionModel> instructions = instructionRepository.getAllInstruction();
+            response.put("code", "000");
+            response.put("data", instructions);
             return response;
-        } else {
-            PostDTO response = new PostDTO(postModel);
-            response.setInWishList(false);
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("code", "999");
+            response.put("message", "Lỗi hệ thống");
             return response;
         }
-
-    }
-
-    @GetMapping("/huong-dan")
-    public String viewInstruction(Model model) {
-        model.addAttribute("customer",roleRepository.getOne((long) 2));
-        return "instruction";
     }
 
     @ResponseBody
@@ -157,11 +148,13 @@ public class HomeController {
                 minDistance = filterDistance.getMinValue();
                 maxDistance = filterDistance.getMaxValue();
             }
+            Date date = new Date();
+            Date currentDate = new Timestamp(date.getTime());
 
-            ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.searchPost(null,
+            ArrayList<PostModel> listPostModel = (ArrayList<PostModel>) postRepository.filterPost(null,
                     null, maxPrice, minPrice,
                     maxDistance, minDistance,
-                    maxSquare, minSquare, true, postSearchDTO.getTypeId(), false);
+                    maxSquare, minSquare, true, postSearchDTO.getTypeId(), false, currentDate);
 
 
             // Paging
@@ -178,34 +171,44 @@ public class HomeController {
             if (start <= end) {
                 sublistPostModel = listPostModel.subList(start, end);
             }
-
             List<PostDTO> postDTOs = new ArrayList<>();
             PostDTO postDTO;
-            // check login
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth instanceof UsernamePasswordAuthenticationToken
-                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-                for (PostModel post:
-                        sublistPostModel) {
-                    postDTO = new PostDTO(post);
-                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
-                    if(wishListModel != null){
-                        postDTO.setInWishList(true);
-                        postDTO.setWishListId(wishListModel.getId());
-                    }else {
-                        postDTO.setInWishList(false);
-                    }
-                    postDTOs.add(postDTO);
-                }
-            } else {
-                for (PostModel post:
-                        sublistPostModel) {
-                    postDTO = new PostDTO(post);
-                    postDTO.setInWishList(false);
-                    postDTOs.add(postDTO);
-                }
+            for (PostModel post:
+                 sublistPostModel) {
+                ImageModel imageModel = imageRepository.getImageById(post.getImages().get(0).getId());
+                post.getImages().get(0).setFileContent(imageModel.getFileContent());
+                post.getImages().get(0).setFileType(imageModel.getFileType());
+                postDTO = new PostDTO();
+                postDTO.setPostDTO(post);
+                postDTOs.add(postDTO);
             }
+//            List<PostDTO> postDTOs = new ArrayList<>();
+//            PostDTO postDTO;
+//            // check login
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            if (auth instanceof UsernamePasswordAuthenticationToken
+//                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
+//                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
+//                for (PostModel post:
+//                        sublistPostModel) {
+//                    postDTO = new PostDTO(post);
+//                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
+//                    if(wishListModel != null){
+//                        postDTO.setInWishList(true);
+//                        postDTO.setWishListId(wishListModel.getId());
+//                    }else {
+//                        postDTO.setInWishList(false);
+//                    }
+//                    postDTOs.add(postDTO);
+//                }
+//            } else {
+//                for (PostModel post:
+//                        sublistPostModel) {
+//                    postDTO = new PostDTO(post);
+//                    postDTO.setInWishList(false);
+//                    postDTOs.add(postDTO);
+//                }
+//            }
 
             Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
             response.put("pageSize", evalPageSize);
@@ -219,6 +222,32 @@ public class HomeController {
         } catch (Exception e) {
             e.printStackTrace();
             response.put("msgCode", "sys999");
+            return response;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/api-get-wish-list")
+    public JSONObject getWishListPost(@RequestBody WishListDTO wishListDTO) {
+        JSONObject response = new JSONObject();
+        try {
+            Date date = new Date();
+            Date currentDate = new Timestamp(date.getTime());
+            List<PostModel> listPostWishList = wishListRepository.getListPostByRenter(
+                    wishListDTO.getRenterUsername(), true, false, currentDate);
+            List<PostDTO> postDTOs = new ArrayList<>();
+            PostDTO postDTO;
+            for (PostModel post:
+                    listPostWishList) {
+                postDTOs.add(new PostDTO(post.getId()));
+            }
+            response.put("code", "000");
+            response.put("data", postDTOs);
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+            response.put("code", "999");
+            response.put("message", "Lỗi Hệ Thống");
             return response;
         }
     }

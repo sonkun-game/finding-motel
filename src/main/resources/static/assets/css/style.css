@@ -386,7 +386,7 @@ label {
     white-space: nowrap;
 }
 
-.btn:hover {
+.btn:hover:enabled {
     background: #f1b233;
     color: #fff;
 }
@@ -3422,7 +3422,7 @@ label {
     overflow: hidden;
     display: -webkit-box;
     color: #112e41;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 600;
     margin-bottom: 19px;
 }

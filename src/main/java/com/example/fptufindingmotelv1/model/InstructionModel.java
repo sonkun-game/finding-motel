@@ -1,18 +1,12 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "INSTRUCTION")
 public class InstructionModel implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -31,4 +25,16 @@ public class InstructionModel implements Serializable {
 
     @Column(name = "CONTENT", nullable = false)
     private String content;
+
+    public InstructionModel() {
+    }
+
+    public InstructionModel(Long id, String title, String content, Long roleId, String roleName) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.roleModel = new RoleModel();
+        this.roleModel.setId(roleId);
+        this.roleModel.setRoleName(roleName);
+    }
 }

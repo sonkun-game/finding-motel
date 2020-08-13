@@ -1,6 +1,7 @@
 var postDetailInstance = new Vue({
     el: '#postDetailBody',
     data: {
+        userInfo: {},
         post: {},
         reportContent: null,
         userInfo: {},
@@ -15,15 +16,17 @@ var postDetailInstance = new Vue({
         relatedPosts: [],
         map : "",
         fuLocation : {placeId : "ChIJbQilLLNUNDER5Der2CkuxqM"},
+        listPostOfRenter : [],
+        listRoomOfPost : [],
+        disableFunctions : false,
     },
     beforeMount() {
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
         //get url param
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         this.postId = urlParams.get('id');
-        this.viewDetail();
-        this.getRelatedPost();
+        this.viewDetail()
     },
     methods: {
         viewDetail: function () {
@@ -35,10 +38,23 @@ var postDetailInstance = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
-                    this.post = data;
-                    this.listImage = this.post.images
-                    this.handleDisplayDirection()
+                    if(data != null && data.code == "000"){
+                        this.post = data.data;
+                        this.listImage = this.post.images
+                        this.getRelatedPost(this.post.id, this.post.landlord, this.post.typeId)
+                        this.handleDisplayDirection()
+                    }else if(data != null && data.code == "001"){
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
+                        this.disableFunctions = true;
+                        this.post = data.data;
+                        this.listImage = this.post.images
+                        this.getRelatedPost(this.post.id, this.post.landlord, this.post.typeId)
+                        this.handleDisplayDirection()
+                    }else {
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
+                    }
 
                 }).catch(error => {
                 console.log(error);
@@ -74,10 +90,11 @@ var postDetailInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == '000') {
-                        this.showModalNotify("Gửi Thành Công")
+                        this.showModalNotify("Gửi Báo Cáo Thành Công")
                         setTimeout(() => this.closeModalReport(), 2000);
                     } else {
-                        window.location.href = "/error";
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
 
                 }).catch(error => {
@@ -88,6 +105,9 @@ var postDetailInstance = new Vue({
             if(this.userInfo == null){
                 window.location.href = "/dang-nhap"
                 return
+            }
+            if(this.listRoomOfPost == null || this.listRoomOfPost.length == 0){
+                this.getListRoom(this.post)
             }
             document.getElementById("myModal_chooseRoom").style.display = 'block';
             document.body.setAttribute("class", "loading-hidden-screen")
@@ -161,9 +181,18 @@ var postDetailInstance = new Vue({
                 console.log(error);
             })
         },
-        getRelatedPost(){
-            fetch("/api-get-related-post?id=" + this.postId, {
+        getRelatedPost(postId, landlordUsername, typeId){
+            let request = {
+                "postId" : postId,
+                "username" : landlordUsername,
+                "typeId" : typeId,
+            }
+            fetch("/api-get-related-post", {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
@@ -187,18 +216,42 @@ var postDetailInstance = new Vue({
             if(this.userInfo == null){
                 window.location.href = "/dang-nhap"
             }else {
-                if(post.inWishList){
-                    // this.removeFromWishList(post.wishListId, this.userInfo.username)
+                if(this.listPostOfRenter.some(p => p.id == post.id)){
+                     this.removeFromWishList(post.id, this.userInfo.username)
                 }else {
                     this.addWishlist(post, this.userInfo.username)
 
                 }
             }
         },
+        removeFromWishList(postId, username){
+            let request = {
+                "postId" : postId,
+                "renterUsername" : username,
+                "wishListScreen" : false,
+            }
+            fetch("/api-remove-from-wishlist", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.msgCode == "wishlist000"){
+                        authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
+                        this.getWishListOfRenter()
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         addWishlist : function(post, username){
             let request = {
                 "postId" : post.id,
-                "renterUsername" : username
+                "renterUsername" : username,
             }
             fetch("/api-add-wishlist", {
                 method: 'POST',
@@ -213,8 +266,7 @@ var postDetailInstance = new Vue({
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.msgCode == "wishlist000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
-                        this.post.inWishList = true
-                        this.post.wishListId = data.wishList.id
+                        this.getWishListOfRenter()
                     }else {
                         modalMessageInstance.message = "Lỗi hệ thống!"
                         modalMessageInstance.showModal()
@@ -265,7 +317,43 @@ var postDetailInstance = new Vue({
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
             let directionsService = new google.maps.DirectionsService();
             this.displayRoute(travel_mode, origin, destination, directionsService, directionsDisplay);
-        }
+        },
+        getWishListOfRenter(){
+            let request = {
+                "renterUsername" : this.userInfo.username
+            }
+            fetch("/api-get-wish-list", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.code == "000"){
+                        this.listPostOfRenter = data.data
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(data.data))
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
+        getListRoom(post) {
+
+            fetch("/api-get-list-room-of-post?postId=" + post.id, {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data != null && data.code == "000"){
+                        this.listRoomOfPost = data.data
+                    }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     },
     mounted() {
         this.initMap()
@@ -277,5 +365,15 @@ var postDetailInstance = new Vue({
                 $('body').removeClass('loading');
             }
         });
+    },
+    created(){
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+        if(this.userInfo != null && this.userInfo.role == 'RENTER'){
+            if(sessionStorage.getItem("listPostOfRenter") != null){
+                this.listPostOfRenter = JSON.parse(sessionStorage.getItem("listPostOfRenter"))
+            }else {
+                this.getWishListOfRenter()
+            }
+        }
     }
 })

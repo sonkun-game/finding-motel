@@ -10,10 +10,10 @@ var postInstance = new Vue({
         pages : 0,
         pageSize : 0,
         postIndex : -1,
-
+        listPostOfRenter : [],
     },
     beforeMount(){
-        this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
     },
     methods : {
         addWishlist : function(post, username){
@@ -34,8 +34,9 @@ var postInstance = new Vue({
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.msgCode == "wishlist000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
-                        this.postList[this.postIndex].inWishList = true
-                        this.postList[this.postIndex].wishListId = data.wishList.id
+                        filterPostInstance.getWishListOfRenter()
+                        // this.postList[this.postIndex].inWishList = true
+                        // this.postList[this.postIndex].wishListId = data.wishList.id
                     }else {
                         modalMessageInstance.message = "Lỗi hệ thống!"
                         modalMessageInstance.showModal()
@@ -50,18 +51,19 @@ var postInstance = new Vue({
             if(this.userInfo == null){
                 window.location.href = "/dang-nhap"
             }else {
-                if(post.inWishList){
-                    this.removeFromWishList(post.wishListId, this.userInfo.username)
+                if(this.listPostOfRenter.some(p => p.id == post.id)){
+                    this.removeFromWishList(post.id, this.userInfo.username)
                 }else {
                     this.addWishlist(post, this.userInfo.username)
 
                 }
             }
         },
-        removeFromWishList(wishListId, username){
+        removeFromWishList(postId, username){
             let request = {
-                "id" : wishListId,
-                "renterUsername" : username
+                "postId" : postId,
+                "renterUsername" : username,
+                "wishListScreen" : false,
             }
             fetch("/api-remove-from-wishlist", {
                 method: 'POST',
@@ -75,19 +77,20 @@ var postInstance = new Vue({
                     console.log(data);
                     if(data != null && data.msgCode == "wishlist000"){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
-                        this.postList[this.postIndex].inWishList = false
-                        this.postList[this.postIndex].wishListId = null
+                        filterPostInstance.getWishListOfRenter()
                     }
                 }).catch(error => {
                 console.log(error);
             })
         },
 
+
     },
 })
 var filterPostInstance = new Vue({
     el: '#filter-container',
     data: {
+        userInfo : {},
         listTypePost : [],
         listFilterPrice : [],
         listFilterSquare : [],
@@ -187,9 +190,32 @@ var filterPostInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
-        }
+        },
+        getWishListOfRenter(){
+            let request = {
+                "renterUsername" : this.userInfo.username
+            }
+            fetch("/api-get-wish-list", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.code == "000"){
+                        postInstance.listPostOfRenter = data.data
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(data.data))
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     },
     created() {
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         this.getInitHomePage()
         this.getPageFromQuery()
         this.typeId = parseInt(sessionStorage.getItem("typeId"))
@@ -221,6 +247,13 @@ var filterPostInstance = new Vue({
             "page": this.page,
         }
         this.filterPost(request)
+        if(this.userInfo != null && this.userInfo.role == 'RENTER'){
+            if(sessionStorage.getItem("listPostOfRenter") != null){
+                postInstance.listPostOfRenter = JSON.parse(sessionStorage.getItem("listPostOfRenter"))
+            }else {
+                this.getWishListOfRenter()
+            }
+        }
     },
     mounted(){
         window.addEventListener("load", function(event) {

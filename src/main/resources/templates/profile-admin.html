@@ -15,8 +15,8 @@
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
-<!--    inlude confirm modal-->
-<div th:replace="layout :: confirm-modal"></div>
+<!--    include message modal-->
+<div th:replace="layout :: message-modal"></div>
 
 <!--    include header-->
 <header th:replace="layout :: header"></header>
@@ -393,7 +393,7 @@
                                 <td>{{post.expireDate}}</td>
                                 <td>
                                     <div v-text="post.displayStatus"
-                                         v-bind:class="post.postVisible && !post.banned ? 'status-show' : 'status-hide'">
+                                         v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'">
                                     </div>
                                 </td>
                                 <td>{{post.landlordName}}</td>
@@ -408,23 +408,24 @@
 
                 <div id="payment-package-table" v-if="task == 19">
                     <div class="title">
-                        <h1 class="title-name uppercase">Quản lý package</h1>
+                        <h1 class="title-name uppercase">Quản lý gói</h1>
                     </div>
                     <div class="information-detail">
                         <div class="btn-container">
                             <button v-on:click="showModalPackage" class="btn btn-add-package rounded-pill shadow-sm">
-                                Thêm package
+                                Thêm gói
                             </button>
                         </div>
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th width="5%">STT</th>
-                                <th width="20%">Tên package</th>
+                                <th width="20%">Tên gói</th>
                                 <th width="20%">Thời hạn bài đăng</th>
-                                <th width="20%">Giá</th>
+                                <th width="15%">Giá</th>
                                 <th width="20%">Trạng thái</th>
-                                <th width="15%">Tác vụ</th>
+                                <th width="10%"></th>
+                                <th width="10%">Tác vụ</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -436,14 +437,22 @@
                                 <td>
                                     <div v-bind:class="package.available ? 'status-show' : 'status-hide'"
                                          v-text="package.displayStatus"></div>
+
+                                </td>
+                                <td>
+                                    <label class="switch">
+                                        <input type="checkbox" v-on:click.prevent="changeStatusPackage(package, index)" v-model="package.available">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </td>
                                 <td>
                                     <i v-on:click="showModalPackage(package, index)" class="fas fa-edit"
                                        data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
-                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"
-                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"
-                                       data-toggle="tooltip" data-html="true"
-                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>
+
+<!--                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"-->
+<!--                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"-->
+<!--                                       data-toggle="tooltip" data-html="true"-->
+<!--                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>-->
                                 </td>
                             </tr>
                             </tbody>
@@ -501,6 +510,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalDel()" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalDelContent"></label>
@@ -525,6 +535,7 @@
                     <div class="message-confirm">
                         <div class="modal-header">
                             <h2>Xác Nhận</h2>
+                            <span @click="closeModalBan" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <label id="modalBanContent"></label>
@@ -626,17 +637,17 @@
                     <!-- Modal content -->
                     <div class="view-information">
                         <div class="modal-header">
-                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm package' : 'Sửa package'"></h2>
+                            <h2 v-text="selectedPaymentPackage == null ? 'Thêm gói' : 'Sửa gói'"></h2>
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Tên package:</p>
+                                <p class="left-modal">Tên gói<span class="require-text">*</span></p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Thời hạn:</p>
+                                <p class="left-modal">Thời hạn<span class="require-text">*</span></p>
                                 <input v-model="inputDuration"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -645,7 +656,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Giá:</p>
+                                <p class="left-modal">Giá<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -707,13 +718,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Chủ trọ:</p>
+                                <p class="left-modal">Chủ trọ</p>
                                 <input v-bind:value="selectedLandlord.username"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số dư hiện tại:</p>
+                                <p class="left-modal">Số dư hiện tại</p>
                                 <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
@@ -722,7 +733,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số dư sau khi nạp tiền:</p>
+                                <p class="left-modal">Số dư sau khi nạp tiền</p>
                                 <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
@@ -731,7 +742,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số tiền:</p>
+                                <p class="left-modal">Số tiền<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -740,12 +751,12 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Phương thức thanh toán:</p>
+                                <p class="left-modal">Phương thức thanh toán<span class="require-text">*</span></p>
                                 <input v-model="paymentMethod" maxlength="50" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Ghi chú:</p>
+                                <p class="left-modal">Ghi chú<span class="require-text">*</span></p>
                                 <input v-model="adjustMoneyNote" maxlength="100" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>

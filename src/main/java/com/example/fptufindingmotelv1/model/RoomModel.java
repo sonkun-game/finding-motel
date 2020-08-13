@@ -33,4 +33,17 @@ public class RoomModel implements Serializable {
     @OneToMany(mappedBy = "rentalRoom")
     private List<RentalRequestModel> roomRentals;
 
+    public RoomModel() {
+    }
+
+    public RoomModel(String id) {
+        this.id = id;
+    }
+
+    public RoomModel(String id, String name, Long statusId) {
+        this.id = id;
+        this.name = name;
+        this.status = new StatusModel();
+        this.status.setId(statusId);
+    }
 }

@@ -26,9 +26,6 @@ public class ManagePostServiceImpl implements ManagePostService{
     private LandlordRepository landlordRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
-
-    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -42,9 +39,6 @@ public class ManagePostServiceImpl implements ManagePostService{
 
     @Autowired
     private ReportRepository reportRepository;
-
-    @Autowired
-    private RenterRepository renterRepository;
 
     @Autowired
     private RentalRequestRepository rentalRequestRepository;
@@ -121,9 +115,9 @@ public class ManagePostServiceImpl implements ManagePostService{
                 roomModel.setName(room.getRoomName());
                 StatusModel status;
                 if(room.isAvailableRoom()){
-                    status = statusRepository.findByIdAndType(1, 1);
+                    status = new StatusModel(1L);
                 }else{
-                    status = statusRepository.findByIdAndType(2, 1);
+                    status = new StatusModel(2L);
                 }
                 roomModel.setStatus(status);
                 roomModel.setPostRoom(newPostCreated);
@@ -311,9 +305,9 @@ public class ManagePostServiceImpl implements ManagePostService{
                 roomModel.setName(room.getRoomName());
                 StatusModel status;
                 if(room.isAvailableRoom()){
-                    status = statusRepository.findByIdAndType(1, 1);
+                    status = new StatusModel(1L);
                 }else{
-                    status = statusRepository.findByIdAndType(2, 1);
+                    status = new StatusModel(2L);
                 }
                 roomModel.setStatus(status);
                 listRoom.add(roomModel);

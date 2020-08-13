@@ -1,22 +1,17 @@
 package com.example.fptufindingmotelv1.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "POST")
 public class PostModel implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -86,4 +81,50 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "postRoom")
     private List<RoomModel> rooms;
 
+    public PostModel() {
+    }
+
+    public PostModel(String id) {
+        this.id = id;
+    }
+
+    public PostModel(String id, double price, double distance, double square,
+                     String description, String title, String address,
+                     String imageId) {
+        this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
+        this.description = description;
+        this.title = title;
+        this.address = address;
+        this.images = new ArrayList<>();
+        this.images.add(new ImageModel(imageId));
+    }
+
+    public PostModel(String id, double price, double distance, double square,
+                     String description, String title, String address, boolean visible, boolean banned,
+                     String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
+                     String landlordUsername, String landlordDisplayName, String landlordPhone
+                     ) {
+        this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
+        this.description = description;
+        this.title = title;
+        this.address = address;
+        this.visible = visible;
+        this.banned = banned;
+        this.mapLocation = mapLocation;
+        this.createDate = createDate;
+        this.expireDate = expireDate;
+        this.type = new TypeModel();
+        this.type.setId(typeId);
+        this.type.setName(typeName);
+        this.landlord = new LandlordModel();
+        this.landlord.setUsername(landlordUsername);
+        this.landlord.setDisplayName(landlordDisplayName);
+        this.landlord.setPhoneNumber(landlordPhone);
+    }
 }

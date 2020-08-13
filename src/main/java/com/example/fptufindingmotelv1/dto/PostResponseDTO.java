@@ -6,9 +6,11 @@ import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -34,9 +36,12 @@ public class PostResponseDTO {
     private boolean banAvailable;
     private String address;
     private String mapLocation;
+    private boolean expirePost;
 
     public PostResponseDTO(PostModel postModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
+        Date date = new Date();
+        Date currentDate = new Timestamp(date.getTime());
         this.id = postModel.getId();
         this.typeId = postModel.getType().getId().toString();
         this.typeName = postModel.getType().getName();
@@ -53,7 +58,9 @@ public class PostResponseDTO {
         this.title = postModel.getTitle();
         this.address = postModel.getAddress();
         this.mapLocation = postModel.getMapLocation();
+        this.expirePost = postModel.getExpireDate().before(currentDate);
         this.displayStatus = this.postVisible ? "Hiển thị" : "Không hiển thị";
+        this.displayStatus = postModel.getExpireDate().before(currentDate) ? "Hết hạn" : this.displayStatus;
         this.displayStatus = this.banned ? "Bị khóa" : this.displayStatus;
         this.listRoom = new ArrayList<>();
         for (int i = 0; i < postModel.getRooms().size(); i++) {

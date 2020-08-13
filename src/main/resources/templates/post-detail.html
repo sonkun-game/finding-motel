@@ -40,21 +40,17 @@
                         </div>
                     </div>
                     <div class="wish-list clearfix">
-                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save"
+                        <button v-if="userInfo == null || userInfo.role == 'RENTER'" class="btn-save" v-bind:disabled="disableFunctions"
                                 v-on:click="showModalReport()" type="button" title="Báo cáo">
                             <img src="assets/img/logo/alert.png">
                             <span>Báo cáo</span>
                         </button>
-                        <button v-if="(userInfo == null || userInfo.role == 'RENTER') && !post.inWishList"
+                        <button v-if="(userInfo == null || userInfo.role == 'RENTER')"
+                                v-bind:disabled="disableFunctions"
                                 class="btn-save" v-on:click="handleActionWishList(post)" type="button"
-                                title="Lưu tin này">
+                                v-bind:title="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'">
                             <img src="assets/img/logo/bookmark.png">
-                            <span>Lưu tin này</span>
-                        </button>
-                        <button v-else-if="(userInfo == null || userInfo.role == 'RENTER') && post.inWishList"
-                                class="btn-save pointer-disabled" type="button" title="Đã lưu">
-                            <img src="assets/img/logo/bookmark.png">
-                            <span>Đã lưu</span>
+                            <span v-text="listPostOfRenter.some(p => p.id == post.id) ? 'Bỏ lưu tin' : 'Lưu tin này'"></span>
                         </button>
                     </div>
                     <div class="title-area clearfix">
@@ -74,7 +70,7 @@
                                 <li class="item">
                                     <span class="item-name"><img class="icon-post-detail"
                                                                  src="assets/img/logo/money.png"> Giá cho thuê:</span>
-                                    <span class="item-value"
+                                    <span class="item-value-price"
                                           v-text="authenticationInstance.formatNumberToDisplay(post.price) + ' VNĐ/Tháng'"></span>
                                 </li>
                                 <li class="item">
@@ -143,7 +139,7 @@
                                 sơ sót. Vì vậy rất mong
                                 nhận được sự đóng góp, phản ánh của các bạn để thông tin chính xác hơn.
                             </p>
-                            <button class="btn-report" v-on:click="showModalReport()" type="button" id="btnReport">
+                            <button class="btn-report" v-on:click="showModalReport()" v-bind:disabled="disableFunctions" type="button" id="btnReport">
                                 <img src="assets/img/logo/alert.png">
                                 <span>Báo Cáo</span>
                             </button>
@@ -156,7 +152,7 @@
                                               class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
-                                        <h4 class="font-weight-normal">Nội dung</h4>
+                                        <h4 class="font-weight-normal">Nội dung<span class="require-text">*</span></h4>
                                         <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
@@ -181,7 +177,7 @@
                             </div>
                         </div>
                         <div class="sent-request" v-if="userInfo == null || userInfo.role == 'RENTER'">
-                            <button @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
+                            <button v-bind:disabled="disableFunctions" @click="showModalChooseRoom()" class="btn btn-danger">Gửi Yêu Cầu</button>
                         </div>
 
                         <!--Modal choose room-->
@@ -195,10 +191,10 @@
                                 <div class="modal-body">
                                     <div class="room-number">
                                         <div class="title-room">
-                                            <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                            <h4 class="font-weight-normal">Chọn phòng<span class="require-text">*</span></h4>
                                         </div>
                                         <div class="choose-room clearfix">
-                                            <ul class="list-select-room" v-for="room in post.listRoom">
+                                            <ul class="list-select-room" v-for="room in listRoomOfPost">
                                                 <li class="select-room"
                                                     v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
                                                     @click="setRoomIdRental(room.roomId, $event)">
@@ -211,7 +207,7 @@
                                     </div>
                                     <div class="room-number">
                                         <div class="title-room">
-                                            <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                            <h4 class="font-weight-normal">Ngày bắt đầu<span class="require-text">*</span></h4>
                                         </div>
                                         <div class="choose-room">
                                             <input @input="setRequestDateRental($event.target.value)" type="date">

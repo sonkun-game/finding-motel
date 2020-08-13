@@ -27,7 +27,7 @@ public class RegisterController {
     @PostMapping("/register")
     public String register(@RequestBody UserDTO userDTO) {
         JSONObject registerMsg = new JSONObject();
-        UserModel userModel = registerService.save(userDTO);
+        UserModel userModel = registerService.register(userDTO);
         if (userModel != null) {
             if (userModel.getFbAccount() != null && userModel.getFbAccount().length() != 0) {
                 registerMsg.put("code", "003");
@@ -55,12 +55,6 @@ public class RegisterController {
         return userRepository.existsByPhoneNumber(phone);
     }
 
-
-    @ResponseBody
-    @RequestMapping(value = "/api/get-otp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public char[] getOTP(@RequestParam int otpLength) {
-        return registerService.generateOTP(otpLength);
-    }
 }
 
 

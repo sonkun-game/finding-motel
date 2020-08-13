@@ -52,22 +52,26 @@
                                                 {{message}}
                                             </span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <input @focusout="checkExistPhone()" id="phone" v-model="inputPhoneNum" class="tel-phone" type="tel" placeholder="Số điện thoại" maxlength="10" required />
+                                        <div class="row tb-row">
+                                            <div class="col-8 col-phone">
+                                                <input @keyup="clearTimer" v-bind:disabled="disableInputPhone" id="phone" v-model="inputPhoneNum" class="tel-phone" type="tel" placeholder="Số điện thoại" maxlength="10" required />
                                             </div>
-                                            <div class="col-3">
-                                                <button v-on:click="getOTP()" class="btn-otp uppercase">Gửi Mã</button>
+                                            <div class="col-4">
+                                                <button v-on:click="sendOTP()" class="btn-otp uppercase">Gửi Mã</button>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row tb-row">
                                             <div class="col-12">
                                                 <input id="otp" v-model="inputOtp" class="otp-field" type="tel" placeholder="Nhập mã xác nhận" maxlength="6" required/>
                                             </div>
                                         </div>
+                                        <div class="msg-notification">
+                                            <span class="text-timer" v-if="displayTimer != null" v-html="displayTimer" >
+                                            </span>
+                                        </div>
                                         <div class="row">
                                             <div class="col-4 btn-col">
-                                                <button v-on:click="checkOTP()" class="btn-continous uppercase">Tiếp tục</button>
+                                                <button v-on:click="validateOTP()" class="btn-continous uppercase">Tiếp tục</button>
                                             </div>
                                         </div>
 
@@ -85,12 +89,12 @@
                                                 {{message}}
                                             </span>
                                         </div>
-                                        <div class="row">
+                                        <div class="row tb-row">
                                             <div class="col-12">
                                                 <input id="pass" @focusout="checkPassword()" v-model="inputPassword" class="reset-password" type="password" placeholder="Nhập mật khẩu" required />
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row tb-row">
                                             <div class="col-12">
                                                 <input id="confirm-pass" @focusout="checkMatchPassword()" v-model="inputRePassword" class="reset-password" type="password" placeholder="Nhập lại mật khẩu" required />
                                             </div>

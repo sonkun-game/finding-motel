@@ -282,3 +282,7 @@ main{
 button:disabled{
     pointer-events: none;
 }
+.require-text{
+    padding: 2px;
+    color: #da2929;
+}

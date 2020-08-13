@@ -1036,3 +1036,6 @@ a:hover {
 .map-container{
     position: relative;
 }
+.request-collapse:hover{
+    background-color: #f8f9fa!important;
+}

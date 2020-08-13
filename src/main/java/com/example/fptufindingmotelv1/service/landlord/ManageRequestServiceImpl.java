@@ -110,9 +110,9 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     }
 
     @Override
-    public RoomModel changeRoomStatus(RoomDTO roomDTO) {
+    public RoomModel changeRoomStatus(RentalRequestDTO rentalRequestDTO) {
         try {
-            RoomModel roomModel = roomRepository.findById(roomDTO.getRoomId()).get();
+            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
             if(roomModel.getStatus().getId() == 1){
 
                 StatusModel statusRoom = new StatusModel(2L);
@@ -140,6 +140,7 @@ public class ManageRequestServiceImpl implements ManageRequestService{
                 if(requestModels != null && requestModels.size() > 0){
                     StatusModel statusExpire = new StatusModel(11L);
                     requestModels.get(0).setRentalStatus(statusExpire);
+                    requestModels.get(0).setExpireMessage(rentalRequestDTO.getExpireMessage());
                     rentalRequestRepository.save(requestModels.get(0));
                     String notificationContent = "Chủ trọ <b>" + roomModel.getPostRoom().getLandlord().getUsername() +
                             "</b> đã kết thúc cho thuê phòng tại <b>" + requestModels.get(0).getRentalRoom().getName() +

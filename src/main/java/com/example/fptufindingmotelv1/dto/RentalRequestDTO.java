@@ -23,6 +23,7 @@ public class RentalRequestDTO {
     private String postTitle;
     private String roomName;
     private UserDTO renterInfo;
+    private String expireMessage;
 
     public RentalRequestDTO() {
     }
@@ -43,5 +44,6 @@ public class RentalRequestDTO {
         this.displayRequestDate = sdf.format(rentalRequestModel.getRequestDate());
         this.displayStartDate = sdfOnlyDate.format(rentalRequestModel.getStartDate());
         this.renterInfo = new UserDTO(rentalRequestModel.getRentalRenter());
+        this.expireMessage = rentalRequestModel.getExpireMessage();
     }
 }

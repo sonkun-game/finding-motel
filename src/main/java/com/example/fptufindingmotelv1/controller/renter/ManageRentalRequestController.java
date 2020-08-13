@@ -21,8 +21,8 @@ public class ManageRentalRequestController {
 
     @ResponseBody
     @RequestMapping(value = "/change-rental-request-status", method = RequestMethod.POST)
-    public JSONObject changeRentalRequestStatus(@RequestParam(value = "rentalRequestId") String rentalRequestId) {
-        return rentalRequestService.changeStatus(rentalRequestId);
+    public JSONObject changeRentalRequestStatus(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        return rentalRequestService.changeStatus(rentalRequestDTO);
     }
 
     @ResponseBody

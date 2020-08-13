@@ -496,7 +496,7 @@
                                                 <th width="15%">Ngày yêu cầu</th>
                                                 <th width="15%">Ngày bắt đầu</th>
                                                 <th width="15%">Trạng thái</th>
-                                                <th width="26%">Tác vụ</th>
+                                                <th width="26%" class="message-col" v-text="task == 17 && room.listRentalRequest[0].statusId == 11 ? 'Lời nhắn' : 'Tác vụ'"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -511,6 +511,9 @@
                                                 <td>
                                                     <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
                                                     <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
+                                                    <button v-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length > 60 && task == 17" v-on:click="showExpireMessage(request)" class="table-button"
+                                                            data-toggle="tooltip" data-html="true" title="Xem lời nhắn của người thuê">Lời nhắn</button>
+                                                    <p v-else v-text="request.expireMessage"> </p>
                                                 </td>
                                             </tr>
                                             </tbody>

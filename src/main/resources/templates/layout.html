@@ -138,7 +138,7 @@
                                         <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">
                                             <div class="bell-container">
                                                 <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">
-                                                    <div  class="notification-number" v-text="notificationNumber"></div>
+                                                    <div v-show="notificationNumber > 0" class="notification-number" v-text="notificationNumber"></div>
                                                     <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>
                                                     <i class="fas fa-caret-up" v-if="isShowNotification"></i>
                                                 </div>
@@ -540,7 +540,7 @@
         <!-- Modal content -->
         <div class="view-information">
             <div class="modal-header">
-                <h2>Thông báo</h2>
+                <h2 v-text="title"></h2>
                 <span @click="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -585,26 +585,26 @@
             </div>
             <div class="modal-body">
                 <div class="infor-modal">
-                    <p class="left-modal">Bài đăng:</p>
+                    <p class="left-modal">Bài đăng</p>
                     <input :value="selectedRequest.postTitle"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
                 <div class="infor-modal">
-                    <p class="left-modal">Tên phòng:</p>
+                    <p class="left-modal">Tên phòng</p>
                     <input :value="selectedRequest.roomName"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
 
                 <div class="infor-modal">
-                    <p class="left-modal">Ngày yêu cầu:</p>
+                    <p class="left-modal">Ngày yêu cầu</p>
                     <input :value="selectedRequest.displayRequestDate"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
                 <div class="infor-modal">
-                    <p class="left-modal">Ngày bắt đầu:</p>
+                    <p class="left-modal">Ngày bắt đầu</p>
                     <input :value="selectedRequest.displayStartDate"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
@@ -612,35 +612,35 @@
                 <label>Người thuê</label>
                 <div class="renter-information-area">
                     <div class="infor-modal">
-                        <p class="left-modal">Tên đăng nhập:</p>
+                        <p class="left-modal">Tên đăng nhập</p>
                         <input :value="renterInfo.username"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div class="infor-modal">
-                        <p class="left-modal">Tên hiển thị:</p>
+                        <p class="left-modal">Tên hiển thị</p>
                         <input :value="renterInfo.displayName"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div class="infor-modal">
-                        <p class="left-modal">Số điện thoại:</p>
+                        <p class="left-modal">Số điện thoại</p>
                         <input :value="renterInfo.phoneNumber"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Ngày sinh:</p>
+                        <p class="left-modal">Ngày sinh</p>
                         <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Nghề nghiệp:</p>
+                        <p class="left-modal">Nghề nghiệp</p>
                         <input class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" :value="renterInfo.career" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Giới tính:</p>
+                        <p class="left-modal">Giới tính</p>
                         <input class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" :value="renterInfo.genderDisplay" disabled/>
                     </div>
@@ -648,6 +648,14 @@
 
                 <div v-html="message">
 
+                </div>
+                <div class="fill-information col-lg-12 px-0">
+                    <div class="title">
+                        <h4 style="color: #000000">Lời nhắn cuối cho người thuê</h4>
+                    </div>
+                    <div class="input-information message-box">
+                        <textarea v-model="expireMessage" class="rounded-pill border-0 shadow-sm"></textarea>
+                    </div>
                 </div>
 
             </div>

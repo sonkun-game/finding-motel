@@ -1037,16 +1037,30 @@ var landlordInstance = new Vue({
                 return true
             }
         },
+        removeDot(inputValue, datatype, event){
+            if(datatype == "int"){
+                if(event.keyCode < 48 || event.keyCode > 57){
+                    event.preventDefault()
+                }
+            }else {
+                if(event.keyCode == 46 && !inputValue.includes(".")){
+                    return
+                }else if(event.keyCode < 48 || event.keyCode > 57){
+                    event.preventDefault()
+                }
+            }
+
+        },
         validateInputForSaving(){
 
             if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
             && this.validateInput(this.title, 10, 100, null, null, "Tiêu đề")
             && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
-            && this.validateInput(this.numberOfRoom, null, null,1, 100, "Số lượng phòng", "")
+            && this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")
             && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
             && this.validateInput(this.square, null, null,5, 100, "Diện tích", "M&sup2")
             && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
-            && this.validateInput(this.inputAddress, null, null,20, 100, "Địa chỉ")
+            && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
             && this.validateMapLocation() && this.validateImages()
             && this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
             ){

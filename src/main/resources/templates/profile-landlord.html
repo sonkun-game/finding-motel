@@ -121,7 +121,7 @@
                                     </div>
                                     <div class="input-information">
                                         <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information  rounded-pill border-0 shadow-sm">
-                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <input v-else @keypress="removeDot(numberOfRoom, 'int', $event)" type="text" maxlength="2" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
 
                                     </div>
                                 </div>
@@ -170,7 +170,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="9" @keypress="removeDot(price, 'int', $event)" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>VNĐ</span>
                                     </div>
@@ -183,7 +183,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="2" @keypress="removeDot(square, 'float', $event)" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>M&sup2</span>
                                     </div>
@@ -197,7 +197,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="2" @keypress="removeDot(distance, 'float', $event)" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>KM</span>
                                     </div>
@@ -296,6 +296,15 @@
                                             </tr>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsg" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsg" v-html="validateMessage">
+
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-lg-6 m-auto">

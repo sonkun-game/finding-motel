@@ -57,12 +57,23 @@
                             <div class="col-lg-10  mx-auto">
                                 <h3 class="display-4">ĐĂNG KÝ</h3>
                                 <form id="registerForm">
+                                    <div class="form-group mb-1">
+                                        <div class="register-label"></div>
+                                        <div id="notify-error-line" class="register-input error-line">
+                                            <div v-show="isShowLoader" class="lds-dual-ring">
+                                            </div>
+                                            <div class="error-line-text">
+                                                <p v-if="isShowMsg" v-text="textContent"
+                                                   class="errorText"></p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group mb-3">
                                         <div class="register-label">
                                             <p>Tên đăng nhập<span class="require-text">*</span> </p>
                                         </div>
                                         <div class="register-input">
-                                            <input @focusout="isValidUsername" v-model="username" id="userName"
+                                            <input @focusout="isValidUsername()" v-model="username" id="userName"
                                                    name="userName" type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
                                         </div>
@@ -75,30 +86,6 @@
                                             <input v-model="displayName" id="displayName" name="displayName"
                                                    type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Số điện thoại<span class="require-text">*</span> </p>
-                                        </div>
-                                        <div class="register-input-phone">
-                                            <input @focusout="isValidPhone" v-model="phone" id="phone" name="phone"
-                                                   type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
-                                                   maxlength="10" required>
-                                        </div>
-                                        <div class="register-btn-phone">
-                                            <button v-on:click="getOTP()" type="button" class="btn-primary-otp">Gửi mã
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Mã xác nhận<span class="require-text">*</span> </p>
-                                        </div>
-                                        <div class="register-input">
-                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
-                                                   class="form-control rounded-pill border-0 shadow-sm px-4"
-                                                   maxlength="6" required>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -118,11 +105,34 @@
                                             </label>
                                         </div>
                                     </div>
-
-                                    <button v-on:click.prevent="validRegister()"
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Số điện thoại<span class="require-text">*</span> </p>
+                                        </div>
+                                        <div class="register-input-phone">
+                                            <input v-model="phone" id="phone" name="phone"
+                                                   type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="10" required>
+                                        </div>
+                                        <div class="register-btn-phone">
+                                            <button v-on:click="sentOTP()" type="button" class="btn-primary-otp">Gửi mã
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Mã xác nhận<span class="require-text">*</span> </p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="6" required>
+                                        </div>
+                                    </div>
+                                    <button v-on:click.prevent="validDataRegisterSocial()"
                                             type="submit"
                                             class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">
-                                        Xác Nhận
+                                        Đăng Ký
                                     </button>
 
                                 </form>

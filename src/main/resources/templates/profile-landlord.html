@@ -298,6 +298,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsg" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsg" v-html="validateMessage">
+
+                                    </span>
+                                </div>
+                            </div>
                             <div class="col-lg-6 m-auto">
                                 <button class="btn-hover btn-complete" v-on:click="handleAddNewPost">Hoàn thành</button>
                             </div>

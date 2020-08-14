@@ -40,6 +40,8 @@ var landlordInstance = new Vue({
         message : "",
         newestPayment : {},
         expireMessage : "",
+        validateMessage : "",
+        showMsg : false,
     },
     created(){
         let previousUrl = document.referrer
@@ -245,6 +247,10 @@ var landlordInstance = new Vue({
             this.amountSelected = package.amount
         },
         handleAddNewPost(){
+            if(!this.validateInputForSaving()){
+                this.showMsg = true
+                return
+            }
             if (this.editMode){
                 this.editPost()
             }else{
@@ -990,6 +996,64 @@ var landlordInstance = new Vue({
             modalMessageInstance.title = "Lời nhắn của người thuê"
             modalMessageInstance.message = rentalRequest.expireMessage
             modalMessageInstance.showModal()
+        },
+        validateInput(inputValue, minLength, maxLength, min, max, inputName, unit){
+            if(inputValue == null || inputValue.length == 0){
+                this.validateMessage = "<b>" + inputName + "</b> không được để trống"
+                return false
+            }else if(maxLength != null && inputValue != null && inputValue.length > maxLength){
+                this.validateMessage = "<b>" + inputName + "</b> không vượt quá " + maxLength + " ký tự"
+                return false
+            }else if(minLength != null && inputValue != null && inputValue.length < minLength){
+                this.validateMessage = "<b>" + inputName + "</b> có ít nhất " + minLength + " ký tự"
+                return false
+            }else if(min != null && inputValue != null && parseFloat(inputValue) <= min){
+                this.validateMessage = "<b>" + inputName + "</b> phải lớn hơn " + authenticationInstance.formatNumberToDisplay(min) + " " + unit
+                return false
+            }else if(max != null && inputValue != null && parseFloat(inputValue) >= max){
+                this.validateMessage = "<b>" + inputName + "</b> phải nhỏ hơn " + authenticationInstance.formatNumberToDisplay(max) + " " + unit
+                return false
+            }else {
+                return true
+            }
+        },
+        validateMapLocation(){
+            if(this.latMarkerEl.value == null || this.latMarkerEl.value.length == 0
+            || this.longMarkerEl.value == null || this.longMarkerEl.value.length == 0){
+                this.validateMessage = "Bạn phải chọn một vị trí trên bản đồ"
+                return false
+            }else {
+                return true
+            }
+        },
+        validateImages(){
+            if(this.uploadImages == null || this.uploadImages.length < 3){
+                this.validateMessage = "Bạn phải thêm tối thiếu 3 hình ảnh cho phòng trọ của mình"
+                return false
+            }else if(this.uploadImages != null && this.uploadImages.length > 10){
+                this.validateMessage = "Bạn chỉ có thể đăng tối đa 10 hình ảnh cho phòng trọ của mình"
+                return false
+            }else {
+                return true
+            }
+        },
+        validateInputForSaving(){
+
+            if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
+            && this.validateInput(this.title, 10, 100, null, null, "Tiêu đề")
+            && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
+            && this.validateInput(this.numberOfRoom, null, null,1, 100, "Số lượng phòng", "")
+            && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
+            && this.validateInput(this.square, null, null,5, 100, "Diện tích", "M&sup2")
+            && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
+            && this.validateInput(this.inputAddress, null, null,20, 100, "Địa chỉ")
+            && this.validateMapLocation() && this.validateImages()
+            && this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
+            ){
+                return true
+            }else {
+                return false
+            }
         }
     }
 })

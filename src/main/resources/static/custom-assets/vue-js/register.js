@@ -93,7 +93,7 @@ var registerVue = new Vue({
         },
         isValidUsername(isRegister) {
             if (this.username != null && this.username.length !== 0) {
-                if (this.usernameRegex.test(this.username)) {
+                if (!this.usernameRegex.test(this.username)) {
                     this.showErrorNotify("Tên đăng nhập phải chứa ít nhất 6 kí tự và là chữ, số hoặc kí tự gạch dưới.");
                 } else {
                     if (isRegister == null) {

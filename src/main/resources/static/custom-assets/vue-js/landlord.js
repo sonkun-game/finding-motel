@@ -251,6 +251,7 @@ var landlordInstance = new Vue({
                 this.showMsg = true
                 return
             }
+            this.showMsg = false
             if (this.editMode){
                 this.editPost()
             }else{

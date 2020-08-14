@@ -890,17 +890,14 @@ a:hover {
     height: 400px;  /* The height is 400 pixels */
     width: 100%;
 }
-#map-search{
-    width: 80%;
-    margin-bottom: 10px;
-}
 .fa-search{
     line-height: 34px;
 }
 .icon-search-map{
     position: absolute;
     padding-right: 10px;
-    right: 20%;
+    right: 0px;
+    z-index: 1;
     line-height: 34px;
     pointer-events: none;
 }
@@ -1023,4 +1020,22 @@ a:hover {
     max-height: 200px;
     max-width: 200px;
     width: 100%;
+}
+.map-search{
+    position: absolute;
+    left: 200px;
+    right: 200px;
+    top: 8px;
+}
+.map-search input{
+    width: 100%;
+    border-radius: 0px!important;
+    z-index: 1;
+    padding-right: 34px;
+}
+.map-container{
+    position: relative;
+}
+.request-collapse:hover{
+    background-color: #f8f9fa!important;
 }

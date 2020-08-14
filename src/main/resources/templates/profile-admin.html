@@ -12,6 +12,9 @@
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
@@ -642,12 +645,12 @@
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Tên gói:</p>
+                                <p class="left-modal">Tên gói<span class="require-text">*</span></p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Thời hạn:</p>
+                                <p class="left-modal">Thời hạn<span class="require-text">*</span></p>
                                 <input v-model="inputDuration"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -656,7 +659,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Giá:</p>
+                                <p class="left-modal">Giá<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -718,13 +721,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
-                                <p class="left-modal">Chủ trọ:</p>
+                                <p class="left-modal">Chủ trọ</p>
                                 <input v-bind:value="selectedLandlord.username"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số dư hiện tại:</p>
+                                <p class="left-modal">Số dư hiện tại</p>
                                 <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
@@ -733,7 +736,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số dư sau khi nạp tiền:</p>
+                                <p class="left-modal">Số dư sau khi nạp tiền</p>
                                 <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
@@ -742,7 +745,7 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Số tiền:</p>
+                                <p class="left-modal">Số tiền<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
@@ -751,12 +754,12 @@
                                 </div>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Phương thức thanh toán:</p>
+                                <p class="left-modal">Phương thức thanh toán<span class="require-text">*</span></p>
                                 <input v-model="paymentMethod" maxlength="50" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Ghi chú:</p>
+                                <p class="left-modal">Ghi chú</p>
                                 <input v-model="adjustMoneyNote" maxlength="100" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>

@@ -95,9 +95,9 @@ public class ManageRequestController {
 
     @ResponseBody
     @PostMapping("/api-change-room-status")
-    public JSONObject changeRoomStatus(@RequestBody RoomDTO roomDTO) {
+    public JSONObject changeRoomStatus(@RequestBody RentalRequestDTO rentalRequestDTO) {
         JSONObject response = new JSONObject();
-        RoomModel roomModel = manageRequestService.changeRoomStatus(roomDTO);
+        RoomModel roomModel = manageRequestService.changeRoomStatus(rentalRequestDTO);
 
         RoomDTO room = new RoomDTO(0,roomModel);
         List<RentalRequestDTO> rentalRequestDTOs = new ArrayList<>();

@@ -228,6 +228,7 @@ var modalMessageInstance = new Vue({
     data: {
         userInfo: {},
         message: "",
+        title: "Thông báo",
     },
     beforeMount(){
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))

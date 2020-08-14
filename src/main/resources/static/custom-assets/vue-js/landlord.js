@@ -39,6 +39,7 @@ var landlordInstance = new Vue({
         paymentValid : false,
         message : "",
         newestPayment : {},
+        expireMessage : "",
     },
     created(){
         let previousUrl = document.referrer
@@ -125,13 +126,15 @@ var landlordInstance = new Vue({
                 sessionStorage.setItem("confirmAction", "delete-post")
             }else if(confirmType == 'hide'){
                 if(this.userInfo.banned){
-                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    modalMessageInstance.title = "Thông báo"
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến <b>" + this.userInfo.unBanDate + "</b></br>" +
                         "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
-                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                        "Chức năng <b>Đăng Tin</b> và <b>Nạp Tiền</b> bị khóa";
                     modalMessageInstance.showModal()
                     return
                 }
                 if(post.banned){
+                    modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = "Bài đăng của bạn đã bị khóa!";
                     modalMessageInstance.showModal()
                     return
@@ -163,6 +166,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.code == "000"){
                         this.listPaymentPost = data.data
                     }else {
+                        modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -331,6 +335,7 @@ var landlordInstance = new Vue({
         },
         handleEditPost(post){
             if(post.banned){
+                modalMessageInstance.title = "Thông báo"
                 modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
                 modalMessageInstance.showModal()
                 return
@@ -403,6 +408,7 @@ var landlordInstance = new Vue({
         },
         showModalExtend(post, postIndex) {
             if(post != null && post.banned){
+                modalMessageInstance.title = "Thông báo"
                 modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
                 modalMessageInstance.showModal()
                 return
@@ -600,9 +606,9 @@ var landlordInstance = new Vue({
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
-                    this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
+                    this.message = "<p style='font-size: 20px; font-weight: 500'>Bạn có muốn làm mới phòng này?</p>" +
                         "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
-                        "<p>Người dùng <b>" + this.renterInfo.username + "</b> sẽ bị xóa khỏi phòng này</p>"
+                        "<p>Người thuê <b>" + this.renterInfo.username + "</b> sẽ kết thúc thuê phòng tại phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
@@ -644,12 +650,16 @@ var landlordInstance = new Vue({
             this.$set(this.listRoomRequest, index, room)
         },
         changeRoomStatus(){
+            let request = {
+                "expireMessage" : this.expireMessage,
+                "roomId" : this.selectedRoom.roomId,
+            }
             let options = {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(this.selectedRoom)
+                body: JSON.stringify(request),
             }
             fetch("/api-change-room-status", options)
                 .then(response => response.json())
@@ -864,6 +874,8 @@ var landlordInstance = new Vue({
         },
         handleDisplayDirection(){
             let origin = this.selectedPost.mapLocation;
+            this.latMarkerEl.value = this.selectedPost.mapLocation.split(", ")[0];
+            this.longMarkerEl.value = this.selectedPost.mapLocation.split(", ")[1];
             let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
@@ -925,6 +937,7 @@ var landlordInstance = new Vue({
                 if (data != null && data.code == "000") {
                     this.listPayment = data.data
                 }else {
+                    modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = data.message;
                     modalMessageInstance.showModal()
                 }
@@ -967,11 +980,17 @@ var landlordInstance = new Vue({
                         sessionStorage.removeItem("amount")
                         sessionStorage.removeItem("errorCode")
                     }else if(data != null && data.code != "000"){
+                        modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
                 })
         },
+        showExpireMessage(rentalRequest){
+            modalMessageInstance.title = "Lời nhắn của người thuê"
+            modalMessageInstance.message = rentalRequest.expireMessage
+            modalMessageInstance.showModal()
+        }
     }
 })
 var noteInstance = new Vue({

@@ -284,6 +284,12 @@ main{
     font-size: .9rem;
 }
 
+.item-value-price{
+    font-weight: 700;
+    font-size: .9rem;
+    color: red;
+}
+
 .subtext{
     display: flex;
     align-items: center;
@@ -515,4 +521,7 @@ main{
     -webkit-box-orient: vertical;
     overflow: hidden;
     display: -webkit-box;
+}
+.img-marker{
+    width: 40px;
 }

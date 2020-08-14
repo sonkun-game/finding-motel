@@ -50,10 +50,10 @@
                                 <form id="registerForm">
                                     <div class="form-group mb-1">
                                         <div class="register-label"></div>
-                                        <div id="notify-error-line" class="register-input">
-                                            <div v-if="isShowLoader" class="lds-dual-ring">
+                                        <div id="notify-error-line" class="register-input error-line">
+                                            <div v-show="isShowLoader" class="lds-dual-ring">
                                             </div>
-                                            <div>
+                                            <div class="error-line-text">
                                                 <p v-if="isShowContent" v-text="textContent"
                                                    class="errorText"></p>
                                             </div>
@@ -155,22 +155,22 @@
                                     <div class="row ">
                                         <div class="col-6 ">
                                             <a th:href="@{facebook-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-fb">
-                                                    <img src="assets/img/logo/facebook.png"> Facebook
+                                                <button type="button" class="btn  btn-block btn-fb">
+                                                    <img src="assets/img/logo/facebook.png">  Facebook
                                                 </button>
                                             </a>
                                         </div>
                                         <div class="col-6 ">
                                             <a th:href="@{google-login}">
-                                                <button type="button" class="btn btn-primary btn-block btn-gm">
-                                                    <img src="assets/img/logo/gmail.png"> Gmail
+                                                <button type="button" class="btn  btn-block btn-gm">
+                                                    <img src="assets/img/logo/gmail.png">  Google
                                                 </button>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="text-center d-flex justify-content-between mt-4 ">
 
-                                        <p style="margin: auto; ">Quay lại trang <a href="login.html ">Đăng Nhập</a></p>
+                                        <p style="margin: auto; ">Quay lại trang <a th:href="@{/dang-nhap}">Đăng Nhập</a></p>
 
                                     </div>
 

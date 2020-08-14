@@ -53,10 +53,10 @@
                                             </span>
                                         </div>
                                         <div class="row tb-row">
-                                            <div class="col-9">
+                                            <div class="col-8 col-phone">
                                                 <input @keyup="clearTimer" v-bind:disabled="disableInputPhone" id="phone" v-model="inputPhoneNum" class="tel-phone" type="tel" placeholder="Số điện thoại" maxlength="10" required />
                                             </div>
-                                            <div class="col-3">
+                                            <div class="col-4">
                                                 <button v-on:click="sendOTP()" class="btn-otp uppercase">Gửi Mã</button>
                                             </div>
                                         </div>

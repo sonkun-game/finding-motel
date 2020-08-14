@@ -14,5 +14,5 @@ public interface ManageRequestService {
 
     RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO);
 
-    RoomModel changeRoomStatus(RoomDTO roomDTO);
+    RoomModel changeRoomStatus(RentalRequestDTO rentalRequestDTO);
 }

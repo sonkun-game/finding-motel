@@ -58,7 +58,7 @@
                     </div>
                     <div class="overview clearfix">
                         <div class="title-name">
-                            <span>Đặc điểm chung:</span>
+                            <span>Đặc điểm chung</span>
                         </div>
                         <div class="content clearfix">
                             <ul class="list-overview clearfix">
@@ -88,7 +88,7 @@
                     </div>
                     <div class="description clearfix">
                         <div class="title-name">
-                            <span>Thông tin mô tả:</span>
+                            <span>Thông tin mô tả</span>
                         </div>
                         <div class="description-content">
                             <p v-text="post.description"></p>
@@ -96,12 +96,23 @@
                     </div>
                     <div class="location clearfix">
                         <div class="title-name">
-                            <span>Vị trí:</span>
+                            <span>Vị trí</span>
                         </div>
                         <div class="address">
                             <span class="subtext">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{post.address}}
+                            </span>
+                        </div>
+                        <div class="address">
+
+                            <span class="subtext">
+                                <img class="img-marker" src="assets/img/logo/A.png">
+                                <p v-text="post.title"></p>
+                            </span>
+                            <span class="subtext">
+                                <img class="img-marker" src="assets/img/logo/B.png">
+                                <p>Đại Học FPT</p>
                             </span>
                         </div>
                         <div class="map" id="map-canvas">
@@ -132,7 +143,7 @@
                     <div class="report clearfix" v-if="userInfo == null || userInfo.role == 'RENTER'">
                         <div class="report-area">
                             <p>
-                                <strong>Lưu ý:</strong>
+                                <strong>Lưu ý</strong>
                                 </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng
                                 cung cấp các thông tin đầy đủ,
                                 chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra
@@ -223,13 +234,13 @@
                         </div>
 
                         <div class="contact">
-                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
+                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ </h4>
                             <h3 v-text="post.phoneNumber"></h3>
                         </div>
                     </div>
                     <div class="news-involve">
                         <div class="header-news">
-                            <span>Có thể bạn quan tâm:</span>
+                            <span>Có thể bạn quan tâm</span>
                         </div>
                         <div class="list-news-content">
                             <ul class="list-news clearfix">

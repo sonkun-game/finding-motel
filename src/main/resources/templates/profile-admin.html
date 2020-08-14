@@ -12,6 +12,9 @@
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
+<!--    include confirm modal-->
+<div th:replace="layout :: confirm-modal"></div>
+
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
@@ -756,7 +759,7 @@
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
-                                <p class="left-modal">Ghi chú<span class="require-text">*</span></p>
+                                <p class="left-modal">Ghi chú</p>
                                 <input v-model="adjustMoneyNote" maxlength="100" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>

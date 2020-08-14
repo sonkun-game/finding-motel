@@ -43,6 +43,9 @@ public class RentalRequestModel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date cancelDate;
 
+    @Column(name = "EXPIRE_MESSAGE")
+    private String expireMessage;
+
     @ManyToOne
     @JoinColumn(name = "STATUS_ID")
     private StatusModel rentalStatus;

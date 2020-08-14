@@ -104,9 +104,9 @@ public class RentalRequestServiceImpl implements RentalRequestService {
     }
 
     @Override
-    public JSONObject changeStatus(String renterRqId) {
+    public JSONObject changeStatus(RentalRequestDTO rentalRequestDTO) {
         try {
-            RentalRequestModel rentalRequestModel = rentalRequestRepository.getOne(renterRqId);
+            RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
             if(rentalRequestModel.getRentalStatus().getId() == 7){
                 Date date = new Date();
                 Date cancelDate = new Timestamp(date.getTime());
@@ -120,6 +120,7 @@ public class RentalRequestServiceImpl implements RentalRequestService {
                 roomRepository.save(rentalRequestModel.getRentalRoom());
                 StatusModel statusExpire = new StatusModel(11L);
                 rentalRequestModel.setRentalStatus(statusExpire);
+                rentalRequestModel.setExpireMessage(rentalRequestDTO.getExpireMessage());
                 rentalRequestModel = rentalRequestRepository.save(rentalRequestModel);
                 // send notification to Landlord
                 String notificationContent = "Tài khoản <b>" + rentalRequestModel.getRentalRenter().getUsername() +

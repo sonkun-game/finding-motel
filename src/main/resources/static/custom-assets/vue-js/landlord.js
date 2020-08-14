@@ -1006,7 +1006,7 @@ var landlordInstance = new Vue({
                 this.validateMessage = "<b>" + inputName + "</b> không vượt quá " + maxLength + " ký tự"
                 return false
             }else if(minLength != null && inputValue != null && inputValue.length < minLength){
-                this.validateMessage = "<b>" + inputName + "</b> có ít nhất " + minLength + " ký tự"
+                this.validateMessage = "<b>" + inputName + "</b> phải có ít nhất " + minLength + " ký tự"
                 return false
             }else if(min != null && inputValue != null && parseFloat(inputValue) <= min){
                 this.validateMessage = "<b>" + inputName + "</b> phải lớn hơn " + authenticationInstance.formatNumberToDisplay(min) + " " + unit

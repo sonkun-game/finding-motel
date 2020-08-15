@@ -296,3 +296,11 @@ button:disabled{
 .message-box textarea{
     height: 15vh;
 }
+#modalRequestDetail .message-container{
+    padding: 20px 40px 10px 40px;
+    border-top: 1px solid #ddd;
+}
+.px-40px{
+    padding-left: 40px;
+    padding-right: 40px;
+}

@@ -434,7 +434,7 @@ color: #fff;
     height: 50px;
     background: #dca73a;
     display: block;
-    margin: 50px auto;
+    margin: 20px auto 50px auto;
     border: medium none;
     border-radius: 3px;
     color: white;
@@ -1036,6 +1036,16 @@ a:hover {
 .map-container{
     position: relative;
 }
-.request-collapse:hover{
-    background-color: #f8f9fa!important;
+.request-collapse:hover {
+    background-color: #f8f9fa !important;
+}
+#modalEndRentalRequest .modal-body{
+    padding: 20px 45px 10px 45px !important;
+}
+#post-new-room .msg-notification span{
+    font-size: 16px;
+    padding-left: 10px;
+}
+#post-new-room .msg-notification span b{
+    color: #e21010;
 }

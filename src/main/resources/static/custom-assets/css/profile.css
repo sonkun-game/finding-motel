@@ -1050,7 +1050,8 @@ a:hover {
 #modalEndRentalRequest .modal-body{
     padding: 20px 45px 10px 45px !important;
 }
-#post-new-room .msg-notification span{
+#post-new-room .msg-notification span,
+#myModal_Extend .msg-notification span{
     font-size: 16px;
     padding-left: 10px;
 }

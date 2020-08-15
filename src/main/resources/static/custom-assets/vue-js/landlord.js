@@ -442,6 +442,10 @@ var landlordInstance = new Vue({
             document.body.removeAttribute("class")
         },
         extendTimePost(){
+            if(!this.validatePaymentPackageAmount()){
+                this.showMsg = true
+                return
+            }
             let request = {
                 'postId' : this.postId,
                 'paymentPackageId' : this.duration,

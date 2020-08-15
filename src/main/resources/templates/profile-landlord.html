@@ -582,6 +582,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsg" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsg" v-html="validateMessage">
+
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>

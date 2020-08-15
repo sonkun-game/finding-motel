@@ -245,6 +245,12 @@ var landlordInstance = new Vue({
         calculateCost(package){
             this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
             this.amountSelected = package.amount
+            if(package.amount > this.userInfo.amount){
+                this.validateMessage = "Số tiền trong tài khoản không đủ"
+                this.showMsg = true
+                this.duration = 0
+            }
+
         },
         handleAddNewPost(){
             if(!this.validateInputForSaving()){
@@ -1052,6 +1058,14 @@ var landlordInstance = new Vue({
             }
 
         },
+        validatePaymentPackageAmount(){
+            if(this.amountSelected > this.userInfo.amount){
+                this.validateMessage = "Số tiền trong tài khoản không đủ"
+                return false
+            }else {
+                return true
+            }
+        },
         validateInputForSaving(){
 
             if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
@@ -1064,6 +1078,7 @@ var landlordInstance = new Vue({
             && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
             && this.validateMapLocation() && this.validateImages()
             && this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
+            && this.validatePaymentPackageAmount()
             ){
                 return true
             }else {

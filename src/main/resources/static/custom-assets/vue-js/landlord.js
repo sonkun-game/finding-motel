@@ -1073,7 +1073,7 @@ var landlordInstance = new Vue({
             && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
             && this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")
             && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
-            && this.validateInput(this.square, null, null,5, 100, "Diện tích", "M&sup2")
+            && this.validateInput(this.square, null, null,5, 1000, "Diện tích", "M&sup2")
             && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
             && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
             && this.validateMapLocation() && this.validateImages()

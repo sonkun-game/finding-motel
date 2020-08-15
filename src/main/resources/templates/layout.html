@@ -406,25 +406,50 @@
                         </div>
                         <div class="modal-body">
                             <div class="change-phone-area">
-                                <div class="msg-notification">
-                                <span v-if="showMsg"  v-cloak>
-                                    {{message}}
-                                </span>
+                                <div class="error-line">
+                                    <div class="col-3">
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="msg-notification">
+                                            <span v-if="showMsg"  v-cloak>
+                                                {{message}}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div class="phone-number">
-                                    <h4 class="title-phone">Số điện thoại: </h4>
-                                    <input @focusout="checkExistPhone()" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm px-4" />
-                                    <button v-on:click="getOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
+                                    <div class="col-3 title-phone-modal">
+                                        <h4 class="">Số điện thoại<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <input @keyup="clearTimer" v-bind:disabled="disableInputPhone" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm" />
+                                    </div>
+                                    <div class="col-3 pl-0">
+                                        <button v-on:click="sendOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
+                                    </div>
+
+
 
                                 </div>
                                 <div class="confirm-otp">
-                                    <h4 class="title-confirm-otp">Mã xác nhận: </h4>
-                                    <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm px-4" />
+                                    <div class="col-3 title-phone-modal">
+                                        <h4 class="">Mã xác nhận<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm" />
+                                    </div>
+                                    <div class="col-3 pl-0">
+                                    </div>
+                                </div>
+                                <div class="msg-notification">
+                                    <span class="text-timer" v-if="displayTimer != null" v-html="displayTimer" >
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click="checkOTP()" class="btn-hover btn-default">Xác Nhận</button>
+                            <button v-on:click="validateOTP()" class="btn-hover btn-default">Xác Nhận</button>
                         </div>
                     </div>
                 </div>

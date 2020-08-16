@@ -15,17 +15,4 @@ public interface WishListRepository extends JpaRepository<WishListModel, String>
 
     WishListModel findByWishListPostAndWishListRenter(PostModel post, RenterModel renter);
 
-    @Query(value = "select new PostModel(wl.wishListPost.id, wl.wishListPost.price, " +
-            "wl.wishListPost.distance, wl.wishListPost.square, " +
-            "wl.wishListPost.description, wl.wishListPost.title, " +
-            "wl.wishListPost.address, MAX (im.id)) from WishListModel wl " +
-            "join ImageModel im on wl.wishListPost.id = im.post.id " +
-            "where (:renterId is null or wl.wishListRenter.username = :renterId)" +
-            "and (:isVisible is null or wl.wishListPost.visible = :isVisible)" +
-            "and (:banned is null or wl.wishListPost.banned = :banned)" +
-            "and (:currentDate is null or wl.wishListPost.expireDate >= :currentDate)" +
-            "group by wl.wishListPost.id, wl.wishListPost.price, wl.wishListPost.distance, " +
-            "wl.wishListPost.square, wl.wishListPost.description, wl.wishListPost.title, wl.wishListPost.address" +
-            "")
-    List<PostModel> getListPostByRenter(String renterId, Boolean isVisible, Boolean banned, Date currentDate);
 }

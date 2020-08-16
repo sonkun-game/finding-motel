@@ -316,30 +316,38 @@ padding-top: 20px;
 }
 
 .change-phone-area{
-margin: 50px 0;
+    padding: 20px 0 50px 0;
 }
 
-.title-phone{
-margin: 4px 20px;
+.title-phone-modal{
+
+}
+.error-line{
+    display: flex;
 }
 
 .btn-default-otp{
-margin: 0px 20px;
-border: 1px solid #dca73a;
-border-radius: 4px;
-cursor: pointer;
-background-color: #dca73a;
-color: white;
+    min-width: 100px;
+    border: 1px solid #dca73a;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #dca73a;
+    color: white;
+    float: left;
+}
+input:disabled{
+    background-color: #DDDDDD;
 }
 
 .change-phone,
 .confirm-otp-phone{
-height: 30px;
-border-radius: 6px;
+    height: 30px;
+    border-radius: 6px;
+    float: left;
 }
 
 .title-confirm-otp{
-margin: 4px 22px;
+    margin: 4px 22px;
 }
 
 .invisible {
@@ -1042,10 +1050,15 @@ a:hover {
 #modalEndRentalRequest .modal-body{
     padding: 20px 45px 10px 45px !important;
 }
-#post-new-room .msg-notification span{
+#post-new-room .msg-notification span,
+#myModal_Extend .msg-notification span,
+#myModal_AddRoom .msg-notification span{
     font-size: 16px;
     padding-left: 10px;
 }
 #post-new-room .msg-notification span b{
     color: #e21010;
+}
+.msg-notification .text-timer{
+    margin: auto;
 }

@@ -7,6 +7,9 @@ import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AdminController {
@@ -26,7 +30,7 @@ public class AdminController {
     private ManagePostService managePostService;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
@@ -50,12 +54,10 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/api-search-user")
-    public JSONObject searchUser(@RequestBody UserDTO userDTO) {
+    public JSONObject searchUser(@RequestBody UserDTO userDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            List<UserDTO> userDTOS = adminService.searchUsers(userDTO);
-            return userDTOS != null
-                    ? responseMsg("000", "Success!", userDTOS)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), 10);
+            return adminService.searchUsers(userDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }

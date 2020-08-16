@@ -173,12 +173,13 @@ var admin = new Vue({
             }
             document.getElementById("modalBan").style.display = 'block';
         },
-        searchUser() {
+        searchUser(currentPage) {
+            if (currentPage == undefined || !currentPage) currentPage = 0;
             let request = {
                 'username' : this.inputSearchUser,
                 'roleId' : parseInt(this.inputRole) == 0 ? null : parseInt(this.inputRole),
             }
-            fetch("/api-search-user", {
+            fetch("/api-search-user?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

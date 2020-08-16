@@ -6,6 +6,8 @@ import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,11 +61,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserDTO> searchUsers(UserDTO userDTO) {
+    public JSONObject searchUsers(UserDTO userDTO, Pageable pageable) {
         try {
             List<UserDTO> users = new ArrayList<>();
-            List<UserModel>  userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId());
-            for (UserModel u : userModels) {
+            Page<UserModel> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
+            for (UserModel u : userModels.getContent()) {
                 UserDTO user = new UserDTO(u);
                 //add report number and ban available
                 if (u.getRole().getId() == 2) {
@@ -73,10 +75,13 @@ public class AdminServiceImpl implements AdminService {
                 }
                 users.add(user);
             }
-            return users;
+            JSONObject pagination = paginationModel(userModels);
+            JSONObject resposnse = responseMsg("000", "Success", users);
+            resposnse.put("pagination", pagination);
+            return resposnse;
         }catch (Exception e){
             e.printStackTrace();
-            return null;
+            return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -349,5 +354,22 @@ public class AdminServiceImpl implements AdminService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
+    }
+
+    public JSONObject paginationModel(Page page) {
+        JSONObject msg = new JSONObject();
+        msg.put("totalPages", page.getTotalPages());
+        msg.put("sizePage", page.getSize());
+        msg.put("currentPage", page.getNumber());
+        msg.put("totalItems", page.getTotalElements());
+        return msg;
     }
 }

@@ -56,7 +56,8 @@ var admin = new Vue({
         selectedLandlord : {},
         paymentMethod : "",
         reportDetail : "",
-        adjustMoneyNote : ""
+        adjustMoneyNote : "",
+        pagination : [],
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -189,7 +190,8 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if(data != null && data.code == "000"){
-                        this.listUser = data.data
+                        this.listUser = data.data;
+                        this.pagination = data.pagination;
                     }else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
@@ -383,14 +385,15 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        searchReport() {
+        searchReport(currentPage) {
+            if (currentPage == undefined || !currentPage) currentPage = 0;
             let reportRequestDTO = {
                 "landlordId": this.inputLandlordId == "" ? null : this.inputLandlordId,
                 "renterId": this.inputRenterId == "" ? null : this.inputRenterId,
                 "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
                 "statusReport": this.isNullSearchParam(this.inputStatusReport),
             }
-            fetch("/search-report", {
+            fetch("/search-report?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -400,6 +403,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         this.listReport = data.data;
+                        this.pagination =  data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()

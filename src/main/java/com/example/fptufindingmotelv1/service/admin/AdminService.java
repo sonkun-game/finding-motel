@@ -26,7 +26,7 @@ public interface AdminService {
 
     PostModel banPost(String postId);
 
-    List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO);
+    JSONObject searchReport(ReportRequestDTO reportRequestDTO, Pageable pageable);
 
     JSONObject getInitAdminManager();
 

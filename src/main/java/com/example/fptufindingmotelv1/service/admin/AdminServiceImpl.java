@@ -81,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
             return resposnse;
         }catch (Exception e){
             e.printStackTrace();
-            return responseMsg("999", "Lỗi hệ thống!", null);
+            return responseMsg("777", "Lỗi dữ liệu!", null);
         }
     }
 
@@ -244,20 +244,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO) {
+    public JSONObject searchReport(ReportRequestDTO reportRequestDTO, Pageable pageable) {
         try {
-            List<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
+            Page<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
                     reportRequestDTO.getRenterId(), reportRequestDTO.getPostTitle(),
-                    reportRequestDTO.getStatusReport());
+                    reportRequestDTO.getStatusReport(), pageable);
             ArrayList<ReportResponseDTO> reportResponseDTOS = new ArrayList<>();
-            for (ReportModel report : reportModels) {
+            for (ReportModel report : reportModels.getContent()) {
                 ReportResponseDTO responseDTO = new ReportResponseDTO(report);
                 reportResponseDTOS.add(responseDTO);
             }
-            return reportResponseDTOS;
+            JSONObject response = responseMsg("000", "Success", reportResponseDTOS);
+            response.put("pagination", paginationModel(reportModels));
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return responseMsg("777", "Lỗi dữ liệu.", null);
         }
     }
 

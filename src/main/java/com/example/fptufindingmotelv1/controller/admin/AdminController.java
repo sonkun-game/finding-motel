@@ -169,12 +169,10 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/search-report")
-    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO) {
+    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO, @RequestParam Optional<Integer> currentPage ) {
         try {
-            List<ReportResponseDTO> response = adminService.searchReport(reportRequestDTO);
-            return response != null
-                    ? responseMsg("000", "Success!", response)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), 10, Sort.by("reportDate").descending());
+            return adminService.searchReport(reportRequestDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }

@@ -42,6 +42,7 @@ var landlordInstance = new Vue({
         expireMessage : "",
         validateMessage : "",
         showMsg : false,
+        showMsgModal : false,
     },
     created(){
         let previousUrl = document.referrer
@@ -194,6 +195,10 @@ var landlordInstance = new Vue({
             })
         },
         generateRooms(){
+            if(this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")){
+                this.showMsgModal = false
+            }
+
 
             this.listRoom = []
             let start = 0
@@ -247,20 +252,32 @@ var landlordInstance = new Vue({
             this.amountSelected = package.amount
             if(package.amount > this.userInfo.amount){
                 this.validateMessage = "Số tiền trong tài khoản không đủ"
-                this.showMsg = true
+                if(this.editMode){
+                    this.showMsgModal = true
+                }else {
+                    this.showMsg = true
+                }
                 this.duration = 0
+            }else {
+                if(this.editMode){
+                    this.showMsgModal = false
+                }
             }
 
         },
         handleAddNewPost(){
-            if(!this.validateInputForSaving()){
-                this.showMsg = true
-                return
-            }
-            this.showMsg = false
             if (this.editMode){
+                if(!this.validateInputForEditing()){
+                    this.showMsg = true
+                    return
+                }
+                this.showMsg = false
                 this.editPost()
             }else{
+                if(!this.validateInputForSaving()){
+                    this.showMsg = true
+                    return
+                }
                 let request = {
                     'typeId' : this.typeOfPost,
                     'title' : this.title,
@@ -440,10 +457,14 @@ var landlordInstance = new Vue({
         closeModalExtend() {
             document.getElementById("myModal_Extend").style.display = 'none';
             document.body.removeAttribute("class")
+            if(this.showMsgModal){
+                this.showMsgModal = false
+            }
         },
         extendTimePost(){
-            if(!this.validatePaymentPackageAmount()){
-                this.showMsg = true
+            if(!this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
+                || !this.validatePaymentPackageAmount()){
+                this.showMsgModal = true
                 return
             }
             let request = {
@@ -700,8 +721,14 @@ var landlordInstance = new Vue({
         closeModalAddRoom(){
             document.body.removeAttribute("class")
             document.getElementById("myModal_AddRoom").style.display = 'none';
+            this.showMsgModal = false
         },
         increaseRoom(){
+            if(!this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")){
+                this.showMsgModal = true
+                return
+            }
+            this.showMsgModal = false
             let request = {
                 "listRoom" : this.listRoom,
                 "postId" : this.postId,
@@ -1083,6 +1110,22 @@ var landlordInstance = new Vue({
             && this.validateMapLocation() && this.validateImages()
             && this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
             && this.validatePaymentPackageAmount()
+            ){
+                return true
+            }else {
+                return false
+            }
+        },
+        validateInputForEditing(){
+
+            if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
+                && this.validateInput(this.title, 10, 100, null, null, "Tiêu đề")
+                && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
+                && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
+                && this.validateInput(this.square, null, null,5, 1000, "Diện tích", "M&sup2")
+                && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
+                && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
+                && this.validateMapLocation() && this.validateImages()
             ){
                 return true
             }else {

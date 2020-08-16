@@ -370,6 +370,8 @@ public class AdminServiceImpl implements AdminService {
         msg.put("sizePage", page.getSize());
         msg.put("currentPage", page.getNumber());
         msg.put("totalItems", page.getTotalElements());
+        msg.put("hasNext", page.hasNext());
+        msg.put("hasPrevious", page.hasPrevious());
         return msg;
     }
 }

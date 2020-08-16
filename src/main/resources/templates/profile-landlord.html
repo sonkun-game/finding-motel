@@ -584,9 +584,9 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="msg-notification">
-                                    <img v-if="showMsg" width="24px" src="assets/img/logo/error.png"/>
+                                    <img v-if="showMsgModal" width="24px" src="assets/img/logo/error.png"/>
 
-                                    <span v-if="showMsg" v-html="validateMessage">
+                                    <span v-if="showMsgModal" v-html="validateMessage">
 
                                     </span>
                                 </div>
@@ -612,7 +612,7 @@
                                     <h4>Số lượng phòng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                    <input @keypress="removeDot(numberOfRoom, 'int', $event)" type="text" maxlength="2" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                 </div>
                             </div>
                             <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
@@ -643,6 +643,15 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsgModal" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsgModal" v-html="validateMessage">
+
+                                    </span>
                                 </div>
                             </div>
                         </div>

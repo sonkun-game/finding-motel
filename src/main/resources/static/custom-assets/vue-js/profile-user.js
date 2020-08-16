@@ -85,8 +85,15 @@ var profileInstance = new Vue({
                                 this.disableInputPhone = true
                                 this.expireDate = Date.now() + 1 * 60000
                                 this.countDown()
+                            }else if(data != null && data.CodeResult == "99"
+                            && data.ErrorMessage.indexOf("Phone not valid") != -1){
+                                this.disableInputPhone = false
+                                this.clearTimer()
+                                this.showMsg = true
+                                this.message = "Số điện thoại không hợp lệ"
                             }else {
                                 this.clearTimer()
+                                this.disableInputPhone = false
                                 this.showMsg = true
                                 this.message = "Chưa gửi được tin nhắn, Vui lòng bấm <b>Gửi mã</b> để gửi lại"
                             }
@@ -117,7 +124,7 @@ var profileInstance = new Vue({
                 requestAnimationFrame(this.countDown)
                 if(duration <= 0){
                     clearTimeout(this.intervalID)
-                    this.displayTimer = 'Mã xác thực đã hết hiệu lực, vui lòng gửi lại mã'
+                    this.displayTimer = 'Mã xác thực đã hết hạn, vui lòng gửi lại mã'
                     this.disableInputPhone = false
                 }
             }, 1000)

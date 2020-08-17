@@ -317,7 +317,10 @@ var admin = new Vue({
             if (list == null || !list) return {max: null, min: null};
             return list[value];
         },
-        searchPost() {
+        searchPost(currentPage) {
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let postRequestDTO = {
                 "typeId": this.isNullSearchParam(this.postType),
                 "title": this.isNullSearchParam(this.postTitleOrLandlord),
@@ -330,7 +333,7 @@ var admin = new Vue({
                 "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
                 "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
             }
-            fetch("/search-post", {
+            fetch("/search-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -340,6 +343,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         this.listPost = data.data;
+                        this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()

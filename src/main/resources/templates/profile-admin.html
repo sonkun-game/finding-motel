@@ -145,7 +145,7 @@
                                     </a>
                                 </li>
                                 <li v-for="page in pagination.totalPages"
-                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
                                     v-on:click="searchUser(page-1)">
                                     <a class="page-link">{{page}}</a>
                                 </li>

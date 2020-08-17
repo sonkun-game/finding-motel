@@ -68,7 +68,9 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
-            this.initMap()
+            setTimeout( () => {
+                this.initMap()
+            }, 1000)
         }else if(this.task == 4){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")

@@ -7,6 +7,10 @@ import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AdminController {
@@ -26,7 +31,9 @@ public class AdminController {
     private ManagePostService managePostService;
 
     @Autowired
-    RoleRepository roleRepository;
+    Environment env;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
@@ -34,14 +41,14 @@ public class AdminController {
     }
 
     @GetMapping(value = {"/quan-ly-he-thong"})
-    public String getManagerPage(Model model){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+    public String getManagerPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(!(userDetails.getUserModel() instanceof LandlordModel)
-                && !(userDetails.getUserModel() instanceof RenterModel)){
+            if (!(userDetails.getUserModel() instanceof LandlordModel)
+                    && !(userDetails.getUserModel() instanceof RenterModel)) {
                 return "profile-admin";
-            }else {
+            } else {
                 return "redirect:/";
             }
         }
@@ -50,12 +57,11 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/api-search-user")
-    public JSONObject searchUser(@RequestBody UserDTO userDTO) {
+    public JSONObject searchUser(@RequestBody UserDTO userDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            List<UserDTO> userDTOS = adminService.searchUsers(userDTO);
-            return userDTOS != null
-                    ? responseMsg("000", "Success!", userDTOS)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), 10);
+            return adminService.searchUsers(userDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
@@ -132,12 +138,11 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/search-post")
-    public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO) {
+    public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            ArrayList<PostResponseDTO> posts = adminService.searchPost(postSearchDTO);
-            return posts != null
-                    ? responseMsg("000", "Success!", posts)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            return adminService.searchPost(postSearchDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
@@ -167,12 +172,11 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/search-report")
-    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO) {
+    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            List<ReportResponseDTO> response = adminService.searchReport(reportRequestDTO);
-            return response != null
-                    ? responseMsg("000", "Success!", response)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("reportDate").descending());
+            return adminService.searchReport(reportRequestDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
@@ -190,8 +194,8 @@ public class AdminController {
         try {
             List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage(null);
             List<PaymentPackageDTO> response = new ArrayList<>();
-            for (PaymentPackageModel paymentPackage:
-                 paymentPackageModels) {
+            for (PaymentPackageModel paymentPackage :
+                    paymentPackageModels) {
                 response.add(new PaymentPackageDTO(paymentPackage));
             }
             return paymentPackageModels != null
@@ -201,6 +205,7 @@ public class AdminController {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
+
     @ResponseBody
     @RequestMapping(value = "/api-save-payment-package")
     public JSONObject savePaymentPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {
@@ -228,6 +233,7 @@ public class AdminController {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
+
     @ResponseBody
     @RequestMapping(value = "/api-add-money-for-landlord")
     public JSONObject addMoneyForLandlord(@RequestBody PaymentDTO paymentDTO) {

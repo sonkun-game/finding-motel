@@ -64,19 +64,19 @@ public class AdminServiceImpl implements AdminService {
     public JSONObject searchUsers(UserDTO userDTO, Pageable pageable) {
         try {
             List<UserDTO> users = new ArrayList<>();
-            Page<UserDTO> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
-//            for (UserModel u : userModels.getContent()) {
-//                UserDTO user = new UserDTO(u);
-//                //add report number and ban available
-//                if (u.getRole().getId() == 2) {
-//                    boolean banAvailable = user.getUnBanDate() == null
-//                            && user.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
-//                    user.setBanAvailable(banAvailable);
-//                }
-//                users.add(user);
-//            }
+            Page<UserModel> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
+            for (UserModel u : userModels.getContent()) {
+                UserDTO user = new UserDTO(u);
+                //add report number and ban available
+                if (u.getRole().getId() == 2) {
+                    boolean banAvailable = user.getUnBanDate() == null
+                            && user.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
+                    user.setBanAvailable(banAvailable);
+                }
+                users.add(user);
+            }
             JSONObject pagination = paginationModel(userModels);
-            JSONObject resposnse = responseMsg("000", "Success", userModels.getContent());
+            JSONObject resposnse = responseMsg("000", "Success", users);
             resposnse.put("pagination", pagination);
             return resposnse;
         } catch (Exception e) {

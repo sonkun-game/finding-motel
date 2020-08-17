@@ -91,19 +91,20 @@ display: flex;
 }
 
 .textfiled{
-font-family: sans-serif;
-width: 60%;
-border-radius: 6px;
-border: .5px solid;
-height: 30px;
-padding-left: 10px;
-background-color: white;
+    font-family: sans-serif;
+    border-radius: 6px;
+    border: .5px solid;
+    height: 30px;
+    padding-left: 10px;
+    background-color: white;
+    width: 100%;
 }
 .label{
-font-family:sans-serif;
-width: 20%;
-color: black;
-font-size: inherit;
+    font-family:sans-serif;
+    color: black;
+    font-size: inherit;
+    padding-left: 40px;
+    float: left;
 }
 
 .detail-3{
@@ -111,27 +112,27 @@ width: 80%;
 }
 
 .save{
-width: 20%;
-height: 40px;
-margin-top: 50px;
-float: right;
-color: white;
-border: .25px solid #dca73a;
-border-radius: 3px;
-background-color: #dca73a;
-cursor: pointer;
+    min-width: 150px;
+    height: 40px;
+    margin-top: 20px;
+    float: right;
+    color: white;
+    border: .25px solid #dca73a;
+    border-radius: 3px;
+    background-color: #dca73a;
+    cursor: pointer;
 }
 .change{
 
-width: 15%;
-height: 30px;
-display: block;
-margin: 0px auto;
-color: white;
-border: .25px solid #dca73a;
-border-radius: 3px;
-background-color: #dca73a;
-cursor: pointer;
+    min-width: 100px;
+    height: 30px;
+    display: block;
+    margin: 0px auto;
+    color: white;
+    border: .25px solid #dca73a;
+    border-radius: 3px;
+    background-color: #dca73a;
+    cursor: pointer;
 }
 
 .btn-hover:hover{
@@ -162,7 +163,7 @@ font-family:  sans-serif !important;
 }
 
 .information-detail{
-    padding-top: 50px;
+    padding-top: 20px;
     text-align: center;
 }
 

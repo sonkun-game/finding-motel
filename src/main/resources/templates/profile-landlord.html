@@ -522,7 +522,7 @@
                                                     <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
                                                     <button v-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length > 60 && task == 17" v-on:click="showExpireMessage(request)" class="table-button"
                                                             data-toggle="tooltip" data-html="true" title="Xem lời nhắn của người thuê">Lời nhắn</button>
-                                                    <p v-else v-text="request.expireMessage"> </p>
+                                                    <p v-else-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length <= 60 && task == 17" v-text="request.expireMessage"> </p>
                                                 </td>
                                             </tr>
                                             </tbody>

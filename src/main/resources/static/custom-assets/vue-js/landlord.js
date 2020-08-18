@@ -144,7 +144,7 @@ var landlordInstance = new Vue({
                     modalMessageInstance.showModal()
                     return
                 }
-                if(post.postVisible){
+                if(post.visible){
                     modalConfirmInstance.messageConfirm = "Bạn có muốn ẩn bài viết này không?"
                 }else{
                     modalConfirmInstance.messageConfirm = "Bạn có muốn hiển thị bài viết này không?"
@@ -308,10 +308,16 @@ var landlordInstance = new Vue({
                     .then(response => response.json())
                     .then((data) => {
                         console.log(data);
-                        if(data != null && data.msgCode == 'post000'){
-                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
-                            basicInfoInstance.userInfo = data.userInfo
-                            window.location.href = "/"
+                        if(data != null && data.code == '000'){
+                            window.location.href = "/post-detail?id=" + data.data
+                        }else if(data != null && data.code == "001"){
+                            this.showMsg = true
+                            this.validateMessage = data.message
+                            loadingInstance.isHidden = true
+                        }else {
+                            loadingInstance.isHidden = true
+                            modalMessageInstance.message = data.message
+                            modalMessageInstance.showModal()
                         }
                     }).catch(error => {
                     console.log(error);
@@ -343,7 +349,7 @@ var landlordInstance = new Vue({
         changeStatusPost(){
             let request = {
                 'postId' : this.selectedPost.id,
-                'isVisible' : !this.selectedPost.postVisible
+                'isVisible' : !this.selectedPost.visible
             }
             fetch("/api-change-post-status", {
                 method: 'POST',
@@ -358,7 +364,8 @@ var landlordInstance = new Vue({
                     if(data != null && data.msgCode == "post000"){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
-                            this.$set(this.listPost, this.postIndex, data.post)
+                            // this.$set(this.listPost, this.postIndex, data.post)
+                            this.viewListPost()
                         }, 2000);
                     }
                 }).catch(error => {
@@ -386,7 +393,7 @@ var landlordInstance = new Vue({
             this.selectedPost = post
             sessionStorage.setItem("selectedPost", JSON.stringify(post))
             this.editMode = true
-            this.typeOfPost = post.typeId
+            this.typeOfPost = post.type.id
             this.title = post.title
             this.detailInfo = post.description
             this.price = post.price
@@ -395,10 +402,33 @@ var landlordInstance = new Vue({
             // this.numberOfRoom = post.roomNumber
             // this.listRoom = post.listRoom
             this.inputAddress = post.address
-            this.uploadImages = post.listImage
-            this.expireDate = post.expireDate
+            // this.uploadImages = post.listImage
+            this.expireDate = this.formatDate(post.expireDate)
             this.postId = post.id
+            this.getListImageByPost(post.id)
             this.getListRoomRequest(null, post.id)
+        },
+        getListImageByPost(postId){
+            let request = {
+                'postId' : postId,
+            }
+            let options = {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            }
+            fetch("/api-get-images-by-post", options)
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.code == '000'){
+                        this.uploadImages = data.data
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
         },
         editPost(){
             let request = {
@@ -430,8 +460,6 @@ var landlordInstance = new Vue({
                         setTimeout(() =>
                         {
                             userTaskInstance.activeBtn(4)
-                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
-                            basicInfoInstance.userInfo = data.userInfo
                         }, 2000);
                     }
                 }).catch(error => {
@@ -485,15 +513,24 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == 'post000'){
+                    if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Gia hạn thành công", 2000)
                         setTimeout(() => {
-                            sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
-                            basicInfoInstance.userInfo = data.userInfo
-                            this.expireDate = data.post.expireDate
-                            this.$set(this.listPost, this.postIndex, data.post)
-                            this.closeModalExtend()
+                            this.userInfo.amount = data.amount;
+                            sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+                            basicInfoInstance.userInfo.amount = data.amount;
+                            this.selectedPost.expireDate = data.expireDate
+                            sessionStorage.setItem("selectedPost", this.selectedPost)
+                            this.expireDate = this.formatDate(data.expireDate);
+                            this.viewListPost();
+                            this.closeModalExtend();
                         }, 2000);
+                    }else if(data != null && data.code == "001"){
+                        this.showMsgModal = true
+                        this.validateMessage = data.message
+                    }else {
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -514,9 +551,12 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == 'post000'){
+                    if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng", 2000)
                         setTimeout(() => this.viewListPost(), 2000);
+                    }else {
+                        modalMessageInstance.message = data.message
+                        modalMessageInstance.showModal()
                     }
                 }).catch(error => {
                 console.log(error);
@@ -993,7 +1033,29 @@ var landlordInstance = new Vue({
             let dateFormatString = rawDate.split(".")[0]
             let date = new Date(dateFormatString)
             return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                + " " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+                + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+        },
+        getStatusPost(postVisible, postBanned, expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(postBanned){
+                return "Bị khóa"
+            }else if(date.getTime() < currentDate.getTime()){
+                return "Hết hạn"
+            }else {
+                return postVisible ? "Hiển thị" : "Không hiển thị"
+            }
+        },
+        IsExpirePost(expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(date.getTime() < currentDate.getTime()){
+                return true
+            }else {
+                return false
+            }
         },
         checkStatusAndSavePayment(){
             let request = {

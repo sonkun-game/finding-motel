@@ -22,4 +22,11 @@ public class TypeModel implements Serializable {
 
     @OneToMany(mappedBy = "type")
     private List<PostModel> posts;
+
+    public TypeModel() {
+    }
+    public TypeModel(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

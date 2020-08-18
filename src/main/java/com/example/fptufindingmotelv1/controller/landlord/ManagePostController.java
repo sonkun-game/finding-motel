@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -87,12 +88,12 @@ public class ManagePostController {
     @ResponseBody
     @PostMapping("/api-add-new-post")
     public JSONObject addNewPost(@RequestBody PostRequestDTO postRequestDTO) {
-        JSONObject response = new JSONObject();
-        PostModel postModel = managePostService.saveNewPost(postRequestDTO);
-        response.put("msgCode", postModel != null ? "post000" : "sys999");
-        response.put("postId", postModel.getId());
-        response.put("userInfo", new UserDTO(postModel.getLandlord()));
-        return response;
+        try {
+            return managePostService.saveNewPost(postRequestDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+            return responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 
     @ResponseBody
@@ -102,7 +103,7 @@ public class ManagePostController {
         PostModel postModel = managePostService.editPost(postRequestDTO);
         response.put("msgCode", postModel != null ? "post000" : "sys999");
         response.put("postId", postModel.getId());
-        response.put("userInfo", new UserDTO(postModel.getLandlord()));
+//        response.put("userInfo", new UserDTO(postModel.getLandlord()));
         return response;
     }
 
@@ -111,13 +112,13 @@ public class ManagePostController {
     public JSONObject viewListPost(@RequestBody PostRequestDTO postRequestDTO) {
         JSONObject response = new JSONObject();
         List<PostModel> listPost = managePostService.getAllPost(postRequestDTO);
-        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
-        for (PostModel post:
-             listPost) {
-            postResponseDTOS.add(new PostResponseDTO(post));
-        }
+//        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
+//        for (PostModel post:
+//             listPost) {
+//            postResponseDTOS.add(new PostResponseDTO(post));
+//        }
         response.put("msgCode", listPost != null ? "post000" : "sys999");
-        response.put("listPost", postResponseDTOS);
+        response.put("listPost", listPost);
         return response;
     }
 
@@ -135,23 +136,23 @@ public class ManagePostController {
     @ResponseBody
     @PostMapping("/api-extend-time-of-post")
     public JSONObject extendTimeOfPost(@RequestBody PostRequestDTO postRequestDTO) {
-        JSONObject response = new JSONObject();
-        PostModel postModel = managePostService.extendTimeOfPost(postRequestDTO);
-
-        response.put("msgCode", postModel != null ? "post000" : "sys999");
-        response.put("post", new PostResponseDTO(postModel));
-        response.put("userInfo", new UserDTO(postModel.getLandlord()));
-        return response;
+        try {
+            return managePostService.extendTimeOfPost(postRequestDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+            return responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 
     @ResponseBody
     @PostMapping("/api-delete-post")
     public JSONObject deletePost(@RequestBody PostRequestDTO postRequestDTO) {
-        JSONObject response = new JSONObject();
-        boolean isSuccess = managePostService.deletePost(postRequestDTO);
-
-        response.put("msgCode", isSuccess ? "post000" : "sys999");
-        return response;
+        try {
+            return managePostService.deletePost(postRequestDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+            return responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 
     @ResponseBody
@@ -170,5 +171,29 @@ public class ManagePostController {
         response.put("msgCode", roomModels != null ? "post000" : "sys999");
         response.put("listNewRoom", roomDTOS);
         return response;
+    }
+    @ResponseBody
+    @PostMapping("/api-get-images-by-post")
+    public JSONObject getListImageByPost(@RequestBody PostRequestDTO postRequestDTO) {
+        List<ImageModel> imageModels = managePostService.getListImageByPost(postRequestDTO);
+
+        List<String> images = new ArrayList<>();
+        for (ImageModel image:
+                imageModels) {
+            String imageUrl = "data:image/"+ image.getFileType()+";base64,"
+                    + Base64.getEncoder().encodeToString(image.getFileContent());
+            images.add(imageUrl);
+        }
+
+        return imageModels != null
+                ? responseMsg("000", "Success", images)
+                : responseMsg("999", "Lỗi hệ thống!", null);
+    }
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
     }
 }

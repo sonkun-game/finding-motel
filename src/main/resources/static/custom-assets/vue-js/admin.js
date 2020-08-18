@@ -72,7 +72,7 @@ var admin = new Vue({
         } else if (this.task == 10) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListPost()
+            this.searchPost();
         } else if (this.task == 11) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -302,7 +302,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
-                        this.getListPost();
+                        this.searchPost();
                     } else {
                         window.location.href = "/error";
                     }

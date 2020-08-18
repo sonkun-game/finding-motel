@@ -147,7 +147,7 @@ public class AdminController {
     public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO, @RequestParam Optional<Integer> currentPage) {
         try {
             Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("createDate"));
             return adminService.searchPost(postSearchDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);

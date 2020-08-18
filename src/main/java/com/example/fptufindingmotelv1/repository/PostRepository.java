@@ -28,7 +28,6 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
-            "order by p.createDate desc " +
             "")
     Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
@@ -65,7 +64,6 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "where (:postId is null or p.id = :postId)" +
             "")
     PostModel getPostById(String postId);
-
 
 
     @Query(value = "select top 5 * from POST p " +

@@ -22,7 +22,7 @@ public interface AdminService {
 
      void deleteReport(String id);
 
-    ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO);
+    JSONObject searchPost(PostSearchDTO postSearchDTO, Pageable pageable);
 
     PostModel banPost(String postId);
 

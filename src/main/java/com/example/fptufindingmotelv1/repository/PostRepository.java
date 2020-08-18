@@ -1,6 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.PostModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,9 +30,9 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:banned is null or p.banned = :banned)" +
             "order by p.createDate desc " +
             "")
-    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
+    Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Pageable pageable);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
             "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +

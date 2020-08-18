@@ -2,11 +2,14 @@ package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,7 +33,13 @@ public class AdminController {
     private ManagePostService managePostService;
 
     @Autowired
+    Environment env;
+
+    @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PaymentPackageRepository paymentPackageRepository;
 
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
@@ -38,14 +47,14 @@ public class AdminController {
     }
 
     @GetMapping(value = {"/quan-ly-he-thong"})
-    public String getManagerPage(Model model){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+    public String getManagerPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(!(userDetails.getUserModel() instanceof LandlordModel)
-                && !(userDetails.getUserModel() instanceof RenterModel)){
+            if (!(userDetails.getUserModel() instanceof LandlordModel)
+                    && !(userDetails.getUserModel() instanceof RenterModel)) {
                 return "profile-admin";
-            }else {
+            } else {
                 return "redirect:/";
             }
         }
@@ -56,6 +65,7 @@ public class AdminController {
     @RequestMapping(value = "/api-search-user")
     public JSONObject searchUser(@RequestBody UserDTO userDTO, @RequestParam Optional<Integer> currentPage) {
         try {
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
             Pageable pageable = PageRequest.of(currentPage.orElse(0), 10);
             return adminService.searchUsers(userDTO, pageable);
         } catch (Exception e) {
@@ -134,12 +144,11 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/search-post")
-    public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO) {
+    public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            ArrayList<PostResponseDTO> posts = adminService.searchPost(postSearchDTO);
-            return posts != null
-                    ? responseMsg("000", "Success!", posts)
-                    : responseMsg("999", "Lỗi hệ thống!", null);
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            return adminService.searchPost(postSearchDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
@@ -169,9 +178,10 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping(value = "/search-report")
-    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO, @RequestParam Optional<Integer> currentPage ) {
+    public JSONObject searchReport(@RequestBody ReportRequestDTO reportRequestDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), 10, Sort.by("reportDate").descending());
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("reportDate").descending());
             return adminService.searchReport(reportRequestDTO, pageable);
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
@@ -190,8 +200,8 @@ public class AdminController {
         try {
             List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage(null);
             List<PaymentPackageDTO> response = new ArrayList<>();
-            for (PaymentPackageModel paymentPackage:
-                 paymentPackageModels) {
+            for (PaymentPackageModel paymentPackage :
+                    paymentPackageModels) {
                 response.add(new PaymentPackageDTO(paymentPackage));
             }
             return paymentPackageModels != null
@@ -201,6 +211,27 @@ public class AdminController {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/api-get-all-payment-package")
+    public JSONObject getAllPaymentPacket(@RequestParam Optional<Integer> currentPage) {
+        try {
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Page<PaymentPackageModel> allPaymentPackage = paymentPackageRepository.getAllPaymentPackage(pageable);
+            List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
+            for (PaymentPackageModel paymentPackage :
+                    allPaymentPackage.getContent()) {
+                paymentPackageDTOS.add(new PaymentPackageDTO(paymentPackage));
+            }
+            JSONObject response = responseMsg("000", "Success!", paymentPackageDTOS);
+            response.put("pagination", paginationModel(allPaymentPackage));
+            return response;
+        } catch (Exception e) {
+            return responseMsg("999", "Lỗi hệ thống!", null);
+        }
+    }
+
     @ResponseBody
     @RequestMapping(value = "/api-save-payment-package")
     public JSONObject savePaymentPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {
@@ -228,6 +259,7 @@ public class AdminController {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
+
     @ResponseBody
     @RequestMapping(value = "/api-add-money-for-landlord")
     public JSONObject addMoneyForLandlord(@RequestBody PaymentDTO paymentDTO) {
@@ -240,6 +272,17 @@ public class AdminController {
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         }
+    }
+
+    public JSONObject paginationModel(Page page) {
+        JSONObject msg = new JSONObject();
+        msg.put("totalPages", page.getTotalPages());
+        msg.put("sizePage", page.getSize());
+        msg.put("currentPage", page.getNumber());
+        msg.put("totalItems", page.getTotalElements());
+        msg.put("hasNext", page.hasNext());
+        msg.put("hasPrevious", page.hasPrevious());
+        return msg;
     }
 }
 

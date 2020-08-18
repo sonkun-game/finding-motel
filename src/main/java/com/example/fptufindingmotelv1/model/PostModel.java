@@ -19,7 +19,7 @@ public class PostModel implements Serializable{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     private String id;
 
     @ManyToOne
@@ -27,40 +27,40 @@ public class PostModel implements Serializable{
     private TypeModel type;
 
     @ManyToOne
-    @JoinColumn(name = "LANDLORD_ID", nullable = false)
+    @JoinColumn(name = "LANDLORD_ID")
     private LandlordModel landlord;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column(name = "PRICE")
     private double price;
 
-    @Column(name = "DISTANCE", nullable = false)
+    @Column(name = "DISTANCE")
     private double distance;
 
-    @Column(name = "SQUARE", nullable = false)
+    @Column(name = "SQUARE")
     private double square;
 
-    @Column(name = "ROOM_NUMBER", nullable = false)
+    @Column(name = "ROOM_NUMBER")
     private int roomNumber;
 
-    @Column(name = "CREATE_DATE", nullable = false)
+    @Column(name = "CREATE_DATE")
     private Date createDate;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "EXPIRE_DATE", nullable = false)
+    @Column(name = "EXPIRE_DATE")
     private Date expireDate;
 
-    @Column(name = "IS_VISIBLE", nullable = false)
+    @Column(name = "IS_VISIBLE")
     private boolean visible;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE")
     private String title;
 
-    @Column(name = "IS_BANNED", nullable = false)
+    @Column(name = "IS_BANNED")
     private boolean banned;
 
-    @Column(name = "ADDRESS", nullable = false)
+    @Column(name = "ADDRESS")
     private String address;
 
     @Column(name = "MAP_LOCATION")
@@ -88,6 +88,11 @@ public class PostModel implements Serializable{
         this.id = id;
     }
 
+    public PostModel(String id, Date expireDate) {
+        this.id = id;
+        this.expireDate = expireDate;
+    }
+
     public PostModel(String id, double price, double distance, double square,
                      String description, String title, String address,
                      String imageId) {
@@ -102,7 +107,7 @@ public class PostModel implements Serializable{
         this.images.add(new ImageModel(imageId));
     }
 
-    public PostModel(String id, double price, double distance, double square,
+    public PostModel(String id, double price, double distance, double square, int roomNumber,
                      String description, String title, String address, boolean visible, boolean banned,
                      String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
                      String landlordUsername, String landlordDisplayName, String landlordPhone
@@ -111,6 +116,7 @@ public class PostModel implements Serializable{
         this.price = price;
         this.distance = distance;
         this.square = square;
+        this.roomNumber = roomNumber;
         this.description = description;
         this.title = title;
         this.address = address;

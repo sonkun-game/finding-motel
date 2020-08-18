@@ -1,9 +1,12 @@
 package com.example.fptufindingmotelv1.service.landlord;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
+import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -59,97 +62,93 @@ public class ManagePostServiceImpl implements ManagePostService{
     @Override
     public List<TypeModel> getListTypePost() {
         try {
-            return typeRepository.findAll();
+            return typeRepository.getAllTypeOfPost();
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public PostModel saveNewPost(PostRequestDTO postRequestDTO) {
-        try {
-            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
-            TypeModel typeModel = typeRepository.findById(postRequestDTO.getTypeId()).get();
-
-            PostModel postModel = new PostModel();
-            postModel.setLandlord(landlordModel);
-            postModel.setDescription(postRequestDTO.getDescription());
-            postModel.setDistance(postRequestDTO.getDistance());
-            postModel.setPrice(postRequestDTO.getPrice());
-            postModel.setSquare(postRequestDTO.getSquare());
-            postModel.setTitle(postRequestDTO.getTitle());
-            postModel.setVisible(true);
-            postModel.setBanned(false);
-            postModel.setRoomNumber(postRequestDTO.getRoomNumber());
-            postModel.setType(typeModel);
-            postModel.setAddress(postRequestDTO.getAddress());
-            postModel.setMapLocation(postRequestDTO.getMapLocation());
-            PaymentPackageModel packageModel
-                    = paymentPackageRepository.findById(postRequestDTO.getPaymentPackageId()).get();
-            Date date = new Date();
-            Date createdDate = new Timestamp(date.getTime());
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.MONTH, packageModel.getDuration());
-            Date expireDate = c.getTime();
-            postModel.setCreateDate(createdDate);
-            postModel.setExpireDate(expireDate);
-
-            PostModel newPostCreated = postRepository.save(postModel);
-
-            // save list image
-            List<ImageModel> listImages = uploadImages(postRequestDTO.getListImage()
-                    , newPostCreated);
-            if(listImages == null){
-                return null;
-            }else {
-                listImages = imageRepository.saveAll(listImages);
-            }
-
-            // save list room
-            List<RoomModel> listRoom = new ArrayList<>();
-            for (RoomDTO room:
-                    postRequestDTO.getListRoom()) {
-                RoomModel roomModel = new RoomModel();
-                roomModel.setName(room.getRoomName());
-                StatusModel status;
-                if(room.isAvailableRoom()){
-                    status = new StatusModel(1L);
-                }else{
-                    status = new StatusModel(2L);
-                }
-                roomModel.setStatus(status);
-                roomModel.setPostRoom(newPostCreated);
-                listRoom.add(roomModel);
-            }
-            listRoom = roomRepository.saveAll(listRoom);
-
-            newPostCreated.setImages(listImages);
-            newPostCreated.setRooms(listRoom);
-            postRepository.save(newPostCreated);
-
-            // save payment post
-            PaymentPostModel paymentPostModel = new PaymentPostModel();
-            paymentPostModel.setPaymentPackage(packageModel);
-            paymentPostModel.setPostPayment(newPostCreated);
-            paymentPostModel.setPayDate(createdDate);
-            paymentPostRepository.save(paymentPostModel);
-
-            landlordModel.setAmount(landlordModel.getAmount() - packageModel.getAmount());
-            landlordRepository.save(landlordModel);
-            return newPostCreated;
-        }catch (Exception e){
-            e.printStackTrace();
+    public JSONObject saveNewPost(PostRequestDTO postRequestDTO) {
+        LandlordModel landlordModel = landlordRepository.getLandlordById(postRequestDTO.getUsername());
+        PaymentPackageModel packageModel
+                = paymentPackageRepository.getPackageById(postRequestDTO.getPaymentPackageId());
+        if((landlordModel.getAmount() - packageModel.getAmount()) < 0){
+            return responseMsg("001", "Số tiền trong tài khoản không đủ", null);
         }
-        return null;
+        TypeModel typeModel = new TypeModel(postRequestDTO.getTypeId(), null);
+
+        PostModel postModel = new PostModel();
+        postModel.setLandlord(landlordModel);
+        postModel.setDescription(postRequestDTO.getDescription());
+        postModel.setDistance(postRequestDTO.getDistance());
+        postModel.setPrice(postRequestDTO.getPrice());
+        postModel.setSquare(postRequestDTO.getSquare());
+        postModel.setTitle(postRequestDTO.getTitle());
+        postModel.setVisible(true);
+        postModel.setBanned(false);
+        postModel.setRoomNumber(postRequestDTO.getRoomNumber());
+        postModel.setType(typeModel);
+        postModel.setAddress(postRequestDTO.getAddress());
+        postModel.setMapLocation(postRequestDTO.getMapLocation());
+
+        Date date = new Date();
+        Date createdDate = new Timestamp(date.getTime());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, packageModel.getDuration());
+        Date expireDate = c.getTime();
+        postModel.setCreateDate(createdDate);
+        postModel.setExpireDate(expireDate);
+
+        PostModel newPostCreated = postRepository.save(postModel);
+
+        // save list image
+        List<ImageModel> listImages = uploadImages(postRequestDTO.getListImage()
+                , newPostCreated);
+        if(listImages == null){
+            return null;
+        }else {
+            listImages = imageRepository.saveAll(listImages);
+        }
+
+        // save list room
+        List<RoomModel> listRoom = new ArrayList<>();
+        for (RoomDTO room:
+                postRequestDTO.getListRoom()) {
+            RoomModel roomModel = new RoomModel();
+            roomModel.setName(room.getRoomName());
+            StatusModel status;
+            if(room.isAvailableRoom()){
+                status = new StatusModel(1L);
+            }else{
+                status = new StatusModel(2L);
+            }
+            roomModel.setStatus(status);
+            roomModel.setPostRoom(newPostCreated);
+            listRoom.add(roomModel);
+        }
+        listRoom = roomRepository.saveAll(listRoom);
+
+        postRepository.save(newPostCreated);
+
+        // save payment post
+        PaymentPostModel paymentPostModel = new PaymentPostModel();
+        paymentPostModel.setPaymentPackage(packageModel);
+        paymentPostModel.setPostPayment(newPostCreated);
+        paymentPostModel.setPayDate(createdDate);
+        paymentPostRepository.save(paymentPostModel);
+
+        landlordRepository.updateAmountLandlord(landlordModel.getAmount() - packageModel.getAmount(), landlordModel.getUsername());
+        return responseMsg("000", "Success", postModel.getId());
     }
 
     @Override
     public List<PostModel> getAllPost(PostRequestDTO postRequestDTO) {
         try {
-            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
-            return landlordModel.getPosts();
+            return postRepository.getPostsByLandlord(postRequestDTO.getUsername());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -169,111 +168,87 @@ public class ManagePostServiceImpl implements ManagePostService{
         return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public PostModel extendTimeOfPost(PostRequestDTO postRequestDTO) {
-        try {
-            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
-            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
-            PaymentPackageModel packageModel
-                    = paymentPackageRepository.findById(postRequestDTO.getPaymentPackageId()).get();
-            Date date = new Date();
-            Date payDate = new Timestamp(date.getTime());
-            Calendar c = Calendar.getInstance();
-            if(payDate.after(postModel.getExpireDate())){
-                c.setTime(payDate);
-            }else{
-                c.setTime(postModel.getExpireDate());
-            }
-            c.add(Calendar.MONTH, packageModel.getDuration());
-            Date expireDate = c.getTime();
-
-            // save amount of landlord
-            landlordModel.setAmount(landlordModel.getAmount() - packageModel.getAmount());
-            landlordRepository.save(landlordModel);
-
-            // save payment post
-            PaymentPostModel paymentPostModel = new PaymentPostModel();
-            paymentPostModel.setPaymentPackage(packageModel);
-            paymentPostModel.setPostPayment(postModel);
-            paymentPostModel.setPayDate(payDate);
-            paymentPostRepository.save(paymentPostModel);
-
-            // add expire date and save post
-            postModel.setExpireDate(expireDate);
-            postModel.setVisible(true);
-            postModel = postRepository.save(postModel);
-            return postModel;
-        }catch (Exception e){
-            e.printStackTrace();
+    public JSONObject extendTimeOfPost(PostRequestDTO postRequestDTO) {
+        LandlordModel landlordModel = landlordRepository.getLandlordById(postRequestDTO.getUsername());
+        PaymentPackageModel packageModel
+                = paymentPackageRepository.getPackageById(postRequestDTO.getPaymentPackageId());
+        if((landlordModel.getAmount() - packageModel.getAmount()) < 0){
+            return responseMsg("001", "Số tiền trong tài khoản không đủ", null);
         }
-        return null;
+        PostModel postModel = postRepository.getPostOnlyExpireDateById(postRequestDTO.getPostId());
+
+        Date date = new Date();
+        Date payDate = new Timestamp(date.getTime());
+        Calendar c = Calendar.getInstance();
+        if(payDate.after(postModel.getExpireDate())){
+            c.setTime(payDate);
+        }else{
+            c.setTime(postModel.getExpireDate());
+        }
+        c.add(Calendar.MONTH, packageModel.getDuration());
+        Date expireDate = c.getTime();
+
+        // save amount of landlord
+        landlordRepository.updateAmountLandlord(landlordModel.getAmount() - packageModel.getAmount(), landlordModel.getUsername());
+
+        // save payment post
+        PaymentPostModel paymentPostModel = new PaymentPostModel();
+        paymentPostModel.setPaymentPackage(packageModel);
+        paymentPostModel.setPostPayment(postModel);
+        paymentPostModel.setPayDate(payDate);
+        paymentPostRepository.save(paymentPostModel);
+
+        // add expire date and save post
+        postRepository.updateExpireDatePost(expireDate, true, postModel.getId());
+        JSONObject response = new JSONObject();
+
+        response.put("code", postModel != null ? "000" : "999");
+        response.put("amount", landlordModel.getAmount() - packageModel.getAmount());
+        response.put("expireDate", expireDate);
+        return response;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public boolean deletePost(PostRequestDTO postRequestDTO) {
-        PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
-
-        // delete wishlist have post
-        for (WishListModel wishListModel:
-             postModel.getWishLists()) {
-            wishListRepository.delete(wishListModel);
+    public JSONObject deletePost(PostRequestDTO postRequestDTO) {
+        if(postRequestDTO.getPostId() == null || postRequestDTO.getPostId().isEmpty()){
+            return responseMsg("999", "NULL POST_ID", null);
         }
+        // delete wishlist have post
+        wishListRepository.deleteWishListsByPost(postRequestDTO.getPostId());
 
         // delete images of post
-        for (ImageModel image:
-                postModel.getImages()) {
-            imageRepository.delete(image);
-        }
+        imageRepository.deleteImagesByPost(postRequestDTO.getPostId());
+
+        // delete rental requests of room of post
+        rentalRequestRepository.deleteRentalRequestsByPost(postRequestDTO.getPostId());
 
         // delete rooms of post
-        for (RoomModel room:
-             postModel.getRooms()) {
-            if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
-                rentalRequestRepository.deleteAll(room.getRoomRentals());
-            }
-            roomRepository.delete(room);
-        }
+        roomRepository.deleteRoomsByPost(postRequestDTO.getPostId());
+
 
         // delete paymentPosts  of post
-        for (PaymentPostModel paymentPostModel:
-                postModel.getPaymentPosts()) {
-            paymentPostRepository.delete(paymentPostModel);
-        }
+        paymentPostRepository.deletePaymentPostsByPost(postRequestDTO.getPostId());
+
 
         // delete reports  of post
-        for (ReportModel reportModel:
-                postModel.getReports()) {
-            reportRepository.delete(reportModel);
-        }
+        reportRepository.deleteReportsByPost(postRequestDTO.getPostId());
 
-        postRepository.delete(postModel);
-        return true;
+
+        postRepository.deletePostById(postRequestDTO.getPostId());
+        return responseMsg("000", "Success", null);
 
     }
 
     @Override
     public PostModel editPost(PostRequestDTO postRequestDTO) {
         try {
-            LandlordModel landlordModel = landlordRepository.findByUsername(postRequestDTO.getUsername());
-            TypeModel typeModel = typeRepository.findById(postRequestDTO.getTypeId()).get();
 
-            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
-            postModel.setLandlord(landlordModel);
-            postModel.setDescription(postRequestDTO.getDescription());
-            postModel.setDistance(postRequestDTO.getDistance());
-            postModel.setPrice(postRequestDTO.getPrice());
-            postModel.setSquare(postRequestDTO.getSquare());
-            postModel.setTitle(postRequestDTO.getTitle());
-            postModel.setType(typeModel);
-            postModel.setAddress(postRequestDTO.getAddress());
-            postModel.setMapLocation(postRequestDTO.getMapLocation());
+            PostModel postModel = new PostModel(postRequestDTO.getPostId());
 
-
-            for (int i = 0; i < postModel.getImages().size(); i++) {
-                imageRepository.delete(postModel.getImages().get(i));
-            }
-            postModel.getImages().clear();
+            imageRepository.deleteImagesByPost(postModel.getId());
 
             // save list image
             List<ImageModel> listImages = uploadImages(postRequestDTO.getListImage()
@@ -283,9 +258,11 @@ public class ManagePostServiceImpl implements ManagePostService{
 
             postModel.setImages(listImages);
 
-            PostModel newPostCreated = postRepository.save(postModel);
+            postRepository.updatePost(postRequestDTO.getTypeId(), postRequestDTO.getPrice(),
+                    postRequestDTO.getDistance(), postRequestDTO.getSquare(), postRequestDTO.getDescription(),
+                    postRequestDTO.getTitle(), postRequestDTO.getAddress(), postRequestDTO.getMapLocation(), postRequestDTO.getPostId());
 
-            return newPostCreated;
+            return postModel;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -322,6 +299,16 @@ public class ManagePostServiceImpl implements ManagePostService{
         return null;
     }
 
+    @Override
+    public List<ImageModel> getListImageByPost(PostRequestDTO postRequestDTO) {
+        try {
+            return imageRepository.getImageByPostId(postRequestDTO.getPostId());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<ImageModel> uploadImages(List<String> uploadImages, PostModel post){
         List<ImageModel> imageList = new ArrayList<>();
         for (int i = 0; i < uploadImages.size(); i++) {
@@ -345,5 +332,12 @@ public class ManagePostServiceImpl implements ManagePostService{
         }
 
         return imageList;
+    }
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
     }
 }

@@ -2,7 +2,9 @@ package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.RoomModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,4 +33,9 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "order by r.name asc ")
     List<RoomModel> getListRoomByPostId(String postId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "delete r from ROOM r " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteRoomsByPost(String postId);
 }

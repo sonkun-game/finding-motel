@@ -49,4 +49,11 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
                 "and r.rentalStatus.id = :statusId " +
                 "and r.rentalRenter.username = :renterUsername")
     void removeRentalRequest(Date cancelDateExpire, Long statusId, String renterUsername);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete rq from RENTAL_REQUEST rq " +
+            "inner join ROOM r on rq.ROOM_ID = r.ID " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteRentalRequestsByPost(String postId);
 }

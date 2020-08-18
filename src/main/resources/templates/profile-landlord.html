@@ -394,15 +394,15 @@
                                     <span v-text="post.roomNumber"></span>
                                 </td>
 
-                                <td v-text="post.createDate"></td>
-                                <td v-text="post.expireDate"></td>
+                                <td v-text="formatDate(post.createDate)"></td>
+                                <td v-text="formatDate(post.expireDate)"></td>
                                 <td>
-                                    <div v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                    <div v-bind:class="post.visible && !post.banned && !IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="getStatusPost(post.visible, post.banned, post.expireDate)"></div>
                                 </td>
                                 <td>
                                     <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
                                     <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                    <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                    <i v-bind:class="{'fa-eye-slash' : post.visible, 'fa-eye' : !post.visible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
                                     <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                 </td>

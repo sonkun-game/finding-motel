@@ -2,7 +2,9 @@ package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.ReportModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,4 +17,10 @@ public interface ReportRepository extends JpaRepository<ReportModel, String> {
             "and (:statusId is null or rp.statusReport.id = :statusId) " +
             "")
     List<ReportModel> searchReport(String landlordId, String renterId, String postTitle, Long statusId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete r from REPORT r " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteReportsByPost(String postId);
 }

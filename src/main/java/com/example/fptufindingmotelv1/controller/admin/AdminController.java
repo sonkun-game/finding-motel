@@ -2,12 +2,14 @@ package com.example.fptufindingmotelv1.controller.admin;
 
 import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,8 +34,12 @@ public class AdminController {
 
     @Autowired
     Environment env;
+
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PaymentPackageRepository paymentPackageRepository;
 
     @RequestMapping(value = "/profile-admin")
     public String adminProfile(Model model) {
@@ -207,6 +213,26 @@ public class AdminController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api-get-all-payment-package")
+    public JSONObject getAllPaymentPacket(@RequestParam Optional<Integer> currentPage) {
+        try {
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Page<PaymentPackageModel> allPaymentPackage = paymentPackageRepository.getAllPaymentPackage(pageable);
+            List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
+            for (PaymentPackageModel paymentPackage :
+                    allPaymentPackage.getContent()) {
+                paymentPackageDTOS.add(new PaymentPackageDTO(paymentPackage));
+            }
+            JSONObject response = responseMsg("000", "Success!", paymentPackageDTOS);
+            response.put("pagination", paginationModel(allPaymentPackage));
+            return response;
+        } catch (Exception e) {
+            return responseMsg("999", "Lỗi hệ thống!", null);
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api-save-payment-package")
     public JSONObject savePaymentPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {
         try {
@@ -246,6 +272,17 @@ public class AdminController {
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         }
+    }
+
+    public JSONObject paginationModel(Page page) {
+        JSONObject msg = new JSONObject();
+        msg.put("totalPages", page.getTotalPages());
+        msg.put("sizePage", page.getSize());
+        msg.put("currentPage", page.getNumber());
+        msg.put("totalItems", page.getTotalElements());
+        msg.put("hasNext", page.hasNext());
+        msg.put("hasPrevious", page.hasPrevious());
+        return msg;
     }
 }
 

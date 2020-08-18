@@ -82,7 +82,7 @@ var admin = new Vue({
         else if (this.task == 19) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListPaymentPackage()
+            this.getAllPaymentPackage()
         }
         else if (this.task == 20) {
             let profileUser = document.getElementById("user-manager-content")
@@ -508,6 +508,26 @@ var admin = new Vue({
                 console.log(error);
             })
         },
+        getAllPaymentPackage(currentPage){
+            if(currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
+            fetch("/api-get-all-payment-package?currentPage=" + currentPage, {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data != null && data.code == "000"){
+                        this.listPaymentPackage = data.data
+                        this.pagination = data.pagination;
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         closeModalPackage(){
             document.getElementById("modalPackage").style.display = 'none';
             document.body.removeAttribute("class")
@@ -550,7 +570,8 @@ var admin = new Vue({
                             if(this.packageIndex != -1){
                                 this.$set(this.listPaymentPackage, this.packageIndex, data.data)
                             }else {
-                                this.listPaymentPackage.push(data.data)
+                                // this.listPaymentPackage.push(data.data)
+                                admin.getAllPaymentPackage();
                             }
                             this.closeModalPackage()
                         }, 2000);

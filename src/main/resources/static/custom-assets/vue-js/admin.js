@@ -44,20 +44,22 @@ var admin = new Vue({
         inputStatusReport: 0,
         userIndex: -1,
         postIndex: -1,
-        listPaymentPackage : [],
-        inputPackageName : "",
-        inputDuration : "",
-        inputAmount : 0,
-        selectedPaymentPackage : null,
-        packageIndex : -1,
-        inputSearchUser : "",
-        inputRole : 0,
-        listRole : [],
-        selectedLandlord : {},
-        paymentMethod : "",
-        reportDetail : "",
-        adjustMoneyNote : "",
-        pagination : [],
+        listPaymentPackage: [],
+        inputPackageName: "",
+        inputDuration: "",
+        inputAmount: 0,
+        selectedPaymentPackage: null,
+        packageIndex: -1,
+        inputSearchUser: "",
+        inputRole: 0,
+        listRole: [],
+        selectedLandlord: {},
+        paymentMethod: "",
+        reportDetail: "",
+        adjustMoneyNote: "",
+        pagination: [],
+        //regex
+        regexCharacterSpace: /[a-zA-Z]|\s/,
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -78,13 +80,11 @@ var admin = new Vue({
             profileUser.classList.add("invisible")
             this.searchReport()
             this.getInitAdmin()
-        }
-        else if (this.task == 19) {
+        } else if (this.task == 19) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getAllPaymentPackage()
-        }
-        else if (this.task == 20) {
+        } else if (this.task == 20) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.inputRole = 2
@@ -140,7 +140,7 @@ var admin = new Vue({
                     } else if (this.modalBanAction == 'unban') {
                         this.unbanLanlord(this.modalBanDataId);
                     }
-                } else if(this.modalBanDataType == 'post') {
+                } else if (this.modalBanDataType == 'post') {
                     if (this.modalBanAction == 'ban') {
                         this.banPost(this.modalBanDataId);
                     } else if (this.modalBanAction == 'unban') {
@@ -177,8 +177,8 @@ var admin = new Vue({
         searchUser(currentPage) {
             if (currentPage == undefined || !currentPage) currentPage = 0;
             let request = {
-                'username' : this.inputSearchUser,
-                'roleId' : parseInt(this.inputRole) == 0 ? null : parseInt(this.inputRole),
+                'username': this.inputSearchUser,
+                'roleId': parseInt(this.inputRole) == 0 ? null : parseInt(this.inputRole),
             }
             fetch("/api-search-user?currentPage=" + currentPage, {
                 method: 'POST',
@@ -189,10 +189,10 @@ var admin = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listUser = data.data;
                         this.pagination = data.pagination;
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -206,13 +206,12 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listRole = data.data
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
-
                 }).catch(error => {
                 console.log(error);
             })
@@ -373,7 +372,7 @@ var admin = new Vue({
         },
 
         unbanPost(id) {
-            fetch("/api-un-ban-post?postId="+id, {
+            fetch("/api-un-ban-post?postId=" + id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -407,7 +406,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         this.listReport = data.data;
-                        this.pagination =  data.pagination;
+                        this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
@@ -416,12 +415,12 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        closeModalReportDetail(){
+        closeModalReportDetail() {
             document.getElementById("modalRepostDetail").style.display = 'none';
             this.reportDetail = "";
             document.body.removeAttribute("class")
         },
-        showModalReportDetail(reportId){
+        showModalReportDetail(reportId) {
             for (let report of this.listReport) {
                 if (report.id == reportId) {
                     this.reportDetail = report;
@@ -436,9 +435,9 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listStatusReport = data.listStatusReport
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -447,15 +446,15 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        handleGetReport(post, user){
+        handleGetReport(post, user) {
             userTaskInstance.task = 11
             sessionStorage.setItem("task", 11)
             this.task = 11
             this.getInitAdmin()
-            if(post != null){
+            if (post != null) {
                 this.inputLandlordId = post.landlordName
                 this.inputPostTitle = post.title
-            }else if(user != null){
+            } else if (user != null) {
                 this.inputLandlordId = user.username
                 this.inputPostTitle = ""
             }
@@ -477,9 +476,9 @@ var admin = new Vue({
                     if (data != null && data.code == "000") {
                         let listReport = []
                         for (let report of data.data) {
-                            if(post != null && (report.statusId == 3 || report.statusId == 5)){
+                            if (post != null && (report.statusId == 3 || report.statusId == 5)) {
                                 listReport.push(report)
-                            }else if(user != null && (report.statusId == 3 || report.statusId == 4)){
+                            } else if (user != null && (report.statusId == 3 || report.statusId == 4)) {
                                 listReport.push(report)
                             }
                         }
@@ -492,14 +491,14 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        getListPaymentPackage(){
+        getListPaymentPackage() {
             fetch("/api-get-list-payment-package", {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listPaymentPackage = data.data
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -508,18 +507,18 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        getAllPaymentPackage(currentPage){
-            if(currentPage === undefined || !currentPage) {
+        getAllPaymentPackage(currentPage) {
+            if (currentPage === undefined || !currentPage) {
                 currentPage = 0;
             }
             fetch("/api-get-all-payment-package?currentPage=" + currentPage, {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listPaymentPackage = data.data
                         this.pagination = data.pagination;
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -528,18 +527,75 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        closeModalPackage(){
+        closeModalPackage() {
             document.getElementById("modalPackage").style.display = 'none';
             document.body.removeAttribute("class")
         },
-        showModalPackage(package, index){
-            if(package != null && index != null){
+        showModalPackageError(msg) {
+            document.getElementById("modalPackageErrorMsg").innerHTML = msg;
+            document.getElementById("modalPackageErrorMsg").style.visibility = 'visible';
+        },
+        hideModalPackageError() {
+            document.getElementById("modalPackageErrorMsg").innerHTML = "";
+            document.getElementById("modalPackageErrorMsg").style.visibility = 'hidden';
+        },
+        validatePackageInputDuration() {
+            this.inputDuration = (this.inputDuration + "").trim();
+            if (!this.inputDuration || this.inputDuration.length == 0) {
+                this.showModalPackageError("Vui lòng nhập thời hạn.");
+            } else if (this.regexCharacterSpace.test(this.inputDuration)) {
+                this.showModalPackageError("Vui lòng nhập thời hạn hợp lệ.");
+            } else {
+                for (let package of this.listPaymentPackage) {
+                    if (package.duration == this.inputDuration) {
+                        this.showModalPackageError("Thời hạn " + package.duration + " tháng đã tồn tại");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        },
+        validatePackageInputAmount() {
+            this.inputAmount = (this.inputAmount + "").trim();
+            if (!this.inputAmount || this.inputAmount.length == 0) {
+                this.showModalPackageError("Vui lòng nhập giá.");
+            } else if (this.regexCharacterSpace.test(this.inputAmount)) {
+                this.showModalPackageError("Vui lòng nhập giá hợp lệ.");
+            } else {
+                for (let package of this.listPaymentPackage) {
+                    if (package.amount == this.inputAmount) {
+                        this.showModalPackageError("Giá gói " + package.amount + " đã tồn tại");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        },
+        validatePackageInputName() {
+            this.inputPackageName = (this.inputPackageName + "").trim();
+            if (!this.inputPackageName || this.inputPackageName.length == 0) {
+                this.showModalPackageError("Vui lòng nhập tên gói");
+            } else {
+                for (let package of this.listPaymentPackage) {
+                    if (package.packageName == this.inputPackageName) {
+                        this.showModalPackageError("Tên gói " + package.packageName + " đã tồn tại");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        },
+        showModalPackage(package, index) {
+            if (package != null && index != null) {
                 this.packageIndex = index
                 this.selectedPaymentPackage = package
                 this.inputPackageName = package.packageName
                 this.inputDuration = package.duration
                 this.inputAmount = package.amount
-            }else {
+            } else {
                 this.selectedPaymentPackage = null
                 this.packageIndex = -1
                 this.inputPackageName = ""
@@ -549,41 +605,43 @@ var admin = new Vue({
             document.getElementById("modalPackage").style.display = 'block';
             document.body.setAttribute("class", "loading-hidden-screen")
         },
-        savePaymentPackage(){
+        savePaymentPackage() {
             let request = {
                 "id": this.selectedPaymentPackage == null ? null : this.selectedPaymentPackage.id,
                 "duration": this.inputDuration,
                 "amount": this.inputAmount,
                 "packageName": this.inputPackageName,
             }
-            fetch("/api-save-payment-package", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(request),
-            }).then(response => response.json())
-                .then((data) => {
-                    if (data != null && data.code == "000") {
-                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
-                        setTimeout(() => {
-                            if(this.packageIndex != -1){
-                                this.$set(this.listPaymentPackage, this.packageIndex, data.data)
-                            }else {
-                                // this.listPaymentPackage.push(data.data)
-                                admin.getAllPaymentPackage();
-                            }
-                            this.closeModalPackage()
-                        }, 2000);
-                    } else {
-                        modalMessageInstance.message = data.message;
-                        modalMessageInstance.showModal()
-                    }
-                }).catch(error => {
-                console.log(error);
-            })
+            if (this.validatePackageInputName() && this.validatePackageInputDuration() && this.validatePackageInputAmount()) {
+                fetch("/api-save-payment-package", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(request),
+                }).then(response => response.json())
+                    .then((data) => {
+                        if (data != null && data.code == "000") {
+                            authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
+                            setTimeout(() => {
+                                if (this.packageIndex != -1) {
+                                    this.$set(this.listPaymentPackage, this.packageIndex, data.data)
+                                } else {
+                                    // this.listPaymentPackage.push(data.data)
+                                    admin.getAllPaymentPackage();
+                                }
+                                this.closeModalPackage()
+                            }, 2000);
+                        } else {
+                            modalMessageInstance.message = data.message;
+                            modalMessageInstance.showModal()
+                        }
+                    }).catch(error => {
+                    console.log(error);
+                })
+            }
         },
-        changeStatusPackage(paymentPackage, index){
+        changeStatusPackage(paymentPackage, index) {
             let request = {
                 "id": paymentPackage.id,
             }
@@ -595,11 +653,11 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
-                        setTimeout( () => this.$set(this.listPaymentPackage, index, data.data), 2000)
+                        setTimeout(() => this.$set(this.listPaymentPackage, index, data.data), 2000)
 
-                    }else {
+                    } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -608,11 +666,11 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        closeModalAddMoney(){
+        closeModalAddMoney() {
             document.getElementById("modalAddMoney").style.display = 'none';
             document.body.removeAttribute("class")
         },
-        showModalAddMoney(user, index){
+        showModalAddMoney(user, index) {
             this.paymentMethod = ""
             this.selectedLandlord = user
             this.inputAmount = 0
@@ -620,20 +678,53 @@ var admin = new Vue({
             document.getElementById("modalAddMoney").style.display = 'block';
             document.body.setAttribute("class", "loading-hidden-screen")
         },
-        handleButtonAddMoney(){
-            modalConfirmInstance.messageConfirm = 'Bạn có xác nhận nạp <b>'
-                + authenticationInstance.formatNumberToDisplay(this.inputAmount)
-                + ' VNĐ </b> vào tài khoản chủ trọ <b>'
-                + this.selectedLandlord.username + '</b> không?';
-            sessionStorage.setItem("confirmAction", "add-money")
-            modalConfirmInstance.showModal()
+        showAddMoneyError(msg) {
+            document.getElementById("modalAddMoneyErrorMsg").innerHTML = msg;
+            document.getElementById("modalAddMoneyErrorMsg").style.visibility = 'visible';
         },
-        addMoneyForLandlord(){
+        hideAddMoneyError() {
+            document.getElementById("modalAddMoneyErrorMsg").innerHTML = "";
+            document.getElementById("modalAddMoneyErrorMsg").style.visibility = 'hidden';
+        },
+        validAddMoney() {
+            let validAmount = false;
+            let validPayment = false;
+            let whiteSpaceRegex = /\s/;
+            if (!this.inputAmount || this.inputAmount.trim().length == 0) {
+                this.showAddMoneyError("Vui lòng nhập số tiền.");
+            } else if (isNaN(this.inputAmount) || whiteSpaceRegex.test(this.inputAmount)) {
+                this.showAddMoneyError("Vui lòng nhập số tiền hợp lệ.");
+            } else if (this.inputAmount <= 1000 || this.inputAmount > 9000000) {
+                this.showAddMoneyError("Vui lòng nhập số tiền ít nhất 1.000đ và cao nhất 9.000.000đ.");
+            } else {
+                validAmount = true;
+                this.hideAddMoneyError();
+                //check valid payment after amount valid
+                if (!this.paymentMethod || this.paymentMethod.trim().length == 0) {
+                    this.showAddMoneyError("Vui lòng nhập phương thức thanh toán.");
+                } else {
+                    validPayment = true;
+                    this.hideAddMoneyError();
+                }
+            }
+            return validPayment && validAmount;
+        },
+        handleButtonAddMoney() {
+            if (this.validAddMoney()) {
+                modalConfirmInstance.messageConfirm = 'Bạn có xác nhận nạp <b>'
+                    + authenticationInstance.formatNumberToDisplay(this.inputAmount)
+                    + ' VNĐ </b> vào tài khoản chủ trọ <b>'
+                    + this.selectedLandlord.username + '</b> không?';
+                sessionStorage.setItem("confirmAction", "add-money")
+                modalConfirmInstance.showModal()
+            }
+        },
+        addMoneyForLandlord() {
             let request = {
                 "landlord": this.selectedLandlord.username,
                 "amount": this.inputAmount,
                 "paymentMethod": this.paymentMethod,
-                "note" : this.adjustMoneyNote
+                "note": this.adjustMoneyNote
             }
             fetch("/api-add-money-for-landlord", {
                 method: 'POST',
@@ -657,13 +748,13 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        closeModalConfirm(){
+        closeModalConfirm() {
             document.getElementById("modalConfirm").style.display = 'none';
         },
-        closeModalDel(){
+        closeModalDel() {
             document.getElementById("modalDelete").style.display = 'none';
         },
-        closeModalBan(){
+        closeModalBan() {
             document.getElementById("modalBan").style.display = 'none';
         }
     }

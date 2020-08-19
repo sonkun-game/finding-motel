@@ -544,7 +544,8 @@
                             </tr>
                             </tbody>
                         </table>
-                        <nav v-if="pagination.totalPages != 1 && listPaymentPackage.length > 0" aria-label="Page navigation">
+                        <nav v-if="pagination.totalPages != 1 && listPaymentPackage.length > 0"
+                             aria-label="Page navigation">
                             <ul class="pagination justify-content-center">
                                 <li v-bind:class="{disabled : !pagination.hasPrevious}"
                                     class="page-item">
@@ -615,6 +616,33 @@
                             </tbody>
                         </table>
                         <div v-if="listUser.length <= 0">Không có chủ trọ nào.</div>
+                        <nav v-if="pagination.totalPages != 1 && listUser.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchUser(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -755,6 +783,9 @@
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalPackageErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Tên gói<span class="require-text">*</span></p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
@@ -834,6 +865,9 @@
                             <span @click="closeModalAddMoney" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalAddMoneyErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Chủ trọ</p>
                                 <input v-bind:value="selectedLandlord.username"
@@ -851,7 +885,8 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Số dư sau khi nạp tiền</p>
-                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount
+                                        + (isNaN(parseInt(inputAmount)) ? 0 : parseInt(inputAmount)))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                                 <div class="input-group-append input-package-append">
@@ -861,6 +896,7 @@
                             <div class="infor-modal">
                                 <p class="left-modal">Số tiền<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
+                                       maxlength="7"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
                                 <div class="input-group-append input-package-append">

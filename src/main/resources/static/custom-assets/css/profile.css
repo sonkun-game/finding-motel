@@ -1063,3 +1063,7 @@ a:hover {
 .msg-notification .text-timer{
     margin: auto;
 }
+
+.visible-hide {
+    visibility: hidden;
+}

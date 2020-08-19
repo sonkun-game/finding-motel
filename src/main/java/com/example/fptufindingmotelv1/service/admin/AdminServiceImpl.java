@@ -6,6 +6,8 @@ import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,11 +61,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserDTO> searchUsers(UserDTO userDTO) {
+    public JSONObject searchUsers(UserDTO userDTO, Pageable pageable) {
         try {
             List<UserDTO> users = new ArrayList<>();
-            List<UserModel>  userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId());
-            for (UserModel u : userModels) {
+            Page<UserModel> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
+            for (UserModel u : userModels.getContent()) {
                 UserDTO user = new UserDTO(u);
                 //add report number and ban available
                 if (u.getRole().getId() == 2) {
@@ -73,10 +75,13 @@ public class AdminServiceImpl implements AdminService {
                 }
                 users.add(user);
             }
-            return users;
-        }catch (Exception e){
+            JSONObject pagination = paginationModel(userModels);
+            JSONObject resposnse = responseMsg("000", "Success", users);
+            resposnse.put("pagination", pagination);
+            return resposnse;
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return responseMsg("777", "Lỗi dữ liệu!", null);
         }
     }
 
@@ -97,15 +102,15 @@ public class AdminServiceImpl implements AdminService {
                 calendar.add(Calendar.DAY_OF_MONTH, 14);
 
                 landlord.setUnBanDate(calendar.getTime());
-                for (PostModel post:
-                     landlord.getPosts()) {
+                for (PostModel post :
+                        landlord.getPosts()) {
                     post.setVisible(false);
-                    for (ReportModel report:
-                         post.getReports()) {
-                        if(report.getStatusReport().getId() == 3){
+                    for (ReportModel report :
+                            post.getReports()) {
+                        if (report.getStatusReport().getId() == 3) {
                             StatusModel statusModel = new StatusModel(5L);
                             report.setStatusReport(statusModel);
-                        }else if(report.getStatusReport().getId() == 4){
+                        } else if (report.getStatusReport().getId() == 4) {
                             StatusModel statusModel = new StatusModel(6L);
                             report.setStatusReport(statusModel);
                         }
@@ -128,7 +133,7 @@ public class AdminServiceImpl implements AdminService {
                 return null;
             } else {
                 landlord.setUnBanDate(null);
-                for (PostModel post:
+                for (PostModel post :
                         landlord.getPosts()) {
                     post.setVisible(true);
                 }
@@ -163,23 +168,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ArrayList<PostResponseDTO> searchPost(PostSearchDTO postSearchDTO) {
+    public JSONObject searchPost(PostSearchDTO postSearchDTO, Pageable pageable) {
         try {
-            ArrayList<PostModel> posts = (ArrayList<PostModel>) postRepository.searchPost(postSearchDTO.getLandlordUsername(),
+            Page<PostModel> posts = postRepository.searchPost(postSearchDTO.getLandlordUsername(),
                     postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
                     postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
-                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(), postSearchDTO.getTypeId(), null);
+                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(),
+                    postSearchDTO.getTypeId(), null, pageable);
             ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
-            for (PostModel p : posts) {
+            for (PostModel p : posts.getContent()) {
                 PostResponseDTO pr = new PostResponseDTO(p);
                 boolean banAvailable = pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
                 pr.setBanAvailable(banAvailable);
                 postResponseDTOs.add(pr);
             }
-            return postResponseDTOs;
+            JSONObject response = responseMsg("000", "Successs", postResponseDTOs);
+            response.put("pagination", paginationModel(posts));
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return responseMsg("777", "Lỗi dữ liệu.", null);
         }
     }
 
@@ -196,19 +204,19 @@ public class AdminServiceImpl implements AdminService {
         String notificationContent;
         boolean isFreeRoom = true;
 
-        for (RoomModel room:
+        for (RoomModel room :
                 postModel.getRooms()) {
 
-            if(room.getRoomRentals() != null && room.getRoomRentals().size() > 0){
-                for (RentalRequestModel request:
-                     room.getRoomRentals()) {
-                    if(request.getRentalStatus().getId() == 7){
+            if (room.getRoomRentals() != null && room.getRoomRentals().size() > 0) {
+                for (RentalRequestModel request :
+                        room.getRoomRentals()) {
+                    if (request.getRentalStatus().getId() == 7) {
                         request.setRentalStatus(statusReject);
                         notificationContent = "Yêu cầu thuê trọ vào <b>" + request.getRentalRoom().getName() +
                                 "</b> - <b>" + request.getRentalRoom().getPostRoom().getTitle() + "</b> đã bị từ chối do bài đăng đã bị khóa";
                         // send notification to Renter
                         sendNotification(request, notificationContent);
-                    }else if(request.getRentalStatus().getId() == 9){
+                    } else if (request.getRentalStatus().getId() == 9) {
                         isFreeRoom = false;
 
                         request.setRentalStatus(statusExpire);
@@ -218,7 +226,7 @@ public class AdminServiceImpl implements AdminService {
                         sendNotification(request, notificationContent);
                     }
                 }
-                if(!isFreeRoom){
+                if (!isFreeRoom) {
                     room.setStatus(statusRoomFree);
                     roomRepository.save(room);
                 }
@@ -226,11 +234,11 @@ public class AdminServiceImpl implements AdminService {
         }
         StatusModel statusReportPost = new StatusModel(4L);
         StatusModel statusReportAll = new StatusModel(6L);
-        for (ReportModel report:
+        for (ReportModel report :
                 postModel.getReports()) {
-            if(report.getStatusReport().getId() == 3){
+            if (report.getStatusReport().getId() == 3) {
                 report.setStatusReport(statusReportPost);
-            }else if(report.getStatusReport().getId() == 5){
+            } else if (report.getStatusReport().getId() == 5) {
                 report.setStatusReport(statusReportAll);
             }
         }
@@ -239,20 +247,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<ReportResponseDTO> searchReport(ReportRequestDTO reportRequestDTO) {
+    public JSONObject searchReport(ReportRequestDTO reportRequestDTO, Pageable pageable) {
         try {
-            List<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
+            Page<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
                     reportRequestDTO.getRenterId(), reportRequestDTO.getPostTitle(),
-                    reportRequestDTO.getStatusReport());
+                    reportRequestDTO.getStatusReport(), pageable);
             ArrayList<ReportResponseDTO> reportResponseDTOS = new ArrayList<>();
-            for (ReportModel report : reportModels) {
+            for (ReportModel report : reportModels.getContent()) {
                 ReportResponseDTO responseDTO = new ReportResponseDTO(report);
                 reportResponseDTOS.add(responseDTO);
             }
-            return reportResponseDTOS;
+            JSONObject response = responseMsg("000", "Success", reportResponseDTOS);
+            response.put("pagination", paginationModel(reportModels));
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return responseMsg("777", "Lỗi dữ liệu.", null);
         }
     }
 
@@ -263,7 +273,7 @@ public class AdminServiceImpl implements AdminService {
             // get list status report
             List<StatusModel> listStatus = statusRepository.findAllByType(2);
             List<StatusDTO> listStatusReport = new ArrayList<>();
-            for (StatusModel status:
+            for (StatusModel status :
                     listStatus) {
                 listStatusReport.add(new StatusDTO(status));
             }
@@ -282,8 +292,8 @@ public class AdminServiceImpl implements AdminService {
     public PaymentPackageModel savePaymentPackage(PaymentPackageDTO paymentPackageDTO) {
         try {
             PaymentPackageModel paymentPackageModel = new PaymentPackageModel();
-            if(paymentPackageDTO.getId() != null){
-                 paymentPackageModel =
+            if (paymentPackageDTO.getId() != null) {
+                paymentPackageModel =
                         paymentPackageRepository.findById(paymentPackageDTO.getId()).get();
             }
             paymentPackageModel.setPackageName(paymentPackageDTO.getPackageName());
@@ -328,7 +338,8 @@ public class AdminServiceImpl implements AdminService {
         paymentRepository.save(paymentModel);
         return landlordModel;
     }
-    private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
+
+    private NotificationModel sendNotification(RentalRequestModel requestModel, String content) {
         try {
             // send notification to Renter
             NotificationModel notificationModel = new NotificationModel();
@@ -345,9 +356,28 @@ public class AdminServiceImpl implements AdminService {
             notificationModel.setCreatedDate(createdDate);
             notificationModel.setRentalRequestNotification(requestModel);
             return notificationRepository.save(notificationModel);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
+    }
+
+    public JSONObject paginationModel(Page page) {
+        JSONObject msg = new JSONObject();
+        msg.put("totalPages", page.getTotalPages());
+        msg.put("sizePage", page.getSize());
+        msg.put("currentPage", page.getNumber());
+        msg.put("totalItems", page.getTotalElements());
+        msg.put("hasNext", page.hasNext());
+        msg.put("hasPrevious", page.hasPrevious());
+        return msg;
     }
 }

@@ -8,6 +8,8 @@ var renterInstance = new Vue({
         listRentalRq : null,
         confirmAction : null,
         selectedRentalRequestId : null,
+        message : "",
+        expireMessage : ""
     },
     beforeMount(){
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
@@ -84,13 +86,23 @@ var renterInstance = new Vue({
             //show modal
             if(action == "cancel"){
                 document.getElementById("modalConfirmMessage").innerHTML = 'Bạn có chắc chắn muốn hủy yêu cầu không?';
+                document.getElementById("modalConfirm").style.display = 'block';
+                document.body.setAttribute("class", "loading-hidden-screen")
             }else if(action == "expire"){
-                document.getElementById("modalConfirmMessage").innerHTML
-                    = '<h3>Bạn có muốn kết thúc quá trình thuê phòng này không?</h3>' +
-                '<p>Bạn sẽ có thể gửi yêu cầu thuê phòng vào phòng khác sau khi kết thúc thuê phòng này</p>';
+                 this.message = '<p style="font-size: 20px; font-weight: 500">Bạn có muốn kết thúc thuê phòng tại phòng này không?</p>' +
+                '<p>Bạn sẽ có thể gửi yêu cầu thuê phòng vào phòng khác sau khi kết thúc thuê phòng này.</p>';
+                document.getElementById("modalEndRentalRequest").style.display = 'block';
+                document.body.setAttribute("class", "loading-hidden-screen")
             }
-            document.getElementById("modalConfirm").style.display = 'block';
-            document.body.setAttribute("class", "loading-hidden-screen")
+
+        },
+        closeModalEndRequest(){
+            document.getElementById("modalEndRentalRequest").style.display = 'none';
+            document.body.removeAttribute("class")
+        },
+        confirmModalEndRequest(){
+            this.closeModalEndRequest()
+            this.confirmAction(this.selectedRentalRequestId);
         },
         closeModalConfirmChangeStatusRequest() {
             //close modal
@@ -143,11 +155,16 @@ var renterInstance = new Vue({
             })
         },
         changeRequestStatus(rentalId) {
-            fetch("/change-rental-request-status?rentalRequestId=" + rentalId, {
+            let rentalRequest = {
+                "expireMessage": this.expireMessage,
+                "id" : rentalId,
+            }
+            fetch("/change-rental-request-status", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(rentalRequest),
             }).then(response => response.json())
                 .then((responseMsg) => {
                     if (responseMsg.status == 403) {
@@ -155,6 +172,8 @@ var renterInstance = new Vue({
                     } else {
                         if (responseMsg != null && responseMsg.code == "000") {
                             this.showModalNotify(responseMsg.message);
+                            this.task = 2
+                            sessionStorage.setItem("task", 2)
                             this.searchRentalRequest();
                         }
                     }
@@ -165,5 +184,10 @@ var renterInstance = new Vue({
         closeModalConfirm(){
             document.getElementById("modalConfirm").style.display = 'none';
         },
+        showExpireMessage(rentalRequest){
+            modalMessageInstance.title = "Lời nhắn của chủ trọ"
+            modalMessageInstance.message = rentalRequest.expireMessage
+            modalMessageInstance.showModal()
+        }
     }
 })

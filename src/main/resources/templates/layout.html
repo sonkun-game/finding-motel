@@ -138,7 +138,7 @@
                                         <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">
                                             <div class="bell-container">
                                                 <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">
-                                                    <div  class="notification-number" v-text="notificationNumber"></div>
+                                                    <div v-show="notificationNumber > 0" class="notification-number" v-text="notificationNumber"></div>
                                                     <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>
                                                     <i class="fas fa-caret-up" v-if="isShowNotification"></i>
                                                 </div>
@@ -385,18 +385,49 @@
             <h1 class="title-name uppercase">Thông tin tài khoản</h1>
         </div>
         <div class="information-detail">
-            <div class="detail">
-                <p class="label">Tên đăng nhập:</p>
-                <input id="username" v-model="userInfo.username" class="textfiled rounded-pill border-0 shadow-sm" type="text" disabled/>
+            <div class="error-line">
+                <div class="col-3">
+                </div>
+                <div class="col-9">
+                    <div class="msg-notification">
+                        <span v-if="showMsg"  v-html="validateMessage">
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="detail-2">
-                <p class="label">Tên hiển thị:</p>
-                <input id="display-name" v-model="userInfo.displayName" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
+            <div class="detail row">
+                <div class="col-lg-3">
+                    <p class="label">Tên đăng nhập</p>
+                </div>
+                <div class="col-lg-6">
+                    <input id="username" v-model="userInfo.username" class="textfiled rounded-pill border-0 shadow-sm" type="text" disabled/>
+                </div>
+                <div class="col-lg-3">
+                </div>
             </div>
-            <div class="detail-2">
-                <p class="label">Số điện thoại:</p>
-                <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="btn-hover change">Thay đổi</button>
+            <div class="detail-2 row">
+                <div class="col-lg-3">
+                    <p class="label">Tên hiển thị</p>
+                </div>
+                <div class="col-lg-6">
+                    <input id="display-name" v-model="userInfo.displayName" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
+                </div>
+                <div class="col-lg-3">
+                </div>
+
+            </div>
+            <div class="detail-2 row ">
+                <div class="col-lg-3">
+                    <p class="label">Số điện thoại</p>
+                </div>
+                <div class="col-lg-6">
+                    <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
+                </div>
+                <div class="col-lg-3">
+                    <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="btn-hover change">Thay đổi</button>
+                </div>
+
+
                 <div id="my-modal-phone" class="modal">
                     <!-- Modal content -->
                     <div id="forgot-pwd-form" class="modal-content">
@@ -406,54 +437,106 @@
                         </div>
                         <div class="modal-body">
                             <div class="change-phone-area">
-                                <div class="msg-notification">
-                                <span v-if="showMsg"  v-cloak>
-                                    {{message}}
-                                </span>
+                                <div class="error-line">
+                                    <div class="col-3">
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="msg-notification">
+                                            <span v-if="showMsg"  v-html="message">
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div class="phone-number">
-                                    <h4 class="title-phone">Số điện thoại: </h4>
-                                    <input @focusout="checkExistPhone()" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm px-4" />
-                                    <button v-on:click="getOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
+                                    <div class="col-3 title-phone-modal">
+                                        <h4 class="">Số điện thoại<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <input @keyup="clearTimer" v-bind:disabled="disableInputPhone" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm" />
+                                    </div>
+                                    <div class="col-3 pl-0">
+                                        <button v-on:click="sendOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
+                                    </div>
+
+
 
                                 </div>
                                 <div class="confirm-otp">
-                                    <h4 class="title-confirm-otp">Mã xác nhận: </h4>
-                                    <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm px-4" />
+                                    <div class="col-3 title-phone-modal">
+                                        <h4 class="">Mã xác nhận<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="col-6">
+                                        <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm" />
+                                    </div>
+                                    <div class="col-3 pl-0">
+                                    </div>
+                                </div>
+                                <div class="msg-notification">
+                                    <span class="text-timer" v-if="displayTimer != null" v-html="displayTimer" >
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click="checkOTP()" class="btn-hover btn-default">Xác Nhận</button>
+                            <button v-on:click="validateOTP()" class="btn-hover btn-default">Xác Nhận</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
-                <p class="label">Ngày sinh:</p>
-                <input id="birthdate" v-model="userInfo.dob" class="textfiled rounded-pill border-0 shadow-sm" type="date" />
-            </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
-                <p class="label">Nghề nghiệp:</p>
-                <input id="career" v-model="userInfo.career" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
-            </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2">
-                <p class="label">Giới tính:</p>
-                <div class="form-check-inline">
-                    <label class="radio-container">Nam
-                        <input v-model="gender" type="radio" name="gender" value="1">
-                        <span class="checkmark"></span>
-                    </label>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+                <div class="col-lg-3">
+                    <p class="label">Ngày sinh</p>
                 </div>
-                <div class="form-check-inline">
-                    <label class="radio-container">Nữ
-                        <input v-model="gender" type="radio" name="gender" value="0">
-                        <span class="checkmark"></span>
-                    </label>
+                <div class="col-lg-6">
+                    <input id="birthdate" @change="validateDate(userInfo.dob)" v-model="userInfo.dob" class="textfiled rounded-pill border-0 shadow-sm" type="date" />
                 </div>
+                <div class="col-lg-3">
+                </div>
+
             </div>
-            <div class="detail-3">
-                <button v-on:click="saveUserInfo()" class="btn-hover save">Lưu thay đổi</button>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+                <div class="col-lg-3">
+                    <p class="label">Nghề nghiệp</p>
+                </div>
+                <div class="col-lg-6">
+                    <input id="career" v-model="userInfo.career" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
+                </div>
+                <div class="col-lg-3">
+                </div>
+
+            </div>
+            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+                <div class="col-lg-3">
+                    <p class="label">Giới tính</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-check-inline f-left">
+                        <label class="radio-container">Nam
+                            <input v-model="gender" type="radio" name="gender" value="1">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="radio-container">Nữ
+                            <input v-model="gender" type="radio" name="gender" value="0">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                </div>
+
+            </div>
+            <div class="detail-2 row">
+                <div class="col-lg-3">
+                </div>
+                <div class="col-lg-6">
+                    <button v-on:click="saveUserInfo()" class="btn-hover save">Lưu thay đổi</button>
+                </div>
+                <div class="col-lg-3">
+                </div>
+
             </div>
         </div>
     </div>
@@ -486,26 +569,53 @@
             <h1 class="title-name uppercase" v-text="userInfo.havePassword ? 'đổi mật khẩu' : 'Thêm mật khẩu'"></h1>
         </div>
         <div class="information-detail">
-            <div class="msg-notification">
-                <span v-show="showMsg"  v-cloak>
-                    {{message}}
-                </span>
+            <div class="error-line">
+                <div class="col-3">
+                </div>
+                <div class="col-9">
+                    <div class="msg-notification">
+                        <span v-if="showMsg"  v-html="message">
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="detail" v-if="userInfo.havePassword">
-                <p class="label">Mật khẩu cũ:</p>
-                <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+                <div class="col-lg-3">
+                    <p class="label">Mật khẩu cũ<span class="require-text">*</span></p>
+                </div>
+                <div class="col-lg-6">
+                    <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+                </div>
+                <div class="col-lg-3"></div>
+
             </div>
             <div class="detail-2">
-                <p class="label">Mật khẩu mới:</p>
-                <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                <div class="col-lg-3">
+                    <p class="label">Mật khẩu mới<span class="require-text">*</span></p>
+                </div>
+                <div class="col-lg-6">
+                    <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                </div>
+                <div class="col-lg-3"></div>
+
             </div>
             <div class="detail-2">
-                <p class="label">Nhập lại mật khẩu:</p>
-                <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                <div class="col-lg-3">
+                    <p class="label">Nhập lại mật khẩu<span class="require-text">*</span></p>
+                </div>
+                <div class="col-lg-6">
+                    <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
+                </div>
+                <div class="col-lg-3"></div>
             </div>
 
-            <div class="detail-3">
-                <button v-on:click="changePassword()" class="btn-hover save">Lưu thay đổi</button>
+            <div class="detail-2">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <button v-on:click="changePassword()" class="btn-hover save">Lưu thay đổi</button>
+                </div>
+                <div class="col-lg-3"></div>
+
             </div>
         </div>
     </div>
@@ -539,7 +649,7 @@
         <!-- Modal content -->
         <div class="view-information">
             <div class="modal-header">
-                <h2>Thông báo</h2>
+                <h2 v-text="title"></h2>
                 <span @click="closeModal()" class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -584,26 +694,26 @@
             </div>
             <div class="modal-body">
                 <div class="infor-modal">
-                    <p class="left-modal">Bài đăng:</p>
+                    <p class="left-modal">Bài đăng</p>
                     <input :value="selectedRequest.postTitle"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
                 <div class="infor-modal">
-                    <p class="left-modal">Tên phòng:</p>
+                    <p class="left-modal">Tên phòng</p>
                     <input :value="selectedRequest.roomName"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
 
                 <div class="infor-modal">
-                    <p class="left-modal">Ngày yêu cầu:</p>
+                    <p class="left-modal">Ngày yêu cầu</p>
                     <input :value="selectedRequest.displayRequestDate"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
                 <div class="infor-modal">
-                    <p class="left-modal">Ngày bắt đầu:</p>
+                    <p class="left-modal">Ngày bắt đầu</p>
                     <input :value="selectedRequest.displayStartDate"
                            class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
@@ -611,47 +721,55 @@
                 <label>Người thuê</label>
                 <div class="renter-information-area">
                     <div class="infor-modal">
-                        <p class="left-modal">Tên đăng nhập:</p>
+                        <p class="left-modal">Tên đăng nhập</p>
                         <input :value="renterInfo.username"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div class="infor-modal">
-                        <p class="left-modal">Tên hiển thị:</p>
+                        <p class="left-modal">Tên hiển thị</p>
                         <input :value="renterInfo.displayName"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div class="infor-modal">
-                        <p class="left-modal">Số điện thoại:</p>
+                        <p class="left-modal">Số điện thoại</p>
                         <input :value="renterInfo.phoneNumber"
                                class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Ngày sinh:</p>
+                        <p class="left-modal">Ngày sinh</p>
                         <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Nghề nghiệp:</p>
+                        <p class="left-modal">Nghề nghiệp</p>
                         <input class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" :value="renterInfo.career" disabled/>
                     </div>
                     <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
-                        <p class="left-modal">Giới tính:</p>
+                        <p class="left-modal">Giới tính</p>
                         <input class="right-modal rounded-pill border-0 shadow-sm"
                                type="text" :value="renterInfo.genderDisplay" disabled/>
                     </div>
                 </div>
 
-                <div v-html="message">
+                <div class="message-container" v-html="message">
 
+                </div>
+                <div class="fill-information col-lg-12 px-40px">
+                    <div class="title">
+                        <h4 style="color: #000000">Lời nhắn cuối cho người thuê</h4>
+                    </div>
+                    <div class="input-information message-box">
+                        <textarea v-model="expireMessage" class="rounded-pill border-0 shadow-sm"></textarea>
+                    </div>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Xác Nhận</button>
+                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Đồng ý</button>
                 <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
             </div>
         </div>

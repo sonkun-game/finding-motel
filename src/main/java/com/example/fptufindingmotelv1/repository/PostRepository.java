@@ -1,6 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.PostModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,11 +28,10 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
-            "order by p.createDate desc " +
             "")
-    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
+    Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Pageable pageable);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
             "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +
@@ -65,7 +66,6 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     PostModel getPostById(String postId);
 
 
-
     @Query(value = "select top 5 * from POST p " +
             "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
             "and (:visible is null or p.IS_VISIBLE = :visible)" +
@@ -83,4 +83,17 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "where p.id = :postId ")
     void updateVisiblePost(Boolean visible, String postId);
 
+    @Query(value = "select new PostModel(wl.wishListPost.id, wl.wishListPost.price, " +
+            "wl.wishListPost.distance, wl.wishListPost.square, " +
+            "wl.wishListPost.description, wl.wishListPost.title, " +
+            "wl.wishListPost.address, MAX (im.id)) from WishListModel wl " +
+            "join ImageModel im on wl.wishListPost.id = im.post.id " +
+            "where (:renterId is null or wl.wishListRenter.username = :renterId)" +
+            "and (:isVisible is null or wl.wishListPost.visible = :isVisible)" +
+            "and (:banned is null or wl.wishListPost.banned = :banned)" +
+            "and (:currentDate is null or wl.wishListPost.expireDate >= :currentDate)" +
+            "group by wl.wishListPost.id, wl.wishListPost.price, wl.wishListPost.distance, " +
+            "wl.wishListPost.square, wl.wishListPost.description, wl.wishListPost.title, wl.wishListPost.address" +
+            "")
+    List<PostModel> getListPostByRenter(String renterId, Boolean isVisible, Boolean banned, Date currentDate);
 }

@@ -43,9 +43,6 @@ public class HomeController {
     RenterRepository renterRepository;
 
     @Autowired
-    WishListRepository wishListRepository;
-
-    @Autowired
     ManagePostService managePostService;
 
     @Autowired
@@ -182,33 +179,6 @@ public class HomeController {
                 postDTO.setPostDTO(post);
                 postDTOs.add(postDTO);
             }
-//            List<PostDTO> postDTOs = new ArrayList<>();
-//            PostDTO postDTO;
-//            // check login
-//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//            if (auth instanceof UsernamePasswordAuthenticationToken
-//                    && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof RenterModel) {
-//                RenterModel renter = renterRepository.findByUsername(((CustomUserDetails)auth.getPrincipal()).getUserModel().getUsername());
-//                for (PostModel post:
-//                        sublistPostModel) {
-//                    postDTO = new PostDTO(post);
-//                    WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(post, renter);
-//                    if(wishListModel != null){
-//                        postDTO.setInWishList(true);
-//                        postDTO.setWishListId(wishListModel.getId());
-//                    }else {
-//                        postDTO.setInWishList(false);
-//                    }
-//                    postDTOs.add(postDTO);
-//                }
-//            } else {
-//                for (PostModel post:
-//                        sublistPostModel) {
-//                    postDTO = new PostDTO(post);
-//                    postDTO.setInWishList(false);
-//                    postDTOs.add(postDTO);
-//                }
-//            }
 
             Page<PostDTO> listDTO = new PageImpl<>(postDTOs, pageable, listPostModel.size());
             response.put("pageSize", evalPageSize);
@@ -233,7 +203,7 @@ public class HomeController {
         try {
             Date date = new Date();
             Date currentDate = new Timestamp(date.getTime());
-            List<PostModel> listPostWishList = wishListRepository.getListPostByRenter(
+            List<PostModel> listPostWishList = postRepository.getListPostByRenter(
                     wishListDTO.getRenterUsername(), true, false, currentDate);
             List<PostDTO> postDTOs = new ArrayList<>();
             PostDTO postDTO;

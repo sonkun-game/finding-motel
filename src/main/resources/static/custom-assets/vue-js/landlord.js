@@ -39,6 +39,10 @@ var landlordInstance = new Vue({
         paymentValid : false,
         message : "",
         newestPayment : {},
+        expireMessage : "",
+        validateMessage : "",
+        showMsg : false,
+        showMsgModal : false,
     },
     created(){
         let previousUrl = document.referrer
@@ -64,7 +68,9 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             this.getInitNewPost()
-            this.initMap()
+            setTimeout( () => {
+                this.initMap()
+            }, 1000)
         }else if(this.task == 4){
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -125,13 +131,15 @@ var landlordInstance = new Vue({
                 sessionStorage.setItem("confirmAction", "delete-post")
             }else if(confirmType == 'hide'){
                 if(this.userInfo.banned){
-                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến " + this.userInfo.unBanDate + "</br>" +
+                    modalMessageInstance.title = "Thông báo"
+                    modalMessageInstance.message = "Tài khoản của bạn bị tạm khóa đến <b>" + this.userInfo.unBanDate + "</b></br>" +
                         "Tất cả bài đăng sẽ bị ẩn " + "</br>" +
-                        "Chức năng Đăng Tin và Nạp Tiền bị khóa";
+                        "Chức năng <b>Đăng Tin</b> và <b>Nạp Tiền</b> bị khóa";
                     modalMessageInstance.showModal()
                     return
                 }
                 if(post.banned){
+                    modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = "Bài đăng của bạn đã bị khóa!";
                     modalMessageInstance.showModal()
                     return
@@ -163,6 +171,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.code == "000"){
                         this.listPaymentPost = data.data
                     }else {
+                        modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
@@ -188,6 +197,10 @@ var landlordInstance = new Vue({
             })
         },
         generateRooms(){
+            if(this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")){
+                this.showMsgModal = false
+            }
+
 
             this.listRoom = []
             let start = 0
@@ -239,11 +252,34 @@ var landlordInstance = new Vue({
         calculateCost(package){
             this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
             this.amountSelected = package.amount
+            if(package.amount > this.userInfo.amount){
+                this.validateMessage = "Số tiền trong tài khoản không đủ"
+                if(this.editMode){
+                    this.showMsgModal = true
+                }else {
+                    this.showMsg = true
+                }
+                this.duration = 0
+            }else {
+                if(this.editMode){
+                    this.showMsgModal = false
+                }
+            }
+
         },
         handleAddNewPost(){
             if (this.editMode){
+                if(!this.validateInputForEditing()){
+                    this.showMsg = true
+                    return
+                }
+                this.showMsg = false
                 this.editPost()
             }else{
+                if(!this.validateInputForSaving()){
+                    this.showMsg = true
+                    return
+                }
                 let request = {
                     'typeId' : this.typeOfPost,
                     'title' : this.title,
@@ -331,6 +367,7 @@ var landlordInstance = new Vue({
         },
         handleEditPost(post){
             if(post.banned){
+                modalMessageInstance.title = "Thông báo"
                 modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
                 modalMessageInstance.showModal()
                 return
@@ -403,6 +440,7 @@ var landlordInstance = new Vue({
         },
         showModalExtend(post, postIndex) {
             if(post != null && post.banned){
+                modalMessageInstance.title = "Thông báo"
                 modalMessageInstance.message = "Bài đăng của bạn đã bị khóa";
                 modalMessageInstance.showModal()
                 return
@@ -421,8 +459,16 @@ var landlordInstance = new Vue({
         closeModalExtend() {
             document.getElementById("myModal_Extend").style.display = 'none';
             document.body.removeAttribute("class")
+            if(this.showMsgModal){
+                this.showMsgModal = false
+            }
         },
         extendTimePost(){
+            if(!this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
+                || !this.validatePaymentPackageAmount()){
+                this.showMsgModal = true
+                return
+            }
             let request = {
                 'postId' : this.postId,
                 'paymentPackageId' : this.duration,
@@ -600,9 +646,9 @@ var landlordInstance = new Vue({
                 }else {
                     this.renterInfo = stayRentalRequest.renterInfo
                     this.selectedRequest = stayRentalRequest
-                    this.message = "<h3>Bạn có muốn làm mới phòng này?</h3>" +
+                    this.message = "<p style='font-size: 20px; font-weight: 500'>Bạn có muốn làm mới phòng này?</p>" +
                         "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
-                        "<p>Người dùng <b>" + this.renterInfo.username + "</b> sẽ bị xóa khỏi phòng này</p>"
+                        "<p>Người thuê <b>" + this.renterInfo.username + "</b> sẽ kết thúc thuê phòng tại phòng này</p>"
                     document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalRequestDetail").style.display = 'block';
                 }
@@ -644,12 +690,16 @@ var landlordInstance = new Vue({
             this.$set(this.listRoomRequest, index, room)
         },
         changeRoomStatus(){
+            let request = {
+                "expireMessage" : this.expireMessage,
+                "roomId" : this.selectedRoom.roomId,
+            }
             let options = {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(this.selectedRoom)
+                body: JSON.stringify(request),
             }
             fetch("/api-change-room-status", options)
                 .then(response => response.json())
@@ -673,8 +723,14 @@ var landlordInstance = new Vue({
         closeModalAddRoom(){
             document.body.removeAttribute("class")
             document.getElementById("myModal_AddRoom").style.display = 'none';
+            this.showMsgModal = false
         },
         increaseRoom(){
+            if(!this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")){
+                this.showMsgModal = true
+                return
+            }
+            this.showMsgModal = false
             let request = {
                 "listRoom" : this.listRoom,
                 "postId" : this.postId,
@@ -864,6 +920,8 @@ var landlordInstance = new Vue({
         },
         handleDisplayDirection(){
             let origin = this.selectedPost.mapLocation;
+            this.latMarkerEl.value = this.selectedPost.mapLocation.split(", ")[0];
+            this.longMarkerEl.value = this.selectedPost.mapLocation.split(", ")[1];
             let destination = this.fuLocation;
             let travel_mode = "DRIVING";
             let directionsDisplay = new google.maps.DirectionsRenderer({'draggable': false});
@@ -925,6 +983,7 @@ var landlordInstance = new Vue({
                 if (data != null && data.code == "000") {
                     this.listPayment = data.data
                 }else {
+                    modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = data.message;
                     modalMessageInstance.showModal()
                 }
@@ -967,11 +1026,114 @@ var landlordInstance = new Vue({
                         sessionStorage.removeItem("amount")
                         sessionStorage.removeItem("errorCode")
                     }else if(data != null && data.code != "000"){
+                        modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
                 })
         },
+        showExpireMessage(rentalRequest){
+            modalMessageInstance.title = "Lời nhắn của người thuê"
+            modalMessageInstance.message = rentalRequest.expireMessage
+            modalMessageInstance.showModal()
+        },
+        validateInput(inputValue, minLength, maxLength, min, max, inputName, unit){
+            if(inputValue == null || inputValue.length == 0){
+                this.validateMessage = "<b>" + inputName + "</b> không được để trống"
+                return false
+            }else if(maxLength != null && inputValue != null && inputValue.length > maxLength){
+                this.validateMessage = "<b>" + inputName + "</b> không vượt quá " + maxLength + " ký tự"
+                return false
+            }else if(minLength != null && inputValue != null && inputValue.length < minLength){
+                this.validateMessage = "<b>" + inputName + "</b> phải có ít nhất " + minLength + " ký tự"
+                return false
+            }else if(min != null && inputValue != null && parseFloat(inputValue) <= min){
+                this.validateMessage = "<b>" + inputName + "</b> phải lớn hơn " + authenticationInstance.formatNumberToDisplay(min) + " " + unit
+                return false
+            }else if(max != null && inputValue != null && parseFloat(inputValue) >= max){
+                this.validateMessage = "<b>" + inputName + "</b> phải nhỏ hơn " + authenticationInstance.formatNumberToDisplay(max) + " " + unit
+                return false
+            }else {
+                return true
+            }
+        },
+        validateMapLocation(){
+            if(this.latMarkerEl.value == null || this.latMarkerEl.value.length == 0
+            || this.longMarkerEl.value == null || this.longMarkerEl.value.length == 0){
+                this.validateMessage = "Bạn phải chọn một vị trí trên bản đồ"
+                return false
+            }else {
+                return true
+            }
+        },
+        validateImages(){
+            if(this.uploadImages == null || this.uploadImages.length < 3){
+                this.validateMessage = "Bạn phải thêm tối thiếu 3 hình ảnh cho phòng trọ của mình"
+                return false
+            }else if(this.uploadImages != null && this.uploadImages.length > 10){
+                this.validateMessage = "Bạn chỉ có thể đăng tối đa 10 hình ảnh cho phòng trọ của mình"
+                return false
+            }else {
+                return true
+            }
+        },
+        removeDot(inputValue, datatype, event){
+            if(datatype == "int"){
+                if(event.keyCode < 48 || event.keyCode > 57){
+                    event.preventDefault()
+                }
+            }else {
+                if(event.keyCode == 46 && !inputValue.includes(".")){
+                    return
+                }else if(event.keyCode < 48 || event.keyCode > 57){
+                    event.preventDefault()
+                }
+            }
+
+        },
+        validatePaymentPackageAmount(){
+            if(this.amountSelected > this.userInfo.amount){
+                this.validateMessage = "Số tiền trong tài khoản không đủ"
+                return false
+            }else {
+                return true
+            }
+        },
+        validateInputForSaving(){
+
+            if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
+            && this.validateInput(this.title, 10, 100, null, null, "Tiêu đề")
+            && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
+            && this.validateInput(this.numberOfRoom, null, null,0, 100, "Số lượng phòng", "")
+            && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
+            && this.validateInput(this.square, null, null,5, 1000, "Diện tích", "M&sup2")
+            && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
+            && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
+            && this.validateMapLocation() && this.validateImages()
+            && this.validateInput(this.duration, null, null,null, null, "Thời hạn bài đăng")
+            && this.validatePaymentPackageAmount()
+            ){
+                return true
+            }else {
+                return false
+            }
+        },
+        validateInputForEditing(){
+
+            if(this.validateInput(this.typeOfPost, null, null, null, null, "Loại phòng")
+                && this.validateInput(this.title, 10, 100, null, null, "Tiêu đề")
+                && this.validateInput(this.detailInfo, 20, null,null, null, "Thông tin chi tiết")
+                && this.validateInput(this.price, null, null, 500000, 20000000, "Giá cho thuê", "VNĐ")
+                && this.validateInput(this.square, null, null,5, 1000, "Diện tích", "M&sup2")
+                && this.validateInput(this.distance, null, null, 0, 100, "Khoảng cách", "KM")
+                && this.validateInput(this.inputAddress, 20, 100,null, null , "Địa chỉ")
+                && this.validateMapLocation() && this.validateImages()
+            ){
+                return true
+            }else {
+                return false
+            }
+        }
     }
 })
 var noteInstance = new Vue({

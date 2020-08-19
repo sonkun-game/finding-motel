@@ -34,8 +34,8 @@ var authenticationInstance = new Vue({
                 return null
             }
             let condition = {
-                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số",
-                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+                message: "Mật khẩu phải chứa tối thiểu 6 kí tự, bao gồm chữ thường, chữ hoa, chữ số và không có kí tự khoảng trắng.",
+                regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{5,}$/
             }
             if(!condition.regex.test(password)){
                 return condition.message
@@ -228,6 +228,7 @@ var modalMessageInstance = new Vue({
     data: {
         userInfo: {},
         message: "",
+        title: "Thông báo",
     },
     beforeMount(){
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))

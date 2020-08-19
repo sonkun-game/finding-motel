@@ -121,7 +121,7 @@
                                     </div>
                                     <div class="input-information">
                                         <input v-if="editMode" disabled type="number" min="0" max="100" v-model="selectedPost.roomNumber" class="form-input-information  rounded-pill border-0 shadow-sm">
-                                        <input v-else type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <input v-else @keypress="removeDot(numberOfRoom, 'int', $event)" type="text" maxlength="2" @change="generateRooms" v-model="numberOfRoom" class="form-input-information rounded-pill border-0 shadow-sm">
 
                                     </div>
                                 </div>
@@ -170,7 +170,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="9" @keypress="removeDot(price, 'int', $event)" v-model="price" class="hide-arrow form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>VNĐ</span>
                                     </div>
@@ -183,7 +183,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="1000" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="3" @keypress="removeDot(square, 'float', $event)" v-model="square" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>M&sup2</span>
                                     </div>
@@ -197,7 +197,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="100" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="2" @keypress="removeDot(distance, 'float', $event)" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>KM</span>
                                     </div>
@@ -218,15 +218,17 @@
                                     <h4>Bản đồ<span class="require-text">*</span>
                                     </h4>
                                 </div>
-                                <div class="input-information">
-                                    <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
-                                    <i class="fas icon-search-map fa-search"></i>
-                                </div>
 
                                 <input type="hidden" id="latitude">
                                 <input type="hidden" id="longitude">
-                                <!--                                    <button id="show-route" v-on:click.prevent="handleCalculateDistance">Show Direction</button>-->
-                                <div id="map-canvas"></div>
+                                <div class="map-container">
+                                    <div class="input-information map-search">
+                                        <input id="map-search" placeholder="Tìm kiếm" type="text" class="form-input-information rounded-pill border-0 shadow-sm">
+                                        <i class="fas icon-search-map fa-search"></i>
+                                    </div>
+                                    <div id="map-canvas"></div>
+                                </div>
+
                             </div>
 
 
@@ -294,6 +296,15 @@
                                             </tr>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsg" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsg" v-html="validateMessage">
+
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-lg-6 m-auto">
@@ -494,7 +505,7 @@
                                                 <th width="15%">Ngày yêu cầu</th>
                                                 <th width="15%">Ngày bắt đầu</th>
                                                 <th width="15%">Trạng thái</th>
-                                                <th width="26%">Tác vụ</th>
+                                                <th width="26%" class="message-col" v-text="task == 17 && room.listRentalRequest[0].statusId == 11 ? 'Lời nhắn' : 'Tác vụ'"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -509,6 +520,9 @@
                                                 <td>
                                                     <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
                                                     <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
+                                                    <button v-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length > 60 && task == 17" v-on:click="showExpireMessage(request)" class="table-button"
+                                                            data-toggle="tooltip" data-html="true" title="Xem lời nhắn của người thuê">Lời nhắn</button>
+                                                    <p v-else-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length <= 60 && task == 17" v-text="request.expireMessage"> </p>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -533,7 +547,7 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Thời hạn bài đăng</h4>
+                                    <h4>Thời hạn bài đăng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
                                     <div class="form-check-inline col" v-for="package in listPaymentPackage">
@@ -568,6 +582,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsgModal" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsgModal" v-html="validateMessage">
+
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button @click="extendTimePost()" class="btn-hover btn-default">Xác Nhận</button>
@@ -586,10 +609,10 @@
                         <div class="modal-body">
                             <div class="fill-information">
                                 <div class="title">
-                                    <h4>Số lượng phòng:</h4>
+                                    <h4>Số lượng phòng<span class="require-text">*</span></h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="number" min="0" max="100" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
+                                    <input @keypress="removeDot(numberOfRoom, 'int', $event)" type="text" maxlength="2" @change="generateRooms" v-model="numberOfRoom" class="form-input-information half-width rounded-pill border-0 shadow-sm">
                                 </div>
                             </div>
                             <div class="fill-information" v-if="listRoom != undefined && listRoom.length > 0">
@@ -620,6 +643,15 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="msg-notification">
+                                    <img v-if="showMsgModal" width="24px" src="assets/img/logo/error.png"/>
+
+                                    <span v-if="showMsgModal" v-html="validateMessage">
+
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -703,7 +735,7 @@
                                 </p>
                                 <div class="fill-information">
                                     <div class="title">
-                                        <h4>Số tiền:</h4>
+                                        <h4>Số tiền<span class="require-text">*</span></h4>
                                     </div>
 
                                     <div class="input-information">

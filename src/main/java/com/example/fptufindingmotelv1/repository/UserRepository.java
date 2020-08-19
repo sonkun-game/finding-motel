@@ -1,6 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.UserModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,5 +22,5 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
     @Query("select u from UserModel u" +
             " where (u.username like %:username% or u.displayName like %:username%) " +
             "and (:roleId is null or u.role.id = :roleId)")
-    ArrayList<UserModel> searchUser(String username, Long roleId);
+    Page<UserModel> searchUser(String username, Long roleId, Pageable pageable);
 }

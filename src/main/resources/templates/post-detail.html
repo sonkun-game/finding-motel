@@ -58,7 +58,7 @@
                     </div>
                     <div class="overview clearfix">
                         <div class="title-name">
-                            <span>Đặc điểm chung:</span>
+                            <span>Đặc điểm chung</span>
                         </div>
                         <div class="content clearfix">
                             <ul class="list-overview clearfix">
@@ -88,7 +88,7 @@
                     </div>
                     <div class="description clearfix">
                         <div class="title-name">
-                            <span>Thông tin mô tả:</span>
+                            <span>Thông tin mô tả</span>
                         </div>
                         <div class="description-content">
                             <p v-text="post.description"></p>
@@ -96,12 +96,23 @@
                     </div>
                     <div class="location clearfix">
                         <div class="title-name">
-                            <span>Vị trí:</span>
+                            <span>Vị trí</span>
                         </div>
                         <div class="address">
                             <span class="subtext">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{post.address}}
+                            </span>
+                        </div>
+                        <div class="address">
+
+                            <span class="subtext">
+                                <img class="img-marker" src="assets/img/logo/A.png">
+                                <p v-text="post.title"></p>
+                            </span>
+                            <span class="subtext">
+                                <img class="img-marker" src="assets/img/logo/B.png">
+                                <p>Đại Học FPT</p>
                             </span>
                         </div>
                         <div class="map" id="map-canvas">
@@ -132,7 +143,7 @@
                     <div class="report clearfix" v-if="userInfo == null || userInfo.role == 'RENTER'">
                         <div class="report-area">
                             <p>
-                                <strong>Lưu ý:</strong>
+                                <strong>Lưu ý</strong>
                                 </br>Mọi thông tin trên website chỉ mang tính chất tham khảo. Chúng tôi luôn cố gắng
                                 cung cấp các thông tin đầy đủ,
                                 chính xác và minh bạch đến người xem, tuy nhiên quá trình kiểm duyệt vẫn có thể xảy ra
@@ -152,7 +163,7 @@
                                               class="close">&times;</span>
                                     </div>
                                     <div class="modal-body">
-                                        <h4 class="font-weight-normal">Nội dung</h4>
+                                        <h4 class="font-weight-normal">Nội dung<span class="require-text">*</span></h4>
                                         <textarea v-model="reportContent"></textarea>
                                     </div>
                                     <div class="modal-footer">
@@ -189,11 +200,21 @@
                                     <span @click="closeModalChooseRoom" class="close">&times;</span>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="room-number">
-                                        <div class="title-room">
-                                            <h4 class="font-weight-normal">Chọn phòng:</h4>
+                                    <div class="error-line">
+                                        <div class="col-3 title-room">
                                         </div>
-                                        <div class="choose-room clearfix">
+                                        <div class="col-9 choose-room">
+                                            <div class="msg-notification">
+                                                <span v-if="showMsg"  v-html="validateMessage">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="room-number pt-0">
+                                        <div class="title-room col-3">
+                                            <h4 class="font-weight-normal">Chọn phòng<span class="require-text">*</span></h4>
+                                        </div>
+                                        <div class="choose-room clearfix col-9">
                                             <ul class="list-select-room" v-for="room in listRoomOfPost">
                                                 <li class="select-room"
                                                     v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
@@ -201,16 +222,14 @@
                                                     {{room.roomName}}
                                                 </li>
                                             </ul>
-                                            <!--                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"-->
-                                            <!--                                                 v-text="room.roomName"></div>-->
                                         </div>
                                     </div>
-                                    <div class="room-number">
-                                        <div class="title-room">
-                                            <h4 class="font-weight-normal">Ngày bắt đầu:</h4>
+                                    <div class="room-number pb-4">
+                                        <div class="title-room col-3 pr-0">
+                                            <h4 class="font-weight-normal">Ngày bắt đầu<span class="require-text">*</span></h4>
                                         </div>
-                                        <div class="choose-room">
-                                            <input @input="setRequestDateRental($event.target.value)" type="date">
+                                        <div class="choose-room col-9">
+                                            <input @change="validateDate(dateRequestRental)" v-model="dateRequestRental" type="date">
                                         </div>
                                     </div>
                                 </div>
@@ -223,13 +242,13 @@
                         </div>
 
                         <div class="contact">
-                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ: </h4>
+                            <h4 class="font-weight-bold-contact">Liên hệ với chủ trọ </h4>
                             <h3 v-text="post.phoneNumber"></h3>
                         </div>
                     </div>
                     <div class="news-involve">
                         <div class="header-news">
-                            <span>Có thể bạn quan tâm:</span>
+                            <span>Có thể bạn quan tâm</span>
                         </div>
                         <div class="list-news-content">
                             <ul class="list-news clearfix">

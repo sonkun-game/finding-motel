@@ -54,7 +54,7 @@
                                             <div v-show="isShowLoader" class="lds-dual-ring">
                                             </div>
                                             <div class="error-line-text">
-                                                <p v-if="isShowContent" v-text="textContent"
+                                                <p v-if="isShowMsg" v-text="textContent"
                                                    class="errorText"></p>
                                             </div>
                                         </div>
@@ -64,7 +64,7 @@
                                             <p>Tên đăng nhập<span class="require-text">*</span></p>
                                         </div>
                                         <div class="register-input">
-                                            <input @focusout="isValidUsername" v-model="username" id="userName"
+                                            <input @focusout="isValidUsername()" v-model="username" id="userName"
                                                    name="userName" type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4" required>
                                         </div>
@@ -77,51 +77,6 @@
                                             <input v-model="displayName" id="displayName" name="displayName"
                                                    type="email "
                                                    class="form-control rounded-pill border-0 shadow-sm px-4 " required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Số điện thoại<span class="require-text">*</span></p>
-                                        </div>
-                                        <div class="register-input-phone">
-                                            <input @focusout="isValidPhone()" v-model="phone" id="phone" name="phone"
-                                                   type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
-                                                   maxlength="10" required>
-                                        </div>
-                                        <div class="register-btn-phone">
-                                            <button v-on:click.prevent="getOTP()" type="button" class="btn-primary-otp">
-                                                Gửi mã
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Mã xác nhận<span class="require-text">*</span></p>
-                                        </div>
-                                        <div class="register-input">
-                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
-                                                   class="form-control rounded-pill border-0 shadow-sm px-4"
-                                                   maxlength="6" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Mật khẩu<span class="require-text">*</span></p>
-                                        </div>
-                                        <div class="register-input">
-                                            <input v-model="password" id="password" name="password" type="password"
-                                                   class="form-control rounded-pill border-0 shadow-sm px-4">
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <div class="register-label">
-                                            <p>Xác nhận mật khẩu<span class="require-text">*</span></p>
-                                        </div>
-                                        <div class="register-input">
-                                            <input @focusout="checkMatchPwd"
-                                                   v-bind:class="{border_error : !matchPwd}" v-model="confirmPassword"
-                                                   id="confirmPassword" name="confirmPassword" type="password"
-                                                   class="form-control rounded-pill border-0 shadow-sm px-4">
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -141,12 +96,57 @@
                                             </label>
                                         </div>
                                     </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Mật khẩu<span class="require-text">*</span></p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input @change="isValidPassword()" v-model="password" id="password" name="password" type="password"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Xác nhận mật khẩu<span class="require-text">*</span></p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input @change="isValidConfirmPassword()"
+                                                   v-bind:class="{border_error : !matchPwd}" v-model="confirmPassword"
+                                                   id="confirmPassword" name="confirmPassword" type="password"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Số điện thoại<span class="require-text">*</span></p>
+                                        </div>
+                                        <div class="register-input-phone">
+                                            <input v-bind:disabled="disableInputPhone" v-model="phone" id="phone"
+                                                   name="phone"
+                                                   type="tel" class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="10" required>
+                                        </div>
+                                        <div class="register-btn-phone">
+                                            <button v-on:click.prevent="sentOTP()" type="button" class="btn-primary-otp">
+                                                Gửi mã
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <div class="register-label">
+                                            <p>Mã xác nhận<span class="require-text">*</span></p>
+                                        </div>
+                                        <div class="register-input">
+                                            <input v-model="otpCode" id="otpCode" name="otpCode" type="number"
+                                                   class="form-control rounded-pill border-0 shadow-sm px-4"
+                                                   maxlength="6" required>
+                                        </div>
+                                    </div>
 
-
-                                    <button v-on:click.prevent="validRegister()"
-                                            type="submit"
+                                    <button v-on:mousedown.prevent="validDataRegister()"
+                                            type="button"
                                             class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm btn-confirm">
-                                        Xác Nhận
+                                        Đăng Ký
                                     </button>
                                     <div class="text-center d-flex justify-content-between mt-4 ">
                                         <p style="margin: auto; ">Hoặc
@@ -156,24 +156,24 @@
                                         <div class="col-6 ">
                                             <a th:href="@{facebook-login}">
                                                 <button type="button" class="btn  btn-block btn-fb">
-                                                    <img src="assets/img/logo/facebook.png">  Facebook
+                                                    <img src="assets/img/logo/facebook.png"> Facebook
                                                 </button>
                                             </a>
                                         </div>
                                         <div class="col-6 ">
                                             <a th:href="@{google-login}">
                                                 <button type="button" class="btn  btn-block btn-gm">
-                                                    <img src="assets/img/logo/gmail.png">  Google
+                                                    <img src="assets/img/logo/gmail.png"> Google
                                                 </button>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="text-center d-flex justify-content-between mt-4 ">
 
-                                        <p style="margin: auto; ">Quay lại trang <a href="login.html ">Đăng Nhập</a></p>
+                                        <p style="margin: auto; ">Quay lại trang <a th:href="@{/dang-nhap}">Đăng
+                                            Nhập</a></p>
 
                                     </div>
-
                                 </form>
                             </div>
                         </div>

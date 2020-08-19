@@ -56,7 +56,8 @@ var admin = new Vue({
         selectedLandlord : {},
         paymentMethod : "",
         reportDetail : "",
-        adjustMoneyNote : ""
+        adjustMoneyNote : "",
+        pagination : [],
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -71,7 +72,7 @@ var admin = new Vue({
         } else if (this.task == 10) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListPost()
+            this.searchPost();
         } else if (this.task == 11) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
@@ -81,7 +82,7 @@ var admin = new Vue({
         else if (this.task == 19) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
-            this.getListPaymentPackage()
+            this.getAllPaymentPackage()
         }
         else if (this.task == 20) {
             let profileUser = document.getElementById("user-manager-content")
@@ -173,12 +174,13 @@ var admin = new Vue({
             }
             document.getElementById("modalBan").style.display = 'block';
         },
-        searchUser() {
+        searchUser(currentPage) {
+            if (currentPage == undefined || !currentPage) currentPage = 0;
             let request = {
                 'username' : this.inputSearchUser,
                 'roleId' : parseInt(this.inputRole) == 0 ? null : parseInt(this.inputRole),
             }
-            fetch("/api-search-user", {
+            fetch("/api-search-user?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +190,8 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if(data != null && data.code == "000"){
-                        this.listUser = data.data
+                        this.listUser = data.data;
+                        this.pagination = data.pagination;
                     }else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
@@ -299,7 +302,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
-                        this.getListPost();
+                        this.searchPost();
                     } else {
                         window.location.href = "/error";
                     }
@@ -314,7 +317,10 @@ var admin = new Vue({
             if (list == null || !list) return {max: null, min: null};
             return list[value];
         },
-        searchPost() {
+        searchPost(currentPage) {
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let postRequestDTO = {
                 "typeId": this.isNullSearchParam(this.postType),
                 "title": this.isNullSearchParam(this.postTitleOrLandlord),
@@ -327,7 +333,7 @@ var admin = new Vue({
                 "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
                 "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
             }
-            fetch("/search-post", {
+            fetch("/search-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -337,6 +343,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         this.listPost = data.data;
+                        this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
@@ -382,14 +389,15 @@ var admin = new Vue({
                 console.log(error);
             })
         },
-        searchReport() {
+        searchReport(currentPage) {
+            if (currentPage == undefined || !currentPage) currentPage = 0;
             let reportRequestDTO = {
                 "landlordId": this.inputLandlordId == "" ? null : this.inputLandlordId,
                 "renterId": this.inputRenterId == "" ? null : this.inputRenterId,
                 "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
                 "statusReport": this.isNullSearchParam(this.inputStatusReport),
             }
-            fetch("/search-report", {
+            fetch("/search-report?currentPage=" + currentPage, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -399,6 +407,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         this.listReport = data.data;
+                        this.pagination =  data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
@@ -499,6 +508,26 @@ var admin = new Vue({
                 console.log(error);
             })
         },
+        getAllPaymentPackage(currentPage){
+            if(currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
+            fetch("/api-get-all-payment-package?currentPage=" + currentPage, {
+                method: 'POST',
+            }).then(response => response.json())
+                .then((data) => {
+                    if(data != null && data.code == "000"){
+                        this.listPaymentPackage = data.data
+                        this.pagination = data.pagination;
+                    }else {
+                        modalMessageInstance.message = data.message;
+                        modalMessageInstance.showModal()
+                    }
+
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         closeModalPackage(){
             document.getElementById("modalPackage").style.display = 'none';
             document.body.removeAttribute("class")
@@ -541,7 +570,8 @@ var admin = new Vue({
                             if(this.packageIndex != -1){
                                 this.$set(this.listPaymentPackage, this.packageIndex, data.data)
                             }else {
-                                this.listPaymentPackage.push(data.data)
+                                // this.listPaymentPackage.push(data.data)
+                                admin.getAllPaymentPackage();
                             }
                             this.closeModalPackage()
                         }, 2000);

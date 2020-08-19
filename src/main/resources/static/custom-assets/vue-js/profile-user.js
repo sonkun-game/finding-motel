@@ -430,7 +430,7 @@ var userTaskInstance = new Vue({
                 }else if(task == 10){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListPost()
+                        admin.searchPost()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -447,7 +447,7 @@ var userTaskInstance = new Vue({
                 }else if(task == 19){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListPaymentPackage()
+                        admin.getAllPaymentPackage()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }

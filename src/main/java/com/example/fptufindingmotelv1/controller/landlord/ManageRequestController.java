@@ -1,8 +1,10 @@
 package com.example.fptufindingmotelv1.controller.landlord;
 
+import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.service.landlord.ManageRequestService;
 import net.minidev.json.JSONObject;
@@ -22,95 +24,59 @@ public class ManageRequestController {
     private ManageRequestService manageRequestService;
 
     @ResponseBody
-    @PostMapping("/api-view-list-request")
-    public JSONObject viewListRoomRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        JSONObject response = new JSONObject();
-        List<RoomDTO> roomDTOS = new ArrayList<>();
-        List<RoomModel> roomModels = manageRequestService.getListRoomRequest(rentalRequestDTO);
-        for (RoomModel roomModel:
-             roomModels) {
-            RoomDTO roomDTO = new RoomDTO(roomModels.indexOf(roomModel), roomModel);
-            int requestNumber = 0;
-            for (RentalRequestModel request:
-                    roomModel.getRoomRentals()) {
-
-                if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() != null){
-                    if(request.getId().equals(rentalRequestDTO.getId())){
-                        requestNumber ++;
-                        roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
-                        roomDTO.setOpenCollapse(true);
-                    }
-                }
-                else if(rentalRequestDTO.getStatusId() == null && rentalRequestDTO.getId() == null){
-                    requestNumber ++;
-                    roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
-                }
-                else if(rentalRequestDTO.getStatusId() != null &&
-                        request.getRentalStatus().getId() == rentalRequestDTO.getStatusId()){
-                    requestNumber ++;
-                    roomDTO.getListRentalRequest().add(new RentalRequestDTO(request));
-                }
-            }
-            if(rentalRequestDTO.getStatusId() != null){
-                if(requestNumber > 0){
-                    roomDTO.setRequestNumber(requestNumber);
-                    roomDTOS.add(roomDTO);
-                }
-            }else {
-                roomDTO.setRequestNumber(requestNumber);
-                roomDTOS.add(roomDTO);
-            }
-
-        }
-        response.put("msgCode", roomModels != null ? "request000" : "sys999");
-        response.put("listRoomRequest", roomDTOS);
-        return response;
-    }
-
-    @ResponseBody
     @PostMapping("/api-accept-request")
     public JSONObject acceptRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        JSONObject response = new JSONObject();
-        List<RentalRequestDTO> rentalRequestDTOList = new ArrayList<>();
         List<RentalRequestModel> rentalRequestModels = manageRequestService.acceptRentalRequest(rentalRequestDTO);
-        for (RentalRequestModel rentalRequest:
-                rentalRequestModels) {
-            rentalRequestDTOList.add(new RentalRequestDTO(rentalRequest));
-        }
-        response.put("msgCode", rentalRequestModels != null ? "request000" : "sys999");
-        response.put("listRequest", rentalRequestDTOList);
-        return response;
+
+        return rentalRequestModels != null
+                ? responseMsg("000", "Success", null)
+                : responseMsg("999", "Lỗi hệ thống!", null);
     }
 
     @ResponseBody
     @PostMapping("/api-reject-request")
     public JSONObject rejectRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        JSONObject response = new JSONObject();
         RentalRequestModel rentalRequestModel = manageRequestService.rejectRentalRequest(rentalRequestDTO);
 
-        response.put("msgCode", rentalRequestModel != null ? "request000" : "sys999");
-        response.put("request", new RentalRequestDTO(rentalRequestModel));
-        return response;
+        return rentalRequestModel != null
+                ? responseMsg("000", "Success", null)
+                : responseMsg("999", "Lỗi hệ thống!", null);
     }
 
     @ResponseBody
     @PostMapping("/api-change-room-status")
     public JSONObject changeRoomStatus(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        JSONObject response = new JSONObject();
         RoomModel roomModel = manageRequestService.changeRoomStatus(rentalRequestDTO);
 
-        RoomDTO room = new RoomDTO(0,roomModel);
-        List<RentalRequestDTO> rentalRequestDTOs = new ArrayList<>();
-        int requestNumber = 0;
-        for (RentalRequestModel request:
-             roomModel.getRoomRentals()) {
-            rentalRequestDTOs.add(new RentalRequestDTO(request));
-            requestNumber ++;
-        }
-        room.setRequestNumber(requestNumber);
-        room.setListRentalRequest(rentalRequestDTOs);
-        response.put("msgCode", roomModel != null ? "request000" : "sys999");
-        response.put("room", room);
-        return response;
+        return roomModel != null
+                ? responseMsg("000", "Success", null)
+                : responseMsg("999", "Lỗi hệ thống!", null);
+    }
+
+    @ResponseBody
+    @PostMapping("/api-get-requests-by-room")
+    public JSONObject getListRequestByRoom(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        List<RentalRequestModel> rentalRequestModels = manageRequestService.getListRequestByRoom(rentalRequestDTO);
+
+        return rentalRequestModels != null
+                ? responseMsg("000", "Success", rentalRequestModels)
+                : responseMsg("999", "Lỗi hệ thống!", null);
+    }
+
+    @ResponseBody
+    @PostMapping("/api-get-renter-info")
+    public JSONObject getRenterInfo(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        RenterModel renterModel = manageRequestService.getRenter(rentalRequestDTO);
+
+        return renterModel != null
+                ? responseMsg("000", "Success", renterModel)
+                : responseMsg("999", "Lỗi hệ thống!", null);
+    }
+    public JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
     }
 }

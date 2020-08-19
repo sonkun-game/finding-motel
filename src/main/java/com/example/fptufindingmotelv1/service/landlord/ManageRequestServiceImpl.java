@@ -15,9 +15,6 @@ import java.util.List;
 public class ManageRequestServiceImpl implements ManageRequestService{
 
     @Autowired
-    private LandlordRepository landlordRepository;
-
-    @Autowired
     private RentalRequestRepository rentalRequestRepository;
 
     @Autowired
@@ -26,20 +23,8 @@ public class ManageRequestServiceImpl implements ManageRequestService{
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Override
-    public List<RoomModel> getListRoomRequest(RentalRequestDTO rentalRequestDTO) {
-        try {
-            if(rentalRequestDTO.getLandlordUsername() != null && !rentalRequestDTO.getLandlordUsername().isEmpty()){
-                LandlordModel landlordModel = landlordRepository.findByUsername(rentalRequestDTO.getLandlordUsername());
-                return roomRepository.getListRoom(landlordModel.getUsername(),
-                        rentalRequestDTO.getPostId(), rentalRequestDTO.getRoomId());
-            }
-            return null;
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+    @Autowired
+    private RenterRepository renterRepository;
 
     @Override
     public List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO) {
@@ -155,6 +140,27 @@ public class ManageRequestServiceImpl implements ManageRequestService{
             return null;
         }
     }
+
+    @Override
+    public List<RentalRequestModel> getListRequestByRoom(RentalRequestDTO rentalRequestDTO) {
+        try {
+            return rentalRequestRepository.getRentalRequests(rentalRequestDTO.getId(), rentalRequestDTO.getRoomId(), rentalRequestDTO.getStatusId());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public RenterModel getRenter(RentalRequestDTO rentalRequestDTO) {
+        try {
+            return renterRepository.getRenterByUsername(rentalRequestDTO.getRenterUsername());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
         try {
             // send notification to Renter

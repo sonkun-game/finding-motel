@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.service.landlord;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
+import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
 import net.minidev.json.JSONObject;
 
@@ -26,4 +27,6 @@ public interface ManagePostService {
     List<RoomModel> increaseRoom(PostRequestDTO postRequestDTO);
 
     List<ImageModel> getListImageByPost(PostRequestDTO postRequestDTO);
+
+    List<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO);
 }

@@ -56,4 +56,14 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "inner join ROOM r on rq.ROOM_ID = r.ID " +
             "where r.POST_ID = :postId ", nativeQuery = true)
     void deleteRentalRequestsByPost(String postId);
+
+    @Query(value = "select new RentalRequestModel(rq.id, rq.requestDate, rq.startDate, rq.cancelDate, " +
+            "rq.expireMessage, r.username, s.id, s.status) from RentalRequestModel rq " +
+            "join RenterModel r on rq.rentalRenter.username = r.username " +
+            "join StatusModel s on rq.rentalStatus.id = s.id " +
+            "where (:requestId is null or rq.id = :requestId)" +
+            "and (:roomId is null or rq.rentalRoom.id = :roomId) " +
+            "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
+            "order by rq.requestDate desc ")
+    List<RentalRequestModel> getRentalRequests(String requestId, String roomId, Long statusId);
 }

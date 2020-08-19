@@ -1,9 +1,6 @@
 package com.example.fptufindingmotelv1.service.landlord;
 
-import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
-import com.example.fptufindingmotelv1.dto.RoomDTO;
-import com.example.fptufindingmotelv1.dto.UserDTO;
+import com.example.fptufindingmotelv1.dto.*;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
 import net.minidev.json.JSONObject;
@@ -303,6 +300,16 @@ public class ManagePostServiceImpl implements ManagePostService{
     public List<ImageModel> getListImageByPost(PostRequestDTO postRequestDTO) {
         try {
             return imageRepository.getImageByPostId(postRequestDTO.getPostId());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO) {
+        try {
+            return roomRepository.getRooms(rentalRequestDTO.getRoomId(), rentalRequestDTO.getPostId(), rentalRequestDTO.getStatusId());
         }catch (Exception e){
             e.printStackTrace();
             return null;

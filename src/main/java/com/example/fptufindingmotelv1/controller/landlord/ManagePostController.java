@@ -189,6 +189,17 @@ public class ManagePostController {
                 ? responseMsg("000", "Success", images)
                 : responseMsg("999", "Lỗi hệ thống!", null);
     }
+
+    @ResponseBody
+    @PostMapping("/api-get-rooms")
+    public JSONObject getListRoomByStatusRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
+        List<RoomModel> roomModels = managePostService.getListRoom(rentalRequestDTO);
+
+        return roomModels != null
+                ? responseMsg("000", "Success", roomModels)
+                : responseMsg("999", "Lỗi hệ thống!", null);
+    }
+
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
         msg.put("code", code);

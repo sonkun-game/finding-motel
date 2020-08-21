@@ -3,7 +3,9 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.PaymentModel;
 import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,4 +19,10 @@ public interface PaymentPostRepository extends JpaRepository<PaymentPostModel, S
             "and (:landlordId is null or ll.username = :landlordId)" +
             "order by p.payDate desc ")
     List<PaymentPostModel> getPaymentPostByLandlord(String landlordId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete pm from PAYMENT_POST pm " +
+            "where pm.POST_ID = :postId ", nativeQuery = true)
+    void deletePaymentPostsByPost(String postId);
 }

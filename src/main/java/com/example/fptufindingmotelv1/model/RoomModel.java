@@ -33,6 +33,9 @@ public class RoomModel implements Serializable {
     @OneToMany(mappedBy = "rentalRoom")
     private List<RentalRequestModel> roomRentals;
 
+    @Transient
+    private long requestNumber;
+
     public RoomModel() {
     }
 
@@ -45,5 +48,17 @@ public class RoomModel implements Serializable {
         this.name = name;
         this.status = new StatusModel();
         this.status.setId(statusId);
+    }
+    public RoomModel(String id, String name, String postId, String postTitle,
+                     Long statusId, String statusNm, long requestNumber) {
+        this.id = id;
+        this.name = name;
+        this.postRoom = new PostModel();
+        this.postRoom.setId(postId);
+        this.postRoom.setTitle(postTitle);
+        this.status = new StatusModel();
+        this.status.setId(statusId);
+        this.status.setStatus(statusNm);
+        this.requestNumber = requestNumber;
     }
 }

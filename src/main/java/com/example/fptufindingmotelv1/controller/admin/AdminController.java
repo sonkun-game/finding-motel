@@ -5,7 +5,7 @@ import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
-import com.example.fptufindingmotelv1.service.landlord.ManagePostService;
+import com.example.fptufindingmotelv1.service.landlord.manageownpost.HideUnHidePostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -30,7 +30,7 @@ public class AdminController {
     private AdminService adminService;
 
     @Autowired
-    private ManagePostService managePostService;
+    private HideUnHidePostService hideUnHidePostService;
 
     @Autowired
     Environment env;
@@ -198,7 +198,7 @@ public class AdminController {
     @RequestMapping(value = "/api-get-list-payment-package")
     public JSONObject getListPaymentPackage() {
         try {
-            List<PaymentPackageModel> paymentPackageModels = managePostService.getListPaymentPackage(null);
+            List<PaymentPackageModel> paymentPackageModels = hideUnHidePostService.getListPaymentPackage(null);
             List<PaymentPackageDTO> response = new ArrayList<>();
             for (PaymentPackageModel paymentPackage :
                     paymentPackageModels) {

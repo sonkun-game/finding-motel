@@ -172,6 +172,8 @@ var renterInstance = new Vue({
                     } else {
                         if (responseMsg != null && responseMsg.code == "000") {
                             this.showModalNotify(responseMsg.message);
+                            this.task = 2
+                            sessionStorage.setItem("task", 2)
                             this.searchRentalRequest();
                         }
                     }

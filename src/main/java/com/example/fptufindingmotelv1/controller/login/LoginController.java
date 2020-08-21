@@ -20,13 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class LoginController {
@@ -82,24 +81,6 @@ public class LoginController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/api-logout")
-    public JSONObject logout(HttpServletRequest request, HttpServletResponse response){
-        JSONObject jsonObject = new JSONObject();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            jsonObject.put("message", "Log out successfully");
-            jsonObject.put("code", "msg001");
-            return jsonObject;
-        }else {
-            jsonObject.put("message", "Authentication is not exist");
-            jsonObject.put("code", "msg002");
-            return jsonObject;
-        }
-
-    }
-
-    @ResponseBody
     @PostMapping("/api-get-authentication")
     public LoginResponseDTO getAuthentication(){
         LoginResponseDTO responseDTO = new LoginResponseDTO();
@@ -117,6 +98,56 @@ public class LoginController {
         return responseDTO;
     }
 
+
+    @GetMapping(value = "/facebook-login")
+    public RedirectView facebookLogin(){
+        RedirectView redirectView = new RedirectView();
+        String url = loginService.facebookLogin();
+        redirectView.setUrl(url);
+        return redirectView;
+    }
+
+    @GetMapping(value = "/facebook")
+    public String facebook(@RequestParam("code") String code) throws IOException {
+        return "register-social";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-facebook-login")
+    public JSONObject getFacebookLogin(@RequestParam String code, HttpServletRequest request) throws IOException {
+        String accessToken = loginService.getFacebookToken(code);
+        return loginService.getResponseFbLogin(accessToken, request);
+    }
+    @ResponseBody
+    @PostMapping(value = "/api-get-facebook-profile")
+    public JSONObject getFacebookProfile(@RequestParam String accessToken, HttpServletRequest request) throws IOException {
+        return loginService.getResponseFbLogin(accessToken, request);
+    }
+
+    @GetMapping(value = "/google-login")
+    public RedirectView googleLogin(){
+        RedirectView redirectView = new RedirectView();
+        String url = loginService.googleLogin();
+        redirectView.setUrl(url);
+        return redirectView;
+    }
+
+    @GetMapping(value = "/google")
+    public String google(@RequestParam("code") String code) throws IOException {
+        return "register-social";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-google-login")
+    public JSONObject getGoogleLogin(@RequestParam String code, HttpServletRequest request) throws IOException {
+        String accessToken = loginService.getGoogleToken(code);
+        return loginService.getResponseGgLogin(accessToken, request);
+    }
+    @ResponseBody
+    @PostMapping(value = "/api-get-google-profile")
+    public JSONObject getGoogleProfile(@RequestParam String accessToken, HttpServletRequest request) throws IOException {
+        return loginService.getResponseGgLogin(accessToken, request);
+    }
 
 
 }

@@ -226,17 +226,20 @@
                             <tbody>
                             <tr v-for="report in listReport">
                                 <th scope="row">{{listReport.indexOf(report) + 1}}</th>
-                                <td><a v-bind:href="'/post-detail?id=' + report.id">{{report.postTitle}}</a></td>
+                                <td><a v-bind:href="'/post-detail?id=' + report.postId">{{report.postTitle}}</a></td>
                                 <td>{{report.landlordName}}</td>
                                 <td>{{report.reportDate}}</td>
                                 <td>{{report.renterId}}</td>
                                 <td>{{report.content}}</td>
                                 <td>{{report.displayStatus}}</td>
                                 <td>
-                                    <i class="fas fa-eye" @click="showModalReportDetail(report.id)"
+                                    <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
+                                       title="Chi tiết báo cáo" @click="showModalReportDetail(report.id)"
                                        id="myIcon_viewReport"></i>
                                     <i @click="showModalConfirmDelete(report.id, 'report')"
-                                       class="fas fa-trash-alt"> </i>
+                                       class="fas fa-trash-alt"data-toggle="tooltip"
+                                       data-html="true"
+                                       title="Xóa báo cáo"> </i>
                                 </td>
                             </tr>
                             </tbody>

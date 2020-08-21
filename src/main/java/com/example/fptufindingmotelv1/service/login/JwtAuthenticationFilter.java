@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
 
     @Autowired
-    private SocialLoginService socialLoginService;
+    private LoginService loginService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
@@ -46,17 +46,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else if(StringUtils.hasText(token) && tokenProvider.equals("google")){
-                GooglePojo googlePojo = socialLoginService.getGgUserInfo(token);
+                GooglePojo googlePojo = loginService.getGgUserInfo(token);
                 UserModel userModel = userRepository.findByGgAccount(googlePojo.getId());
-                UserDetails userDetails = socialLoginService.buildUser(userModel);
+                UserDetails userDetails = loginService.buildUser(userModel);
                 UsernamePasswordAuthenticationToken authentication = new
                         UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else if(StringUtils.hasText(token) && tokenProvider.equals("facebook")){
-                User fbUser = socialLoginService.getFbUserInfo(token);
+                User fbUser = loginService.getFbUserInfo(token);
                 UserModel userModel = userRepository.findByFbAccount(fbUser.getId());
-                UserDetails userDetails = socialLoginService.buildUser(userModel);
+                UserDetails userDetails = loginService.buildUser(userModel);
                 UsernamePasswordAuthenticationToken authentication = new
                         UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));

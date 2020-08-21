@@ -158,6 +158,17 @@ public class LoginServiceImpl implements LoginService {
                     UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            Date date = new Date();
+            if(userModel instanceof LandlordModel
+                    && ((LandlordModel) userModel).getUnBanDate() != null
+                    && ((LandlordModel) userModel).getUnBanDate().before(new Timestamp(date.getTime()))){
+                ((LandlordModel) userModel).setUnBanDate(null);
+                for (PostModel post:
+                        ((LandlordModel) userModel).getPosts()) {
+                    post.setBanned(false);
+                }
+                userRepository.save(userModel);
+            }
             response.put("user", new UserDTO(userModel));
             response.put("msgCode", "msg004");
             response.put("message", "Registered");

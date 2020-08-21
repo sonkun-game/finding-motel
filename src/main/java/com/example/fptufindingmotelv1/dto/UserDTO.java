@@ -73,13 +73,15 @@ public class UserDTO {
             this.unBanDate = ((LandlordModel) userModel).getUnBanDate() == null ? null : sdf.format(((LandlordModel) userModel).getUnBanDate());
             this.amount = ((LandlordModel) userModel).getAmount();
             this.reportNumber = 0;
-            for (PostModel post:
-                 ((LandlordModel) userModel).getPosts()) {
-                if(post != null && post.getReports() != null){
-                    for (ReportModel report:
-                            post.getReports()) {
-                        if(report.getStatusReport().getId() == 3 || report.getStatusReport().getId() == 4){
-                            this.reportNumber ++;
+            if(((LandlordModel) userModel).getPosts() != null){
+                for (PostModel post:
+                        ((LandlordModel) userModel).getPosts()) {
+                    if(post != null && post.getReports() != null){
+                        for (ReportModel report:
+                                post.getReports()) {
+                            if(report.getStatusReport().getId() == 3 || report.getStatusReport().getId() == 4){
+                                this.reportNumber ++;
+                            }
                         }
                     }
                 }

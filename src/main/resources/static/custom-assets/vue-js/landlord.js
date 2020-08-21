@@ -339,8 +339,8 @@ var landlordInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "post000"){
-                        this.listPost = data.listPost
+                    if(data != null && data.code == "000"){
+                        this.listPost = data.data
                     }
                 }).catch(error => {
                 console.log(error);
@@ -361,7 +361,7 @@ var landlordInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "post000"){
+                    if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
                             // this.$set(this.listPost, this.postIndex, data.post)
@@ -561,7 +561,7 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == 'post000'){
+                    if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() =>
                         {
@@ -865,12 +865,12 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == 'post000'){
+                    if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Thêm phòng thành công", 2000)
                         setTimeout(() => {
                             document.body.removeAttribute("class")
                             document.getElementById("myModal_AddRoom").style.display = 'none';
-                            for (let room of data.listNewRoom) {
+                            for (let room of data.data) {
                                 this.listRoomRequest.push(room)
                             }
                         }, 2000);

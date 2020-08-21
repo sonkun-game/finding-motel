@@ -4,6 +4,8 @@ import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.model.UserModel;
+import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.service.landlord.manageownpost.ViewListOwnPostService;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
@@ -26,17 +28,21 @@ public class ViewListOwnPostController {
     @Autowired
     ViewListOwnPostService viewListOwnPostService;
 
+    @Autowired
+    LandlordRepository landlordRepository;
+
     @GetMapping(value = {"/dang-tin", "/nap-tien"})
-    public String getFucntionPage(){
+    public String getFunctionPage(){
         Date date = new Date();
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel() instanceof LandlordModel){
-                if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() == null){
+            if(userDetails.getUserModel().getRole().getId() == 2){
+                UserModel userModel = landlordRepository.getLandlordByUsername(userDetails.getUsername());
+                if(((LandlordModel) userModel).getUnBanDate() == null){
                     return "profile-landlord";
-                }else if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() != null
-                        && ((LandlordModel) userDetails.getUserModel()).getUnBanDate().after(new Timestamp(date.getTime()))){
+                }else if(((LandlordModel) userModel).getUnBanDate() != null
+                        && ((LandlordModel) userModel).getUnBanDate().after(new Timestamp(date.getTime()))){
                     return "redirect:/";
                 }
             }else {
@@ -51,7 +57,7 @@ public class ViewListOwnPostController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel() instanceof LandlordModel){
+            if(userDetails.getUserModel().getRole().getId() == 2){
                 return "profile-landlord";
             }else {
                 return "redirect:/";

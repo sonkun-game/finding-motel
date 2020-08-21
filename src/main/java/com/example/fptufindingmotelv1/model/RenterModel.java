@@ -41,9 +41,9 @@ public class RenterModel extends UserModel implements Serializable {
     }
 
     public RenterModel(String username, Long roleId, String roleName, String displayRole, String fbAccount,
-                       String ggAccount, String phoneNumber, String displayName, boolean gender,
+                       String ggAccount, String phoneNumber, String displayName, String password, boolean gender,
                        String career, Date dob) {
-        super(username, roleId, roleName, displayRole, fbAccount, ggAccount, phoneNumber, displayName);
+        super(username, roleId, roleName, displayRole, fbAccount, ggAccount, phoneNumber, displayName, password);
         this.gender = gender;
         this.career = career;
         this.dob = dob;

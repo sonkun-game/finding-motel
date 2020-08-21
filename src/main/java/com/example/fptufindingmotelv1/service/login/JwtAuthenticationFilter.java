@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else if(StringUtils.hasText(token) && tokenProvider.equals("google")){
                 GooglePojo googlePojo = loginService.getGgUserInfo(token);
-                UserModel userModel = userRepository.findByGgAccount(googlePojo.getId());
+                UserModel userModel = userRepository.getUserById(null, null, googlePojo.getId());
                 UserDetails userDetails = loginService.buildUser(userModel);
                 UsernamePasswordAuthenticationToken authentication = new
                         UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else if(StringUtils.hasText(token) && tokenProvider.equals("facebook")){
                 User fbUser = loginService.getFbUserInfo(token);
-                UserModel userModel = userRepository.findByFbAccount(fbUser.getId());
+                UserModel userModel = userRepository.getUserById(null, fbUser.getId(), null);
                 UserDetails userDetails = loginService.buildUser(userModel);
                 UsernamePasswordAuthenticationToken authentication = new
                         UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -47,13 +47,14 @@ public class UserModel implements Serializable {
     }
 
     public UserModel(String username, Long roleId, String roleName, String displayRole, String fbAccount,
-                     String ggAccount, String phoneNumber, String displayName) {
+                     String ggAccount, String phoneNumber, String displayName, String password) {
         this.username = username;
         this.role = new RoleModel(roleId, roleName, displayRole);
         this.fbAccount = fbAccount;
         this.ggAccount = ggAccount;
         this.phoneNumber = phoneNumber;
         this.displayName = displayName;
+        this.password = password;
     }
 
 }

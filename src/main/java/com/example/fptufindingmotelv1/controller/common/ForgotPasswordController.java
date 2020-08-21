@@ -5,6 +5,8 @@ import com.example.fptufindingmotelv1.service.common.forgotpassword.ForgotPasswo
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +19,11 @@ public class ForgotPasswordController {
     @Autowired
     private ForgotPasswordService forgotPasswordService;
 
-    @GetMapping("/forgot")
+    @GetMapping("/quen-mat-khau")
     public String getForgot(){
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            return "redirect:/";
+        }
         return "forgot";
     }
 

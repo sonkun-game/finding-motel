@@ -7,6 +7,8 @@ import com.example.fptufindingmotelv1.service.register.RegisterService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,9 @@ public class RegisterController {
 
     @GetMapping("/dang-ky")
     public String getRegister() {
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            return "redirect:/";
+        }
         return "register";
     }
 

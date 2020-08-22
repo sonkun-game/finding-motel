@@ -19,7 +19,7 @@ var authenticationInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data)
-                    if(data != null && data.code === "msg001"){
+                    if(data != null && data.code === "000"){
                         sessionStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
@@ -35,7 +35,7 @@ var authenticationInstance = new Vue({
             }
             let condition = {
                 message: "Mật khẩu phải chứa tối thiểu 6 kí tự, bao gồm chữ thường, chữ hoa, chữ số và không có kí tự khoảng trắng.",
-                regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{6,}$/
+                regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{5,}$/
             }
             if(!condition.regex.test(password)){
                 return condition.message
@@ -172,7 +172,7 @@ var authenticationInstance = new Vue({
             })
         }
     },
-    mounted(){
+    created(){
         // if(sessionStorage.getItem("userInfo")){
         //     this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         //     if(this.userInfo.role == "RENTER"){

@@ -61,7 +61,10 @@
 }
 
 .room-number{
-    margin: 20px 18px;
+    display: flex;
+    padding: 15px 0;
+}
+.error-line{
     display: flex;
 }
 .select-room{
@@ -109,7 +112,7 @@ select{
 
 .room-number input{
     display: block !important;
-    width: 70%;
+    width: 100%;
     height: auto;
     border: 1px solid #dca73a;
     border-radius: 2px;

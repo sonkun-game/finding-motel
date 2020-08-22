@@ -149,11 +149,11 @@
                                         <tbody>
                                         <tr v-for="(room, index) in editMode ? listRoomRequest : listRoom">
                                             <th scope="row" v-text="index + 1"></th>
-                                            <th scope="row" v-text="room.roomName"></th>
+                                            <th scope="row" v-text="editMode ? room.name : room.roomName"></th>
                                             <th scope="row">
                                                 <span>Đã cho thuê</span>
                                                 <label class="switch">
-                                                    <input type="checkbox" v-if="editMode" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                                    <input type="checkbox" v-if="editMode" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.status.id == 1">
                                                     <input type="checkbox" v-else v-model="room.availableRoom">
                                                     <span class="slider round"></span>
                                                 </label>
@@ -394,15 +394,15 @@
                                     <span v-text="post.roomNumber"></span>
                                 </td>
 
-                                <td v-text="post.createDate"></td>
-                                <td v-text="post.expireDate"></td>
+                                <td v-text="formatDate(post.createDate)"></td>
+                                <td v-text="formatDate(post.expireDate)"></td>
                                 <td>
-                                    <div v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'" v-text="post.displayStatus"></div>
+                                    <div v-bind:class="post.visible && !post.banned && !IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="getStatusPost(post.visible, post.banned, post.expireDate)"></div>
                                 </td>
                                 <td>
                                     <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
                                     <i class="fas fa-trash-alt" v-on:click="showModalConfirm(post, 'delete')" data-toggle="tooltip" data-html="true" title="Xóa bài viết"></i>
-                                    <i v-bind:class="{'fa-eye-slash' : post.postVisible, 'fa-eye' : !post.postVisible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
+                                    <i v-bind:class="{'fa-eye-slash' : post.visible, 'fa-eye' : !post.visible}" class="fas"  v-on:click="showModalConfirm(post, 'hide')" data-toggle="tooltip" data-html="true" v-bind:title="post.postVisible ? 'Ẩn bài viết' : 'Hiển thị bài viết'"></i>
                                     <i @click="showModalExtend(post, index)" class="far fa-calendar-plus" data-toggle="tooltip" data-html="true" title="Gia hạn bài đăng"></i>
 
                                 </td>
@@ -441,10 +441,88 @@
                         </table>
                     </div>
                 </div>
+                <!-- Quản lý phòng -->
+
+                <div id="room-manager" v-if="task == 15">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý phòng</h1>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th  width="2%"></th>
+                                <th  width="2%">STT</th>
+                                <th  width="30%">Tên phòng trọ</th>
+                                <th  width="21%">Phòng</th>
+                                <th  width="15%">Tình trạng</th>
+                                <th width="10%"></th>
+                                <th  width="20%">Yêu cầu thuê phòng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-for="(room, index) in listRoomRequest">
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="getListRequestByRoom(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                        <i class="fas fa-angle-double-right" v-else v-on:click="getListRequestByRoom(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                    </td>
+                                    <td v-text="index + 1"></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + room.postRoom.id" v-text="room.postRoom.title"></a></td>
+                                    <td v-text="room.name"></td>
+                                    <td v-text="room.status.status"></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.status.id == 1">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+                                    <td v-text="room.requestNumber"></td>
+
+                                </tr>
+
+                                <tr v-bind:id="room.id" v-show="room.requestNumber > 0" class="request-collapse" v-bind:class="{requestCollapseShow : room.openCollapse}">
+                                    <td colspan="7" v-if="room.openCollapse">
+                                        <table class="collapse-table table-bordered table-hover">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="2%">STT</th>
+                                                <th width="25%">Tên người thuê</th>
+                                                <th width="15%">Ngày yêu cầu</th>
+                                                <th width="15%">Ngày bắt đầu</th>
+                                                <th width="15%">Trạng thái</th>
+                                                <th width="26%">Tác vụ</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(request, index) in room.listRentalRequest">
+                                                <td v-text="index + 1"></td>
+                                                <td>
+                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
+                                                </td>
+                                                <td v-text="formatDate(request.requestDate)"></td>
+                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="request.rentalStatus.status"></td>
+                                                <td>
+                                                    <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
+                                                    <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </template>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
 
                 <!-- Quản lý yêu cầu -->
 
-                <div id="request-manager" v-if="task == 5 || task == 15 || task == 17">
+                <div id="request-manager" v-if="task == 5 || task == 17">
                     <div class="title">
                         <h1 class="title-name uppercase" v-text="task == 5 ? 'Quản lý yêu cầu' : 'Quản lý phòng'"></h1>
                     </div>
@@ -474,20 +552,17 @@
                             <tbody>
                             <template v-for="(room, index) in listRoomRequest">
                                 <tr>
-                                    <!--                                            <td data-toggle="collapse" v-bind:data-target="'#' + room.roomId" aria-expanded="true" v-bind:aria-controls="'#' + room.roomId">-->
-                                    <!--                                                <i class="fas fa-angle-double-down" v-bind:class="{invisible: room.requestNumber == 0}"></i>-->
-                                    <!--                                            </td>-->
                                     <td>
-                                        <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
-                                        <i class="fas fa-angle-double-right" v-else v-on:click="collapseRequestTable(room, index)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                        <i class="fas fa-angle-double-down" v-if="!room.openCollapse" v-on:click="getListRequestByRoom(room, index, 7)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
+                                        <i class="fas fa-angle-double-right" v-else v-on:click="getListRequestByRoom(room, index, 7)" v-bind:class="{invisible: room.requestNumber == 0}"></i>
                                     </td>
                                     <td v-text="index + 1"></td>
-                                    <td><a v-bind:href="'/post-detail?id=' + room.postId" v-text="room.postTitle"></a></td>
-                                    <td v-text="room.roomName"></td>
-                                    <td v-if="task == 15  || task == 17" v-text="room.displayStatus"></td>
+                                    <td><a v-bind:href="'/post-detail?id=' + room.postRoom.id" v-text="room.postRoom.title"></a></td>
+                                    <td v-text="room.name"></td>
+                                    <td v-if="task == 15  || task == 17" v-text="room.status.status"></td>
                                     <td v-if="task == 15  || task == 17">
                                         <label class="switch">
-                                            <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.availableRoom">
+                                            <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.status.id == 1">
                                             <span class="slider round"></span>
                                         </label>
                                     </td>
@@ -512,17 +587,17 @@
                                             <tr v-for="(request, index) in room.listRentalRequest">
                                                 <td v-text="index + 1"></td>
                                                 <td>
-                                                    <a class="pointer-enable" v-on:click="showRenterInfo(request.renterInfo)" v-text="request.renterUsername"></a>
+                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
                                                 </td>
-                                                <td v-text="request.displayRequestDate"></td>
-                                                <td v-text="request.displayStartDate"></td>
-                                                <td v-text="request.statusDisplay"></td>
+                                                <td v-text="formatDate(request.requestDate)"></td>
+                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="request.rentalStatus.status"></td>
                                                 <td>
-                                                    <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
-                                                    <button v-if="request.statusId == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
-                                                    <button v-if="request.statusId == 11 && request.expireMessage != null && request.expireMessage.length > 60 && task == 17" v-on:click="showExpireMessage(request)" class="table-button"
+                                                    <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
+                                                    <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'reject')" class="table-button">Từ chối</button>
+                                                    <button v-if="request.rentalStatus.id == 11 && request.expireMessage != null && request.expireMessage.length > 60 && task == 17" v-on:click="showExpireMessage(request)" class="table-button"
                                                             data-toggle="tooltip" data-html="true" title="Xem lời nhắn của người thuê">Lời nhắn</button>
-                                                    <p v-else v-text="request.expireMessage"> </p>
+                                                    <p v-else-if="request.rentalStatus.id == 11 && request.expireMessage != null && request.expireMessage.length <= 60 && task == 17" v-text="request.expireMessage"> </p>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -688,20 +763,20 @@
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                            <div class="infor-modal">
                                 <p class="left-modal">Ngày sinh:</p>
-                                <input :value="renterInfo.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                            <div class="infor-modal">
                                 <p class="left-modal">Nghề nghiệp:</p>
                                 <input class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" :value="renterInfo.career" disabled/>
                             </div>
-                            <div v-if="renterInfo.role == 'RENTER'" class="infor-modal">
+                            <div class="infor-modal">
                                 <p class="left-modal">Giới tính:</p>
                                 <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" :value="renterInfo.genderDisplay" disabled/>
+                                       type="text" :value="renterInfo.gender ? 'Nam' : 'Nữ'" disabled/>
                             </div>
 
                         </div>

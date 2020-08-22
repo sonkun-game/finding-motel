@@ -1,6 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.PostModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,11 +28,10 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
-            "order by p.createDate desc " +
             "")
-    List<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
+    Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Pageable pageable);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
             "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +
@@ -54,7 +55,7 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
                                Double squareMax, Double squareMin, Boolean isVisible,
                                Long postType, Boolean banned, Date currentDate);
 
-    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, p.roomNumber, " +
             "p.description, p.title, p.address, p.visible, p.banned, " +
             "p.mapLocation, p.createDate, p.expireDate, " +
             "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber) from PostModel p " +
@@ -64,6 +65,15 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "")
     PostModel getPostById(String postId);
 
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, " +
+            "p.mapLocation, p.createDate, p.expireDate, " +
+            "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber) from PostModel p " +
+            "join TypeModel t on p.type.id = t.id " +
+            "join LandlordModel ll on p.landlord.username = ll.username " +
+            "where (:landlordId is null or ll.username = :landlordId)" +
+            "")
+    List<PostModel> getPostsByLandlord(String landlordId);
 
 
     @Query(value = "select top 5 * from POST p " +
@@ -96,4 +106,40 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "wl.wishListPost.square, wl.wishListPost.description, wl.wishListPost.title, wl.wishListPost.address" +
             "")
     List<PostModel> getListPostByRenter(String renterId, Boolean isVisible, Boolean banned, Date currentDate);
+
+    @Query(value = "select new PostModel(p.id, p.expireDate) from PostModel p " +
+            "where (:postId is null or p.id = :postId)" +
+            "")
+    PostModel getPostOnlyExpireDateById(String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update PostModel p " +
+            "set p.expireDate = :expireDate, " +
+            "p.visible = :visible " +
+            "where p.id = :postId ")
+    void updateExpireDatePost(Date expireDate, Boolean visible, String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update p " +
+            "set p.TYPE_ID = :typeId, " +
+            "p.PRICE = :price, " +
+            "p.DISTANCE = :distance, " +
+            "p.SQUARE = :square, " +
+            "p.DESCRIPTION = :description, " +
+            "p.TITLE = :title, " +
+            "p.ADDRESS = :address, " +
+            "p.MAP_LOCATION = :mapLocation " +
+            "from POST p " +
+            "inner join TYPE t on p.TYPE_ID = t.ID " +
+            "where p.id = :postId ", nativeQuery = true)
+    void updatePost(Long typeId, Double price, Double distance, Double square,
+                    String description, String title, String address, String mapLocation, String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete p from POST p " +
+            "where p.ID = :postId ", nativeQuery = true)
+    void deletePostById(String postId);
 }

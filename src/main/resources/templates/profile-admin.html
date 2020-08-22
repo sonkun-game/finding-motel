@@ -133,6 +133,33 @@
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listUser.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchUser(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div v-if="listUser.length <= 0">Không có người dùng nào.</div>
                     </div>
                 </div>
@@ -147,7 +174,7 @@
                             <li>
                                 <div class="search-container">
                                     <label class="search-box-label">Bài đăng</label>
-                                    <input v-model="inputPostTitle" class="search-box" type="text"name="search"/>
+                                    <input v-model="inputPostTitle" class="search-box" type="text" name="search"/>
                                 </div>
                             </li>
                             <li>
@@ -170,7 +197,8 @@
                                     <div class="form-dropdown">
                                         <select class="search-box" v-model="inputStatusReport">
                                             <option selected value="0">Tất cả</option>
-                                            <option v-for="status in listStatusReport" v-bind:value="status.id" v-text="status.displayStatus"></option>
+                                            <option v-for="status in listStatusReport" v-bind:value="status.id"
+                                                    v-text="status.displayStatus"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -198,21 +226,51 @@
                             <tbody>
                             <tr v-for="report in listReport">
                                 <th scope="row">{{listReport.indexOf(report) + 1}}</th>
-                                <td><a v-bind:href="'/post-detail?id=' + report.id">{{report.postTitle}}</a></td>
+                                <td><a v-bind:href="'/post-detail?id=' + report.postId">{{report.postTitle}}</a></td>
                                 <td>{{report.landlordName}}</td>
                                 <td>{{report.reportDate}}</td>
                                 <td>{{report.renterId}}</td>
                                 <td>{{report.content}}</td>
                                 <td>{{report.displayStatus}}</td>
                                 <td>
-                                    <i class="fas fa-eye" @click="showModalReportDetail(report.id)"
+                                    <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
+                                       title="Chi tiết báo cáo" @click="showModalReportDetail(report.id)"
                                        id="myIcon_viewReport"></i>
                                     <i @click="showModalConfirmDelete(report.id, 'report')"
-                                       class="fas fa-trash-alt"> </i>
+                                       class="fas fa-trash-alt"data-toggle="tooltip"
+                                       data-html="true"
+                                       title="Xóa báo cáo"> </i>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listReport.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchReport(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchReport(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchReport(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div v-if="listReport.length <= 0">Không có báo cáo nào.</div>
                     </div>
                 </div>
@@ -289,7 +347,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li >
+                            <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
                                         <span>Khoảng cách:</span>
@@ -331,7 +389,8 @@
                                         <span>Tên bài đăng:</span>
                                     </div>
                                     <div class="search-container">
-                                        <input class="search-post" v-model="postTitleOrLandlord" id="searchLandlordTxt" type="text"
+                                        <input class="search-post" v-model="postTitleOrLandlord" id="searchLandlordTxt"
+                                               type="text"
                                                placeholder="Tìm kiếm..."
                                                name="search">
                                     </div>
@@ -403,6 +462,33 @@
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPost.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchPost(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchPost(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchPost(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div v-if="listPost.length <= 0">Không có bài đăng nào.</div>
                     </div>
                 </div>
@@ -444,7 +530,8 @@
                                 </td>
                                 <td>
                                     <label class="switch">
-                                        <input type="checkbox" v-on:click.prevent="changeStatusPackage(package, index)" v-model="package.available">
+                                        <input type="checkbox" v-on:click.prevent="changeStatusPackage(package, index)"
+                                               v-model="package.available">
                                         <span class="slider round"></span>
                                     </label>
                                 </td>
@@ -452,14 +539,42 @@
                                     <i v-on:click="showModalPackage(package, index)" class="fas fa-edit"
                                        data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
 
-<!--                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"-->
-<!--                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"-->
-<!--                                       data-toggle="tooltip" data-html="true"-->
-<!--                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>-->
+                                    <!--                                    <i v-on:click="changeStatusPackage(package, index)" class="fas"-->
+                                    <!--                                       v-bind:class="package.available ? 'fa-eye-slash' : 'fa-eye'"-->
+                                    <!--                                       data-toggle="tooltip" data-html="true"-->
+                                    <!--                                       v-bind:title="package.available ? 'Không sử dụng' : 'Sử dụng'"></i>-->
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPaymentPackage.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getAllPaymentPackage(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getAllPaymentPackage(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getAllPaymentPackage(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div v-if="listPaymentPackage.length <= 0">Không có gói nào.</div>
                     </div>
                 </div>
@@ -504,6 +619,33 @@
                             </tbody>
                         </table>
                         <div v-if="listUser.length <= 0">Không có chủ trọ nào.</div>
+                        <nav v-if="pagination.totalPages != 1 && listUser.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchUser(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -644,6 +786,9 @@
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalPackageErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Tên gói<span class="require-text">*</span></p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
@@ -687,17 +832,20 @@
                         <div class="modal-body">
                             <div class="infor-modal">
                                 <p class="left-modal">Tên bài đăng:</p>
-                                <input :value="reportDetail.postTitle" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="reportDetail.postTitle"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Tên chủ trọ:</p>
-                                <input :value="reportDetail.landlordName" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="reportDetail.landlordName"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Ngày báo cáo:</p>
-                                <input :value="reportDetail.reportDate" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="reportDetail.reportDate"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal-table">
@@ -720,6 +868,9 @@
                             <span @click="closeModalAddMoney" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalAddMoneyErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Chủ trọ</p>
                                 <input v-bind:value="selectedLandlord.username"
@@ -737,7 +888,8 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Số dư sau khi nạp tiền</p>
-                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount
+                                        + (isNaN(parseInt(inputAmount)) ? 0 : parseInt(inputAmount)))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                                 <div class="input-group-append input-package-append">
@@ -747,6 +899,7 @@
                             <div class="infor-modal">
                                 <p class="left-modal">Số tiền<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
+                                       maxlength="7"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
                                 <div class="input-group-append input-package-append">
@@ -755,12 +908,14 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Phương thức thanh toán<span class="require-text">*</span></p>
-                                <input v-model="paymentMethod" maxlength="50" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input v-model="paymentMethod" maxlength="50"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Ghi chú</p>
-                                <input v-model="adjustMoneyNote" maxlength="100" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input v-model="adjustMoneyNote" maxlength="100"
+                                       class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text"/>
                             </div>
 

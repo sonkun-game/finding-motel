@@ -35,10 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then((data) => {
                             if (data.msgCode === "login000") {
                                 this.showMsg = false
-                                console.log(data)
                                 sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                                 this.$cookies.set("access_token", data.accessToken)
-                                console.log(this.$cookies.get("access_token"))
                                 window.location.href = "/"
                             } else {
                                 this.message = data.message

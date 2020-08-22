@@ -28,4 +28,23 @@ public class LandlordModel extends UserModel implements Serializable {
     @OneToMany(mappedBy = "landlordModel", cascade = CascadeType.ALL)
     private List<PaymentModel> paymentModels;
 
+    public LandlordModel(String username) {
+        super(username);
+    }
+    public LandlordModel(String username, float amount, Date unBanDate) {
+        super(username);
+        this.amount = amount;
+        this.unBanDate = unBanDate;
+    }
+
+    public LandlordModel() {
+    }
+
+    public LandlordModel(String username, Long roleId, String roleName, String displayRole, String fbAccount,
+                       String ggAccount, String phoneNumber, String displayName, String password,
+                         float amount, Date unBanDate) {
+        super(username, roleId, roleName, displayRole, fbAccount, ggAccount, phoneNumber, displayName, password);
+        this.amount = amount;
+        this.unBanDate = unBanDate;
+    }
 }

@@ -200,11 +200,21 @@
                                     <span @click="closeModalChooseRoom" class="close">&times;</span>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="room-number">
-                                        <div class="title-room">
+                                    <div class="error-line">
+                                        <div class="col-3 title-room">
+                                        </div>
+                                        <div class="col-9 choose-room">
+                                            <div class="msg-notification">
+                                                <span v-if="showMsg"  v-html="validateMessage">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="room-number pt-0">
+                                        <div class="title-room col-3">
                                             <h4 class="font-weight-normal">Chọn phòng<span class="require-text">*</span></h4>
                                         </div>
-                                        <div class="choose-room clearfix">
+                                        <div class="choose-room clearfix col-9">
                                             <ul class="list-select-room" v-for="room in listRoomOfPost">
                                                 <li class="select-room"
                                                     v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
@@ -212,16 +222,14 @@
                                                     {{room.roomName}}
                                                 </li>
                                             </ul>
-                                            <!--                                            <div @click="setRoomIdRental(room.roomId)" class="select-room"-->
-                                            <!--                                                 v-text="room.roomName"></div>-->
                                         </div>
                                     </div>
-                                    <div class="room-number">
-                                        <div class="title-room">
+                                    <div class="room-number pb-4">
+                                        <div class="title-room col-3 pr-0">
                                             <h4 class="font-weight-normal">Ngày bắt đầu<span class="require-text">*</span></h4>
                                         </div>
-                                        <div class="choose-room">
-                                            <input @input="setRequestDateRental($event.target.value)" type="date">
+                                        <div class="choose-room col-9">
+                                            <input @change="validateDate(dateRequestRental)" v-model="dateRequestRental" type="date">
                                         </div>
                                     </div>
                                 </div>

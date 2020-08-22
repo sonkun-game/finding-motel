@@ -31,4 +31,15 @@ public class PaymentPackageModel implements Serializable {
 
     @OneToMany(mappedBy = "paymentPackage", cascade = CascadeType.ALL)
     private List<PaymentPostModel> paymentPosts;
+
+    public PaymentPackageModel() {
+    }
+
+    public PaymentPackageModel(Long id, float amount, int duration, String packageName, boolean available) {
+        this.id = id;
+        this.amount = amount;
+        this.duration = duration;
+        this.packageName = packageName;
+        this.available = available;
+    }
 }

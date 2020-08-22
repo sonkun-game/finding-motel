@@ -18,7 +18,7 @@ var profileInstance = new Vue({
         displayTimer : null,
         intervalID : null,
         expireDate : 0,
-
+        validateMessage : "",
     },
     beforeMount(){
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
@@ -30,8 +30,49 @@ var profileInstance = new Vue({
 
     },
     methods: {
+        validateInput(inputValue, require, minLength, maxLength, min, max, inputName, unit){
+            if(require && (inputValue == null || inputValue.length == 0)){
+                this.validateMessage = "<b>" + inputName + "</b> không được để trống"
+                return false
+            }else if(maxLength != null && inputValue != null && inputValue.length > maxLength){
+                this.validateMessage = "<b>" + inputName + "</b> không vượt quá " + maxLength + " ký tự"
+                return false
+            }else if(minLength != null && inputValue != null && inputValue.length < minLength){
+                this.validateMessage = "<b>" + inputName + "</b> phải có ít nhất " + minLength + " ký tự"
+                return false
+            }else if(min != null && inputValue != null && parseFloat(inputValue) <= min){
+                this.validateMessage = "<b>" + inputName + "</b> phải lớn hơn " + authenticationInstance.formatNumberToDisplay(min) + " " + unit
+                return false
+            }else if(max != null && inputValue != null && parseFloat(inputValue) >= max){
+                this.validateMessage = "<b>" + inputName + "</b> phải nhỏ hơn " + authenticationInstance.formatNumberToDisplay(max) + " " + unit
+                return false
+            }else {
+                return true
+            }
+        },
+        validateDate(inputDate){
+            let dob = new Date(inputDate)
+            let currentDate = new Date()
+            if(Number.isNaN(dob.getTime()) || currentDate.getTime() <= dob.getTime()){
+                this.validateMessage = "Ngày sinh không hợp lệ"
+                this.showMsg = true
+                return false
+            }else {
+                this.showMsg = false
+                return true
+            }
+        },
         saveUserInfo(){
             this.userInfo.gender = this.gender == "1" ? true : false
+            if(this.validateInput(this.userInfo.displayName, false, null, 50, null, null, "Tên hiển thị")
+                && this.validateDate(this.userInfo.dob)
+                && this.validateInput(this.userInfo.career, false, null, 30, null, null, "Nghề nghiệp")
+                ){
+                this.showMsg = false
+            }else {
+                this.showMsg = true
+                return
+            }
             fetch("/api-save-user-info", {
                 method: 'POST',
                 headers: {
@@ -389,7 +430,7 @@ var userTaskInstance = new Vue({
                 }else if(task == 10){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListPost()
+                        admin.searchPost()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -406,7 +447,7 @@ var userTaskInstance = new Vue({
                 }else if(task == 19){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
-                        admin.getListPaymentPackage()
+                        admin.getAllPaymentPackage()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
                     }
@@ -451,7 +492,7 @@ var userTaskInstance = new Vue({
                     if(this.$route.fullPath.includes("quan-ly-bai-dang")){
                         noteInstance.task = task
                         landlordInstance.task = task
-                        landlordInstance.getListRoomRequest(7, null)
+                        landlordInstance.getListRoomProcessingRequest()
                     } else {
                         window.location.href = "/quan-ly-bai-dang"
                     }

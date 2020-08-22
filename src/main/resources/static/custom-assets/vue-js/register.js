@@ -42,7 +42,7 @@ var registerVue = new Vue({
         intervalID: null,
         expireDate: 0,
         //pwd valid
-        passwordRegex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{6,}$/,
+        passwordRegex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{5,}$/,
         usernameRegex: /^(?=.*?^\w)[^\s\W]{6,}$/,
     },
     created() {

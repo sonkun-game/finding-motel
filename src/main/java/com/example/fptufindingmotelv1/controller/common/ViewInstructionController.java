@@ -19,7 +19,7 @@ public class ViewInstructionController {
     ViewInstructionService viewInstructionService;
 
     @GetMapping("/huong-dan")
-    public String viewInstruction(Model model) {
+    public String viewInstruction() {
         return "instruction";
     }
 

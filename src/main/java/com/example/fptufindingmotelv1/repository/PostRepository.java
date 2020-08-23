@@ -20,7 +20,7 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "p.description, p.title, p.address, p.visible, p.banned, " +
             "p.mapLocation, p.createDate, p.expireDate, " +
             "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber, " +
-            "sum(case when (r.statusReport = 3 or r.statusReport = 5) then 1 else 0 end) )" +
+            "sum(case when (r.statusReport.id = 3 or r.statusReport.id = 5) then 1 else 0 end) )" +
             " from PostModel p " +
             "join TypeModel t on p.type.id = t.id " +
             "join LandlordModel ll on p.landlord.username = ll.username " +

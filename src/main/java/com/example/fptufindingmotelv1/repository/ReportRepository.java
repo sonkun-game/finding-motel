@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 public interface ReportRepository extends JpaRepository<ReportModel, String> {
-    @Query(value = "select rp from ReportModel rp " +
+    @Query(value = "select new ReportModel(rp.id, rp.content, rp.reportDate, p.id, p.title, " +
+            "p.landlord.username, rp.renterReport.username, s.id, s.status) from ReportModel rp " +
+            "join PostModel p on rp.postReport.id = p.id " +
+            "join StatusModel s on rp.statusReport.id = s.id " +
             "where 1 = 1" +
             "and (:landlordId is null or rp.postReport.landlord.username like %:landlordId%)" +
             "and (:renterId is null or rp.renterReport.username like %:renterId%)" +

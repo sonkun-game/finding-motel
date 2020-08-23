@@ -226,12 +226,12 @@
                             <tbody>
                             <tr v-for="report in listReport">
                                 <th scope="row">{{listReport.indexOf(report) + 1}}</th>
-                                <td><a v-bind:href="'/post-detail?id=' + report.postId">{{report.postTitle}}</a></td>
-                                <td>{{report.landlordName}}</td>
-                                <td>{{report.reportDate}}</td>
-                                <td>{{report.renterId}}</td>
+                                <td><a v-bind:href="'/post-detail?id=' + report.postReport.id">{{report.postReport.title}}</a></td>
+                                <td>{{report.postReport.landlord.username}}</td>
+                                <td>{{authenticationInstance.formatDate(report.reportDate)}}</td>
+                                <td>{{report.renterReport.username}}</td>
                                 <td>{{report.content}}</td>
-                                <td>{{report.displayStatus}}</td>
+                                <td>{{report.statusReport.status}}</td>
                                 <td>
                                     <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
                                        title="Chi tiết báo cáo" @click="showModalReportDetail(report.id)"
@@ -801,7 +801,7 @@
                 <!--                    modal report detail -->
                 <div id="modalRepostDetail" class="modal">
                     <!-- Modal content -->
-                    <div class="view-information">
+                    <div class="view-information" v-if="reportDetail != null && reportDetail.postReport != null">
                         <div class="modal-header">
                             <h2>Chi tiết báo cáo</h2>
                             <span @click="closeModalReportDetail" class="close">&times;</span>
@@ -809,19 +809,19 @@
                         <div class="modal-body">
                             <div class="infor-modal">
                                 <p class="left-modal">Tên bài đăng:</p>
-                                <input :value="reportDetail.postTitle"
+                                <input :value="reportDetail.postReport.title"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Tên chủ trọ:</p>
-                                <input :value="reportDetail.landlordName"
+                                <input :value="reportDetail.postReport.landlord.username"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Ngày báo cáo:</p>
-                                <input :value="reportDetail.reportDate"
+                                <input :value="authenticationInstance.formatDate(reportDetail.reportDate)"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>

@@ -1,5 +1,7 @@
 package com.example.fptufindingmotelv1.untils;
 
+import net.minidev.json.JSONObject;
+
 public class Constant {
     public static final int BUTTONS_TO_SHOW = 9;
     public static final int INITIAL_PAGE = 0;
@@ -11,4 +13,12 @@ public class Constant {
     public static final String DATE_FORMAT_ONLY_DATE = "dd/MM/yyyy";
     public static final Integer EXPIRE_MIN = 1;
     public static final Integer OTP_LENGTH = 6;
+
+    public static JSONObject responseMsg(String code, String message, Object data) {
+        JSONObject msg = new JSONObject();
+        msg.put("code", code);
+        msg.put("message", message);
+        msg.put("data", data);
+        return msg;
+    }
 }

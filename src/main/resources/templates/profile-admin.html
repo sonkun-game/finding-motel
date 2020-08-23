@@ -105,25 +105,25 @@
                                 <th scope="row">{{listUser.indexOf(user) + 1}}</th>
                                 <td><a id="myBtn">{{user.username}}</a></td>
                                 <td>{{user.displayName}}</td>
-                                <td>{{user.roleName}}</td>
+                                <td>{{user.role.displayName}}</td>
                                 <td>
-                                    <i v-if="user.role == 'LANDLORD'" v-on:click="handleGetReport(null, user)"
+                                    <i v-if="user.role.roleName == 'LANDLORD'" v-on:click="handleGetReport(null, user)"
                                        class="fas fa-eye" data-toggle="tooltip" data-html="true"
                                        title="Xem báo cáo"></i>
-                                    <span v-if="user.role == 'LANDLORD'">{{user.reportNumber}}</span>
+                                    <span v-if="user.role.roleName == 'LANDLORD'">{{user.landlordModel.reportNumber}}</span>
                                 </td>
                                 <td>
                                     <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
                                        id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
-                                    <i v-if="user.role == 'LANDLORD'"
-                                       v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
+                                    <i v-if="user.role.roleName == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.landlordModel.unBanDate != null, disable : !user.landlordModel.banAvailable}"
                                        @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, $event)"
                                        class="fas fa-lock" data-toggle="tooltip" data-html="true"
-                                       v-bind:title="user.banAvailable ? 'Khóa tài khoản' : ''">
-                                        {{user.unBanDate}}
+                                       v-bind:title="user.landlordModel.banAvailable ? 'Khóa tài khoản' : ''">
+                                        {{user.landlordModel.unBanDate}}
                                     </i>
-                                    <i v-if="user.role == 'LANDLORD'"
-                                       v-bind:class="{invisible: user.unBanDate == null}"
+                                    <i v-if="user.role.roleName == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.landlordModel.unBanDate == null}"
                                        @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, $event)"
                                        :aria-disabled="true"
                                        class="fas fa-unlock" data-toggle="tooltip" data-html="true"
@@ -226,17 +226,20 @@
                             <tbody>
                             <tr v-for="report in listReport">
                                 <th scope="row">{{listReport.indexOf(report) + 1}}</th>
-                                <td><a v-bind:href="'/post-detail?id=' + report.id">{{report.postTitle}}</a></td>
+                                <td><a v-bind:href="'/post-detail?id=' + report.postId">{{report.postTitle}}</a></td>
                                 <td>{{report.landlordName}}</td>
                                 <td>{{report.reportDate}}</td>
                                 <td>{{report.renterId}}</td>
                                 <td>{{report.content}}</td>
                                 <td>{{report.displayStatus}}</td>
                                 <td>
-                                    <i class="fas fa-eye" @click="showModalReportDetail(report.id)"
+                                    <i class="fas fa-eye" data-toggle="tooltip" data-html="true"
+                                       title="Chi tiết báo cáo" @click="showModalReportDetail(report.id)"
                                        id="myIcon_viewReport"></i>
                                     <i @click="showModalConfirmDelete(report.id, 'report')"
-                                       class="fas fa-trash-alt"> </i>
+                                       class="fas fa-trash-alt"data-toggle="tooltip"
+                                       data-html="true"
+                                       title="Xóa báo cáo"> </i>
                                 </td>
                             </tr>
                             </tbody>
@@ -283,14 +286,13 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Loại phòng:</span>
+                                        <span>Loại phòng</span>
                                     </div>
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postType">
                                                 <option value="0">Tất cả</option>
-                                                <option value="1">Phòng trọ</option>
-                                                <option value="2">Căn hộ</option>
+                                                <option v-for="type in listTypePost" v-bind:value="type.id" v-text="type.name"></option>
                                             </select>
                                         </form>
                                     </div>
@@ -299,22 +301,13 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Giá:</span>
+                                        <span>Giá</span>
                                     </div>
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postPrice">
                                                 <option value="0">Tất cả</option>
-                                                <option value="1">Dưới 1 triệu</option>
-                                                <option value="3">1 triệu - 1.5 triệu</option>
-                                                <option value="4"> 1.5 triệu - 2 triệu</option>
-                                                <option value="5">2 triệu - 2.5 triệu</option>
-                                                <option value="6">2.5 triệu - 3 triệu</option>
-                                                <option value="7">3 triệu - 3.5 triệu</option>
-                                                <option value="8">3.5 triệu - 4 triệu</option>
-                                                <option value="9">4 triệu - 4.5 triệu</option>
-                                                <option value="10">4.5 triệu - 5 triệu</option>
-                                                <option value="11">Trên 5 triệu</option>
+                                                <option v-for="filterPrice in listFilterPrice" v-bind:value="filterPrice.id" v-text="filterPrice.displayText"></option>
                                             </select>
                                         </form>
                                     </div>
@@ -323,22 +316,13 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Diện tích:</span>
+                                        <span>Diện tích</span>
                                     </div>
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postSquare">
                                                 <option value="0">Tất cả</option>
-                                                <option value="1">Dưới 20m&sup2</option>
-                                                <option value="2">20m&sup2 - 30m&sup2</option>
-                                                <option value="4">30m&sup2 - 40m&sup2</option>
-                                                <option value="5">40m&sup2 - 50m&sup2</option>
-                                                <option value="6">50m&sup2 - 60m&sup2</option>
-                                                <option value="7">60m&sup2 - 70m&sup2</option>
-                                                <option value="8">70m&sup2 - 80m&sup2</option>
-                                                <option value="9">80m&sup2 - 90m&sup2</option>
-                                                <option value="10">90m&sup2 - 100m&sup2</option>
-                                                <option value="11">Trên 100m&sup2</option>
+                                                <option v-for="filterSquare in listFilterSquare"  v-bind:value="filterSquare.id" v-html="filterSquare.displayText"></option>
                                             </select>
                                         </form>
                                     </div>
@@ -347,18 +331,13 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Khoảng cách:</span>
+                                        <span>Khoảng cách</span>
                                     </div>
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postDistance">
                                                 <option value="0">Tất cả</option>
-                                                <option value="1">Dưới 1 km</option>
-                                                <option value="3">1 km - 2 km</option>
-                                                <option value="4">2 km - 3 km</option>
-                                                <option value="5"> 3 km - 4 km</option>
-                                                <option value="6">4 km - 5 km</option>
-                                                <option value="7">Trên 5 km</option>
+                                                <option v-for="filterDistance in listFilterDistance" v-bind:value="filterDistance.id" v-text="filterDistance.displayText"></option>
                                             </select>
                                         </form>
                                     </div>
@@ -367,14 +346,14 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Trạng thái:</span>
+                                        <span>Trạng thái</span>
                                     </div>
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postStatus">
                                                 <option value="">Tất cả</option>
-                                                <option value="0">Ẩn</option>
-                                                <option value="1">Hiện</option>
+                                                <option value="0">Không hiển thị</option>
+                                                <option value="1">Hiển thị</option>
                                             </select>
                                         </form>
                                     </div>
@@ -383,7 +362,7 @@
                             <li>
                                 <div class="filter-area">
                                     <div class="title-filter-area">
-                                        <span>Tên bài đăng:</span>
+                                        <span>Tên bài đăng</span>
                                     </div>
                                     <div class="search-container">
                                         <input class="search-post" v-model="postTitleOrLandlord" id="searchLandlordTxt"
@@ -444,50 +423,51 @@
                                 </td>
                                 <td><a target="_blank" v-bind:href='"post-detail?id=" + post.id'>{{post.title}}</a>
                                 </td>
-                                <td>{{post.typeName}}</td>
+                                <td>{{post.type.name}}</td>
                                 <td>{{post.price}}</td>
                                 <td>{{post.square}} m&sup2</td>
                                 <td>{{post.distance}} km</td>
-                                <td>{{post.createDate}}</td>
-                                <td>{{post.expireDate}}</td>
+                                <td>{{authenticationInstance.formatDate(post.createDate)}}</td>
+                                <td>{{authenticationInstance.formatDate(post.expireDate)}}</td>
                                 <td>
-                                    <div v-text="post.displayStatus"
-                                         v-bind:class="post.postVisible && !post.banned && !post.expirePost ? 'status-show' : 'status-hide'">
+                                    <div v-text="authenticationInstance.getStatusPost(post.visible, post.banned, post.expireDate)"
+                                         v-bind:class="post.visible && !post.banned && !authenticationInstance.IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'">
                                     </div>
                                 </td>
-                                <td>{{post.landlordName}}</td>
+                                <td>{{post.landlord.username}}</td>
                             </tr>
                             </tbody>
                         </table>
-                        <nav v-if="pagination.totalPages != 1 && listPost.length > 0" aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
-                                    class="page-item">
-                                    <a v-on:click="searchPost(pagination.currentPage-1)"
-                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
-                                       aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                <li v-for="page in pagination.totalPages"
-                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
-                                    v-on:click="searchPost(page-1)">
-                                    <a class="page-link">{{page}}</a>
-                                </li>
-                                <li v-bind:class="{disabled : !pagination.hasNext}"
-                                    class="page-item">
-                                    <a v-on:click="searchPost(pagination.currentPage+1)"
-                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
-                                       aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+
                         <div v-if="listPost.length <= 0">Không có bài đăng nào.</div>
                     </div>
+                    <nav class="nav-paging" v-if="pagination.totalPages != 1 && listPost.length > 0" aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                class="page-item">
+                                <a v-on:click="searchPost(pagination.currentPage-1)"
+                                   v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li v-for="page in pagination.totalPages"
+                                v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                v-on:click="searchPost(page-1)">
+                                <a class="page-link">{{page}}</a>
+                            </li>
+                            <li v-bind:class="{disabled : !pagination.hasNext}"
+                                class="page-item">
+                                <a v-on:click="searchPost(pagination.currentPage+1)"
+                                   v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
 
                 <!-- Quản lý gói -->
@@ -522,7 +502,7 @@
                                 <td v-text="authenticationInstance.formatNumberToDisplay(package.amount) + ' VNĐ'"></td>
                                 <td>
                                     <div v-bind:class="package.available ? 'status-show' : 'status-hide'"
-                                         v-text="package.displayStatus"></div>
+                                         v-text="package.available ? 'Đang sử dụng' : 'Không sử dụng'"></div>
 
                                 </td>
                                 <td>
@@ -544,6 +524,34 @@
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPaymentPackage.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getAllPaymentPackage(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getAllPaymentPackage(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getAllPaymentPackage(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div v-if="listPaymentPackage.length <= 0">Không có gói nào.</div>
                     </div>
                 </div>
@@ -588,6 +596,33 @@
                             </tbody>
                         </table>
                         <div v-if="listUser.length <= 0">Không có chủ trọ nào.</div>
+                        <nav v-if="pagination.totalPages != 1 && listUser.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page === pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchUser(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchUser(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -728,6 +763,9 @@
                             <span @click="closeModalPackage" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalPackageErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Tên gói<span class="require-text">*</span></p>
                                 <input v-model="inputPackageName" class="right-modal rounded-pill border-0 shadow-sm"
@@ -807,6 +845,9 @@
                             <span @click="closeModalAddMoney" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
+                            <div class="d-flex justify-content-center mb-1 visible-hide">
+                                <div id="modalAddMoneyErrorMsg" class="text-danger ">Ô kê</div>
+                            </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Chủ trọ</p>
                                 <input v-bind:value="selectedLandlord.username"
@@ -824,7 +865,8 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Số dư sau khi nạp tiền</p>
-                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount + parseInt(inputAmount))"
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount
+                                        + (isNaN(parseInt(inputAmount)) ? 0 : parseInt(inputAmount)))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                                 <div class="input-group-append input-package-append">
@@ -834,6 +876,7 @@
                             <div class="infor-modal">
                                 <p class="left-modal">Số tiền<span class="require-text">*</span></p>
                                 <input v-model="inputAmount"
+                                       maxlength="7"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text"/>
                                 <div class="input-group-append input-package-append">

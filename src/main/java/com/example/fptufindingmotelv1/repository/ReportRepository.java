@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface ReportRepository extends JpaRepository<ReportModel, String> {
     @Query(value = "select rp from ReportModel rp " +
             "where 1 = 1" +
@@ -23,4 +25,5 @@ public interface ReportRepository extends JpaRepository<ReportModel, String> {
     @Query(value = "delete r from REPORT r " +
             "where r.POST_ID = :postId ", nativeQuery = true)
     void deleteReportsByPost(String postId);
+
 }

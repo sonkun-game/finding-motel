@@ -4,10 +4,6 @@ import com.example.fptufindingmotelv1.dto.LoginRequestDTO;
 import com.example.fptufindingmotelv1.dto.LoginResponseDTO;
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.CustomUserDetails;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
-import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.service.login.JwtTokenProvider;
 import com.example.fptufindingmotelv1.service.login.LoginService;
 import net.minidev.json.JSONObject;
@@ -17,16 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class LoginController {
@@ -43,14 +35,8 @@ public class LoginController {
     @Autowired
     LoginService loginService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RentalRequestRepository rentalRequestRepository;
-
     @GetMapping("/dang-nhap")
-    public String getLogin(Model model){
+    public String getLogin(){
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             return "redirect:/";
         }
@@ -73,50 +59,68 @@ public class LoginController {
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         responseDTO.setAccessToken(token);
         UserDTO userDTO = new UserDTO(userDetails.getUserModel());
-        if(userDetails.getUserModel() instanceof LandlordModel){
-            int countRequest = rentalRequestRepository.getRequestNumber(userDetails.getUsername(), 7L);
-            userDTO.setRequestNumber(countRequest);
-        }
         responseDTO.setUserDTO(userDTO);
         return responseDTO;
     }
 
-    @ResponseBody
-    @PostMapping(value = "/api-logout")
-    public JSONObject logout(HttpServletRequest request, HttpServletResponse response){
-        JSONObject jsonObject = new JSONObject();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            jsonObject.put("message", "Log out successfully");
-            jsonObject.put("code", "msg001");
-            return jsonObject;
-        }else {
-            jsonObject.put("message", "Authentication is not exist");
-            jsonObject.put("code", "msg002");
-            return jsonObject;
-        }
 
-    }
-
-    @ResponseBody
-    @PostMapping("/api-get-authentication")
-    public LoginResponseDTO getAuthentication(){
-        LoginResponseDTO responseDTO = new LoginResponseDTO();
+    @GetMapping(value = "/facebook-login")
+    public RedirectView facebookLogin(){
+        RedirectView redirectView = new RedirectView();
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            UserModel userModel = userRepository.findByUsername(userDetails.getUsername());
-            UserDTO userDTO = new UserDTO(userModel);
-            if(userModel instanceof LandlordModel){
-                int countRequest = rentalRequestRepository.getRequestNumber(userModel.getUsername(), 7L);
-                userDTO.setRequestNumber(countRequest);
-            }
-            responseDTO.setUserDTO(userDTO);
+            redirectView.setUrl("/");
+            return redirectView;
         }
-        return responseDTO;
+        String url = loginService.facebookLogin();
+        redirectView.setUrl(url);
+        return redirectView;
     }
 
+    @GetMapping(value = "/facebook")
+    public String facebook(@RequestParam("code") String code) throws IOException {
+        return "register-social";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-facebook-login")
+    public JSONObject getFacebookLogin(@RequestParam String code, HttpServletRequest request) throws IOException {
+        String accessToken = loginService.getFacebookToken(code);
+        return loginService.getResponseFbLogin(accessToken, request);
+    }
+    @ResponseBody
+    @PostMapping(value = "/api-get-facebook-profile")
+    public JSONObject getFacebookProfile(@RequestParam String accessToken, HttpServletRequest request) throws IOException {
+        return loginService.getResponseFbLogin(accessToken, request);
+    }
+
+    @GetMapping(value = "/google-login")
+    public RedirectView googleLogin(){
+        RedirectView redirectView = new RedirectView();
+        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
+            redirectView.setUrl("/");
+            return redirectView;
+        }
+        String url = loginService.googleLogin();
+        redirectView.setUrl(url);
+        return redirectView;
+    }
+
+    @GetMapping(value = "/google")
+    public String google(@RequestParam("code") String code) throws IOException {
+        return "register-social";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-google-login")
+    public JSONObject getGoogleLogin(@RequestParam String code, HttpServletRequest request) throws IOException {
+        String accessToken = loginService.getGoogleToken(code);
+        return loginService.getResponseGgLogin(accessToken, request);
+    }
+    @ResponseBody
+    @PostMapping(value = "/api-get-google-profile")
+    public JSONObject getGoogleProfile(@RequestParam String accessToken, HttpServletRequest request) throws IOException {
+        return loginService.getResponseGgLogin(accessToken, request);
+    }
 
 
 }

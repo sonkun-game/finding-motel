@@ -24,19 +24,6 @@ var admin = new Vue({
         //user detail form
         userDetail: [],
         task: 0,
-        //metal data
-        priceValueSheet: [
-            {max: null, min: null},
-            {max: "1000000", min: null},
-        ],
-        distanceValueSheet: [
-            {max: null, min: null},
-            {max: "1", min: null},
-        ],
-        squareValueSheet: [
-            {max: null, min: null},
-            {max: "20", min: null},
-        ],
         inputLandlordId: "",
         inputRenterId: "",
         inputPostTitle: "",
@@ -60,6 +47,11 @@ var admin = new Vue({
         pagination: [],
         //regex
         regexCharacterSpace: /[a-zA-Z]|\s/,
+        //list filter post
+        listTypePost : [],
+        listFilterPrice : [],
+        listFilterSquare : [],
+        listFilterDistance : [],
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -74,6 +66,7 @@ var admin = new Vue({
         } else if (this.task == 10) {
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
+            this.getInitFilterPost();
             this.searchPost();
         } else if (this.task == 11) {
             let profileUser = document.getElementById("user-manager-content")
@@ -321,14 +314,11 @@ var admin = new Vue({
                 currentPage = 0;
             }
             let postRequestDTO = {
-                "typeId": this.isNullSearchParam(this.postType),
                 "title": this.isNullSearchParam(this.postTitleOrLandlord),
-                "priceMax": this.valueSheetData(this.postPrice, this.priceValueSheet).max,
-                "priceMin": this.valueSheetData(this.postPrice, this.priceValueSheet).min,
-                "distanceMax": this.valueSheetData(this.postDistance, this.distanceValueSheet).max,
-                "distanceMin": this.valueSheetData(this.postDistance, this.distanceValueSheet).min,
-                "squareMax": this.valueSheetData(this.postSquare, this.squareValueSheet).max,
-                "squareMin": this.valueSheetData(this.postSquare, this.squareValueSheet).min,
+                "typeId": this.isNullSearchParam(parseInt(this.postType)),
+                "filterPriceId": this.isNullSearchParam(parseInt(this.postPrice)),
+                "filterSquareId": this.isNullSearchParam(parseInt(this.postSquare)),
+                "filterDistanceId": this.isNullSearchParam(parseInt(this.postDistance)),
                 "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
                 "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
             }
@@ -341,7 +331,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
-                        this.listPost = data.data;
+                        this.listPost = data.data.content;
                         this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
@@ -452,7 +442,7 @@ var admin = new Vue({
             this.task = 11
             this.getInitAdmin()
             if (post != null) {
-                this.inputLandlordId = post.landlordName
+                this.inputLandlordId = post.landlord.username
                 this.inputPostTitle = post.title
             } else if (user != null) {
                 this.inputLandlordId = user.username
@@ -465,7 +455,7 @@ var admin = new Vue({
                 "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
                 "statusReport": null,
             }
-            fetch("/search-report", {
+            fetch("/search-report?currentPage=0", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -483,26 +473,11 @@ var admin = new Vue({
                             }
                         }
                         this.listReport = listReport
+                        this.pagination = data.pagination
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
-                }).catch(error => {
-                console.log(error);
-            })
-        },
-        getListPaymentPackage() {
-            fetch("/api-get-list-payment-package", {
-                method: 'POST',
-            }).then(response => response.json())
-                .then((data) => {
-                    if (data != null && data.code == "000") {
-                        this.listPaymentPackage = data.data
-                    } else {
-                        modalMessageInstance.message = data.message;
-                        modalMessageInstance.showModal()
-                    }
-
                 }).catch(error => {
                 console.log(error);
             })
@@ -511,12 +486,12 @@ var admin = new Vue({
             if (currentPage === undefined || !currentPage) {
                 currentPage = 0;
             }
-            fetch("/api-get-all-payment-package?currentPage=" + currentPage, {
+            fetch("/api-get-list-payment-package?currentPage=" + currentPage, {
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
-                        this.listPaymentPackage = data.data
+                        this.listPaymentPackage = data.data.content
                         this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
@@ -756,6 +731,26 @@ var admin = new Vue({
         },
         closeModalBan() {
             document.getElementById("modalBan").style.display = 'none';
-        }
+        },
+        getInitFilterPost(){
+            fetch("/api-get-init-home-page", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if(data != null && data.code == "000"){
+                        this.listTypePost = data.listTypePost
+                        this.listFilterPrice = data.listFilterPrice
+                        this.listFilterSquare = data.listFilterSquare
+                        this.listFilterDistance = data.listFilterDistance
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
     }
 })

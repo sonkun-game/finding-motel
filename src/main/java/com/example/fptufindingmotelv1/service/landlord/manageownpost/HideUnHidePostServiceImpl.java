@@ -13,20 +13,7 @@ import java.util.*;
 public class HideUnHidePostServiceImpl implements HideUnHidePostService {
 
     @Autowired
-    private PaymentPackageRepository paymentPackageRepository;
-
-    @Autowired
     private PostRepository postRepository;
-
-    @Override
-    public List<PaymentPackageModel> getListPaymentPackage(Boolean available) {
-        try {
-            return paymentPackageRepository.getListPaymentPackage(available);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     public PostModel changePostStatus(PostRequestDTO postRequestDTO) {

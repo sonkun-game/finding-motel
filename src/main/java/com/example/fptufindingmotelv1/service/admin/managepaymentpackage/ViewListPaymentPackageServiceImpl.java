@@ -7,6 +7,8 @@ import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.StatusRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +20,9 @@ public class ViewListPaymentPackageServiceImpl implements ViewListPaymentPackage
     PaymentPackageRepository paymentPackageRepository;
 
     @Override
-    public List<PaymentPackageModel> getListPaymentPackage(Boolean available) {
+    public Page<PaymentPackageModel> getListPaymentPackage(Pageable pageable) {
         try {
-            return paymentPackageRepository.getListPaymentPackage(available);
+            return paymentPackageRepository.getAllPaymentPackage(pageable);
         }catch (Exception e){
             e.printStackTrace();
         }

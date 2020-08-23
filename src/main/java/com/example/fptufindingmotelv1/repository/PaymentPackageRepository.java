@@ -22,7 +22,8 @@ public interface PaymentPackageRepository extends JpaRepository<PaymentPackageMo
             "and (:packageId is null or p.id = :packageId)")
     PaymentPackageModel getPackageById(Long packageId);
 
-    @Query(value = "select p from PaymentPackageModel p " +
+    @Query(value = "select new PaymentPackageModel(p.id, p.amount, p.duration, " +
+            "p.packageName, p.available) from PaymentPackageModel p " +
             "order by p.duration")
     Page<PaymentPackageModel> getAllPaymentPackage(Pageable pageable);
 }

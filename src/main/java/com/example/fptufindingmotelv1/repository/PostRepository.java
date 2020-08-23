@@ -15,9 +15,16 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostModel, String> {
-//    List<PostModel> findByVisibleTrueAndBannedFalse(Sort sort);
 
-    @Query(value = "select p from PostModel p " +
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, " +
+            "p.mapLocation, p.createDate, p.expireDate, " +
+            "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber, " +
+            "sum(case when (r.statusReport = 3 or r.statusReport = 5) then 1 else 0 end) )" +
+            " from PostModel p " +
+            "join TypeModel t on p.type.id = t.id " +
+            "join LandlordModel ll on p.landlord.username = ll.username " +
+            "left outer join ReportModel r on p.id = r.postReport.id " +
             "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
             "and (:priceMax is null or p.price <= :priceMax) " +
             "and (:priceMin is null or p.price >= :priceMin) " +
@@ -28,6 +35,9 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
+            "group by p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, p.mapLocation, p.createDate, " +
+            "p.expireDate, t.id, t.name, ll.username, ll.displayName, ll.phoneNumber" +
             "")
     Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,

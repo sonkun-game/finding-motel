@@ -82,7 +82,6 @@ var admin = new Vue({
             profileUser.classList.add("invisible")
             this.inputRole = 2
             this.searchUser()
-            this.getAllRole()
         }
     },
     methods: {

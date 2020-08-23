@@ -591,7 +591,7 @@
                                 <td><a id="myBtn">{{user.username}}</a></td>
                                 <td>{{user.displayName}}</td>
                                 <td>{{user.phoneNumber}}</td>
-                                <td>{{authenticationInstance.formatNumberToDisplay(user.amount)}}</td>
+                                <td>{{authenticationInstance.formatNumberToDisplay(user.landlordModel.amount)}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -677,7 +677,7 @@
                 <!--Modal user detail-->
                 <div id="modalUserDetail" class="modal">
                     <!-- Modal content -->
-                    <div class="view-information">
+                    <div class="view-information" v-if="userDetail != null && userDetail.role != null">
                         <div class="modal-header">
                             <h2>Thông tin người dùng</h2>
                             <span id="closeModalUserDetail" class="close">&times;</span>
@@ -701,52 +701,52 @@
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                            <div v-if="userDetail.role.roleName == 'RENTER'" class="infor-modal">
                                 <p class="left-modal">Ngày sinh:</p>
-                                <input :value="userDetail.dob" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="authenticationInstance.formatDate(userDetail.renterModel.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                            <div v-if="userDetail.role.roleName == 'RENTER'" class="infor-modal">
                                 <p class="left-modal">Nghề nghiệp:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" value="Sinh viên" disabled/>
+                                <input :value="userDetail.renterModel.career" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text" disabled/>
                             </div>
-                            <div v-if="userDetail.role == 'RENTER'" class="infor-modal">
+                            <div v-if="userDetail.role.roleName == 'RENTER'" class="infor-modal">
                                 <p class="left-modal">Giới tính:</p>
-                                <input class="right-modal rounded-pill border-0 shadow-sm"
-                                       type="text" value="Nam" disabled/>
+                                <input :value="userDetail.renterModel.gender ? 'Nam' : 'Nữ'" class="right-modal rounded-pill border-0 shadow-sm"
+                                       type="text"  disabled/>
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Vai trò:</p>
-                                <input :value="userDetail.roleName"
+                                <input :value="userDetail.role.displayName"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal">
+                            <div v-if="userDetail.role.roleName == 'LANDLORD'" class="infor-modal">
                                 <p class="left-modal">Tài khoản:</p>
-                                <input :value="userDetail.amount"
+                                <input :value="userDetail.landlordModel.amount"
                                        class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
-                            <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal-table">
-                                <p class="left-modal">Danh sách bài đăng:</p>
-                                <table class="table">
-                                    <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">STT</th>
-                                        <th scope="col">Tên bài đăng</th>
-                                        <th scope="col">Ngày đăng</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>phòng 1</td>
-                                        <td>20-06-2020</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+<!--                            <div v-if="userDetail.role == 'LANDLORD'" class="infor-modal-table">-->
+<!--                                <p class="left-modal">Danh sách bài đăng:</p>-->
+<!--                                <table class="table">-->
+<!--                                    <thead class="thead-light">-->
+<!--                                    <tr>-->
+<!--                                        <th scope="col">STT</th>-->
+<!--                                        <th scope="col">Tên bài đăng</th>-->
+<!--                                        <th scope="col">Ngày đăng</th>-->
+<!--                                    </tr>-->
+<!--                                    </thead>-->
+<!--                                    <tbody>-->
+<!--                                    <tr>-->
+<!--                                        <td>1</td>-->
+<!--                                        <td>phòng 1</td>-->
+<!--                                        <td>20-06-2020</td>-->
+<!--                                    </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                            </div>-->
                         </div>
                         <div class="modal-footer">
                             <button class="btn-hover btn-default">Xác Nhận</button>
@@ -839,7 +839,7 @@
                 <!--                    modal nạp tiền -->
                 <div id="modalAddMoney" class="modal">
                     <!-- Modal content -->
-                    <div class="view-information">
+                    <div class="view-information" v-if="selectedLandlord != null && selectedLandlord.landlordModel != null">
                         <div class="modal-header">
                             <h2>Nạp tiền</h2>
                             <span @click="closeModalAddMoney" class="close">&times;</span>
@@ -856,7 +856,7 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Số dư hiện tại</p>
-                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount)"
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.landlordModel.amount)"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                                 <div class="input-group-append input-package-append">
@@ -865,7 +865,7 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Số dư sau khi nạp tiền</p>
-                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.amount
+                                <input v-bind:value="authenticationInstance.formatNumberToDisplay(selectedLandlord.landlordModel.amount
                                         + (isNaN(parseInt(inputAmount)) ? 0 : parseInt(inputAmount)))"
                                        class="right-modal input-package-tbx rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>

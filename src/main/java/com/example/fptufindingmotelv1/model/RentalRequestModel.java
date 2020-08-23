@@ -9,10 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "RENTAL_REQUEST")
 public class RentalRequestModel implements Serializable {
@@ -52,4 +49,21 @@ public class RentalRequestModel implements Serializable {
 
     @OneToMany(mappedBy = "rentalRequestNotification")
     private List<NotificationModel> notifications;
+
+    public RentalRequestModel() {
+    }
+
+    public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
+                              String renterUsername, Long statusId, String statusNm) {
+        this.id = id;
+        this.requestDate = requestDate;
+        this.startDate = startDate;
+        this.cancelDate = cancelDate;
+        this.expireMessage = expireMessage;
+        this.rentalRenter = new RenterModel();
+        this.rentalRenter.setUsername(renterUsername);
+        this.rentalStatus = new StatusModel();
+        this.rentalStatus.setId(statusId);
+        this.rentalStatus.setStatus(statusNm);
+    }
 }

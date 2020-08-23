@@ -19,7 +19,7 @@ var authenticationInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data)
-                    if(data != null && data.code === "msg001"){
+                    if(data != null && data.code === "000"){
                         sessionStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
@@ -172,7 +172,7 @@ var authenticationInstance = new Vue({
             })
         }
     },
-    mounted(){
+    created(){
         // if(sessionStorage.getItem("userInfo")){
         //     this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         //     if(this.userInfo.role == "RENTER"){

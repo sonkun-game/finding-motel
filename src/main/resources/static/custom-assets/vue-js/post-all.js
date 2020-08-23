@@ -114,7 +114,7 @@ var filterPostInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "home000"){
+                    if(data != null && data.code == "000"){
                         this.listTypePost = data.listTypePost
                         this.listFilterPrice = data.listFilterPrice
                         this.listFilterSquare = data.listFilterSquare
@@ -180,7 +180,7 @@ var filterPostInstance = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.msgCode == "home000"){
+                    if(data != null && data.code == "000"){
                         postInstance.pageSize = data.pageSize;
                         //  this.pages=data;
                         postInstance.postList = data.page.content;

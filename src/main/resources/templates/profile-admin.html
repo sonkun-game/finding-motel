@@ -105,25 +105,25 @@
                                 <th scope="row">{{listUser.indexOf(user) + 1}}</th>
                                 <td><a id="myBtn">{{user.username}}</a></td>
                                 <td>{{user.displayName}}</td>
-                                <td>{{user.roleName}}</td>
+                                <td>{{user.role.displayName}}</td>
                                 <td>
-                                    <i v-if="user.role == 'LANDLORD'" v-on:click="handleGetReport(null, user)"
+                                    <i v-if="user.role.roleName == 'LANDLORD'" v-on:click="handleGetReport(null, user)"
                                        class="fas fa-eye" data-toggle="tooltip" data-html="true"
                                        title="Xem báo cáo"></i>
-                                    <span v-if="user.role == 'LANDLORD'">{{user.reportNumber}}</span>
+                                    <span v-if="user.role.roleName == 'LANDLORD'">{{user.landlordModel.reportNumber}}</span>
                                 </td>
                                 <td>
                                     <i class="fas fa-eye" @click="showModalUserDetail(user.username)"
                                        id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
-                                    <i v-if="user.role == 'LANDLORD'"
-                                       v-bind:class="{invisible: user.unBanDate != null, disable : !user.banAvailable}"
+                                    <i v-if="user.role.roleName == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.landlordModel.unBanDate != null, disable : !user.landlordModel.banAvailable}"
                                        @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, $event)"
                                        class="fas fa-lock" data-toggle="tooltip" data-html="true"
-                                       v-bind:title="user.banAvailable ? 'Khóa tài khoản' : ''">
-                                        {{user.unBanDate}}
+                                       v-bind:title="user.landlordModel.banAvailable ? 'Khóa tài khoản' : ''">
+                                        {{user.landlordModel.unBanDate}}
                                     </i>
-                                    <i v-if="user.role == 'LANDLORD'"
-                                       v-bind:class="{invisible: user.unBanDate == null}"
+                                    <i v-if="user.role.roleName == 'LANDLORD'"
+                                       v-bind:class="{invisible: user.landlordModel.unBanDate == null}"
                                        @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, $event)"
                                        :aria-disabled="true"
                                        class="fas fa-unlock" data-toggle="tooltip" data-html="true"

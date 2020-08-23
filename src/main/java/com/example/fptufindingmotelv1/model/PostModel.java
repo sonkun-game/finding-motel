@@ -100,6 +100,11 @@ public class PostModel implements Serializable{
         this.expireDate = expireDate;
     }
 
+    public PostModel(String id, Long reportNumber) {
+        this.id = id;
+        this.reportNumber = reportNumber;
+    }
+
     public PostModel(String id, double price, double distance, double square,
                      String description, String title, String address,
                      String imageId) {

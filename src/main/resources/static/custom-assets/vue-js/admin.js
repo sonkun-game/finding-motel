@@ -183,7 +183,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
-                        this.listUser = data.data;
+                        this.listUser = data.data.content;
                         this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;

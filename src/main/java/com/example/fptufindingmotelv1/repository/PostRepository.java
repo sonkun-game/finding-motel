@@ -152,4 +152,12 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     @Query(value = "delete p from POST p " +
             "where p.ID = :postId ", nativeQuery = true)
     void deletePostById(String postId);
+
+    @Query(value = "select sum(pr.reportNumber) from " +
+            "(select sum(case when (r.STATUS_ID = 3 or r.STATUS_ID = 4) then 1 else 0 end) reportNumber " +
+            "from POST p " +
+            "left outer join REPORT r on r.POST_ID = p.ID " +
+            "where p.LANDLORD_ID = :landlordUsername " +
+            "group by p.ID) as pr", nativeQuery = true)
+    Long getReportNumberOfLandlord(String landlordUsername);
 }

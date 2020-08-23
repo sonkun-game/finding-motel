@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.admin.managepost;
 
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
+import com.example.fptufindingmotelv1.model.FilterPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.untils.Constant;
@@ -19,35 +20,51 @@ public class SearchPostServiceImpl implements SearchPostService{
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    FilterPostRepository filterPostRepository;
+
     @Override
     public JSONObject searchPost(PostSearchDTO postSearchDTO, Pageable pageable) {
         try {
-            Page<PostModel> posts = postRepository.searchPost(postSearchDTO.getLandlordUsername(),
-                    postSearchDTO.getTitle(), postSearchDTO.getPriceMax(), postSearchDTO.getPriceMin(),
-                    postSearchDTO.getDistanceMax(), postSearchDTO.getDistanceMin(),
-                    postSearchDTO.getSquareMax(), postSearchDTO.getSquareMin(), postSearchDTO.getVisible(),
-                    postSearchDTO.getTypeId(), null, pageable);
-            ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
-            for (PostModel p : posts.getContent()) {
-                PostResponseDTO pr = new PostResponseDTO(p);
-                boolean banAvailable = pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
-                pr.setBanAvailable(banAvailable);
-                postResponseDTOs.add(pr);
+            Double minPrice = null;
+            Double maxPrice = null;
+            Double minSquare = null;
+            Double maxSquare = null;
+            Double minDistance = null;
+            Double maxDistance = null;
+            if(postSearchDTO.getFilterPriceId() != null){
+                FilterPostModel filterPrice = filterPostRepository.findById(postSearchDTO.getFilterPriceId()).get();
+                minPrice = filterPrice.getMinValue();
+                maxPrice = filterPrice.getMaxValue();
             }
-            JSONObject response = responseMsg("000", "Successs", postResponseDTOs);
+            if(postSearchDTO.getFilterSquareId() != null){
+                FilterPostModel filterSquare = filterPostRepository.findById(postSearchDTO.getFilterSquareId()).get();
+                minSquare = filterSquare.getMinValue();
+                maxSquare = filterSquare.getMaxValue();
+            }
+            if(postSearchDTO.getFilterDistanceId() != null){
+                FilterPostModel filterDistance = filterPostRepository.findById(postSearchDTO.getFilterDistanceId()).get();
+                minDistance = filterDistance.getMinValue();
+                maxDistance = filterDistance.getMaxValue();
+            }
+            Page<PostModel> posts = postRepository.searchPost(postSearchDTO.getLandlordUsername(),
+                    postSearchDTO.getTitle(), maxPrice, minPrice, maxDistance, minDistance,
+                    maxSquare, minSquare, postSearchDTO.getVisible(),
+                    postSearchDTO.getTypeId(), null, pageable);
+//            ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
+//            for (PostModel p : posts.getContent()) {
+//                PostResponseDTO pr = new PostResponseDTO(p);
+//                boolean banAvailable = pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
+//                pr.setBanAvailable(banAvailable);
+//                postResponseDTOs.add(pr);
+//            }
+            JSONObject response = Constant.responseMsg("000", "Successs", posts);
             response.put("pagination", paginationModel(posts));
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            return responseMsg("777", "Lỗi dữ liệu.", null);
+            return Constant.responseMsg("777", "Lỗi dữ liệu.", null);
         }
-    }
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
     }
 
     public JSONObject paginationModel(Page page) {

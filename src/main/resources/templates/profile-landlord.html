@@ -355,7 +355,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="payment in listPayment">
-                                <td v-text="formatDate(payment.payDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(payment.payDate)"></td>
                                 <td v-text="authenticationInstance.formatNumberToDisplay(payment.amount) + ' VNĐ'"></td>
                                 <td v-text="payment.paymentMethod"></td>
                                 <td v-text="payment.momoId"></td>
@@ -394,10 +394,10 @@
                                     <span v-text="post.roomNumber"></span>
                                 </td>
 
-                                <td v-text="formatDate(post.createDate)"></td>
-                                <td v-text="formatDate(post.expireDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(post.createDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(post.expireDate)"></td>
                                 <td>
-                                    <div v-bind:class="post.visible && !post.banned && !IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="getStatusPost(post.visible, post.banned, post.expireDate)"></div>
+                                    <div v-bind:class="post.visible && !post.banned && !authenticationInstance.IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="authenticationInstance.getStatusPost(post.visible, post.banned, post.expireDate)"></div>
                                 </td>
                                 <td>
                                     <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
@@ -432,7 +432,7 @@
                             <tbody>
                             <tr v-for="paymentPost in listPaymentPost">
                                 <td><a v-bind:href="'/post-detail?id=' + paymentPost.postPayment.id" v-text="paymentPost.postPayment.title"></a> </td>
-                                <td v-text="formatDate(paymentPost.payDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(paymentPost.payDate)"></td>
                                 <td v-text="paymentPost.paymentPackage.packageName"></td>
                                 <td v-text="authenticationInstance.formatNumberToDisplay(paymentPost.paymentPackage.amount) + ' VNĐ'"></td>
                                 <td v-text="paymentPost.paymentPackage.duration + ' Tháng'"></td>
@@ -500,8 +500,8 @@
                                                 <td>
                                                     <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
                                                 </td>
-                                                <td v-text="formatDate(request.requestDate)"></td>
-                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
                                                 <td v-text="request.rentalStatus.status"></td>
                                                 <td>
                                                     <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
@@ -589,8 +589,8 @@
                                                 <td>
                                                     <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
                                                 </td>
-                                                <td v-text="formatDate(request.requestDate)"></td>
-                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
                                                 <td v-text="request.rentalStatus.status"></td>
                                                 <td>
                                                     <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
@@ -765,7 +765,7 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Ngày sinh:</p>
-                                <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="authenticationInstance.formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">

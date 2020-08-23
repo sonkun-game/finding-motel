@@ -403,7 +403,7 @@ var landlordInstance = new Vue({
             // this.listRoom = post.listRoom
             this.inputAddress = post.address
             // this.uploadImages = post.listImage
-            this.expireDate = this.formatDate(post.expireDate)
+            this.expireDate = authenticationInstance.formatDate(post.expireDate)
             this.postId = post.id
             this.getListImageByPost(post.id)
             this.getListRoomByPost(post.id)
@@ -627,7 +627,7 @@ var landlordInstance = new Vue({
                             basicInfoInstance.userInfo.amount = data.amount;
                             this.selectedPost.expireDate = data.expireDate
                             sessionStorage.setItem("selectedPost", this.selectedPost)
-                            this.expireDate = this.formatDate(data.expireDate);
+                            this.expireDate = authenticationInstance.formatDate(data.expireDate);
                             this.viewListPost();
                             this.closeModalExtend();
                         }, 2000);
@@ -1107,39 +1107,6 @@ var landlordInstance = new Vue({
                     modalMessageInstance.showModal()
                 }
             })
-        },
-        formatDate(rawDate, onlyDate){
-            if(rawDate != null){
-                let dateFormatString = rawDate.split(".")[0]
-                let date = new Date(dateFormatString)
-                if(onlyDate != null && onlyDate){
-                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-                }
-                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-            }
-        },
-        getStatusPost(postVisible, postBanned, expireDate){
-            let dateFormatString = expireDate.split(".")[0]
-            let date = new Date(dateFormatString)
-            let currentDate = new Date()
-            if(postBanned){
-                return "Bị khóa"
-            }else if(date.getTime() < currentDate.getTime()){
-                return "Hết hạn"
-            }else {
-                return postVisible ? "Hiển thị" : "Không hiển thị"
-            }
-        },
-        IsExpirePost(expireDate){
-            let dateFormatString = expireDate.split(".")[0]
-            let date = new Date(dateFormatString)
-            let currentDate = new Date()
-            if(date.getTime() < currentDate.getTime()){
-                return true
-            }else {
-                return false
-            }
         },
         checkStatusAndSavePayment(){
             let request = {

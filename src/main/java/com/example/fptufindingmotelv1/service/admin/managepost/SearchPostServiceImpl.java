@@ -4,6 +4,7 @@ import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.model.FilterPostModel;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.repository.FilterPostRepository;
 import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;

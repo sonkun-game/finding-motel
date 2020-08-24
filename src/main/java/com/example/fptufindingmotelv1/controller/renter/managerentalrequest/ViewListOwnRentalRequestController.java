@@ -1,7 +1,6 @@
 package com.example.fptufindingmotelv1.controller.renter.managerentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.service.landlord.processrentalrequest.ViewListRentalRequestService;
 import com.example.fptufindingmotelv1.service.renter.managerentalrequest.ViewListOwnRentalRequestService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

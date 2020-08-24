@@ -1,7 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
-import com.example.fptufindingmotelv1.model.ImageModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +40,6 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
             "group by r.id, r.name, p.id, p.title, s.id, s.status " +
             "order by r.name asc ")
-    List<RoomModel> getRooms(String roomId, String postId, Long statusId);
+    Page<RoomModel> getRooms(String roomId, String postId, Long statusId, Pageable pageable);
 
 }

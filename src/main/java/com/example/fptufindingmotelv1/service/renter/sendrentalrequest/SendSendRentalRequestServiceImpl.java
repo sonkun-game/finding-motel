@@ -2,7 +2,10 @@ package com.example.fptufindingmotelv1.service.renter.sendrentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.repository.NotificationRepository;
+import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
+import com.example.fptufindingmotelv1.repository.RoomRepository;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.example.fptufindingmotelv1.controller.landlord.manageownpost;
 
-import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.dto.PostRequestDTO;
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.service.landlord.manageownpost.HideUnHidePostService;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;

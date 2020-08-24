@@ -1,7 +1,6 @@
 package com.example.fptufindingmotelv1.controller.admin.managereport;
 
 import com.example.fptufindingmotelv1.dto.ReportRequestDTO;
-import com.example.fptufindingmotelv1.service.admin.managepost.SearchPostService;
 import com.example.fptufindingmotelv1.service.admin.managereport.SearchReportService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -31,6 +27,12 @@ public class SearchReportController {
         msg.put("message", message);
         msg.put("data", data);
         return msg;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/api-get-init-admin")
+    public JSONObject getInitAdmin() {
+        return searchReportService.getInitAdminManager();
     }
 
     @ResponseBody

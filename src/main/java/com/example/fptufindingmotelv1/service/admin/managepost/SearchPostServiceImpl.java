@@ -3,13 +3,12 @@ package com.example.fptufindingmotelv1.service.admin.managepost;
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.repository.PostRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

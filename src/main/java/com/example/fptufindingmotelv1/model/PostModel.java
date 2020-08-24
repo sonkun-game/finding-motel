@@ -1,7 +1,7 @@
 package com.example.fptufindingmotelv1.model;
 
 
-import lombok.*;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

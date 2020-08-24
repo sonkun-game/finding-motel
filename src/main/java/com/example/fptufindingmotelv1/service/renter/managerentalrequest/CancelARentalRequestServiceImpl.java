@@ -1,8 +1,13 @@
 package com.example.fptufindingmotelv1.service.renter.managerentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.NotificationModel;
+import com.example.fptufindingmotelv1.model.RentalRequestModel;
+import com.example.fptufindingmotelv1.model.StatusModel;
+import com.example.fptufindingmotelv1.repository.NotificationRepository;
+import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
+import com.example.fptufindingmotelv1.repository.RoomRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,19 +1,12 @@
 package com.example.fptufindingmotelv1.service.landlord.manageownpost;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.dto.RoomDTO;
-import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
-import net.minidev.json.JSONObject;
+import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
-import java.sql.Timestamp;
-import java.util.*;
 
 @Service
 public class ViewListOwnPostServiceImpl implements ViewListOwnPostService {
@@ -22,9 +15,9 @@ public class ViewListOwnPostServiceImpl implements ViewListOwnPostService {
     private PostRepository postRepository;
 
     @Override
-    public List<PostModel> getAllPost(PostRequestDTO postRequestDTO) {
+    public Page<PostModel> getAllPost(PostRequestDTO postRequestDTO, Pageable pageable) {
         try {
-            return postRepository.getPostsByLandlord(postRequestDTO.getUsername());
+            return postRepository.getPostsByLandlord(postRequestDTO.getUsername(), pageable);
         }catch (Exception e){
             e.printStackTrace();
         }

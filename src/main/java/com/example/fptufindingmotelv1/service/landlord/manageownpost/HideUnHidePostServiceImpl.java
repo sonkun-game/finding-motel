@@ -1,13 +1,14 @@
 package com.example.fptufindingmotelv1.service.landlord.manageownpost;
 
-import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
-import net.minidev.json.JSONObject;
+import com.example.fptufindingmotelv1.dto.PostRequestDTO;
+import com.example.fptufindingmotelv1.model.PaymentPackageModel;
+import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
+import com.example.fptufindingmotelv1.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class HideUnHidePostServiceImpl implements HideUnHidePostService {

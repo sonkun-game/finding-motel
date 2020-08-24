@@ -8,17 +8,18 @@ import com.example.fptufindingmotelv1.service.landlord.manageownpost.ViewListOwn
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ViewListOwnPostController {
@@ -26,20 +27,23 @@ public class ViewListOwnPostController {
     @Autowired
     ViewListOwnPostService viewListOwnPostService;
 
+    @Autowired
+    Environment env;
+
     @GetMapping(value = {"/dang-tin", "/nap-tien"})
-    public String getFucntionPage(){
+    public String getFucntionPage() {
         Date date = new Date();
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel() instanceof LandlordModel){
-                if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() == null){
+            if (userDetails.getUserModel() instanceof LandlordModel) {
+                if (((LandlordModel) userDetails.getUserModel()).getUnBanDate() == null) {
                     return "profile-landlord";
-                }else if(((LandlordModel) userDetails.getUserModel()).getUnBanDate() != null
-                        && ((LandlordModel) userDetails.getUserModel()).getUnBanDate().after(new Timestamp(date.getTime()))){
+                } else if (((LandlordModel) userDetails.getUserModel()).getUnBanDate() != null
+                        && ((LandlordModel) userDetails.getUserModel()).getUnBanDate().after(new Timestamp(date.getTime()))) {
                     return "redirect:/";
                 }
-            }else {
+            } else {
                 return "redirect:/";
             }
         }
@@ -47,13 +51,13 @@ public class ViewListOwnPostController {
     }
 
     @GetMapping(value = {"/quan-ly-bai-dang"})
-    public String getManagerPage(){
-        if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
-            CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
+    public String getManagerPage() {
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel() instanceof LandlordModel){
+            if (userDetails.getUserModel() instanceof LandlordModel) {
                 return "profile-landlord";
-            }else {
+            } else {
                 return "redirect:/";
             }
         }
@@ -62,10 +66,17 @@ public class ViewListOwnPostController {
 
     @ResponseBody
     @PostMapping("/api-view-list-post")
-    public JSONObject viewListPost(@RequestBody PostRequestDTO postRequestDTO) {
-        List<PostModel> listPost = viewListOwnPostService.getAllPost(postRequestDTO);
-        return listPost != null ?
-                Constant.responseMsg("000", "Success", listPost) :
-                Constant.responseMsg("999", "Lỗi hệ thống!", null);
+    public JSONObject viewListPost(@RequestBody PostRequestDTO postRequestDTO, @RequestParam Optional<Integer> currentPage) {
+        try {
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Page<PostModel> listPostPage = viewListOwnPostService.getAllPost(postRequestDTO, pageable);
+            JSONObject response = Constant.responseMsg("000", "Success", listPostPage.getContent());
+            response.put("pagination", Constant.paginationModel(listPostPage));
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 }

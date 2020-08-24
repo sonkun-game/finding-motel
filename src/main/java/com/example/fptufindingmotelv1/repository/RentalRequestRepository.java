@@ -37,7 +37,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "order by rr.requestDate desc")
     ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId);
 
-    @Query(value = "select count(rr) from RentalRequestModel rr " +
+    @Query(value = "select count(rr.id) from RentalRequestModel rr " +
             "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +
             "and rr.rentalStatus.id = :statusId")
     int getRequestNumber(String landlordUsername, Long statusId);

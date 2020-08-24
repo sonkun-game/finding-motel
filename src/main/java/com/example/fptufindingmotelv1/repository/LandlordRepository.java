@@ -20,4 +20,10 @@ public interface LandlordRepository extends JpaRepository<LandlordModel, String>
             "set ll.amount = :amount " +
             "where ll.username = :landlordUsername ")
     void updateAmountLandlord(Float amount, String landlordUsername);
+
+    @Query(value = "select new LandlordModel(ll.username, r.id, r.roleName, r.displayName, " +
+            "ll.fbAccount, ll.ggAccount, ll.phoneNumber, ll.displayName, ll.password, ll.amount, ll.unBanDate) from LandlordModel ll " +
+            "join RoleModel r on r.id = ll.role.id " +
+            "where ll.username = :username")
+    LandlordModel getLandlordByUsername(String username);
 }

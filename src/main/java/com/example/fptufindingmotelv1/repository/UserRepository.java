@@ -21,4 +21,14 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
             " where (u.username like %:username% or u.displayName like %:username%) " +
             "and (:roleId is null or u.role.id = :roleId)")
     Page<UserModel> searchUser(String username, Long roleId, Pageable pageable);
+
+    @Query(value = "select new UserModel(u.username, r.id, r.roleName, r.displayName, " +
+            "u.fbAccount, u.ggAccount, u.phoneNumber, u.displayName, u.password) from UserModel u " +
+            "join RoleModel r on r.id = u.role.id " +
+            "where (:username is null or u.username = :username)" +
+            "and (:fbAccount is null or u.fbAccount = :fbAccount)" +
+            "and (:ggAccount is null or u.ggAccount = :ggAccount)")
+    UserModel getUserById(String username, String fbAccount, String ggAccount);
+
+
 }

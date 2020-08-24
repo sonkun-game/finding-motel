@@ -39,4 +39,12 @@ public class LandlordModel extends UserModel implements Serializable {
 
     public LandlordModel() {
     }
+
+    public LandlordModel(String username, Long roleId, String roleName, String displayRole, String fbAccount,
+                       String ggAccount, String phoneNumber, String displayName, String password,
+                         float amount, Date unBanDate) {
+        super(username, roleId, roleName, displayRole, fbAccount, ggAccount, phoneNumber, displayName, password);
+        this.amount = amount;
+        this.unBanDate = unBanDate;
+    }
 }

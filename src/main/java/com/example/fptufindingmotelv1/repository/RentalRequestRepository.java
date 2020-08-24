@@ -4,6 +4,8 @@ import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.model.StatusModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,7 +38,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
             "and (:requestId is null or rr.id = :requestId)" +
             "order by rr.requestDate desc")
-    ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId);
+    Page<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId, Pageable pageable);
 
     @Query(value = "select count(rr.id) from RentalRequestModel rr " +
             "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +

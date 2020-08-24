@@ -1,13 +1,14 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.WishListModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 
 public interface WishListRepository extends JpaRepository<WishListModel, String> {
 
@@ -43,5 +44,5 @@ public interface WishListRepository extends JpaRepository<WishListModel, String>
             "wl.wishListPost.square, wl.wishListPost.description, wl.wishListPost.title, wl.wishListPost.address " +
             "order by wl.createdDate desc " +
             "")
-    List<WishListModel> getWishlistOfRenter(String renterId, Boolean isVisible, Boolean banned, Date currentDate);
+    Page<WishListModel> getWishlistOfRenter(String renterId, Boolean isVisible, Boolean banned, Date currentDate, Pageable pageable);
 }

@@ -43,6 +43,7 @@ var landlordInstance = new Vue({
         validateMessage : "",
         showMsg : false,
         showMsgModal : false,
+        pagination: [],
     },
     created(){
         let previousUrl = document.referrer
@@ -153,12 +154,15 @@ var landlordInstance = new Vue({
             }
             modalConfirmInstance.showModal()
         },
-        getHistoryPaymentPost(){
+        getHistoryPaymentPost(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'landlord' : this.userInfo.username
             }
 
-            fetch("/api-get-history-payment-post", {
+            fetch("/api-get-history-payment-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -170,6 +174,7 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         this.listPaymentPost = data.data
+                        this.pagination = data.pagination
                     }else {
                         modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
@@ -325,11 +330,14 @@ var landlordInstance = new Vue({
             }
 
         },
-        viewListPost(){
+        viewListPost(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'username' : this.userInfo.username,
             }
-            fetch("/api-view-list-post", {
+            fetch("/api-view-list-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -341,6 +349,7 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         this.listPost = data.data
+                        this.pagination = data.pagination
                     }
                 }).catch(error => {
                 console.log(error);
@@ -1086,11 +1095,14 @@ var landlordInstance = new Vue({
             this.showModal = false;
             this.$http.get
         },
-        getHistoryPayment(){
+        getHistoryPayment(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'landlord' : this.userInfo.username
             }
-            fetch("/api-get-payment-by-landlord", {
+            fetch("/api-get-payment-by-landlord?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -1101,6 +1113,7 @@ var landlordInstance = new Vue({
             .then((data) => {
                 if (data != null && data.code == "000") {
                     this.listPayment = data.data
+                    this.pagination = data.pagination
                 }else {
                     modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = data.message;

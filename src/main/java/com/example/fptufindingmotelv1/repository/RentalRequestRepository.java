@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
+import com.example.fptufindingmotelv1.model.StatusModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -66,4 +67,8 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
             "order by rq.requestDate desc ")
     List<RentalRequestModel> getRentalRequests(String requestId, String roomId, Long statusId);
+
+    Boolean existsByRentalRenterAndRentalRoomAndRentalStatus(RenterModel renter, RoomModel room, StatusModel status);
+
+    Boolean existsByRentalRenterAndRentalStatus(RenterModel renter, StatusModel status);
 }

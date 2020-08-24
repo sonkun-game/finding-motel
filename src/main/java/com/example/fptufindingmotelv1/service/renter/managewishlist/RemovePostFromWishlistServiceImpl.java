@@ -27,28 +27,17 @@ public class RemovePostFromWishlistServiceImpl implements RemovePostFromWishlist
     WishListRepository wishListRepository;
 
     @Override
-    public List<WishListDTO> removeItem(WishListDTO wishListDTO) {
+    public boolean removeItem(WishListDTO wishListDTO) {
         try {
-            List<WishListDTO> wishListDTOS = new ArrayList<>();
-            RenterModel renterModel = new RenterModel(wishListDTO.getRenterUsername());
             if(wishListDTO.isWishListScreen()){
-                WishListModel wishListModel = wishListRepository.findById(wishListDTO.getId()).get();
-                wishListRepository.delete(wishListModel);
-                Sort sort = Sort.by("createdDate").descending();
-                List<WishListModel> wishListModels = wishListRepository.findAllByWishListRenter(renterModel, sort);
-                for (WishListModel wishlist:
-                        wishListModels) {
-                    wishListDTOS.add(new WishListDTO(wishlist));
-                }
+                wishListRepository.deleteWishListById(wishListDTO.getId());
             }else {
-                PostModel postModel = new PostModel(wishListDTO.getPostId());
-                WishListModel wishListModel = wishListRepository.findByWishListPostAndWishListRenter(postModel, renterModel);
-                wishListRepository.delete(wishListModel);
+                wishListRepository.deleteWishListByPostAndRenter(wishListDTO.getPostId(), wishListDTO.getRenterUsername());
             }
-            return wishListDTOS;
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return null;
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
     }
 }

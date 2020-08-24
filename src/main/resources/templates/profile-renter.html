@@ -83,7 +83,7 @@
                             <h1 class="title-name uppercase">Danh sách yêu thích</h1>
                         </div>
                         <div class="information-detail">
-                            <div class="post-wishlist" v-for="itemWishList in wishList" :key="wishList.id" v-bind:id="itemWishList.id">
+                            <div class="post-wishlist" v-for="itemWishList in wishList" v-bind:id="itemWishList.id">
                                 <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
                                     <div class="img-post-wishlist">
                                         <img v-bind:src="itemWishList.post.images[0]" alt=""/>

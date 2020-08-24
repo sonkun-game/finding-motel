@@ -447,7 +447,10 @@ var landlordInstance = new Vue({
             }
             this.getListRoom(request)
         },
-        getListRoom(request){
+        getListRoom(request, currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let options = {
                 method: 'POST',
                 headers:{
@@ -455,12 +458,13 @@ var landlordInstance = new Vue({
                 },
                 body: JSON.stringify(request)
             }
-            fetch("/api-get-rooms", options)
+            fetch("/api-get-rooms?currentPage=" + currentPage, options)
                 .then(response => response.json())
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.code == '000'){
                         this.listRoomRequest = data.data
+                        this.pagination = data.pagination
                         if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
                             this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.requestId)

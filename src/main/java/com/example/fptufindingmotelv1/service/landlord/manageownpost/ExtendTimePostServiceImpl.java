@@ -1,9 +1,10 @@
 package com.example.fptufindingmotelv1.service.landlord.manageownpost;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.dto.RoomDTO;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.PaymentPackageModel;
+import com.example.fptufindingmotelv1.model.PaymentPostModel;
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
@@ -11,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class ExtendTimePostServiceImpl implements ExtendTimePostService {

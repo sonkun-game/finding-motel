@@ -82,7 +82,6 @@ var admin = new Vue({
             profileUser.classList.add("invisible")
             this.inputRole = 2
             this.searchUser()
-            this.getAllRole()
         }
     },
     methods: {
@@ -183,7 +182,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
-                        this.listUser = data.data;
+                        this.listUser = data.data.content;
                         this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
@@ -395,7 +394,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
-                        this.listReport = data.data;
+                        this.listReport = data.data.content;
                         this.pagination = data.pagination;
                     } else {
                         modalMessageInstance.message = data.message;
@@ -465,10 +464,10 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         let listReport = []
-                        for (let report of data.data) {
-                            if (post != null && (report.statusId == 3 || report.statusId == 5)) {
+                        for (let report of data.data.content) {
+                            if (post != null && (report.statusReport.id == 3 || report.statusReport.id == 5)) {
                                 listReport.push(report)
-                            } else if (user != null && (report.statusId == 3 || report.statusId == 4)) {
+                            } else if (user != null && (report.statusReport.id == 3 || report.statusReport.id == 4)) {
                                 listReport.push(report)
                             }
                         }

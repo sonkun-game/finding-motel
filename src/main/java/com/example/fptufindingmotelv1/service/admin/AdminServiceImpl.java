@@ -1,22 +1,14 @@
 package com.example.fptufindingmotelv1.service.admin;
 
-import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.repository.*;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
 
 @Service
 public class AdminServiceImpl implements AdminService {

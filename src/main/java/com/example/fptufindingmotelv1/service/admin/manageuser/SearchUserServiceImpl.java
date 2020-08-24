@@ -2,7 +2,8 @@ package com.example.fptufindingmotelv1.service.admin.manageuser;
 
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.model.UserModel;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class SearchUserServiceImpl implements SearchUserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PostRepository postRepository;
 
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
@@ -42,19 +46,18 @@ public class SearchUserServiceImpl implements SearchUserService {
     public JSONObject searchUsers(UserDTO userDTO, Pageable pageable) {
         try {
             List<UserDTO> users = new ArrayList<>();
+            Long reportNumber = 0L;
             Page<UserModel> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
             for (UserModel u : userModels.getContent()) {
-                UserDTO user = new UserDTO(u);
                 //add report number and ban available
-                if (u.getRole().getId() == 2) {
-                    boolean banAvailable = user.getUnBanDate() == null
-                            && user.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_USER;
-                    user.setBanAvailable(banAvailable);
+                if(u.getRole().getId() == 2){
+                    reportNumber = postRepository.getReportNumberOfLandlord(u.getUsername());
+                    u.getLandlordModel().setReportNumber(reportNumber != null ? reportNumber : 0);
+                    u.getLandlordModel().setBanAvailable(reportNumber != null ? reportNumber > Constant.NUMBER_OF_BAN_DATE_USER : false);
                 }
-                users.add(user);
             }
             JSONObject pagination = paginationModel(userModels);
-            JSONObject resposnse = responseMsg("000", "Success", users);
+            JSONObject resposnse = responseMsg("000", "Success", userModels);
             resposnse.put("pagination", pagination);
             return resposnse;
         } catch (Exception e) {

@@ -1,8 +1,6 @@
 package com.example.fptufindingmotelv1.controller.common;
 
 import com.example.fptufindingmotelv1.dto.PostDTO;
-import com.example.fptufindingmotelv1.dto.PostRequestDTO;
-import com.example.fptufindingmotelv1.dto.PostResponseDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.websocket.server.PathParam;

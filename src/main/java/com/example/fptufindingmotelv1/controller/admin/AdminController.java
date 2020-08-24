@@ -1,27 +1,29 @@
 package com.example.fptufindingmotelv1.controller.admin;
 
-import com.example.fptufindingmotelv1.dto.*;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.RenterModel;
+import com.example.fptufindingmotelv1.model.RoleModel;
 import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.manageownpost.HideUnHidePostService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class AdminController {
@@ -51,8 +53,8 @@ public class AdminController {
         if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
             CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if (!(userDetails.getUserModel() instanceof LandlordModel)
-                    && !(userDetails.getUserModel() instanceof RenterModel)) {
+            if (!(userDetails.getUserModel().getRole().getId() == Constant.LANDLORD_ID)
+                    && !(userDetails.getUserModel().getRole().getId() == Constant.RENTER_ID)) {
                 return "profile-admin";
             } else {
                 return "redirect:/";

@@ -13,42 +13,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-
 @Service
 public class RegisterServiceImpl implements RegisterService {
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private RenterRepository renterRepository;
     @Autowired
     private LandlordRepository landlordRepository;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
 
 
     @Override
     public UserModel register(UserDTO userDTO) {
-        RoleModel roleModel = roleRepository.getOne(Long.parseLong(userDTO.getRole().trim()));
-        UserModel userModel;
-        if (roleModel != null && roleModel.getId() != null) {
-            if (roleModel.getId() == 1) {
-                userModel = passParamToUser(userDTO, roleModel);
+        try {
+            RoleModel roleModel = new RoleModel(Long.parseLong(userDTO.getRole().trim()));
+            UserModel userModel;
+            if (roleModel != null && roleModel.getId() != null) {
+                if (roleModel.getId() == 1) {
+                    userModel = passParamToUser(userDTO, roleModel);
 
-                renterRepository.save((RenterModel) userModel);
-                return userModel;
+                    renterRepository.save((RenterModel) userModel);
+                    return userModel;
 
-            } else if (roleModel.getId() == 2) {
-                userModel = passParamToUser(userDTO, roleModel);
+                } else if (roleModel.getId() == 2) {
+                    userModel = passParamToUser(userDTO, roleModel);
 
-                if (userModel instanceof LandlordModel) {
-                    ((LandlordModel) userModel).setAmount(0);
+                    if (userModel instanceof LandlordModel) {
+                        ((LandlordModel) userModel).setAmount(0);
+                    }
+                    landlordRepository.save((LandlordModel) userModel);
+                    return userModel;
                 }
-                landlordRepository.save((LandlordModel) userModel);
-                return userModel;
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

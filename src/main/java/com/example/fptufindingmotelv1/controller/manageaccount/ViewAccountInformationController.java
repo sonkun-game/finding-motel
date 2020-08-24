@@ -6,6 +6,7 @@ import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.service.manageaccount.ViewAccountInformationService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +26,9 @@ public class ViewAccountInformationController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel().getRole().getId() == 2){
+            if(userDetails.getUserModel().getRole().getId() == Constant.LANDLORD_ID){
                 return "profile-landlord";
-            }else if(userDetails.getUserModel().getRole().getId() == 1){
+            }else if(userDetails.getUserModel().getRole().getId() == Constant.RENTER_ID){
                 return "profile-renter";
             }else {
                 return "profile-admin";

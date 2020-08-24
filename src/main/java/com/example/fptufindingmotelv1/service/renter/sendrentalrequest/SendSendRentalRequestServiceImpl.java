@@ -2,7 +2,10 @@ package com.example.fptufindingmotelv1.service.renter.sendrentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.repository.NotificationRepository;
+import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
+import com.example.fptufindingmotelv1.repository.RoomRepository;
+import com.example.fptufindingmotelv1.repository.UserRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,25 +32,16 @@ public class SendSendRentalRequestServiceImpl implements SendRentalRequestServic
 
     public String checkExitRentalRequest(RentalRequestDTO rentalRequestDTO) {
         try {
-            RenterModel renterModel = (RenterModel) userRepository.findByUsername(rentalRequestDTO.getRenterUsername());
-            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-            List<RentalRequestModel> rentalRequestModels = rentalRequestRepository
-                    .findByRentalRenterAndRentalRoom(renterModel, roomModel);
-            for (RentalRequestModel request:
-                 rentalRequestModels) {
-                if(request != null &&
-                        request.getRentalStatus().getId() == 9){
-                    return "Bạn đã thuê phòng này!";
-                }
-                else if(request != null &&
-                        request.getRentalStatus().getId() == 7){
-                    return "Bạn đã yêu cầu thuê phòng này!";
-                }
-            }
-            List<RentalRequestModel> requestModels =
-                    rentalRequestRepository.getListRequest(null, 9L, renterModel.getUsername(), null);
-            if(requestModels != null && requestModels.size() > 0){
+            RenterModel renterModel = new RenterModel(rentalRequestDTO.getRenterUsername());
+            RoomModel roomModel = new RoomModel(rentalRequestDTO.getRoomId());
+            StatusModel statusAccept = new StatusModel(9L);
+            StatusModel statusProcess = new StatusModel(7L);
+            if(rentalRequestRepository.existsByRentalRenterAndRentalRoomAndRentalStatus(renterModel, roomModel, statusAccept)){
+                return "Bạn đã thuê phòng này!";
+            }else if(rentalRequestRepository.existsByRentalRenterAndRentalStatus(renterModel, statusAccept)){
                 return "Bạn không thể thực hiện yêu cầu thuê phòng vì đã thuê một phòng khác!";
+            }else if(rentalRequestRepository.existsByRentalRenterAndRentalRoomAndRentalStatus(renterModel, roomModel, statusProcess)){
+                return "Bạn đã yêu cầu thuê phòng này!";
             }
             return "000";
 
@@ -67,7 +59,7 @@ public class SendSendRentalRequestServiceImpl implements SendRentalRequestServic
                 return Constant.responseMsg("111", message, null);
             }else if(message != null && message.equals("000")){
                 RentalRequestModel rentalRequestModel = new RentalRequestModel();
-                RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
+                RoomModel roomModel = roomRepository.getRoomById(rentalRequestDTO.getRoomId());
                 RenterModel renterModel = new RenterModel(rentalRequestDTO.getRenterUsername());
                 StatusModel statusModel = new StatusModel(rentalRequestDTO.getStatusId());
                 rentalRequestModel.setId(rentalRequestDTO.getId());
@@ -90,7 +82,7 @@ public class SendSendRentalRequestServiceImpl implements SendRentalRequestServic
                 String notificationContent = "Tài khoản <b>" + rentalRequestModel.getRentalRenter().getUsername() +
                         "</b> đã gửi một yêu cầu thuê trọ vào <b>" + rentalRequestModel.getRentalRoom().getName() +
                         "</b> - <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getTitle() + "</b>";
-                sendNotification(rentalRequestModel, notificationContent);
+                sendNotification(rentalRequestModel, notificationContent, rentalRequestDTO.getLandlordUsername());
                 return Constant.responseMsg("000", "Cập nhật thành công!", null);
             }
             return Constant.responseMsg("999", "Cập nhật không thành công!", null);
@@ -100,11 +92,11 @@ public class SendSendRentalRequestServiceImpl implements SendRentalRequestServic
         }
     }
 
-    private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
+    private NotificationModel sendNotification(RentalRequestModel requestModel, String content, String landlordUsername){
         try {
             // send notification to Landlord
             NotificationModel notificationModel = new NotificationModel();
-            LandlordModel landlordModel = requestModel.getRentalRoom().getPostRoom().getLandlord();
+            LandlordModel landlordModel = new LandlordModel(landlordUsername);
 
             StatusModel statusNotification = new StatusModel(12L);
 

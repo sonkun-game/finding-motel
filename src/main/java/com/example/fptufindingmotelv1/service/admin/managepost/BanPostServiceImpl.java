@@ -1,7 +1,9 @@
 package com.example.fptufindingmotelv1.service.admin.managepost;
 
 import com.example.fptufindingmotelv1.model.*;
-import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.repository.NotificationRepository;
+import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

@@ -3,7 +3,6 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.PostModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +19,7 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "p.description, p.title, p.address, p.visible, p.banned, " +
             "p.mapLocation, p.createDate, p.expireDate, " +
             "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber, " +
-            "sum(case when (r.statusReport = 3 or r.statusReport = 5) then 1 else 0 end) )" +
+            "sum(case when (r.statusReport.id = 3 or r.statusReport.id = 5) then 1 else 0 end) )" +
             " from PostModel p " +
             "join TypeModel t on p.type.id = t.id " +
             "join LandlordModel ll on p.landlord.username = ll.username " +
@@ -83,7 +82,7 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "join LandlordModel ll on p.landlord.username = ll.username " +
             "where (:landlordId is null or ll.username = :landlordId)" +
             "")
-    List<PostModel> getPostsByLandlord(String landlordId);
+    Page<PostModel> getPostsByLandlord(String landlordId, Pageable pageable);
 
 
     @Query(value = "select top 5 * from POST p " +
@@ -152,4 +151,12 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     @Query(value = "delete p from POST p " +
             "where p.ID = :postId ", nativeQuery = true)
     void deletePostById(String postId);
+
+    @Query(value = "select sum(pr.reportNumber) from " +
+            "(select sum(case when (r.STATUS_ID = 3 or r.STATUS_ID = 4) then 1 else 0 end) reportNumber " +
+            "from POST p " +
+            "left outer join REPORT r on r.POST_ID = p.ID " +
+            "where p.LANDLORD_ID = :landlordUsername " +
+            "group by p.ID) as pr", nativeQuery = true)
+    Long getReportNumberOfLandlord(String landlordUsername);
 }

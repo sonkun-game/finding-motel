@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.model;
 
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.*;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -98,6 +99,11 @@ public class PostModel implements Serializable{
     public PostModel(String id, Date expireDate) {
         this.id = id;
         this.expireDate = expireDate;
+    }
+
+    public PostModel(String id, Long reportNumber) {
+        this.id = id;
+        this.reportNumber = reportNumber;
     }
 
     public PostModel(String id, double price, double distance, double square,

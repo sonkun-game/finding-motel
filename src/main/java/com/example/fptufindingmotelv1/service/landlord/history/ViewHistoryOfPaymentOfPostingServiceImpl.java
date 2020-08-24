@@ -4,6 +4,8 @@ import com.example.fptufindingmotelv1.dto.PaymentDTO;
 import com.example.fptufindingmotelv1.model.PaymentPostModel;
 import com.example.fptufindingmotelv1.repository.PaymentPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +18,10 @@ public class ViewHistoryOfPaymentOfPostingServiceImpl implements ViewHistoryOfPa
     PaymentPostRepository paymentPostRepository;
 
     @Override
-    public List<PaymentPostModel> getListPaymentPostOfLandlord(PaymentDTO paymentDTO) {
+    public Page<PaymentPostModel> getListPaymentPostOfLandlord(PaymentDTO paymentDTO, Pageable pageable) {
         try {
-            List<PaymentPostModel> paymentPostModels =
-                    paymentPostRepository.getPaymentPostByLandlord(paymentDTO.getLandlord());
+            Page<PaymentPostModel> paymentPostModels =
+                    paymentPostRepository.getPaymentPostByLandlord(paymentDTO.getLandlord(), pageable);
             return paymentPostModels;
         }catch (Exception e){
             e.printStackTrace();

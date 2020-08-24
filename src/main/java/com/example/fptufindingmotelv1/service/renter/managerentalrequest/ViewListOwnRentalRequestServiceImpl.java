@@ -6,6 +6,8 @@ import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class ViewListOwnRentalRequestServiceImpl implements ViewListOwnRentalReq
     RentalRequestRepository rentalRequestRepository;
 
     @Override
-    public JSONObject searchRentalRequest(RentalRequestDTO rentalRequestDTO) {
+    public JSONObject searchRentalRequest(RentalRequestDTO rentalRequestDTO, Pageable pageable) {
         try {
             Date date = new Date();
             Calendar c = Calendar.getInstance();
@@ -27,17 +29,18 @@ public class ViewListOwnRentalRequestServiceImpl implements ViewListOwnRentalReq
             c.add(Calendar.DAY_OF_MONTH, -30);
             Date cancelDateExpire = c.getTime();
             rentalRequestRepository.removeRentalRequest(cancelDateExpire, 8L, rentalRequestDTO.getRenterUsername());
-            ArrayList<RentalRequestModel> renterModels = rentalRequestRepository.searchRentalRequest(
+            Page<RentalRequestModel> renterModels = rentalRequestRepository.searchRentalRequest(
                     rentalRequestDTO.getId(), rentalRequestDTO.getRenterUsername(), rentalRequestDTO.getRoomId()
-                    ,rentalRequestDTO.getStatusId(), rentalRequestDTO.getId());
+                    ,rentalRequestDTO.getStatusId(), rentalRequestDTO.getId(), pageable);
 
             ArrayList<RentalRequestDTO> requestDTOS = new ArrayList<>();
-            for (RentalRequestModel requestModel : renterModels) {
+            for (RentalRequestModel requestModel : renterModels.getContent()) {
                 RentalRequestDTO requestDTO = new RentalRequestDTO(requestModel);
                 requestDTOS.add(requestDTO);
             }
-            return renterModels.size() > 0 ? Constant.responseMsg("000", "OK", requestDTOS   )
-                                            : Constant.responseMsg("111", "No Data!", null);
+            JSONObject response = Constant.responseMsg("000", "Success", requestDTOS);
+            response.put("pagination", Constant.paginationModel(renterModels));
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
             return Constant.responseMsg("999", "System Error!", null);

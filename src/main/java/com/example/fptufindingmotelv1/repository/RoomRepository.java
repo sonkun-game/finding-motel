@@ -42,4 +42,9 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "order by r.name asc ")
     Page<RoomModel> getRooms(String roomId, String postId, Long statusId, Pageable pageable);
 
+    @Query(value = "select new RoomModel(r.id, r.name, p.id, p.title) from RoomModel r " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "where (:roomId is null or r.id = :roomId)")
+    RoomModel getRoomById(String roomId);
+
 }

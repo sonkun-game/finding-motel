@@ -39,7 +39,7 @@ public class ViewHistoryOfPaymentOfPostingController {
             if(paymentDTO.getLandlord() == null && paymentDTO.getLandlord().isEmpty()){
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 if (auth instanceof UsernamePasswordAuthenticationToken
-                        && ((CustomUserDetails)auth.getPrincipal()).getUserModel() instanceof LandlordModel) {
+                        && ((CustomUserDetails)auth.getPrincipal()).getUserModel().getRole().getId() == Constant.LANDLORD_ID) {
                     paymentDTO.setLandlord(((CustomUserDetails) auth.getPrincipal()).getUsername());
                 }else {
                     return Constant.responseMsg("403", "Access denied", null);

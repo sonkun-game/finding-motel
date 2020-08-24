@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface HideUnHidePostService {
 
-    List<PaymentPackageModel> getListPaymentPackage(Boolean available);
-
     PostModel changePostStatus(PostRequestDTO postRequestDTO);
 }

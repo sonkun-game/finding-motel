@@ -14,6 +14,8 @@ public class Constant {
     public static final String DATE_FORMAT_ONLY_DATE = "dd/MM/yyyy";
     public static final Integer EXPIRE_MIN = 1;
     public static final Integer OTP_LENGTH = 6;
+    public static final Long RENTER_ID = 1L;
+    public static final Long LANDLORD_ID = 2L;
 
     public static JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();

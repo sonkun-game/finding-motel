@@ -27,9 +27,6 @@ public class ViewListPaymentPackageController {
     @Autowired
     Environment env;
 
-    @Autowired
-    PaymentPackageRepository paymentPackageRepository;
-
     public JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();
         msg.put("code", code);
@@ -50,38 +47,17 @@ public class ViewListPaymentPackageController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api-get-all-payment-package")
-    public JSONObject getAllPaymentPacket(@RequestParam Optional<Integer> currentPage) {
+    @RequestMapping(value = "/api-get-list-payment-package")
+    public JSONObject getListPaymentPackage(@RequestParam Optional<Integer> currentPage) {
         try {
             Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
             Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
-            Page<PaymentPackageModel> allPaymentPackage = paymentPackageRepository.getAllPaymentPackage(pageable);
-            List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
-            for (PaymentPackageModel paymentPackage :
-                    allPaymentPackage.getContent()) {
-                paymentPackageDTOS.add(new PaymentPackageDTO(paymentPackage));
-            }
-            JSONObject response = responseMsg("000", "Success!", paymentPackageDTOS);
-            response.put("pagination", paginationModel(allPaymentPackage));
-            return response;
-        } catch (Exception e) {
-            return responseMsg("999", "Lỗi hệ thống!", null);
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/api-get-list-payment-package")
-    public JSONObject getListPaymentPackage() {
-        try {
-            List<PaymentPackageModel> paymentPackageModels = viewListPaymentPackageService.getListPaymentPackage(null);
-            List<PaymentPackageDTO> response = new ArrayList<>();
-            for (PaymentPackageModel paymentPackage :
-                    paymentPackageModels) {
-                response.add(new PaymentPackageDTO(paymentPackage));
-            }
-            return paymentPackageModels != null
-                    ? responseMsg("000", "Success!", response)
+            Page<PaymentPackageModel> paymentPackageModels = viewListPaymentPackageService.getListPaymentPackage(pageable);
+            JSONObject response = paymentPackageModels != null
+                    ? responseMsg("000", "Success!", paymentPackageModels)
                     : responseMsg("999", "Lỗi hệ thống", null);
+            response.put("pagination", paginationModel(paymentPackageModels));
+            return response;
         } catch (Exception e) {
             return responseMsg("999", "Lỗi hệ thống!", null);
         }

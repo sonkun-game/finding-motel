@@ -3,6 +3,8 @@ package com.example.fptufindingmotelv1.service.admin.managepaymentpackage;
 import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +15,9 @@ public class ViewListPaymentPackageServiceImpl implements ViewListPaymentPackage
     PaymentPackageRepository paymentPackageRepository;
 
     @Override
-    public List<PaymentPackageModel> getListPaymentPackage(Boolean available) {
+    public Page<PaymentPackageModel> getListPaymentPackage(Pageable pageable) {
         try {
-            return paymentPackageRepository.getListPaymentPackage(available);
+            return paymentPackageRepository.getAllPaymentPackage(pageable);
         }catch (Exception e){
             e.printStackTrace();
         }

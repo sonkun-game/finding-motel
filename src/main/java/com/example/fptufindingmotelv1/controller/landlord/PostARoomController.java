@@ -28,12 +28,7 @@ public class PostARoomController {
         JSONObject response = new JSONObject();
         List<PaymentPackageModel> paymentPackages = postARoomService.getListPaymentPackage(true);
         if(paymentPackages != null){
-            List<PaymentPackageDTO> paymentPackageDTOS = new ArrayList<>();
-            for (PaymentPackageModel paymentPackage:
-                    paymentPackages) {
-                paymentPackageDTOS.add(new PaymentPackageDTO(paymentPackage));
-            }
-            response.put("listPaymentPackage", paymentPackageDTOS);
+            response.put("listPaymentPackage", paymentPackages);
         }
         List<TypeModel> typePosts = postARoomService.getListTypePost();
         if(typePosts != null){

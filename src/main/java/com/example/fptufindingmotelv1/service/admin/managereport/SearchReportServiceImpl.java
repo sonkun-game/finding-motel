@@ -71,12 +71,12 @@ public class SearchReportServiceImpl implements SearchReportService {
             Page<ReportModel> reportModels = reportRepository.searchReport(reportRequestDTO.getLandlordId(),
                     reportRequestDTO.getRenterId(), reportRequestDTO.getPostTitle(),
                     reportRequestDTO.getStatusReport(), pageable);
-            ArrayList<ReportResponseDTO> reportResponseDTOS = new ArrayList<>();
-            for (ReportModel report : reportModels.getContent()) {
-                ReportResponseDTO responseDTO = new ReportResponseDTO(report);
-                reportResponseDTOS.add(responseDTO);
-            }
-            JSONObject response = responseMsg("000", "Success", reportResponseDTOS);
+//            ArrayList<ReportResponseDTO> reportResponseDTOS = new ArrayList<>();
+//            for (ReportModel report : reportModels.getContent()) {
+//                ReportResponseDTO responseDTO = new ReportResponseDTO(report);
+//                reportResponseDTOS.add(responseDTO);
+//            }
+            JSONObject response = responseMsg("000", "Success", reportModels);
             response.put("pagination", paginationModel(reportModels));
             return response;
         } catch (Exception e) {

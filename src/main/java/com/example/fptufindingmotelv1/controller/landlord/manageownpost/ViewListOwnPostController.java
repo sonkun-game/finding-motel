@@ -41,7 +41,7 @@ public class ViewListOwnPostController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel().getRole().getId() == 2){
+            if(userDetails.getUserModel().getRole().getId() == Constant.LANDLORD_ID){
                 UserModel userModel = landlordRepository.getLandlordByUsername(userDetails.getUsername());
                 if(((LandlordModel) userModel).getUnBanDate() == null){
                     return "profile-landlord";
@@ -61,7 +61,7 @@ public class ViewListOwnPostController {
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if(userDetails.getUserModel().getRole().getId() == 2){
+            if(userDetails.getUserModel().getRole().getId() == Constant.LANDLORD_ID){
                 return "profile-landlord";
             }else {
                 return "redirect:/";

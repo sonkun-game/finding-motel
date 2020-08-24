@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin.managepost;
 
 import com.example.fptufindingmotelv1.dto.PostSearchDTO;
 import com.example.fptufindingmotelv1.service.admin.managepost.SearchPostService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Controller
 public class SearchPostController {
+
     @Autowired
     Environment env;
 
@@ -29,18 +31,11 @@ public class SearchPostController {
     public JSONObject searchPost(@RequestBody PostSearchDTO postSearchDTO, @RequestParam Optional<Integer> currentPage) {
         try {
             Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("createDate"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("createDate").descending());
             return searchPostService.searchPost(postSearchDTO, pageable);
         } catch (Exception e) {
-            return responseMsg("999", "Lỗi hệ thống!", null);
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
-    }
 }

@@ -1,9 +1,11 @@
 package com.example.fptufindingmotelv1.model;
 
+import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -39,6 +41,12 @@ public class UserModel implements Serializable {
     @OneToMany(mappedBy = "userNotification")
     private List<NotificationModel> notifications;
 
+    @Transient
+    private LandlordModel landlordModel;
+
+    @Transient
+    private RenterModel renterModel;
+
     public UserModel() {
     }
 
@@ -57,4 +65,24 @@ public class UserModel implements Serializable {
         this.password = password;
     }
 
+    public UserModel(String username, Long roleId, String roleName, String displayRole, String fbAccount,
+                     String ggAccount, String phoneNumber, String displayName, String password,
+                     String landlordUsername, Float amount, Date unBanDate,
+                     String renterUsername, Boolean gender, String career, Date dob) {
+        this.role = new RoleModel(roleId, roleName, displayRole);
+        if(landlordUsername != null){
+            this.landlordModel = new LandlordModel(username, roleId, roleName, displayRole, fbAccount,
+                    ggAccount, phoneNumber, displayName, password, amount, unBanDate);
+        }else if(renterUsername != null){
+            this.renterModel = new RenterModel(username, roleId, roleName, displayRole, fbAccount,
+                    ggAccount, phoneNumber, displayName, password, gender, career, dob);
+        }
+        this.username = username;
+        this.fbAccount = fbAccount;
+        this.ggAccount = ggAccount;
+        this.phoneNumber = phoneNumber;
+        this.displayName = displayName;
+        this.password = password;
+
+    }
 }

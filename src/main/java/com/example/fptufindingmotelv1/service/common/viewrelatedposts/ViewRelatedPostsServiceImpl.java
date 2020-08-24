@@ -4,7 +4,6 @@ import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.repository.ImageRepository;
 import com.example.fptufindingmotelv1.repository.PostRepository;
-import com.example.fptufindingmotelv1.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +14,6 @@ public class ViewRelatedPostsServiceImpl implements ViewRelatedPostsService {
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private ImageRepository imageRepository;
 
     @Override
     public List<PostModel> getRelatedPosts(PostRequestDTO postRequestDTO) {

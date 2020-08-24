@@ -30,15 +30,13 @@ var postInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.msgCode == "wishlist002"){
+                    if(data != null && data.code == "403"){
                         window.location.href = "/dang-nhap"
-                    }else if(data != null && data.msgCode == "wishlist000"){
+                    }else if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
                         filterPostInstance.getWishListOfRenter()
-                        // this.postList[this.postIndex].inWishList = true
-                        // this.postList[this.postIndex].wishListId = data.wishList.id
                     }else {
-                        modalMessageInstance.message = "Lỗi hệ thống!"
+                        modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()
                         return null
                     }
@@ -75,7 +73,7 @@ var postInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "wishlist000"){
+                    if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
                         filterPostInstance.getWishListOfRenter()
                     }

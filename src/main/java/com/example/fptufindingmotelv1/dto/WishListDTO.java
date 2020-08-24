@@ -20,10 +20,10 @@ public class WishListDTO {
     public WishListDTO(WishListModel wishListModel) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_FORMAT);
         this.id = wishListModel.getId();
-        this.renterUsername = wishListModel.getWishListRenter().getUsername();
         this.createdDate = wishListModel.getCreatedDate();
         this.displayCreatedDate = sdf.format(wishListModel.getCreatedDate());
-        this.post = new PostDTO(wishListModel.getWishListPost());
+        this.post = new PostDTO();
+        this.post.setPostDTO(wishListModel.getWishListPost());
     }
 
     public WishListDTO() {

@@ -6,6 +6,7 @@ import com.example.fptufindingmotelv1.repository.PaymentPackageRepository;
 import com.example.fptufindingmotelv1.repository.RoleRepository;
 import com.example.fptufindingmotelv1.service.admin.AdminService;
 import com.example.fptufindingmotelv1.service.landlord.manageownpost.HideUnHidePostService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -51,8 +52,8 @@ public class AdminController {
         if (SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken) {
             CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            if (!(userDetails.getUserModel() instanceof LandlordModel)
-                    && !(userDetails.getUserModel() instanceof RenterModel)) {
+            if (!(userDetails.getUserModel().getRole().getId() == Constant.LANDLORD_ID)
+                    && !(userDetails.getUserModel().getRole().getId() == Constant.RENTER_ID)) {
                 return "profile-admin";
             } else {
                 return "redirect:/";

@@ -38,12 +38,10 @@ var renterInstance = new Vue({
             fetch("/api-get-wishlist", {
                 method: 'POST',
 
-
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
-                    if(data != null && data.msgCode == "wishlist000"){
-                        this.wishList = data.wishList
+                    if(data != null && data.code == "000"){
+                        this.wishList = data.data
                     }
                 }).catch(error => {
                 console.log(error);
@@ -65,13 +63,10 @@ var renterInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "wishlist000"){
+                    if(data != null && data.code == "000"){
                         this.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích");
                         sessionStorage.removeItem("listPostOfRenter")
-                        setTimeout(() => {
-                            this.wishList = data.wishList
-                        }, 2000);
-
+                        this.getWishlist()
                     }
                 }).catch(error => {
                 console.log(error);

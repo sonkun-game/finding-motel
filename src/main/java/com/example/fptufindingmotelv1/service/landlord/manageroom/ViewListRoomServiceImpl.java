@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ViewListRoomServiceImpl implements ViewListRoomService {
 
@@ -15,7 +17,7 @@ public class ViewListRoomServiceImpl implements ViewListRoomService {
     private RoomRepository roomRepository;
 
     @Override
-    public Page<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO, Pageable pageable) {
+    public Page<RoomModel> getListRoomPaging(RentalRequestDTO rentalRequestDTO, Pageable pageable) {
         try {
             return roomRepository.getRooms(rentalRequestDTO.getRoomId(), rentalRequestDTO.getPostId(), rentalRequestDTO.getStatusId(), pageable);
         }catch (Exception e){
@@ -24,4 +26,13 @@ public class ViewListRoomServiceImpl implements ViewListRoomService {
         }
     }
 
+    @Override
+    public List<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO) {
+        try {
+            return roomRepository.getRooms(rentalRequestDTO.getRoomId(), rentalRequestDTO.getPostId(), rentalRequestDTO.getStatusId());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

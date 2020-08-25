@@ -32,12 +32,18 @@ public class ViewListRoomController {
     @PostMapping("/api-get-rooms")
     public JSONObject getListRoom(@RequestBody RentalRequestDTO rentalRequestDTO, @RequestParam Optional<Integer> currentPage) {
         try {
-            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
-            Page<RoomModel> roomModels = viewListRoomService.getListRoom(rentalRequestDTO, pageable);
-            JSONObject response = Constant.responseMsg("000", "Success", roomModels.getContent());
-            response.put("pagination", Constant.paginationModel(roomModels));
-            return response;
+            if(currentPage.get() == -1){
+                List<RoomModel> roomModels = viewListRoomService.getListRoom(rentalRequestDTO);
+                return roomModels != null ? Constant.responseMsg("000", "Success", roomModels)
+                        : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+            }else {
+                Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+                Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+                Page<RoomModel> roomModels = viewListRoomService.getListRoomPaging(rentalRequestDTO, pageable);
+                JSONObject response = Constant.responseMsg("000", "Success", roomModels.getContent());
+                response.put("pagination", Constant.paginationModel(roomModels));
+                return response;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Constant.responseMsg("999", "Lỗi hệ thống!", null);

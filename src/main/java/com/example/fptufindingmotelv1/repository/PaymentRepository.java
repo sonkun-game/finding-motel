@@ -12,7 +12,6 @@ public interface PaymentRepository extends JpaRepository<PaymentModel, String> {
     @Query(value = "select new PaymentModel (p.id, p.amount, p.payDate, p.momoId, " +
             "p.paymentMethod, p.note) from PaymentModel p" +
             " where (1 = 1)" +
-            "and (:landlordId is null or p.landlordModel.username = :landlordId)" +
-            "order by p.payDate desc ")
+            "and (:landlordId is null or p.landlordModel.username = :landlordId)")
     Page<PaymentModel> getPaymentByLandlord(String landlordId, Pageable pageable);
 }

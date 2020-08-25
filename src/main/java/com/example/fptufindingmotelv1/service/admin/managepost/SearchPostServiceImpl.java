@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class SearchPostServiceImpl implements SearchPostService{
@@ -47,17 +49,23 @@ public class SearchPostServiceImpl implements SearchPostService{
                 minDistance = filterDistance.getMinValue();
                 maxDistance = filterDistance.getMaxValue();
             }
+            Boolean visible = null, banned = null;
+            Date currentDate = null;
+            if(postSearchDTO.getStatusId() != null && postSearchDTO.getStatusId().equals("1")){
+                visible = false;
+            }else if(postSearchDTO.getStatusId() != null && postSearchDTO.getStatusId().equals("2")){
+                visible = true;
+            }else if(postSearchDTO.getStatusId() != null && postSearchDTO.getStatusId().equals("3")){
+                banned = true;
+            }else if(postSearchDTO.getStatusId() != null && postSearchDTO.getStatusId().equals("4")){
+                Date date = new Date();
+                currentDate = new Timestamp(date.getTime());
+            }
+
             Page<PostModel> posts = postRepository.searchPost(postSearchDTO.getLandlordUsername(),
                     postSearchDTO.getTitle(), maxPrice, minPrice, maxDistance, minDistance,
-                    maxSquare, minSquare, postSearchDTO.getVisible(),
-                    postSearchDTO.getTypeId(), null, pageable);
-//            ArrayList<PostResponseDTO> postResponseDTOs = new ArrayList<>();
-//            for (PostModel p : posts.getContent()) {
-//                PostResponseDTO pr = new PostResponseDTO(p);
-//                boolean banAvailable = pr.getReportNumber() >= Constant.NUMBER_OF_BAN_DATE_POST;
-//                pr.setBanAvailable(banAvailable);
-//                postResponseDTOs.add(pr);
-//            }
+                    maxSquare, minSquare, visible,
+                    postSearchDTO.getTypeId(), banned, currentDate, pageable);
             JSONObject response = Constant.responseMsg("000", "Successs", posts);
             response.put("pagination", paginationModel(posts));
             return response;

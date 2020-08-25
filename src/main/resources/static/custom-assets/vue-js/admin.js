@@ -10,7 +10,7 @@ var admin = new Vue({
         postPrice: 0,
         postSquare: 0,
         postDistance: 0,
-        postStatus: "",
+        postStatus: 0,
         postTitleOrLandlord: "",
         isBannedUser: false,
         //modal form
@@ -89,16 +89,15 @@ var admin = new Vue({
             for (var user of this.listUser) {
                 if (user.username == userId) {
                     this.userDetail = user;
+                    document.body.setAttribute("class", "loading-hidden-screen")
                     document.getElementById("modalUserDetail").style.display = 'block';
                     break;
                 }
             }
-            //close modal
-            window.onclick = function (event) {
-                if (event.target.id.toString().includes('closeModal')) {
-                    document.getElementById("modalUserDetail").style.display = "none";
-                }
-            }
+        },
+        closeModalUserDetail(){
+            document.body.removeAttribute("class")
+            document.getElementById("modalUserDetail").style.display = 'none';
         },
         yesNoConfirmDelClick(event) {
             document.getElementById("modalDelete").style.display = 'none';
@@ -319,7 +318,7 @@ var admin = new Vue({
                 "filterSquareId": this.isNullSearchParam(parseInt(this.postSquare)),
                 "filterDistanceId": this.isNullSearchParam(parseInt(this.postDistance)),
                 "landlordUsername": this.isNullSearchParam(this.postTitleOrLandlord),
-                "visible": this.postStatus == '0' ? false : this.postStatus == '1' ? true : null,
+                "statusId": this.isNullSearchParam(this.postStatus),
             }
             fetch("/search-post?currentPage=" + currentPage, {
                 method: 'POST',

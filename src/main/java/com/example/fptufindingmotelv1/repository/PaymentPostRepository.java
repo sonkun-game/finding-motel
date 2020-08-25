@@ -15,8 +15,7 @@ public interface PaymentPostRepository extends JpaRepository<PaymentPostModel, S
             "join PostModel post on p.postPayment.id = post.id " +
             "join LandlordModel ll on post.landlord.username = ll.username " +
             "where (1 = 1)" +
-            "and (:landlordId is null or ll.username = :landlordId)" +
-            "order by p.payDate desc ")
+            "and (:landlordId is null or ll.username = :landlordId)" )
     Page<PaymentPostModel> getPaymentPostByLandlord(String landlordId, Pageable pageable);
 
     @Transactional

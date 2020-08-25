@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +37,7 @@ public class ViewListOwnRentalRequestController {
     public JSONObject searchRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO, @RequestParam Optional<Integer> currentPage) {
         try {
             Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("requestDate").descending());
             return viewListOwnRentalRequestService.searchRentalRequest(rentalRequestDTO, pageable);
         } catch (Exception e) {
             e.printStackTrace();

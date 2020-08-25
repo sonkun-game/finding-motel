@@ -26,14 +26,8 @@ public class AddRoomController {
     public JSONObject increaseRoom(@RequestBody PostRequestDTO postRequestDTO) {
         List<RoomModel> roomModels = addRoomService.increaseRoom(postRequestDTO);
 
-        List<RoomDTO> roomDTOS = new ArrayList<>();
-        for (RoomModel room:
-                roomModels) {
-            roomDTOS.add(new RoomDTO(0, room));
-        }
-
         return roomModels != null ?
-                Constant.responseMsg("000", "Success", roomDTOS) :
+                Constant.responseMsg("000", "Success", null) :
                 Constant.responseMsg("999", "Lỗi hệ thống!", null);
     }
 }

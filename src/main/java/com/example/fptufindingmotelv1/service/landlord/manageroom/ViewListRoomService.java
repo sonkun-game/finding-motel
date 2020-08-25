@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface ViewListRoomService {
 
-    Page<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO, Pageable pageable);
+    Page<RoomModel> getListRoomPaging(RentalRequestDTO rentalRequestDTO, Pageable pageable);
+
+    List<RoomModel> getListRoom(RentalRequestDTO rentalRequestDTO);
 }

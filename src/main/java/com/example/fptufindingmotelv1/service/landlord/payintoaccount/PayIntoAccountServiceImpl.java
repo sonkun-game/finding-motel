@@ -2,8 +2,10 @@ package com.example.fptufindingmotelv1.service.landlord.payintoaccount;
 
 import com.example.fptufindingmotelv1.dto.MomoResponseDTO;
 import com.example.fptufindingmotelv1.dto.MomoTransactionStatusRequestDTO;
-import com.example.fptufindingmotelv1.dto.PaymentDTO;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
+import com.example.fptufindingmotelv1.model.LandlordModel;
+import com.example.fptufindingmotelv1.model.MomoModel;
+import com.example.fptufindingmotelv1.model.PaymentModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
 import com.example.fptufindingmotelv1.repository.PaymentPostRepository;
 import com.example.fptufindingmotelv1.repository.PaymentRepository;
@@ -22,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 

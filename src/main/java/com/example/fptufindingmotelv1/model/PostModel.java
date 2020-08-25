@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.model;
 
 import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.*;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

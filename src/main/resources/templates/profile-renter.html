@@ -9,7 +9,7 @@
 <body>
 
 <!--    include notification modal-->
-    <div th:replace="layout :: notification"></div>
+<div th:replace="layout :: notification"></div>
 
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
@@ -22,129 +22,210 @@
 
 <main>
     <div class="container-fluid">
-<!--        <div class="container">-->
-            <div class="row">
-                <div class="col-lg-2 d-none d-lg-block bg-light sidebar-left col-menu">
-                    <div th:replace="layout :: basic-user-infor"></div>
-                    <div th:replace="layout :: user-task"></div>
+        <!--        <div class="container">-->
+        <div class="row">
+            <div class="col-lg-2 d-none d-lg-block bg-light sidebar-left col-menu">
+                <div th:replace="layout :: basic-user-infor"></div>
+                <div th:replace="layout :: user-task"></div>
+            </div>
+
+            <div id="user-manager-content" class="col sidebar-right col-table">
+                <!-- Thông tin tài khoản -->
+                <div th:replace="layout :: profile-user"></div>
+
+
+                <!-- Đổi mật khẩu -->
+                <div th:replace="layout :: change-password"></div>
+            </div>
+
+            <div id="renter-manager" class="col sidebar-right col-table">
+                <!-- Quản lý yêu cầu -->
+
+                <div id="request-manager" v-if="task == 2 || task == 18">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
+                    </div>
+                    <div class="information-detail">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Tên phòng trọ</th>
+                                <th scope="col">Phòng</th>
+                                <th scope="col">Ngày tạo</th>
+                                <th scope="col" v-if="task != 18 || listRentalRq[0].statusId != 11">Ngày bắt đầu</th>
+                                <th scope="col">Tình trạng</th>
+                                <th scope="col"
+                                    v-text="task == 18 && listRentalRq[0].statusId == 11 ? 'Lời nhắn' : 'Tác vụ'">Tác vụ
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(rentalRequest, index) in listRentalRq">
+                                <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId"
+                                       v-text="rentalRequest.postTitle" target="_blank"></a></td>
+                                <td v-text="rentalRequest.roomName"></td>
+                                <td v-text="rentalRequest.displayRequestDate"></td>
+                                <td v-if="task != 18 || listRentalRq[0].statusId != 11"
+                                    v-text="rentalRequest.displayStartDate"></td>
+                                <td v-text="rentalRequest.statusDisplay"></td>
+                                <td>
+                                    <button v-if="rentalRequest.statusId == 7"
+                                            v-bind:class="{disable : rentalRequest.statusId == 8}"
+                                            @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'cancel', $event)"
+                                            class="table-button">Hủy
+                                    </button>
+                                    <button v-if="rentalRequest.statusId == 9"
+                                            @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'expire', $event)"
+                                            data-toggle="tooltip" data-html="true" title="Kết thúc thuê trọ"
+                                            class="table-button">Kết thúc
+                                    </button>
+                                    <button v-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length > 60 && task == 18"
+                                            v-on:click="showExpireMessage(rentalRequest)" class="table-button"
+                                            data-toggle="tooltip" data-html="true" title="Xem lời nhắn của chủ trọ">Lời
+                                        nhắn
+                                    </button>
+                                    <p v-else-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length <= 60 && task == 18"
+                                       v-text="rentalRequest.expireMessage"></p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <nav v-if="pagination.totalPages != 1 && listRentalRq.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="searchRentalRequest(null, pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="searchRentalRequest(null, page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="searchRentalRequest(null, pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div v-if="listRentalRq.length == 0" class="justify-content-center">Không có yêu cầu nào</div>
+                    </div>
                 </div>
 
-                <div id="user-manager-content" class="col sidebar-right col-table">
-                    <!-- Thông tin tài khoản -->
-                    <div th:replace="layout :: profile-user"></div>
+                <!-- Danh sách yêu thích -->
+                <div id="wishlist-manager" v-if="task == 3">
+                    <div class="title">
+                        <h1 class="title-name uppercase">Danh sách yêu thích</h1>
+                    </div>
+                    <div class="information-detail">
+                        <div class="post-wishlist" v-for="itemWishList in wishList" v-bind:id="itemWishList.id">
+                            <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
+                                <div class="img-post-wishlist">
+                                    <img v-bind:src="itemWishList.post.images[0]" alt=""/>
+                                </div>
+                                <div class="title-post-wishlist">
 
-
-                    <!-- Đổi mật khẩu -->
-                    <div th:replace="layout :: change-password"></div>
-                </div>
-
-                <div id="renter-manager" class="col sidebar-right col-table">
-                    <!-- Quản lý yêu cầu -->
-
-                    <div id="request-manager" v-if="task == 2 || task == 18">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Quản lý yêu cầu</h1>
-                        </div>
-                        <div class="information-detail">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Tên phòng trọ</th>
-                                    <th scope="col">Phòng</th>
-                                    <th scope="col">Ngày tạo</th>
-                                    <th scope="col" v-if="task != 18 || listRentalRq[0].statusId != 11">Ngày bắt đầu</th>
-                                    <th scope="col">Tình trạng</th>
-                                    <th scope="col" v-text="task == 18 && listRentalRq[0].statusId == 11 ? 'Lời nhắn' : 'Tác vụ'">Tác vụ</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(rentalRequest, index) in listRentalRq">
-                                    <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId" v-text="rentalRequest.postTitle" target="_blank"></a> </td>
-                                    <td v-text="rentalRequest.roomName"></td>
-                                    <td v-text="rentalRequest.displayRequestDate"></td>
-                                    <td v-if="task != 18 || listRentalRq[0].statusId != 11" v-text="rentalRequest.displayStartDate"></td>
-                                    <td v-text="rentalRequest.statusDisplay"></td>
-                                    <td>
-                                        <button v-if="rentalRequest.statusId == 7" v-bind:class="{disable : rentalRequest.statusId == 8}" @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'cancel', $event)" class="table-button">Hủy</button>
-                                        <button v-if="rentalRequest.statusId == 9" @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'expire', $event)" data-toggle="tooltip" data-html="true" title="Kết thúc thuê trọ" class="table-button" >Kết thúc</button>
-                                        <button v-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length > 60 && task == 18" v-on:click="showExpireMessage(rentalRequest)" class="table-button"
-                                                data-toggle="tooltip" data-html="true" title="Xem lời nhắn của chủ trọ">Lời nhắn</button>
-                                        <p v-else-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length <= 60 && task == 18" v-text="rentalRequest.expireMessage"> </p>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    <h4><a v-bind:href="'/post-detail?id=' + itemWishList.post.id"
+                                           v-text="itemWishList.post.title" target="_blank"></a></h4>
+                                    <div class="per-night">
+                                        <span class="item-name"><img class="icon-post-wishlist"
+                                                                     src="assets/img/logo/money.png">  Giá cho thuê:</span>
+                                        <span v-text="authenticationInstance.formatNumberToDisplay(itemWishList.post.price) + ' VNĐ/Tháng'"></span>
+                                    </div>
+                                    <div class="per-night">
+                                        <span class="item-name"><img class="icon-post-wishlist"
+                                                                     src="assets/img/logo/square.png"> Diện tích:</span>
+                                        <span v-text="itemWishList.post.square + ' M&sup2'"></span>
+                                    </div>
+                                    <div class="per-night">
+                                        <span class="item-name"><img class="icon-post-wishlist"
+                                                                     src="assets/img/logo/distance.png">  Khoảng cách:</span>
+                                        <span v-text="itemWishList.post.distance + ' Km'"></span>
+                                    </div>
+                                    <i v-on:click="removeFromWishList(itemWishList.id, userInfo.username)"
+                                       class="fas fa-times-circle"></i>
+                                </div>
+                            </a>
                         </div>
                     </div>
-
-                    <!-- Danh sách yêu thích -->
-                    <div id="wishlist-manager" v-if="task == 3">
-                        <div class="title">
-                            <h1 class="title-name uppercase">Danh sách yêu thích</h1>
-                        </div>
-                        <div class="information-detail">
-                            <div class="post-wishlist" v-for="itemWishList in wishList" v-bind:id="itemWishList.id">
-                                <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
-                                    <div class="img-post-wishlist">
-                                        <img v-bind:src="itemWishList.post.images[0]" alt=""/>
-                                    </div>
-                                    <div class="title-post-wishlist">
-
-                                        <h4><a v-bind:href="'/post-detail?id=' + itemWishList.post.id" v-text="itemWishList.post.title" target="_blank"></a></h4>
-                                        <div class="per-night">
-                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/money.png">  Giá cho thuê:</span>
-                                            <span v-text="authenticationInstance.formatNumberToDisplay(itemWishList.post.price) + ' VNĐ/Tháng'"></span>
-                                        </div>
-                                        <div class="per-night">
-                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/square.png"> Diện tích:</span>
-                                            <span v-text="itemWishList.post.square + ' M&sup2'"></span>
-                                        </div>
-                                        <div class="per-night">
-                                            <span class="item-name"><img class="icon-post-wishlist" src="assets/img/logo/distance.png">  Khoảng cách:</span>
-                                            <span v-text="itemWishList.post.distance + ' Km'"></span>
-                                        </div>
-                                        <i v-on:click="removeFromWishList(itemWishList.id, userInfo.username)" class="fas fa-times-circle"></i>
-                                    </div>
+                    <nav v-if="pagination.totalPages != 1 && wishList.length > 0"
+                         aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                class="page-item">
+                                <a v-on:click="getWishlist(pagination.currentPage-1)"
+                                   v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
                                 </a>
-                            </div>
-                        </div>
+                            </li>
+                            <li v-for="page in pagination.totalPages"
+                                v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                v-on:click="getWishlist(page-1)">
+                                <a class="page-link">{{page}}</a>
+                            </li>
+                            <li v-bind:class="{disabled : !pagination.hasNext}"
+                                class="page-item">
+                                <a v-on:click="getWishlist(pagination.currentPage+1)"
+                                   v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div v-if="wishList.length == 0" class="justify-content-center">Không có bài đăng yêu thích nào
                     </div>
-
-                    <!--Modal end rental request-->
-                    <div id="modalEndRentalRequest" class="modal">
-                        <!-- Modal content -->
-                        <div class="view-information">
-                            <div class="modal-header">
-                                <h2>Kết thúc yêu cầu thuê phòng</h2>
-                                <span id="closeModalEndRequest" @click="closeModalEndRequest" class="close">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                <div v-html="message">
-
-                                </div>
-                                <div class="fill-information col-lg-12 px-0">
-                                    <div class="title">
-                                        <h4 style="color: #000000">Lời nhắn cuối cho chủ trọ</h4>
-                                    </div>
-                                    <div class="input-information message-box">
-                                        <textarea v-model="expireMessage" class="rounded-pill border-0 shadow-sm"></textarea>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-hover btn-default" @click="confirmModalEndRequest">Đồng ý</button>
-                                <button class="btn-hover btn-default" @click="closeModalEndRequest">Hủy bỏ</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div th:replace="layout :: notification"></div>
-                    <div th:replace="layout :: confirmModalFragment"></div>
                 </div>
+
+                <!--Modal end rental request-->
+                <div id="modalEndRentalRequest" class="modal">
+                    <!-- Modal content -->
+                    <div class="view-information">
+                        <div class="modal-header">
+                            <h2>Kết thúc yêu cầu thuê phòng</h2>
+                            <span id="closeModalEndRequest" @click="closeModalEndRequest" class="close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div v-html="message">
+
+                            </div>
+                            <div class="fill-information col-lg-12 px-0">
+                                <div class="title">
+                                    <h4 style="color: #000000">Lời nhắn cuối cho chủ trọ</h4>
+                                </div>
+                                <div class="input-information message-box">
+                                    <textarea v-model="expireMessage"
+                                              class="rounded-pill border-0 shadow-sm"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-hover btn-default" @click="confirmModalEndRequest">Đồng ý</button>
+                            <button class="btn-hover btn-default" @click="closeModalEndRequest">Hủy bỏ</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:replace="layout :: notification"></div>
+                <div th:replace="layout :: confirmModalFragment"></div>
             </div>
         </div>
-<!--    </div>-->
+    </div>
+    <!--    </div>-->
 </main>
 
 <footer th:replace="layout :: footer"></footer>

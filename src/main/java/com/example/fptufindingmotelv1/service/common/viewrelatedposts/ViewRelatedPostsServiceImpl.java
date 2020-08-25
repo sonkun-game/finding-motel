@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.service.common.viewrelatedposts;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
+import com.example.fptufindingmotelv1.repository.ImageRepository;
 import com.example.fptufindingmotelv1.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

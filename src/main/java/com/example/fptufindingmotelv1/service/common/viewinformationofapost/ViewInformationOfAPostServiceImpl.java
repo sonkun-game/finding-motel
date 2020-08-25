@@ -1,6 +1,5 @@
 package com.example.fptufindingmotelv1.service.common.viewinformationofapost;
 
-import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.repository.ImageRepository;

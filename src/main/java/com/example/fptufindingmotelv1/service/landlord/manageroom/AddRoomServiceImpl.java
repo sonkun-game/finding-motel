@@ -2,12 +2,11 @@ package com.example.fptufindingmotelv1.service.landlord.manageroom;
 
 import com.example.fptufindingmotelv1.dto.PostRequestDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
-import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
 import com.example.fptufindingmotelv1.model.StatusModel;
-import com.example.fptufindingmotelv1.repository.*;
-import net.minidev.json.JSONObject;
+import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

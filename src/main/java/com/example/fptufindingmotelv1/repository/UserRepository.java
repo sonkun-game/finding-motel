@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
-
 public interface UserRepository extends JpaRepository<UserModel, String> {
     UserModel findByGgAccount(String ggAccount);
     UserModel findByFbAccount(String fbAccount);

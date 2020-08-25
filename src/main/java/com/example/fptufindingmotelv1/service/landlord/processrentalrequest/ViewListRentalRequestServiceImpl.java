@@ -1,7 +1,7 @@
 package com.example.fptufindingmotelv1.service.landlord.processrentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.model.*;
+import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

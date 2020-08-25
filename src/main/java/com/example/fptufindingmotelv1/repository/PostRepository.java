@@ -3,7 +3,6 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.PostModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -83,7 +82,7 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "join LandlordModel ll on p.landlord.username = ll.username " +
             "where (:landlordId is null or ll.username = :landlordId)" +
             "")
-    List<PostModel> getPostsByLandlord(String landlordId);
+    Page<PostModel> getPostsByLandlord(String landlordId, Pageable pageable);
 
 
     @Query(value = "select top 5 * from POST p " +

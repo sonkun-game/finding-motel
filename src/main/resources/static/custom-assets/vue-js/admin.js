@@ -169,7 +169,7 @@ var admin = new Vue({
         searchUser(currentPage) {
             if (currentPage == undefined || !currentPage) currentPage = 0;
             let request = {
-                'username': this.inputSearchUser,
+                'username': this.inputSearchUser.trim(),
                 'roleId': parseInt(this.inputRole) == 0 ? null : parseInt(this.inputRole),
             }
             fetch("/api-search-user?currentPage=" + currentPage, {
@@ -380,9 +380,9 @@ var admin = new Vue({
         searchReport(currentPage) {
             if (currentPage == undefined || !currentPage) currentPage = 0;
             let reportRequestDTO = {
-                "landlordId": this.inputLandlordId == "" ? null : this.inputLandlordId,
-                "renterId": this.inputRenterId == "" ? null : this.inputRenterId,
-                "postTitle": this.inputPostTitle == "" ? null : this.inputPostTitle,
+                "landlordId": this.inputLandlordId.trim() == "" ? null : this.inputLandlordId,
+                "renterId": this.inputRenterId.trim()  == "" ? null : this.inputRenterId,
+                "postTitle": this.inputPostTitle.trim()  == "" ? null : this.inputPostTitle,
                 "statusReport": this.isNullSearchParam(this.inputStatusReport),
             }
             fetch("/search-report?currentPage=" + currentPage, {

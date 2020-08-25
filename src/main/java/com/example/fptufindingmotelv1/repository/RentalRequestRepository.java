@@ -37,7 +37,8 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
             "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
             "and (:requestId is null or rr.id = :requestId)" +
-            "order by rr.requestDate desc")
+//            "order by rr.requestDate desc" +
+            "")
     Page<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId, Pageable pageable);
 
     @Query(value = "select count(rr.id) from RentalRequestModel rr " +

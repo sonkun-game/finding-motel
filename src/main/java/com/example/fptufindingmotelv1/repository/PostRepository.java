@@ -34,13 +34,14 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
+            "and (:currentDate is null or p.expireDate < :currentDate)" +
             "group by p.id, p.price, p.distance, p.square, p.roomNumber, " +
             "p.description, p.title, p.address, p.visible, p.banned, p.mapLocation, p.createDate, " +
             "p.expireDate, t.id, t.name, ll.username, ll.displayName, ll.phoneNumber" +
             "")
     Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Pageable pageable);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Date currentDate, Pageable pageable);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
             "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +

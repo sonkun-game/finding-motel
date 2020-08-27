@@ -7,7 +7,7 @@ import net.minidev.json.JSONObject;
 
 import java.util.List;
 
-public interface PostARoomService {
+public interface UploadNewPostService {
 
     List<PaymentPackageModel> getListPaymentPackage(Boolean available);
     List<TypeModel> getListTypePost();

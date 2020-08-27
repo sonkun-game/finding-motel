@@ -5,7 +5,7 @@ import com.example.fptufindingmotelv1.model.RoomModel;
 
 import java.util.List;
 
-public interface ViewInformationOfAPostService {
+public interface ViewInformationOfPostService {
     List<RoomModel> getListRoomOfPost(String postId);
 
     PostModel getPostDetail(String id);

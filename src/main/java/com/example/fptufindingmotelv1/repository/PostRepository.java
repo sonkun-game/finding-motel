@@ -86,15 +86,30 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     Page<PostModel> getPostsByLandlord(String landlordId, Pageable pageable);
 
 
-    @Query(value = "select top 5 * from POST p " +
-            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
-            "and (:visible is null or p.IS_VISIBLE = :visible)" +
-            "and (:banned is null or p.IS_BANNED = :banned)" +
-            "and ((p.ID != :postId)" +
-            "or (p.TYPE_ID = :typeId and p.ID != :postId))" +
-            "", nativeQuery = true)
-    List<PostModel> getRelatedPost(String postId, String landlordId,
-                                   Long typeId, Boolean visible, Boolean banned);
+//    @Query(value = "select top 5 * from POST p " +
+//            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
+//            "and (:visible is null or p.IS_VISIBLE = :visible)" +
+//            "and (:banned is null or p.IS_BANNED = :banned)" +
+//            "and ((p.ID != :postId)" +
+//            "or (p.TYPE_ID = :typeId and p.ID != :postId))" +
+//            "", nativeQuery = true)
+//    List<PostModel> getRelatedPost(String postId, String landlordId,
+//                                   Long typeId, Boolean visible, Boolean banned);
+
+    @Query(value = "select new PostModel(p.id, p.price, p.title, MAX (im.id)) " +
+            "from PostModel p " +
+            "join ImageModel im on p.id = im.post.id " +
+            "where 1 = 1 " +
+            "and (:visible is null or p.visible = :visible)" +
+            "and (:banned is null or p.banned = :banned) " +
+            "and (:currentDate is null or p.expireDate >= :currentDate)" +
+            "and (p.id <> :postId) " +
+            "and ((:landlordId is null or p.landlord.username like %:landlordId%)" +
+            "or (p.type.id = :typeId)) " +
+            "group by p.id, p.price, p.title " +
+            "")
+    List<PostModel> getRelatedPost(String postId, String landlordId, Long typeId, Boolean visible,
+                                   Boolean banned, Date currentDate, Pageable pageable);
 
     @Transactional
     @Modifying

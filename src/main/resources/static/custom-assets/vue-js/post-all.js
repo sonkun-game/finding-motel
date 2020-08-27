@@ -17,6 +17,7 @@ var postInstance = new Vue({
     },
     methods : {
         addWishlist : function(post, username){
+            processingLoaderInstance.showLoader()
             let request = {
                 "postId" : post.id,
                 "renterUsername" : username
@@ -33,6 +34,7 @@ var postInstance = new Vue({
                     if(data != null && data.code == "403"){
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.code == "000"){
+                        processingLoaderInstance.hideLoader()
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
                         filterPostInstance.getWishListOfRenter()
                     }else {
@@ -58,6 +60,7 @@ var postInstance = new Vue({
             }
         },
         removeFromWishList(postId, username){
+            processingLoaderInstance.showLoader()
             let request = {
                 "postId" : postId,
                 "renterUsername" : username,
@@ -74,6 +77,7 @@ var postInstance = new Vue({
                 .then((data) => {
                     console.log(data);
                     if(data != null && data.code == "000"){
+                        processingLoaderInstance.hideLoader()
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
                         filterPostInstance.getWishListOfRenter()
                     }
@@ -185,6 +189,7 @@ var filterPostInstance = new Vue({
                         postInstance.page = data.page
                         postInstance.endPage = data.endPage;
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })

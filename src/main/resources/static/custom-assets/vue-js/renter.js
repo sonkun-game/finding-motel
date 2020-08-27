@@ -46,6 +46,7 @@ var renterInstance = new Vue({
                         this.wishList = data.data
                         this.pagination = data.pagination
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -151,6 +152,7 @@ var renterInstance = new Vue({
                             this.listRentalRq = responseMsg.data;
                             this.pagination = responseMsg.pagination
                         }
+                        authenticationInstance.hidePreloader()
                     }
                 }).catch(error => {
                 console.log(error);

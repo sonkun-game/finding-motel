@@ -62,6 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     return "";
                 }
             }
+        },
+        mounted(){
+            authenticationInstance.hidePreloader()
         }
     })
     var loadingInstance = new Vue({

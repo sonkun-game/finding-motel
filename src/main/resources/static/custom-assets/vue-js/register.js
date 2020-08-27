@@ -57,6 +57,9 @@ var registerVue = new Vue({
         }
 
     },
+    mounted(){
+        authenticationInstance.hidePreloader()
+    },
     methods: {
         checkDisplayName() {
             if (this.displayName != null && this.displayName.length > 0) {

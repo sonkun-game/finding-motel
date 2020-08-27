@@ -204,6 +204,9 @@ var authenticationInstance = new Vue({
                 return false
             }
         },
+        hidePreloader(){
+            $('#preloader-active').fadeOut('slow');
+        }
     },
     created(){
         // if(sessionStorage.getItem("userInfo")){
@@ -323,5 +326,22 @@ var modalConfirmInstance = new Vue({
             }
         }
     },
+
+})
+
+var processingLoaderInstance = new Vue({
+    el: '#processing-loader',
+    data: {
+        isShowLoader : false,
+        displayText : "Đang xử lý",
+    },
+    methods : {
+        hideLoader(){
+            this.isShowLoader = false
+        },
+        showLoader(){
+            this.isShowLoader = true
+        }
+    }
 
 })

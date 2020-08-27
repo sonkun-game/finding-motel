@@ -27,7 +27,9 @@ var profileInstance = new Vue({
         authenticationInstance.isShowBtn = false
     },
     mounted(){
-
+        if(this.task == 0 || this.task == 1){
+            authenticationInstance.hidePreloader()
+        }
     },
     methods: {
         validateInput(inputValue, require, minLength, maxLength, min, max, inputName, unit){

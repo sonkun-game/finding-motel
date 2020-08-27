@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,7 +48,7 @@ public class ViewHistoryOfPaymentIntoAccountController {
                 }
             }
             Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
-            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize, Sort.by("payDate").descending());
             Page<PaymentModel> paymentModelPages = viewHistoryOfPaymentIntoAccountService.getPaymentsByLandlord(paymentDTO, pageable);
 
             JSONObject response = Constant.responseMsg("000", "Success", paymentModelPages.getContent());

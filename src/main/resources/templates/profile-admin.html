@@ -351,9 +351,11 @@
                                     <div class="form-dropdown">
                                         <form action="#">
                                             <select v-model="postStatus">
-                                                <option value="">Tất cả</option>
-                                                <option value="0">Không hiển thị</option>
-                                                <option value="1">Hiển thị</option>
+                                                <option value="0" selected>Tất cả</option>
+                                                <option value="1">Không hiển thị</option>
+                                                <option value="2">Hiển thị</option>
+                                                <option value="3">Bị khóa</option>
+                                                <option value="4">Hết hạn</option>
                                             </select>
                                         </form>
                                     </div>
@@ -680,7 +682,7 @@
                     <div class="view-information" v-if="userDetail != null && userDetail.role != null">
                         <div class="modal-header">
                             <h2>Thông tin người dùng</h2>
-                            <span id="closeModalUserDetail" class="close">&times;</span>
+                            <span id="closeModalUserDetail" @click="closeModalUserDetail" class="close">&times;</span>
                         </div>
                         <div class="modal-body">
                             <div class="infor-modal">
@@ -749,7 +751,7 @@
 <!--                            </div>-->
                         </div>
                         <div class="modal-footer">
-                            <button class="btn-hover btn-default">Xác Nhận</button>
+                            <button class="btn-hover btn-default" @click="closeModalUserDetail">Xác Nhận</button>
                         </div>
                     </div>
                 </div>

@@ -31,15 +31,17 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
     List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId, String roomId);
 
 
-    @Query(value = "select rr from RentalRequestModel rr " +
-            "where (:id is null or rr.id like :id )" +
+    @Query(value = "select new RentalRequestModel(rr.id, rr.requestDate, rr.startDate, " +
+            "rr.cancelDate, rr.expireMessage, p.id, p.title, r.id, r.name, s.id, s.status) from RentalRequestModel rr " +
+            "join RoomModel r on rr.rentalRoom.id = r.id " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "join StatusModel s on rr.rentalStatus.id = s.id " +
+            "where (:id is null or rr.id = :id )" +
             "and (:renterUsername is null or rr.rentalRenter.username = :renterUsername)" +
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
             "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
-            "and (:requestId is null or rr.id = :requestId)" +
-//            "order by rr.requestDate desc" +
             "")
-    Page<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId, Pageable pageable);
+    Page<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, Pageable pageable);
 
     @Query(value = "select count(rr.id) from RentalRequestModel rr " +
             "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +
@@ -48,10 +50,10 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
 
     @Transactional
     @Modifying
-    @Query(value = "delete from RentalRequestModel r " +
-                "where r.cancelDate < :cancelDateExpire " +
-                "and r.rentalStatus.id = :statusId " +
-                "and r.rentalRenter.username = :renterUsername")
+    @Query(value = "delete rq from RENTAL_REQUEST rq " +
+            "where rq.CANCEL_DATE < :cancelDateExpire " +
+            "and rq.STATUS_ID = :statusId " +
+            "and rq.RENTER_ID = :renterUsername", nativeQuery = true)
     void removeRentalRequest(Date cancelDateExpire, Long statusId, String renterUsername);
 
     @Transactional

@@ -21,4 +21,5 @@ public class PostSearchDTO {
     private Long filterSquareId;
     private Long filterDistanceId;
     private Optional<Integer> page;
+    private String statusId;
 }

@@ -388,11 +388,11 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
-            this.setFieldEditMode(post)
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
             sessionStorage.setItem("task", 16)
+            this.setFieldEditMode(post)
             setTimeout( () => {
                 this.initMap()
                 this.handleDisplayDirection()
@@ -445,7 +445,29 @@ var landlordInstance = new Vue({
                 'roomId' : null,
                 'statusId' : null,
             }
-            this.getListRoom(request)
+            if(this.task == 16){
+                this.getListRoom(request, -1)
+            }else {
+                this.getListRoom(request)
+            }
+
+        },
+        getListRoomPaging(currentPage){
+            if(this.task == 15){
+                let request = {
+                    'postId' : this.selectedPost.id,
+                    'roomId' : null,
+                    'statusId' : null,
+                }
+                this.getListRoom(request, currentPage)
+            }else if(this.task == 5){
+                let request = {
+                    'statusId' : 7,
+                    'postId' : null,
+                    'roomId' : null,
+                }
+                this.getListRoom(request, currentPage)
+            }
         },
         getListRoom(request, currentPage){
             if (currentPage === undefined || !currentPage) {
@@ -880,12 +902,10 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Thêm phòng thành công", 2000)
+                        this.getListRoomByPost(this.selectedPost.id)
                         setTimeout(() => {
                             document.body.removeAttribute("class")
                             document.getElementById("myModal_AddRoom").style.display = 'none';
-                            for (let room of data.data) {
-                                this.listRoomRequest.push(room)
-                            }
                         }, 2000);
                     }
                 }).catch(error => {

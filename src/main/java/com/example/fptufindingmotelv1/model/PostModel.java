@@ -106,6 +106,11 @@ public class PostModel implements Serializable{
         this.reportNumber = reportNumber;
     }
 
+    public PostModel(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public PostModel(String id, double price, double distance, double square,
                      String description, String title, String address,
                      String imageId) {

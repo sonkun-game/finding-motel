@@ -65,8 +65,6 @@ public class RoomModel implements Serializable {
     public RoomModel(String id, String name, String postId, String postTitle) {
         this.id = id;
         this.name = name;
-        this.postRoom = new PostModel();
-        this.postRoom.setId(postId);
-        this.postRoom.setTitle(postTitle);
+        this.postRoom = new PostModel(postId, postTitle);
     }
 }

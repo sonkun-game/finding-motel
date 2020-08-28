@@ -48,10 +48,10 @@ var admin = new Vue({
         //regex
         regexCharacterSpace: /[a-zA-Z]|\s/,
         //list filter post
-        listTypePost : [],
-        listFilterPrice : [],
-        listFilterSquare : [],
-        listFilterDistance : [],
+        listTypePost: [],
+        listFilterPrice: [],
+        listFilterSquare: [],
+        listFilterDistance: [],
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -95,7 +95,7 @@ var admin = new Vue({
                 }
             }
         },
-        closeModalUserDetail(){
+        closeModalUserDetail() {
             document.body.removeAttribute("class")
             document.getElementById("modalUserDetail").style.display = 'none';
         },
@@ -382,8 +382,8 @@ var admin = new Vue({
             if (currentPage == undefined || !currentPage) currentPage = 0;
             let reportRequestDTO = {
                 "landlordId": this.inputLandlordId.trim() == "" ? null : this.inputLandlordId,
-                "renterId": this.inputRenterId.trim()  == "" ? null : this.inputRenterId,
-                "postTitle": this.inputPostTitle.trim()  == "" ? null : this.inputPostTitle,
+                "renterId": this.inputRenterId.trim() == "" ? null : this.inputRenterId,
+                "postTitle": this.inputPostTitle.trim() == "" ? null : this.inputPostTitle,
                 "statusReport": this.isNullSearchParam(this.inputStatusReport),
             }
             fetch("/search-report?currentPage=" + currentPage, {
@@ -505,6 +505,7 @@ var admin = new Vue({
             })
         },
         closeModalPackage() {
+            this.hideModalPackageError();
             document.getElementById("modalPackage").style.display = 'none';
             document.body.removeAttribute("class")
         },
@@ -516,37 +517,39 @@ var admin = new Vue({
             document.getElementById("modalPackageErrorMsg").innerHTML = "";
             document.getElementById("modalPackageErrorMsg").style.visibility = 'hidden';
         },
-        validatePackageInputDuration() {
+        validatePackageInputDurationAndAmount() {
+            //chekc valid duration
             this.inputDuration = (this.inputDuration + "").trim();
+
             if (!this.inputDuration || this.inputDuration.length == 0) {
-                this.showModalPackageError("Vui lòng nhập thời hạn.");
+                this.showModalPackageError("Vui lòng nhập thời hạn");
+            } else if (this.inputDuration*1 === 0) {
+                this.showModalPackageError("Vui lòng nhập thời hạn ít nhất 1 tháng");
             } else if (this.regexCharacterSpace.test(this.inputDuration)) {
-                this.showModalPackageError("Vui lòng nhập thời hạn hợp lệ.");
+                this.showModalPackageError("Vui lòng nhập thời hạn hợp lệ");
             } else {
-                for (let package of this.listPaymentPackage) {
-                    if (package.duration == this.inputDuration) {
-                        this.showModalPackageError("Thời hạn " + package.duration + " tháng đã tồn tại");
-                        return false;
+                //check valid amount
+                this.inputAmount = (this.inputAmount + "").trim();
+                if (!this.inputAmount || this.inputAmount.length == 0) {
+                    this.showModalPackageError("Vui lòng nhập giá");
+                } else if (this.regexCharacterSpace.test(this.inputAmount)) {
+                    this.showModalPackageError("Vui lòng nhập giá hợp lệ");
+                } else if (this.inputAmount*1 < 1000) {
+                    this.showModalPackageError("Vui lòng nhập giá lớn hơn 1.000đ");
+                } else {
+                    //check exist duration and amount
+                    for (let package of this.listPaymentPackage) {
+                        if (package.duration == this.inputDuration) {
+                            for (let package of this.listPaymentPackage) {
+                                if (package.amount == this.inputAmount) {
+                                    this.showModalPackageError("Đã tồn tại gói có thời hạn và giá tiền tương ứng");
+                                    return false;
+                                }
+                            }
+                        }
                     }
+                    return true;
                 }
-                return true;
-            }
-            return false;
-        },
-        validatePackageInputAmount() {
-            this.inputAmount = (this.inputAmount + "").trim();
-            if (!this.inputAmount || this.inputAmount.length == 0) {
-                this.showModalPackageError("Vui lòng nhập giá.");
-            } else if (this.regexCharacterSpace.test(this.inputAmount)) {
-                this.showModalPackageError("Vui lòng nhập giá hợp lệ.");
-            } else {
-                for (let package of this.listPaymentPackage) {
-                    if (package.amount == this.inputAmount) {
-                        this.showModalPackageError("Giá gói " + package.amount + " đã tồn tại");
-                        return false;
-                    }
-                }
-                return true;
             }
             return false;
         },
@@ -589,7 +592,7 @@ var admin = new Vue({
                 "amount": this.inputAmount,
                 "packageName": this.inputPackageName,
             }
-            if (this.validatePackageInputName() && this.validatePackageInputDuration() && this.validatePackageInputAmount()) {
+            if (this.validatePackageInputName() && this.validatePackageInputDurationAndAmount()) {
                 fetch("/api-save-payment-package", {
                     method: 'POST',
                     headers: {
@@ -734,7 +737,7 @@ var admin = new Vue({
         closeModalBan() {
             document.getElementById("modalBan").style.display = 'none';
         },
-        getInitFilterPost(){
+        getInitFilterPost() {
             fetch("/api-get-init-home-page", {
                 method: 'GET',
                 headers: {
@@ -744,7 +747,7 @@ var admin = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.code == "000"){
+                    if (data != null && data.code == "000") {
                         this.listTypePost = data.listTypePost
                         this.listFilterPrice = data.listFilterPrice
                         this.listFilterSquare = data.listFilterSquare

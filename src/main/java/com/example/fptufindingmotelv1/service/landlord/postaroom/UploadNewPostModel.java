@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-public class PostARoomModel implements PostARoomService {
+public class UploadNewPostModel implements UploadNewPostService {
 
     @Autowired
     private PaymentPackageRepository paymentPackageRepository;

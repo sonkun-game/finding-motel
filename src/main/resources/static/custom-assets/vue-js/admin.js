@@ -180,6 +180,7 @@ var admin = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
+                    authenticationInstance.hidePreloader()
                     if (data != null && data.code == "000") {
                         this.listUser = data.data.content;
                         this.pagination = data.pagination;
@@ -328,6 +329,7 @@ var admin = new Vue({
                 body: JSON.stringify(postRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
+                    authenticationInstance.hidePreloader()
                     if (data != null && data.code == "000") {
                         this.listPost = data.data.content;
                         this.pagination = data.pagination;
@@ -392,6 +394,7 @@ var admin = new Vue({
                 body: JSON.stringify(reportRequestDTO),
             }).then(response => response.json())
                 .then((data) => {
+                    authenticationInstance.hidePreloader()
                     if (data != null && data.code == "000") {
                         this.listReport = data.data.content;
                         this.pagination = data.pagination;
@@ -488,6 +491,7 @@ var admin = new Vue({
                 method: 'POST',
             }).then(response => response.json())
                 .then((data) => {
+                    authenticationInstance.hidePreloader()
                     if (data != null && data.code == "000") {
                         this.listPaymentPackage = data.data.content
                         this.pagination = data.pagination;

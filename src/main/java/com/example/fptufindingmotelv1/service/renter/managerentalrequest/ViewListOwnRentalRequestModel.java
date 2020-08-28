@@ -31,14 +31,9 @@ public class ViewListOwnRentalRequestModel implements ViewListOwnRentalRequestSe
             rentalRequestRepository.removeRentalRequest(cancelDateExpire, 8L, rentalRequestDTO.getRenterUsername());
             Page<RentalRequestModel> renterModels = rentalRequestRepository.searchRentalRequest(
                     rentalRequestDTO.getId(), rentalRequestDTO.getRenterUsername(), rentalRequestDTO.getRoomId()
-                    ,rentalRequestDTO.getStatusId(), rentalRequestDTO.getId(), pageable);
+                    ,rentalRequestDTO.getStatusId(), pageable);
 
-            ArrayList<RentalRequestDTO> requestDTOS = new ArrayList<>();
-            for (RentalRequestModel requestModel : renterModels.getContent()) {
-                RentalRequestDTO requestDTO = new RentalRequestDTO(requestModel);
-                requestDTOS.add(requestDTO);
-            }
-            JSONObject response = Constant.responseMsg("000", "Success", requestDTOS);
+            JSONObject response = Constant.responseMsg("000", "Success", renterModels.getContent());
             response.put("pagination", Constant.paginationModel(renterModels));
             return response;
         } catch (Exception e) {

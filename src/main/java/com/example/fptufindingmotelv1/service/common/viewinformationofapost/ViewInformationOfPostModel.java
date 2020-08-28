@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ViewInformationOfAPostModel implements ViewInformationOfAPostService {
+public class ViewInformationOfPostModel implements ViewInformationOfPostService {
 
     @Autowired
     private PostRepository postRepository;

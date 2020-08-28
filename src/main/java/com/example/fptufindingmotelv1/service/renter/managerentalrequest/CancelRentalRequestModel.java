@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Service
-public class CancelARentalRequestModel implements CancelARentalRequestService {
+public class CancelRentalRequestModel implements CancelRentalRequestService {
     @Autowired
     RoomRepository roomRepository;
 

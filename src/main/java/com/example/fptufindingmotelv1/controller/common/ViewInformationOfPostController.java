@@ -4,7 +4,7 @@ import com.example.fptufindingmotelv1.dto.PostDTO;
 import com.example.fptufindingmotelv1.dto.RoomDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
-import com.example.fptufindingmotelv1.service.common.viewinformationofapost.ViewInformationOfAPostService;
+import com.example.fptufindingmotelv1.service.common.viewinformationofapost.ViewInformationOfPostService;
 import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ViewInformationOfAPostController {
+public class ViewInformationOfPostController {
     @Autowired
-    private ViewInformationOfAPostService viewInformationOfAPostService;
+    private ViewInformationOfPostService viewInformationOfPostService;
 
     @GetMapping("/post-detail")
     public String getPostDetail() {
@@ -31,7 +31,7 @@ public class ViewInformationOfAPostController {
     @PostMapping(value = "/api-post-detail")
     public JSONObject viewPost(@PathParam("id") String id){
         try {
-            PostModel postModel = viewInformationOfAPostService.getPostDetail(id);
+            PostModel postModel = viewInformationOfPostService.getPostDetail(id);
             PostDTO post = new PostDTO(postModel);
             if(postModel == null){
                 return Constant.responseMsg("999", "Lỗi hệ thống!", null);
@@ -56,7 +56,7 @@ public class ViewInformationOfAPostController {
     public JSONObject getListRoomOfPost(@PathParam("postId") String postId){
         JSONObject response = new JSONObject();
         List<RoomDTO> roomDTOS = new ArrayList<>();
-        List<RoomModel> listRoomOfPost = viewInformationOfAPostService.getListRoomOfPost(postId);
+        List<RoomModel> listRoomOfPost = viewInformationOfPostService.getListRoomOfPost(postId);
         for (RoomModel r:
                 listRoomOfPost) {
             roomDTOS.add(new RoomDTO(r));

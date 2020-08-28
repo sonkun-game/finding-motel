@@ -52,39 +52,39 @@
                                 <th scope="col">Tên phòng trọ</th>
                                 <th scope="col">Phòng</th>
                                 <th scope="col">Ngày tạo</th>
-                                <th scope="col" v-if="task != 18 || listRentalRq[0].statusId != 11">Ngày bắt đầu</th>
+                                <th scope="col" v-if="task != 18 || listRentalRq[0].rentalStatus.id != 11">Ngày bắt đầu</th>
                                 <th scope="col">Tình trạng</th>
                                 <th scope="col"
-                                    v-text="task == 18 && listRentalRq[0].statusId == 11 ? 'Lời nhắn' : 'Tác vụ'">Tác vụ
+                                    v-text="task == 18 && listRentalRq[0].rentalStatus.id == 11 ? 'Lời nhắn' : 'Tác vụ'">Tác vụ
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(rentalRequest, index) in listRentalRq">
-                                <td><a v-bind:href="'/post-detail?id=' + rentalRequest.postId"
-                                       v-text="rentalRequest.postTitle" target="_blank"></a></td>
-                                <td v-text="rentalRequest.roomName"></td>
-                                <td v-text="rentalRequest.displayRequestDate"></td>
-                                <td v-if="task != 18 || listRentalRq[0].statusId != 11"
-                                    v-text="rentalRequest.displayStartDate"></td>
-                                <td v-text="rentalRequest.statusDisplay"></td>
+                                <td><a v-bind:href="'/post-detail?id=' + rentalRequest.rentalRoom.postRoom.id"
+                                       v-text="rentalRequest.rentalRoom.postRoom.title" target="_blank"></a></td>
+                                <td v-text="rentalRequest.rentalRoom.name"></td>
+                                <td v-text="authenticationInstance.formatDate(rentalRequest.requestDate)"></td>
+                                <td v-if="task != 18 || listRentalRq[0].rentalStatus.id != 11"
+                                    v-text="authenticationInstance.formatDate(rentalRequest.startDate, true)"></td>
+                                <td v-text="rentalRequest.rentalStatus.status"></td>
                                 <td>
-                                    <button v-if="rentalRequest.statusId == 7"
-                                            v-bind:class="{disable : rentalRequest.statusId == 8}"
+                                    <button v-if="rentalRequest.rentalStatus.id == 7"
+                                            v-bind:class="{disable : rentalRequest.rentalStatus.id == 8}"
                                             @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'cancel', $event)"
                                             class="table-button">Hủy
                                     </button>
-                                    <button v-if="rentalRequest.statusId == 9"
+                                    <button v-if="rentalRequest.rentalStatus.id == 9"
                                             @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'expire', $event)"
                                             data-toggle="tooltip" data-html="true" title="Kết thúc thuê trọ"
                                             class="table-button">Kết thúc
                                     </button>
-                                    <button v-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length > 60 && task == 18"
+                                    <button v-if="rentalRequest.rentalStatus.id == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length > 60 && task == 18"
                                             v-on:click="showExpireMessage(rentalRequest)" class="table-button"
                                             data-toggle="tooltip" data-html="true" title="Xem lời nhắn của chủ trọ">Lời
                                         nhắn
                                     </button>
-                                    <p v-else-if="rentalRequest.statusId == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length <= 60 && task == 18"
+                                    <p v-else-if="rentalRequest.rentalStatus.id == 11 && rentalRequest.expireMessage != null && rentalRequest.expireMessage.length <= 60 && task == 18"
                                        v-text="rentalRequest.expireMessage"></p>
                                 </td>
                             </tr>

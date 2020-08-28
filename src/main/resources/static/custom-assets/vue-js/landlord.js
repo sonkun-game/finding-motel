@@ -118,6 +118,8 @@ var landlordInstance = new Vue({
                 && sessionStorage.getItem("momo-check") != null
                 && sessionStorage.getItem("momo-check") == "1"){
                 this.checkStatusAndSavePayment()
+            }else {
+                authenticationInstance.hidePreloader()
             }
         }
 
@@ -180,6 +182,7 @@ var landlordInstance = new Vue({
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -197,6 +200,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.listTypePost != null){
                         this.listTypePost = data.listTypePost
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -351,6 +355,7 @@ var landlordInstance = new Vue({
                         this.listPost = data.data
                         this.pagination = data.pagination
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -483,7 +488,7 @@ var landlordInstance = new Vue({
             fetch("/api-get-rooms?currentPage=" + currentPage, options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    authenticationInstance.hidePreloader()
                     if(data != null && data.code == '000'){
                         this.listRoomRequest = data.data
                         this.pagination = data.pagination
@@ -1143,6 +1148,7 @@ var landlordInstance = new Vue({
                     modalMessageInstance.message = data.message;
                     modalMessageInstance.showModal()
                 }
+                authenticationInstance.hidePreloader()
             })
         },
         checkStatusAndSavePayment(){
@@ -1164,6 +1170,7 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
+                        authenticationInstance.hidePreloader()
                         basicInfoInstance.userInfo.amount = data.landlordAmount
                         authenticationInstance.showModalNotify("Quý khách đã nạp thành công <b>"
                             + authenticationInstance.formatNumberToDisplay(data.addAmount)
@@ -1176,6 +1183,7 @@ var landlordInstance = new Vue({
                         sessionStorage.removeItem("amount")
                         sessionStorage.removeItem("errorCode")
                     }else if(data != null && data.code != "000"){
+                        authenticationInstance.hidePreloader()
                         modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()

@@ -57,7 +57,7 @@ var postDetailInstance = new Vue({
                         modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()
                     }
-
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })

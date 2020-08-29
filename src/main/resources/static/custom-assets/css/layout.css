@@ -304,3 +304,10 @@ button:disabled{
     padding-left: 40px;
     padding-right: 40px;
 }
+
+.read-more a{
+    margin: 5px 180px;
+}
+.read-more:hover{
+    background-color: white !important;
+}

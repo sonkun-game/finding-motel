@@ -523,7 +523,7 @@ var admin = new Vue({
 
             if (!this.inputDuration || this.inputDuration.length == 0) {
                 this.showModalPackageError("Vui lòng nhập thời hạn");
-            } else if (this.inputDuration*1 === 0) {
+            } else if (this.inputDuration * 1 === 0) {
                 this.showModalPackageError("Vui lòng nhập thời hạn ít nhất 1 tháng");
             } else if (this.regexCharacterSpace.test(this.inputDuration)) {
                 this.showModalPackageError("Vui lòng nhập thời hạn hợp lệ");
@@ -534,7 +534,7 @@ var admin = new Vue({
                     this.showModalPackageError("Vui lòng nhập giá");
                 } else if (this.regexCharacterSpace.test(this.inputAmount)) {
                     this.showModalPackageError("Vui lòng nhập giá hợp lệ");
-                } else if (this.inputAmount*1 < 1000) {
+                } else if (this.inputAmount * 1 < 1000) {
                     this.showModalPackageError("Vui lòng nhập giá lớn hơn 1.000đ");
                 } else {
                     //check exist duration and amount
@@ -559,7 +559,7 @@ var admin = new Vue({
                 this.showModalPackageError("Vui lòng nhập tên gói");
             } else {
                 for (let package of this.listPaymentPackage) {
-                    if (package.packageName == this.inputPackageName) {
+                    if (package.packageName == this.inputPackageName && !(this.selectedPaymentPackage != null && this.selectedPaymentPackage.packageName == this.inputPackageName)) {
                         this.showModalPackageError("Tên gói " + package.packageName + " đã tồn tại");
                         return false;
                     }

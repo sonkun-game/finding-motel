@@ -1,6 +1,8 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.NotificationModel;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +20,11 @@ public interface NotificationRepository extends JpaRepository<NotificationModel,
             "where (ntf.userNotification.username = :username)" +
             "order by ntf.createdDate desc ")
     List<NotificationModel> getAllByUsername(String username);
+
+    @Query(value = "select ntf from NotificationModel ntf " +
+            "where (ntf.userNotification.username = :username)" +
+            "order by ntf.createdDate desc ")
+    Slice<NotificationModel> getAllByUsernamePaging(String username, Pageable pageable);
 
     @Transactional
     @Modifying

@@ -8,6 +8,8 @@ var authenticationInstance = new Vue({
         isShowNotification : false,
         notificationNumber : -1,
         listNotification : [],
+        firstPageNotifies : -1,
+        isLastPageNotify : true,
     },
     methods: {
         logout(){
@@ -115,7 +117,8 @@ var authenticationInstance = new Vue({
             let request = {
                 "username": this.userInfo.username,
             }
-            fetch("/api-get-notifications", {
+            this.firstPageNotifies += 1;
+            fetch("/api-get-notifications?currentPage=" + this.firstPageNotifies, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +127,10 @@ var authenticationInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     if (data.msgCode == "notify000") {
-                        this.listNotification = data.listNotification
+                        for (let notify of data.listNotification) {
+                            this.listNotification.push(notify)
+                        }
+                        this.isLastPageNotify = data.isLastPage !== undefined && data.isLastPage !== null && data.isLastPage == true ? true : false
                     }
                 }).catch(error => {
                 console.log(error);

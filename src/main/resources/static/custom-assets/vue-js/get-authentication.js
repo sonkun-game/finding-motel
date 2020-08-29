@@ -170,6 +170,42 @@ var authenticationInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        formatDate(rawDate, onlyDate){
+            if(rawDate != null){
+                let dateFormatString = rawDate.split(".")[0]
+                let date = new Date(dateFormatString)
+                if(onlyDate != null && onlyDate){
+                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                }
+                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+            }
+        },
+        getStatusPost(postVisible, postBanned, expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(postBanned){
+                return "Bị khóa"
+            }else if(date.getTime() < currentDate.getTime()){
+                return "Hết hạn"
+            }else {
+                return postVisible ? "Hiển thị" : "Không hiển thị"
+            }
+        },
+        IsExpirePost(expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(date.getTime() < currentDate.getTime()){
+                return true
+            }else {
+                return false
+            }
+        },
+        hidePreloader(){
+            $('#preloader-active').fadeOut('slow');
         }
     },
     created(){
@@ -290,5 +326,22 @@ var modalConfirmInstance = new Vue({
             }
         }
     },
+
+})
+
+var processingLoaderInstance = new Vue({
+    el: '#processing-loader',
+    data: {
+        isShowLoader : false,
+        displayText : "Đang xử lý",
+    },
+    methods : {
+        hideLoader(){
+            this.isShowLoader = false
+        },
+        showLoader(){
+            this.isShowLoader = true
+        }
+    }
 
 })

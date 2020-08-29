@@ -1,20 +1,15 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "WISH_LIST")
 public class WishListModel implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -36,4 +31,15 @@ public class WishListModel implements Serializable {
     @Column(name = "CREATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    public WishListModel() {
+    }
+
+    public WishListModel(String id, Date createdDate, String postId,
+                         double price, double distance, double square,
+                         String description, String postTitle, String address, String imageId) {
+        this.id = id;
+        this.createdDate = createdDate;
+        this.wishListPost = new PostModel(postId, price, distance, square, description, postTitle, address, imageId);
+    }
 }

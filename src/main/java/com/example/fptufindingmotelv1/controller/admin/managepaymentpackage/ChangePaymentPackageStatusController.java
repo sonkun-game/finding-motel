@@ -6,7 +6,6 @@ import com.example.fptufindingmotelv1.service.admin.managepaymentpackage.ChangeP
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,13 +23,7 @@ public class ChangePaymentPackageStatusController {
         msg.put("data", data);
         return msg;
     }
-
-    @ResponseBody
-    @PostMapping(value = "/api-get-init-admin")
-    public JSONObject getInitAdmin() {
-        return changePaymentPackageStatusService.getInitAdminManager();
-    }
-
+    
     @ResponseBody
     @RequestMapping(value = "/api-change-status-package")
     public JSONObject changeStatusPackage(@RequestBody PaymentPackageDTO paymentPackageDTO) {

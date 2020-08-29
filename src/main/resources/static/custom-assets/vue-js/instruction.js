@@ -27,6 +27,7 @@ var instructionInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         this.listInstruction = data.data
+                        authenticationInstance.hidePreloader()
                     }
                 }).catch(error => {
                 console.log(error);

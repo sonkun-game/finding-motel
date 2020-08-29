@@ -355,7 +355,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="payment in listPayment">
-                                <td v-text="formatDate(payment.payDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(payment.payDate)"></td>
                                 <td v-text="authenticationInstance.formatNumberToDisplay(payment.amount) + ' VNĐ'"></td>
                                 <td v-text="payment.paymentMethod"></td>
                                 <td v-text="payment.momoId"></td>
@@ -363,6 +363,34 @@
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPayment.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getHistoryPayment(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getHistoryPayment(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getHistoryPayment(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div v-if="listPayment.length == 0">Không có lịch sử nạp tiền nào.</div>
                     </div>
                 </div>
 
@@ -394,10 +422,10 @@
                                     <span v-text="post.roomNumber"></span>
                                 </td>
 
-                                <td v-text="formatDate(post.createDate)"></td>
-                                <td v-text="formatDate(post.expireDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(post.createDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(post.expireDate)"></td>
                                 <td>
-                                    <div v-bind:class="post.visible && !post.banned && !IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="getStatusPost(post.visible, post.banned, post.expireDate)"></div>
+                                    <div v-bind:class="post.visible && !post.banned && !authenticationInstance.IsExpirePost(post.expireDate) ? 'status-show' : 'status-hide'" v-text="authenticationInstance.getStatusPost(post.visible, post.banned, post.expireDate)"></div>
                                 </td>
                                 <td>
                                     <i class="fas fa-edit" v-on:click="handleEditPost(post)" data-toggle="tooltip" data-html="true" title="Chỉnh sửa"></i>
@@ -410,6 +438,34 @@
 
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPost.length > 0" aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="viewListPost(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="viewListPost(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="viewListPost(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div v-if="listPost.length == 0">Không có bài đăng nào.</div>
                     </div>
                 </div>
 
@@ -432,13 +488,42 @@
                             <tbody>
                             <tr v-for="paymentPost in listPaymentPost">
                                 <td><a v-bind:href="'/post-detail?id=' + paymentPost.postPayment.id" v-text="paymentPost.postPayment.title"></a> </td>
-                                <td v-text="formatDate(paymentPost.payDate)"></td>
+                                <td v-text="authenticationInstance.formatDate(paymentPost.payDate)"></td>
                                 <td v-text="paymentPost.paymentPackage.packageName"></td>
                                 <td v-text="authenticationInstance.formatNumberToDisplay(paymentPost.paymentPackage.amount) + ' VNĐ'"></td>
                                 <td v-text="paymentPost.paymentPackage.duration + ' Tháng'"></td>
                             </tr>
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listPaymentPost.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getHistoryPaymentPost(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getHistoryPaymentPost(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getHistoryPaymentPost(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div v-if="listPaymentPost.length == 0">Không có lịch sử thanh toán nào.</div>
                     </div>
                 </div>
                 <!-- Quản lý phòng -->
@@ -500,8 +585,8 @@
                                                 <td>
                                                     <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
                                                 </td>
-                                                <td v-text="formatDate(request.requestDate)"></td>
-                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
                                                 <td v-text="request.rentalStatus.status"></td>
                                                 <td>
                                                     <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
@@ -516,6 +601,34 @@
 
                             </tbody>
                         </table>
+                        <nav v-if="pagination.totalPages != 1 && listRoomRequest.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getListRoomPaging(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getListRoomPaging(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getListRoomPaging(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
 
                     </div>
                 </div>
@@ -589,8 +702,8 @@
                                                 <td>
                                                     <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
                                                 </td>
-                                                <td v-text="formatDate(request.requestDate)"></td>
-                                                <td v-text="formatDate(request.startDate, true)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
+                                                <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
                                                 <td v-text="request.rentalStatus.status"></td>
                                                 <td>
                                                     <button v-if="request.rentalStatus.id == 7" v-on:click="handleProcessRequest(room, request, 'accept')" class="table-button">Chấp nhận</button>
@@ -608,7 +721,34 @@
 
                             </tbody>
                         </table>
-
+                        <nav v-if="pagination.totalPages != 1 && listRoomRequest.length > 0"
+                             aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li v-bind:class="{disabled : !pagination.hasPrevious}"
+                                    class="page-item">
+                                    <a v-on:click="getListRoomPaging(pagination.currentPage-1)"
+                                       v-bind:class="{'text-primary' : pagination.hasPrevious}" class="page-link"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li v-for="page in pagination.totalPages"
+                                    v-bind:class="{active : page == pagination.currentPage+1}" class="page-item"
+                                    v-on:click="getListRoomPaging(page-1)">
+                                    <a class="page-link">{{page}}</a>
+                                </li>
+                                <li v-bind:class="{disabled : !pagination.hasNext}"
+                                    class="page-item">
+                                    <a v-on:click="getListRoomPaging(pagination.currentPage+1)"
+                                       v-bind:class="{'text-primary' : pagination.hasNext}" class="page-link"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
                 <!--   Modal extend -->
@@ -765,7 +905,7 @@
                             </div>
                             <div class="infor-modal">
                                 <p class="left-modal">Ngày sinh:</p>
-                                <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
+                                <input :value="authenticationInstance.formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
                                        type="text" disabled/>
                             </div>
                             <div class="infor-modal">
@@ -897,9 +1037,9 @@
 <div th:replace="layout :: js-fragment"></div>
 
 <!--<script th:src="@{/assets/js/bootstrap.min.js}"></script>-->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
 <!--<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>-->
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/profile-user.js}"></script>
 <script type="text/javascript" th:src="@{/custom-assets/vue-js/landlord.js}"></script>

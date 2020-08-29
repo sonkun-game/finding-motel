@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -60,10 +61,18 @@ public class RentalRequestModel implements Serializable {
         this.startDate = startDate;
         this.cancelDate = cancelDate;
         this.expireMessage = expireMessage;
-        this.rentalRenter = new RenterModel();
-        this.rentalRenter.setUsername(renterUsername);
-        this.rentalStatus = new StatusModel();
-        this.rentalStatus.setId(statusId);
-        this.rentalStatus.setStatus(statusNm);
+        this.rentalRenter = new RenterModel(renterUsername);
+        this.rentalStatus = new StatusModel(statusId, statusNm);
+    }
+    public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
+                              String postId, String postTitle, String roomId, String roomName,
+                              Long statusId, String statusNm) {
+        this.id = id;
+        this.requestDate = requestDate;
+        this.startDate = startDate;
+        this.cancelDate = cancelDate;
+        this.expireMessage = expireMessage;
+        this.rentalStatus = new StatusModel(statusId, statusNm);
+        this.rentalRoom = new RoomModel(roomId, roomName, postId, postTitle);
     }
 }

@@ -61,4 +61,10 @@ public class RoomModel implements Serializable {
         this.status.setStatus(statusNm);
         this.requestNumber = requestNumber;
     }
+
+    public RoomModel(String id, String name, String postId, String postTitle) {
+        this.id = id;
+        this.name = name;
+        this.postRoom = new PostModel(postId, postTitle);
+    }
 }

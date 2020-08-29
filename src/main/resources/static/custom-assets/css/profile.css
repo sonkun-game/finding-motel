@@ -1067,3 +1067,6 @@ a:hover {
 .visible-hide {
     visibility: hidden;
 }
+.nav-paging{
+    padding-top: 50px;
+}

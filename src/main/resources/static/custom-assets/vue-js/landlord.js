@@ -43,6 +43,7 @@ var landlordInstance = new Vue({
         validateMessage : "",
         showMsg : false,
         showMsgModal : false,
+        pagination: [],
     },
     created(){
         let previousUrl = document.referrer
@@ -117,6 +118,8 @@ var landlordInstance = new Vue({
                 && sessionStorage.getItem("momo-check") != null
                 && sessionStorage.getItem("momo-check") == "1"){
                 this.checkStatusAndSavePayment()
+            }else {
+                authenticationInstance.hidePreloader()
             }
         }
 
@@ -153,12 +156,15 @@ var landlordInstance = new Vue({
             }
             modalConfirmInstance.showModal()
         },
-        getHistoryPaymentPost(){
+        getHistoryPaymentPost(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'landlord' : this.userInfo.username
             }
 
-            fetch("/api-get-history-payment-post", {
+            fetch("/api-get-history-payment-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -170,11 +176,13 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         this.listPaymentPost = data.data
+                        this.pagination = data.pagination
                     }else {
                         modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -192,6 +200,7 @@ var landlordInstance = new Vue({
                     if(data != null && data.listTypePost != null){
                         this.listTypePost = data.listTypePost
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -325,11 +334,14 @@ var landlordInstance = new Vue({
             }
 
         },
-        viewListPost(){
+        viewListPost(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'username' : this.userInfo.username,
             }
-            fetch("/api-view-list-post", {
+            fetch("/api-view-list-post?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -341,7 +353,9 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == "000"){
                         this.listPost = data.data
+                        this.pagination = data.pagination
                     }
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -379,11 +393,11 @@ var landlordInstance = new Vue({
                 modalMessageInstance.showModal()
                 return
             }
-            this.setFieldEditMode(post)
             userTaskInstance.task = 16
             noteInstance.task = 16
             this.task = 16
             sessionStorage.setItem("task", 16)
+            this.setFieldEditMode(post)
             setTimeout( () => {
                 this.initMap()
                 this.handleDisplayDirection()
@@ -403,7 +417,7 @@ var landlordInstance = new Vue({
             // this.listRoom = post.listRoom
             this.inputAddress = post.address
             // this.uploadImages = post.listImage
-            this.expireDate = this.formatDate(post.expireDate)
+            this.expireDate = authenticationInstance.formatDate(post.expireDate)
             this.postId = post.id
             this.getListImageByPost(post.id)
             this.getListRoomByPost(post.id)
@@ -436,9 +450,34 @@ var landlordInstance = new Vue({
                 'roomId' : null,
                 'statusId' : null,
             }
-            this.getListRoom(request)
+            if(this.task == 16){
+                this.getListRoom(request, -1)
+            }else {
+                this.getListRoom(request)
+            }
+
         },
-        getListRoom(request){
+        getListRoomPaging(currentPage){
+            if(this.task == 15){
+                let request = {
+                    'postId' : this.selectedPost.id,
+                    'roomId' : null,
+                    'statusId' : null,
+                }
+                this.getListRoom(request, currentPage)
+            }else if(this.task == 5){
+                let request = {
+                    'statusId' : 7,
+                    'postId' : null,
+                    'roomId' : null,
+                }
+                this.getListRoom(request, currentPage)
+            }
+        },
+        getListRoom(request, currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let options = {
                 method: 'POST',
                 headers:{
@@ -446,12 +485,13 @@ var landlordInstance = new Vue({
                 },
                 body: JSON.stringify(request)
             }
-            fetch("/api-get-rooms", options)
+            fetch("/api-get-rooms?currentPage=" + currentPage, options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    authenticationInstance.hidePreloader()
                     if(data != null && data.code == '000'){
                         this.listRoomRequest = data.data
+                        this.pagination = data.pagination
                         if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
                             this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.requestId)
@@ -627,7 +667,7 @@ var landlordInstance = new Vue({
                             basicInfoInstance.userInfo.amount = data.amount;
                             this.selectedPost.expireDate = data.expireDate
                             sessionStorage.setItem("selectedPost", this.selectedPost)
-                            this.expireDate = this.formatDate(data.expireDate);
+                            this.expireDate = authenticationInstance.formatDate(data.expireDate);
                             this.viewListPost();
                             this.closeModalExtend();
                         }, 2000);
@@ -867,12 +907,10 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Thêm phòng thành công", 2000)
+                        this.getListRoomByPost(this.selectedPost.id)
                         setTimeout(() => {
                             document.body.removeAttribute("class")
                             document.getElementById("myModal_AddRoom").style.display = 'none';
-                            for (let room of data.data) {
-                                this.listRoomRequest.push(room)
-                            }
                         }, 2000);
                     }
                 }).catch(error => {
@@ -1086,11 +1124,14 @@ var landlordInstance = new Vue({
             this.showModal = false;
             this.$http.get
         },
-        getHistoryPayment(){
+        getHistoryPayment(currentPage){
+            if (currentPage === undefined || !currentPage) {
+                currentPage = 0;
+            }
             let request = {
                 'landlord' : this.userInfo.username
             }
-            fetch("/api-get-payment-by-landlord", {
+            fetch("/api-get-payment-by-landlord?currentPage=" + currentPage, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -1101,45 +1142,14 @@ var landlordInstance = new Vue({
             .then((data) => {
                 if (data != null && data.code == "000") {
                     this.listPayment = data.data
+                    this.pagination = data.pagination
                 }else {
                     modalMessageInstance.title = "Thông báo"
                     modalMessageInstance.message = data.message;
                     modalMessageInstance.showModal()
                 }
+                authenticationInstance.hidePreloader()
             })
-        },
-        formatDate(rawDate, onlyDate){
-            if(rawDate != null){
-                let dateFormatString = rawDate.split(".")[0]
-                let date = new Date(dateFormatString)
-                if(onlyDate != null && onlyDate){
-                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-                }
-                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-            }
-        },
-        getStatusPost(postVisible, postBanned, expireDate){
-            let dateFormatString = expireDate.split(".")[0]
-            let date = new Date(dateFormatString)
-            let currentDate = new Date()
-            if(postBanned){
-                return "Bị khóa"
-            }else if(date.getTime() < currentDate.getTime()){
-                return "Hết hạn"
-            }else {
-                return postVisible ? "Hiển thị" : "Không hiển thị"
-            }
-        },
-        IsExpirePost(expireDate){
-            let dateFormatString = expireDate.split(".")[0]
-            let date = new Date(dateFormatString)
-            let currentDate = new Date()
-            if(date.getTime() < currentDate.getTime()){
-                return true
-            }else {
-                return false
-            }
         },
         checkStatusAndSavePayment(){
             let request = {
@@ -1160,6 +1170,7 @@ var landlordInstance = new Vue({
                 .then(response => response.json())
                 .then((data) => {
                     if (data != null && data.code == "000") {
+                        authenticationInstance.hidePreloader()
                         basicInfoInstance.userInfo.amount = data.landlordAmount
                         authenticationInstance.showModalNotify("Quý khách đã nạp thành công <b>"
                             + authenticationInstance.formatNumberToDisplay(data.addAmount)
@@ -1172,6 +1183,7 @@ var landlordInstance = new Vue({
                         sessionStorage.removeItem("amount")
                         sessionStorage.removeItem("errorCode")
                     }else if(data != null && data.code != "000"){
+                        authenticationInstance.hidePreloader()
                         modalMessageInstance.title = "Thông báo"
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()

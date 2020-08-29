@@ -1,13 +1,12 @@
 package com.example.fptufindingmotelv1.repository;
 
-import com.example.fptufindingmotelv1.model.PaymentModel;
 import com.example.fptufindingmotelv1.model.PaymentPostModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 public interface PaymentPostRepository extends JpaRepository<PaymentPostModel, String> {
     @Query(value = "select new PaymentPostModel (p.id, p.payDate, pp.id, pp.amount, " +
@@ -16,9 +15,8 @@ public interface PaymentPostRepository extends JpaRepository<PaymentPostModel, S
             "join PostModel post on p.postPayment.id = post.id " +
             "join LandlordModel ll on post.landlord.username = ll.username " +
             "where (1 = 1)" +
-            "and (:landlordId is null or ll.username = :landlordId)" +
-            "order by p.payDate desc ")
-    List<PaymentPostModel> getPaymentPostByLandlord(String landlordId);
+            "and (:landlordId is null or ll.username = :landlordId)" )
+    Page<PaymentPostModel> getPaymentPostByLandlord(String landlordId, Pageable pageable);
 
     @Transactional
     @Modifying

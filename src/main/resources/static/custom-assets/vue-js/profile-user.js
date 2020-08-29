@@ -27,7 +27,9 @@ var profileInstance = new Vue({
         authenticationInstance.isShowBtn = false
     },
     mounted(){
-
+        if(this.task == 0 || this.task == 1){
+            authenticationInstance.hidePreloader()
+        }
     },
     methods: {
         validateInput(inputValue, require, minLength, maxLength, min, max, inputName, unit){
@@ -413,6 +415,7 @@ var userTaskInstance = new Vue({
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
                         admin.inputRole = 0
+                        admin.getAllRole()
                         admin.searchUser()
                     }else{
                         window.location.href = "/quan-ly-he-thong"
@@ -430,6 +433,7 @@ var userTaskInstance = new Vue({
                 }else if(task == 10){
                     if(this.$route.fullPath.includes("quan-ly-he-thong")){
                         admin.task = task
+                        admin.getInitFilterPost()
                         admin.searchPost()
                     }else{
                         window.location.href = "/quan-ly-he-thong"

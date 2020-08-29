@@ -3,7 +3,6 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.PostModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +14,16 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostModel, String> {
-//    List<PostModel> findByVisibleTrueAndBannedFalse(Sort sort);
 
-    @Query(value = "select p from PostModel p " +
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, " +
+            "p.mapLocation, p.createDate, p.expireDate, " +
+            "t.id, t.name, ll.username, ll.displayName, ll.phoneNumber, " +
+            "sum(case when (r.statusReport.id = 3 or r.statusReport.id = 5) then 1 else 0 end) )" +
+            " from PostModel p " +
+            "join TypeModel t on p.type.id = t.id " +
+            "join LandlordModel ll on p.landlord.username = ll.username " +
+            "left outer join ReportModel r on p.id = r.postReport.id " +
             "where ((:landlordId is null or p.landlord.username like %:landlordId%) or (:title is null or p.title like %:title%))" +
             "and (:priceMax is null or p.price <= :priceMax) " +
             "and (:priceMin is null or p.price >= :priceMin) " +
@@ -28,10 +34,14 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "and (:isVisible is null or p.visible = :isVisible)" +
             "and (:postType is null or p.type.id = :postType) " +
             "and (:banned is null or p.banned = :banned)" +
+            "and (:currentDate is null or p.expireDate < :currentDate)" +
+            "group by p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, p.mapLocation, p.createDate, " +
+            "p.expireDate, t.id, t.name, ll.username, ll.displayName, ll.phoneNumber" +
             "")
     Page<PostModel> searchPost(String landlordId, String title, Double priceMax, Double priceMin,
                                Double distanceMax, Double distanceMin,
-                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Pageable pageable);
+                               Double squareMax, Double squareMin, Boolean isVisible, Long postType, Boolean banned, Date currentDate, Pageable pageable);
 
     @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, " +
             "p.description, p.title, p.address, MAX (im.id)) from PostModel p " +
@@ -73,18 +83,33 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "join LandlordModel ll on p.landlord.username = ll.username " +
             "where (:landlordId is null or ll.username = :landlordId)" +
             "")
-    List<PostModel> getPostsByLandlord(String landlordId);
+    Page<PostModel> getPostsByLandlord(String landlordId, Pageable pageable);
 
 
-    @Query(value = "select top 5 * from POST p " +
-            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
-            "and (:visible is null or p.IS_VISIBLE = :visible)" +
-            "and (:banned is null or p.IS_BANNED = :banned)" +
-            "and ((p.ID != :postId)" +
-            "or (p.TYPE_ID = :typeId and p.ID != :postId))" +
-            "", nativeQuery = true)
-    List<PostModel> getRelatedPost(String postId, String landlordId,
-                                   Long typeId, Boolean visible, Boolean banned);
+//    @Query(value = "select top 5 * from POST p " +
+//            "where (:landlordId is null or p.LANDLORD_ID like %:landlordId%)" +
+//            "and (:visible is null or p.IS_VISIBLE = :visible)" +
+//            "and (:banned is null or p.IS_BANNED = :banned)" +
+//            "and ((p.ID != :postId)" +
+//            "or (p.TYPE_ID = :typeId and p.ID != :postId))" +
+//            "", nativeQuery = true)
+//    List<PostModel> getRelatedPost(String postId, String landlordId,
+//                                   Long typeId, Boolean visible, Boolean banned);
+
+    @Query(value = "select new PostModel(p.id, p.price, p.title, MAX (im.id)) " +
+            "from PostModel p " +
+            "join ImageModel im on p.id = im.post.id " +
+            "where 1 = 1 " +
+            "and (:visible is null or p.visible = :visible)" +
+            "and (:banned is null or p.banned = :banned) " +
+            "and (:currentDate is null or p.expireDate >= :currentDate)" +
+            "and (p.id <> :postId) " +
+            "and ((:landlordId is null or p.landlord.username like %:landlordId%)" +
+            "or (p.type.id = :typeId)) " +
+            "group by p.id, p.price, p.title " +
+            "")
+    List<PostModel> getRelatedPost(String postId, String landlordId, Long typeId, Boolean visible,
+                                   Boolean banned, Date currentDate, Pageable pageable);
 
     @Transactional
     @Modifying
@@ -142,4 +167,12 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
     @Query(value = "delete p from POST p " +
             "where p.ID = :postId ", nativeQuery = true)
     void deletePostById(String postId);
+
+    @Query(value = "select sum(pr.reportNumber) from " +
+            "(select sum(case when (r.STATUS_ID = 3 or r.STATUS_ID = 4) then 1 else 0 end) reportNumber " +
+            "from POST p " +
+            "left outer join REPORT r on r.POST_ID = p.ID " +
+            "where p.LANDLORD_ID = :landlordUsername " +
+            "group by p.ID) as pr", nativeQuery = true)
+    Long getReportNumberOfLandlord(String landlordUsername);
 }

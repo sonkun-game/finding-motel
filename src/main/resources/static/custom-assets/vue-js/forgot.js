@@ -17,6 +17,9 @@ var forgotInstance = new Vue({
         intervalID : null,
         expireDate : 0,
     },
+    mounted(){
+        authenticationInstance.hidePreloader()
+    },
     methods: {
         sendOTP() {
             if (this.inputPhoneNum == null || this.inputPhoneNum.length == 0) {

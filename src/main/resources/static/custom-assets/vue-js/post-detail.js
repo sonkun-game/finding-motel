@@ -19,6 +19,8 @@ var postDetailInstance = new Vue({
         listPostOfRenter : [],
         listRoomOfPost : [],
         disableFunctions : false,
+        validateMessage : "",
+        showMsg : false,
     },
     beforeMount() {
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
@@ -55,7 +57,7 @@ var postDetailInstance = new Vue({
                         modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()
                     }
-
+                    authenticationInstance.hidePreloader()
                 }).catch(error => {
                 console.log(error);
             })
@@ -117,10 +119,47 @@ var postDetailInstance = new Vue({
             document.body.removeAttribute("class")
         },
         showModalConfirmSentRental() {
+            if(this.validateRoomSelect() && this.validateDate(this.dateRequestRental)){
+                this.showMsg = false
+            }else {
+                this.showMsg = true
+                return
+            }
             this.confirmAction = this.sentRentalRequest;
             //show modal
             document.getElementById("modalConfirm").style.display = 'block';
             document.getElementById("modalConfirmMessage").innerHTML = 'Bạn có chắc chắn tạo yêu cầu không?';
+        },
+        validateRoomSelect(){
+            if(this.roomIdRental == "" || this.roomIdRental == null){
+                this.validateMessage = "Vui lòng chọn phòng muốn thuê"
+                this.showMsg = true
+                return false
+            }else {
+                this.showMsg = false
+                return true
+            }
+        },
+        validateDate(inputDate){
+            let startDate = new Date(inputDate)
+            let currentDate = new Date()
+            if(inputDate == "" || inputDate == null){
+                this.validateMessage = "Vui lòng chọn ngày bắt đầu"
+                this.showMsg = true
+                return false
+            }else if(Number.isNaN(startDate.getTime())){
+                this.validateMessage = "Ngày bắt đầu không hợp lệ"
+                this.showMsg = true
+                return false
+            }else if(currentDate.getTime() >= startDate.getTime()){
+                this.validateMessage = "Vui lòng chọn ngày bắt đầu sau ngày " +
+                    currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear()
+                this.showMsg = true
+                return false
+            }else {
+                this.showMsg = false
+                return true
+            }
         },
         closeModalConfirm() {
             //close modal
@@ -140,9 +179,7 @@ var postDetailInstance = new Vue({
                 return;
             }
             this.roomIdRental = roomId;
-        },
-        setRequestDateRental(date) {
-            this.dateRequestRental = date;
+            this.validateRoomSelect()
         },
         showModalNotify(msg) {
             document.getElementById("my-modal-notification").style.display = 'block';
@@ -158,6 +195,7 @@ var postDetailInstance = new Vue({
                 "startDate": this.dateRequestRental,
                 "statusId": 7,
                 "postId": this.postId,
+                "landlordUsername" : this.post.landlord,
             }
             fetch("/sent-rental-request", {
                 method: 'POST',
@@ -240,7 +278,7 @@ var postDetailInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data);
-                    if(data != null && data.msgCode == "wishlist000"){
+                    if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
                         this.getWishListOfRenter()
                     }
@@ -262,13 +300,13 @@ var postDetailInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    if(data != null && data.msgCode == "wishlist002"){
+                    if(data != null && data.code == "403"){
                         window.location.href = "/dang-nhap"
-                    }else if(data != null && data.msgCode == "wishlist000"){
+                    }else if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
                         this.getWishListOfRenter()
                     }else {
-                        modalMessageInstance.message = "Lỗi hệ thống!"
+                        modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()
                         return null
                     }

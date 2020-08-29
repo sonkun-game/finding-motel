@@ -91,19 +91,20 @@ display: flex;
 }
 
 .textfiled{
-font-family: sans-serif;
-width: 60%;
-border-radius: 6px;
-border: .5px solid;
-height: 30px;
-padding-left: 10px;
-background-color: white;
+    font-family: sans-serif;
+    border-radius: 6px;
+    border: .5px solid;
+    height: 30px;
+    padding-left: 10px;
+    background-color: white;
+    width: 100%;
 }
 .label{
-font-family:sans-serif;
-width: 20%;
-color: black;
-font-size: inherit;
+    font-family:sans-serif;
+    color: black;
+    font-size: inherit;
+    padding-left: 40px;
+    float: left;
 }
 
 .detail-3{
@@ -111,27 +112,27 @@ width: 80%;
 }
 
 .save{
-width: 20%;
-height: 40px;
-margin-top: 50px;
-float: right;
-color: white;
-border: .25px solid #dca73a;
-border-radius: 3px;
-background-color: #dca73a;
-cursor: pointer;
+    min-width: 150px;
+    height: 40px;
+    margin-top: 20px;
+    float: right;
+    color: white;
+    border: .25px solid #dca73a;
+    border-radius: 3px;
+    background-color: #dca73a;
+    cursor: pointer;
 }
 .change{
 
-width: 15%;
-height: 30px;
-display: block;
-margin: 0px auto;
-color: white;
-border: .25px solid #dca73a;
-border-radius: 3px;
-background-color: #dca73a;
-cursor: pointer;
+    min-width: 100px;
+    height: 30px;
+    display: block;
+    margin: 0px auto;
+    color: white;
+    border: .25px solid #dca73a;
+    border-radius: 3px;
+    background-color: #dca73a;
+    cursor: pointer;
 }
 
 .btn-hover:hover{
@@ -162,7 +163,7 @@ font-family:  sans-serif !important;
 }
 
 .information-detail{
-    padding-top: 50px;
+    padding-top: 20px;
     text-align: center;
 }
 
@@ -316,30 +317,38 @@ padding-top: 20px;
 }
 
 .change-phone-area{
-margin: 50px 0;
+    padding: 20px 0 50px 0;
 }
 
-.title-phone{
-margin: 4px 20px;
+.title-phone-modal{
+
+}
+.error-line{
+    display: flex;
 }
 
 .btn-default-otp{
-margin: 0px 20px;
-border: 1px solid #dca73a;
-border-radius: 4px;
-cursor: pointer;
-background-color: #dca73a;
-color: white;
+    min-width: 100px;
+    border: 1px solid #dca73a;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #dca73a;
+    color: white;
+    float: left;
+}
+input:disabled{
+    background-color: #DDDDDD;
 }
 
 .change-phone,
 .confirm-otp-phone{
-height: 30px;
-border-radius: 6px;
+    height: 30px;
+    border-radius: 6px;
+    float: left;
 }
 
 .title-confirm-otp{
-margin: 4px 22px;
+    margin: 4px 22px;
 }
 
 .invisible {
@@ -434,7 +443,7 @@ color: #fff;
     height: 50px;
     background: #dca73a;
     display: block;
-    margin: 50px auto;
+    margin: 20px auto 50px auto;
     border: medium none;
     border-radius: 3px;
     color: white;
@@ -1035,4 +1044,29 @@ a:hover {
 }
 .map-container{
     position: relative;
+}
+.request-collapse:hover {
+    background-color: #f8f9fa !important;
+}
+#modalEndRentalRequest .modal-body{
+    padding: 20px 45px 10px 45px !important;
+}
+#post-new-room .msg-notification span,
+#myModal_Extend .msg-notification span,
+#myModal_AddRoom .msg-notification span{
+    font-size: 16px;
+    padding-left: 10px;
+}
+#post-new-room .msg-notification span b{
+    color: #e21010;
+}
+.msg-notification .text-timer{
+    margin: auto;
+}
+
+.visible-hide {
+    visibility: hidden;
+}
+.nav-paging{
+    padding-top: 50px;
 }

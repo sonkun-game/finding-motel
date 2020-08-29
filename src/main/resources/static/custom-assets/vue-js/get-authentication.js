@@ -19,7 +19,7 @@ var authenticationInstance = new Vue({
             }).then(response => response.json())
                 .then((data) => {
                     console.log(data)
-                    if(data != null && data.code === "msg001"){
+                    if(data != null && data.code === "000"){
                         sessionStorage.removeItem("userInfo")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
@@ -34,8 +34,8 @@ var authenticationInstance = new Vue({
                 return null
             }
             let condition = {
-                message: "Mật khẩu phải chứa tối thiểu 8 kí tự, bao gồm chữ thường, chữ hoa, chữ số",
-                regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+                message: "Mật khẩu phải chứa tối thiểu 6 kí tự, bao gồm chữ thường, chữ hoa, chữ số và không có kí tự khoảng trắng.",
+                regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?^\w\S).[^\s]{5,}$/
             }
             if(!condition.regex.test(password)){
                 return condition.message
@@ -170,9 +170,45 @@ var authenticationInstance = new Vue({
                 }).catch(error => {
                 console.log(error);
             })
+        },
+        formatDate(rawDate, onlyDate){
+            if(rawDate != null){
+                let dateFormatString = rawDate.split(".")[0]
+                let date = new Date(dateFormatString)
+                if(onlyDate != null && onlyDate){
+                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                }
+                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+            }
+        },
+        getStatusPost(postVisible, postBanned, expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(postBanned){
+                return "Bị khóa"
+            }else if(date.getTime() < currentDate.getTime()){
+                return "Hết hạn"
+            }else {
+                return postVisible ? "Hiển thị" : "Không hiển thị"
+            }
+        },
+        IsExpirePost(expireDate){
+            let dateFormatString = expireDate.split(".")[0]
+            let date = new Date(dateFormatString)
+            let currentDate = new Date()
+            if(date.getTime() < currentDate.getTime()){
+                return true
+            }else {
+                return false
+            }
+        },
+        hidePreloader(){
+            $('#preloader-active').fadeOut('slow');
         }
     },
-    mounted(){
+    created(){
         // if(sessionStorage.getItem("userInfo")){
         //     this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
         //     if(this.userInfo.role == "RENTER"){
@@ -228,6 +264,7 @@ var modalMessageInstance = new Vue({
     data: {
         userInfo: {},
         message: "",
+        title: "Thông báo",
     },
     beforeMount(){
         this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
@@ -289,5 +326,22 @@ var modalConfirmInstance = new Vue({
             }
         }
     },
+
+})
+
+var processingLoaderInstance = new Vue({
+    el: '#processing-loader',
+    data: {
+        isShowLoader : false,
+        displayText : "Đang xử lý",
+    },
+    methods : {
+        hideLoader(){
+            this.isShowLoader = false
+        },
+        showLoader(){
+            this.isShowLoader = true
+        }
+    }
 
 })

@@ -1,22 +1,16 @@
 package com.example.fptufindingmotelv1.repository;
 
 import com.example.fptufindingmotelv1.model.RoomModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<RoomModel, String> {
-
-    @Query(value = "select * from ROOM r " +
-            "join RENTAL_REQUEST rq " +
-            "on r.ID = rq.ROOM_ID " +
-            "and (:statusId is null or rq.STATUS_ID = :statusId)" +
-            "join POST p on p.ID = r.POST_ID " +
-            "join LANDLORD llrd on llrd.USER_NAME = p.LANDLORD_ID " +
-            "where (llrd.USER_NAME = :landlordId)" +
-            "", nativeQuery = true)
-    List<RoomModel> getListRoom(String landlordId, Long statusId);
 
     @Query(value = "select r from RoomModel r " +
             "where (:landlordId is null or r.postRoom.landlord.username = :landlordId)" +
@@ -30,5 +24,38 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "where (:postId is null or r.postRoom.id = :postId)" +
             "order by r.name asc ")
     List<RoomModel> getListRoomByPostId(String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete r from ROOM r " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteRoomsByPost(String postId);
+
+    @Query(value = "select new RoomModel(r.id, r.name, p.id, p.title, s.id, s.status, count(rq.id)) from RoomModel r " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "join StatusModel s on r.status.id = s.id " +
+            "left outer join RentalRequestModel rq on rq.rentalRoom.id = r.id " +
+            "where (:roomId is null or r.id = :roomId)" +
+            "and (:postId is null or p.id = :postId) " +
+            "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
+            "group by r.id, r.name, p.id, p.title, s.id, s.status " +
+            "order by r.name asc ")
+    Page<RoomModel> getRooms(String roomId, String postId, Long statusId, Pageable pageable);
+
+    @Query(value = "select new RoomModel(r.id, r.name, p.id, p.title, s.id, s.status, count(rq.id)) from RoomModel r " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "join StatusModel s on r.status.id = s.id " +
+            "left outer join RentalRequestModel rq on rq.rentalRoom.id = r.id " +
+            "where (:roomId is null or r.id = :roomId)" +
+            "and (:postId is null or p.id = :postId) " +
+            "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
+            "group by r.id, r.name, p.id, p.title, s.id, s.status " +
+            "order by r.name asc ")
+    List<RoomModel> getRooms(String roomId, String postId, Long statusId);
+
+    @Query(value = "select new RoomModel(r.id, r.name, p.id, p.title) from RoomModel r " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "where (:roomId is null or r.id = :roomId)")
+    RoomModel getRoomById(String roomId);
 
 }

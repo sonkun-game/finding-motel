@@ -1,7 +1,9 @@
 package com.example.fptufindingmotelv1.model;
 
 
+import com.example.fptufindingmotelv1.untils.Constant;
 import lombok.*;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -19,7 +21,7 @@ public class PostModel implements Serializable{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     private String id;
 
     @ManyToOne
@@ -27,40 +29,40 @@ public class PostModel implements Serializable{
     private TypeModel type;
 
     @ManyToOne
-    @JoinColumn(name = "LANDLORD_ID", nullable = false)
+    @JoinColumn(name = "LANDLORD_ID")
     private LandlordModel landlord;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column(name = "PRICE")
     private double price;
 
-    @Column(name = "DISTANCE", nullable = false)
+    @Column(name = "DISTANCE")
     private double distance;
 
-    @Column(name = "SQUARE", nullable = false)
+    @Column(name = "SQUARE")
     private double square;
 
-    @Column(name = "ROOM_NUMBER", nullable = false)
+    @Column(name = "ROOM_NUMBER")
     private int roomNumber;
 
-    @Column(name = "CREATE_DATE", nullable = false)
+    @Column(name = "CREATE_DATE")
     private Date createDate;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "EXPIRE_DATE", nullable = false)
+    @Column(name = "EXPIRE_DATE")
     private Date expireDate;
 
-    @Column(name = "IS_VISIBLE", nullable = false)
+    @Column(name = "IS_VISIBLE")
     private boolean visible;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE")
     private String title;
 
-    @Column(name = "IS_BANNED", nullable = false)
+    @Column(name = "IS_BANNED")
     private boolean banned;
 
-    @Column(name = "ADDRESS", nullable = false)
+    @Column(name = "ADDRESS")
     private String address;
 
     @Column(name = "MAP_LOCATION")
@@ -81,11 +83,40 @@ public class PostModel implements Serializable{
     @OneToMany(mappedBy = "postRoom")
     private List<RoomModel> rooms;
 
+    @Transient
+    private long reportNumber;
+
+    @Transient
+    private boolean banAvailable;
+
     public PostModel() {
     }
 
     public PostModel(String id) {
         this.id = id;
+    }
+
+    public PostModel(String id, Date expireDate) {
+        this.id = id;
+        this.expireDate = expireDate;
+    }
+
+    public PostModel(String id, Long reportNumber) {
+        this.id = id;
+        this.reportNumber = reportNumber;
+    }
+
+    public PostModel(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public PostModel(String id, double price, String title, String imageId) {
+        this.id = id;
+        this.price = price;
+        this.title = title;
+        this.images = new ArrayList<>();
+        this.images.add(new ImageModel(imageId));
     }
 
     public PostModel(String id, double price, double distance, double square,
@@ -102,7 +133,7 @@ public class PostModel implements Serializable{
         this.images.add(new ImageModel(imageId));
     }
 
-    public PostModel(String id, double price, double distance, double square,
+    public PostModel(String id, double price, double distance, double square, int roomNumber,
                      String description, String title, String address, boolean visible, boolean banned,
                      String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
                      String landlordUsername, String landlordDisplayName, String landlordPhone
@@ -111,6 +142,7 @@ public class PostModel implements Serializable{
         this.price = price;
         this.distance = distance;
         this.square = square;
+        this.roomNumber = roomNumber;
         this.description = description;
         this.title = title;
         this.address = address;
@@ -126,5 +158,32 @@ public class PostModel implements Serializable{
         this.landlord.setUsername(landlordUsername);
         this.landlord.setDisplayName(landlordDisplayName);
         this.landlord.setPhoneNumber(landlordPhone);
+    }
+
+    public PostModel(String id, double price, double distance, double square, int roomNumber,
+                     String description, String title, String address, boolean visible, boolean banned,
+                     String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
+                     String landlordUsername, String landlordDisplayName, String landlordPhone, long reportNumber
+    ) {
+        this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
+        this.roomNumber = roomNumber;
+        this.description = description;
+        this.title = title;
+        this.address = address;
+        this.visible = visible;
+        this.banned = banned;
+        this.mapLocation = mapLocation;
+        this.createDate = createDate;
+        this.expireDate = expireDate;
+        this.type = new TypeModel(typeId, typeName);
+        this.landlord = new LandlordModel();
+        this.landlord.setUsername(landlordUsername);
+        this.landlord.setDisplayName(landlordDisplayName);
+        this.landlord.setPhoneNumber(landlordPhone);
+        this.reportNumber = reportNumber;
+        this.banAvailable = reportNumber >= Constant.NUMBER_OF_BAN_DATE_POST;
     }
 }

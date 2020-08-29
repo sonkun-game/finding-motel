@@ -1,6 +1,6 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;

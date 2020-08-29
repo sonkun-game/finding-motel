@@ -41,4 +41,9 @@ public class StatusModel implements Serializable {
     public StatusModel(Long id) {
         this.id = id;
     }
+
+    public StatusModel(Long id, String name) {
+        this.id = id;
+        this.status = name;
+    }
 }

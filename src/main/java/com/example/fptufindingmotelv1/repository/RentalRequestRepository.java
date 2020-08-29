@@ -3,6 +3,9 @@ package com.example.fptufindingmotelv1.repository;
 import com.example.fptufindingmotelv1.model.RentalRequestModel;
 import com.example.fptufindingmotelv1.model.RenterModel;
 import com.example.fptufindingmotelv1.model.RoomModel;
+import com.example.fptufindingmotelv1.model.StatusModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,25 +31,49 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
     List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId, String roomId);
 
 
-    @Query(value = "select rr from RentalRequestModel rr " +
-            "where (:id is null or rr.id like :id )" +
+    @Query(value = "select new RentalRequestModel(rr.id, rr.requestDate, rr.startDate, " +
+            "rr.cancelDate, rr.expireMessage, p.id, p.title, r.id, r.name, s.id, s.status) from RentalRequestModel rr " +
+            "join RoomModel r on rr.rentalRoom.id = r.id " +
+            "join PostModel p on r.postRoom.id = p.id " +
+            "join StatusModel s on rr.rentalStatus.id = s.id " +
+            "where (:id is null or rr.id = :id )" +
             "and (:renterUsername is null or rr.rentalRenter.username = :renterUsername)" +
             "and (:roomId is null or rr.rentalRoom.id like :roomId)" +
             "and (:statusId is null or rr.rentalStatus.id = :statusId)" +
-            "and (:requestId is null or rr.id = :requestId)" +
-            "order by rr.requestDate desc")
-    ArrayList<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, String requestId);
+            "")
+    Page<RentalRequestModel> searchRentalRequest(String id, String renterUsername, String roomId, Long statusId, Pageable pageable);
 
-    @Query(value = "select count(rr) from RentalRequestModel rr " +
+    @Query(value = "select count(rr.id) from RentalRequestModel rr " +
             "where (rr.rentalRoom.postRoom.landlord.username = :landlordUsername)" +
             "and rr.rentalStatus.id = :statusId")
     int getRequestNumber(String landlordUsername, Long statusId);
 
     @Transactional
     @Modifying
-    @Query(value = "delete from RentalRequestModel r " +
-                "where r.cancelDate < :cancelDateExpire " +
-                "and r.rentalStatus.id = :statusId " +
-                "and r.rentalRenter.username = :renterUsername")
+    @Query(value = "delete rq from RENTAL_REQUEST rq " +
+            "where rq.CANCEL_DATE < :cancelDateExpire " +
+            "and rq.STATUS_ID = :statusId " +
+            "and rq.RENTER_ID = :renterUsername", nativeQuery = true)
     void removeRentalRequest(Date cancelDateExpire, Long statusId, String renterUsername);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete rq from RENTAL_REQUEST rq " +
+            "inner join ROOM r on rq.ROOM_ID = r.ID " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteRentalRequestsByPost(String postId);
+
+    @Query(value = "select new RentalRequestModel(rq.id, rq.requestDate, rq.startDate, rq.cancelDate, " +
+            "rq.expireMessage, r.username, s.id, s.status) from RentalRequestModel rq " +
+            "join RenterModel r on rq.rentalRenter.username = r.username " +
+            "join StatusModel s on rq.rentalStatus.id = s.id " +
+            "where (:requestId is null or rq.id = :requestId)" +
+            "and (:roomId is null or rq.rentalRoom.id = :roomId) " +
+            "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
+            "order by rq.requestDate desc ")
+    List<RentalRequestModel> getRentalRequests(String requestId, String roomId, Long statusId);
+
+    Boolean existsByRentalRenterAndRentalRoomAndRentalStatus(RenterModel renter, RoomModel room, StatusModel status);
+
+    Boolean existsByRentalRenterAndRentalStatus(RenterModel renter, StatusModel status);
 }

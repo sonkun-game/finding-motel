@@ -1,6 +1,7 @@
 package com.example.fptufindingmotelv1.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,10 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "RENTAL_REQUEST")
 public class RentalRequestModel implements Serializable {
@@ -43,10 +41,38 @@ public class RentalRequestModel implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date cancelDate;
 
+    @Column(name = "EXPIRE_MESSAGE")
+    private String expireMessage;
+
     @ManyToOne
     @JoinColumn(name = "STATUS_ID")
     private StatusModel rentalStatus;
 
     @OneToMany(mappedBy = "rentalRequestNotification")
     private List<NotificationModel> notifications;
+
+    public RentalRequestModel() {
+    }
+
+    public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
+                              String renterUsername, Long statusId, String statusNm) {
+        this.id = id;
+        this.requestDate = requestDate;
+        this.startDate = startDate;
+        this.cancelDate = cancelDate;
+        this.expireMessage = expireMessage;
+        this.rentalRenter = new RenterModel(renterUsername);
+        this.rentalStatus = new StatusModel(statusId, statusNm);
+    }
+    public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
+                              String postId, String postTitle, String roomId, String roomName,
+                              Long statusId, String statusNm) {
+        this.id = id;
+        this.requestDate = requestDate;
+        this.startDate = startDate;
+        this.cancelDate = cancelDate;
+        this.expireMessage = expireMessage;
+        this.rentalStatus = new StatusModel(statusId, statusNm);
+        this.rentalRoom = new RoomModel(roomId, roomName, postId, postTitle);
+    }
 }

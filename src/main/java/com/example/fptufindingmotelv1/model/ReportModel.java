@@ -61,4 +61,16 @@ public class ReportModel implements Serializable {
         Date date = dateFormat.parse(currentDate);
         this.reportDate = date;
     }
+    public ReportModel(String id, String content, Date reportDate, String postId, String postTitle,
+                       String landlordUsername, String renterUsername, Long statusId, String statusNm) {
+        this.id = id;
+        this.content = content;
+        this.reportDate = reportDate;
+        this.postReport = new PostModel();
+        this.postReport.setId(postId);
+        this.postReport.setTitle(postTitle);
+        this.postReport.setLandlord(new LandlordModel(landlordUsername));
+        this.renterReport = new RenterModel(renterUsername);
+        this.statusReport = new StatusModel(statusId, statusNm);
+    }
 }

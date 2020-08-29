@@ -17,6 +17,9 @@ var forgotInstance = new Vue({
         intervalID : null,
         expireDate : 0,
     },
+    mounted(){
+        authenticationInstance.hidePreloader()
+    },
     methods: {
         sendOTP() {
             if (this.inputPhoneNum == null || this.inputPhoneNum.length == 0) {
@@ -25,7 +28,7 @@ var forgotInstance = new Vue({
             } else {
                 if (this.inputPhoneNum.length == 10) {
                     this.showMsg = false
-                    fetch("/api-send-otp?phoneNumber="+this.inputPhoneNum, {
+                    fetch("/api-send-otp?phoneNumber="+this.inputPhoneNum+ "&siteCode=2", {
                         method: 'POST'
                     })
                         .then(response => response.json())
@@ -38,8 +41,15 @@ var forgotInstance = new Vue({
                                 this.disableInputPhone = true
                                 this.expireDate = Date.now() + 1 * 60000
                                 this.countDown()
+                            }else if(data != null && data.CodeResult == "99"
+                                && data.ErrorMessage.indexOf("Phone not valid") != -1){
+                                this.disableInputPhone = false
+                                this.clearTimer()
+                                this.showMsg = true
+                                this.message = "Số điện thoại không hợp lệ"
                             }else {
                                 this.clearTimer()
+                                this.disableInputPhone = false
                                 this.showMsg = true
                                 this.message = "Chưa gửi được tin nhắn, Vui lòng bấm <b>Gửi mã</b> để gửi lại"
                             }
@@ -56,7 +66,6 @@ var forgotInstance = new Vue({
             this.displayTimer = null
         },
         countDown(){
-
             var duration = 5 * 60000;
             var minutes, seconds, milliseconds;
             this.intervalID = setTimeout(() => {

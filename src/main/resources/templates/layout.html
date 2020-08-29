@@ -9,8 +9,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <!-- CSS here -->
-<!--    <link rel="stylesheet" type="text/css" th:href="@{assets/css/bootstrap.min.css}">-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{assets/css/bootstrap.min.css}">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/fontawesome-all.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/slicknav.css}">
     <link rel="stylesheet" type="text/css" th:href="@{assets/css/themify-icons.css}">
@@ -21,178 +22,207 @@
     <link rel="stylesheet" th:href="@{custom-assets/css/modal.css}">
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}" src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
+            src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
 
 </head>
 <body>
-    <!-- Modal confirm -->
-    <div th:fragment="confirmModalFragment" id="modalConfirm" class="modal">
-        <!-- Modal content -->
-        <div class="message-confirm">
-            <div class="modal-header">
-                <h2>Xác Nhận</h2>
-                <span @click="closeModalConfirm()" class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <label id="modalConfirmMessage"></label>
-            </div>
-            <div class="modal-footer">
-                <div class="group-btn">
-                    <button @click="executeConfirm(true)" value="1"
-                            class="btn-hover btn-default-cancel">Đồng ý
-                    </button>
-                    <button @click="executeConfirm(false)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy bỏ
-                    </button>
-                </div>
+<!-- Modal confirm -->
+<div th:fragment="confirmModalFragment" id="modalConfirm" class="modal">
+    <!-- Modal content -->
+    <div class="message-confirm">
+        <div class="modal-header">
+            <h2>Xác Nhận</h2>
+            <span @click="closeModalConfirm()" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <label id="modalConfirmMessage"></label>
+        </div>
+        <div class="modal-footer">
+            <div class="group-btn">
+                <button @click="executeConfirm(true)" value="1"
+                        class="btn-hover btn-default-cancel">Đồng ý
+                </button>
+                <button @click="executeConfirm(false)" value="0"
+                        class="btn-hover btn-default-cancel">Hủy bỏ
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <div th:fragment="notification" id="my-modal-notification" class="modal">
-        <div class="message">
-            <div class="modal-body">
-                <div>
-                    <i class="fas fa-check"></i>
-                </div>
-                <div>
-                    <div class="message-success-container">
-                        <div id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</div>
-                    </div>
+<div th:fragment="notification" id="my-modal-notification" class="modal">
+    <div class="message">
+        <div class="modal-body">
+            <div>
+                <i class="fas fa-check"></i>
+            </div>
+            <div>
+                <div class="message-success-container">
+                    <div id="modalNotifyMessage" class="message-update">Cập Nhật Thành Công</div>
                 </div>
             </div>
         </div>
     </div>
-    <div th:fragment="loader">
-        <div id="preloader-active">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b>FFM</b>
-                    </div>
+</div>
+<div th:fragment="loader">
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b>FFM</b>
                 </div>
             </div>
         </div>
     </div>
-    <div th:fragment="processing-loader">
-        <div id="processing-loader" v-show="isShowLoader" style="display: none">
-            <div class="preloader d-flex align-items-center justify-content-center">
-                <div class="preloader-inner position-relative">
-                    <div class="preloader-circle"></div>
-                    <div class="preloader-img pere-text">
-                        <b v-text="displayText"></b>
-                    </div>
+</div>
+<div th:fragment="processing-loader">
+    <div id="processing-loader" v-show="isShowLoader" style="display: none">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <b v-text="displayText"></b>
                 </div>
             </div>
         </div>
     </div>
-    <header th:fragment="header">
-        <!-- Header Start -->
-        <div id="header" class="header-area header-sticky">
-            <div class="main-header ">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <!-- logo -->
-                        <div class="col-xl-2 col-lg-2">
-                            <div class="logo">
-                                <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
-                            </div>
+</div>
+<header th:fragment="header">
+    <!-- Header Start -->
+    <div id="header" class="header-area header-sticky">
+        <div class="main-header ">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- logo -->
+                    <div class="col-xl-2 col-lg-2">
+                        <div class="logo">
+                            <a th:href="@{/}"><img th:src="@{assets/img/hero/logo.png}" alt=""></a>
                         </div>
-                        <div class="col-xl-10 col-lg-10">
-                            <!-- main-menu -->
-                            <div class="main-menu f-right d-none d-lg-block">
-                                <nav>
-                                    <ul id="navigation">
-                                        <li><a th:href="@{/}">TRANG CHỦ</a></li>
-                                        <li><a th:href="@{/phong-tro}">PHÒNG TRỌ</a></li>
-                                        <li><a th:href="@{can-ho}">CĂN HỘ</a></li>
-                                        <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
-                                        <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
-                                            <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
-                                        </li>
-                                        <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
-                                            <ul class="submenu">
-                                                <li><a th:href="@{dang-nhap}">Đăng Nhập</a></li>
-                                                <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
-                                            </ul>
-                                        </li>
-                                        <!-- DROPDOWN USER -->
-                                        <li v-else class="login-icon" @mouseover="handleMouseOverProfile">
-                                             <i v-cloak class="ti-user ti-user-header overflow-dots"></i>
-                                            <div class="display-name-dropdown">{{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}} </div>
+                    </div>
+                    <div class="col-xl-10 col-lg-10">
+                        <!-- main-menu -->
+                        <div class="main-menu f-right d-none d-lg-block">
+                            <nav>
+                                <ul id="navigation">
+                                    <li><a th:href="@{/}">TRANG CHỦ</a></li>
+                                    <li><a th:href="@{/phong-tro}">PHÒNG TRỌ</a></li>
+                                    <li><a th:href="@{can-ho}">CĂN HỘ</a></li>
+                                    <li><a th:href="@{/huong-dan}">HƯỚNG DẪN</a></li>
+                                    <li v-if="userInfo.role == 'LANDLORD' && isShowBtn">
+                                        <button class="button-post" v-on:click="getTaskPage(13)">ĐĂNG TIN</button>
+                                    </li>
+                                    <li v-if="!authenticated" class="login-icon"><i class="ti-user"></i>
+                                        <ul class="submenu">
+                                            <li><a th:href="@{dang-nhap}">Đăng Nhập</a></li>
+                                            <li><a th:href="@{dang-ky}">Đăng Ký</a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- DROPDOWN USER -->
+                                    <li v-else class="login-icon" @mouseover="handleMouseOverProfile">
+                                        <i v-cloak class="ti-user ti-user-header overflow-dots"></i>
+                                        <div class="display-name-dropdown">
+                                            {{ userInfo.displayName == null ? userInfo.username : userInfo.displayName}}
+                                        </div>
 
 
-                                            <ul class="submenu">
-                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin tài khoản</a></li>
-                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)" v-text="userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'"></a></li>
+                                        <ul class="submenu">
+                                            <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(0)">Thông tin
+                                                tài khoản</a></li>
+                                            <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(1)"
+                                                   v-text="userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'"></a>
+                                            </li>
 
-                                                <!-- DROPDOWN RENTER -->
-                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(3)" v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a></li>
-                                                <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(2)" v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
+                                            <!-- DROPDOWN RENTER -->
+                                            <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(3)"
+                                                   v-show="userInfo.role == 'RENTER'">Danh sách yêu thích</a></li>
+                                            <li><a th:href="@{/quan-ly-tai-khoan}" v-on:click="getTaskPage(2)"
+                                                   v-show="userInfo.role == 'RENTER'">Quản lý yêu cầu</a></li>
 
 
-                                                <!-- DROPDOWN LANDLORD -->
-                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)" v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(5)" v-show="userInfo.role == 'LANDLORD'" v-text="'Xử lý yêu cầu thuê trọ (' + userInfo.requestNumber + ')'"></a></li>
-                                                <li><a th:href="@{/nap-tien}" v-on:click="getTaskPage(8)" v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
+                                            <!-- DROPDOWN LANDLORD -->
+                                            <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(4)"
+                                                   v-show="userInfo.role == 'LANDLORD'">Quản lý bài đăng</a></li>
+                                            <li><a th:href="@{/quan-ly-bai-dang}" v-on:click="getTaskPage(5)"
+                                                   v-show="userInfo.role == 'LANDLORD'"
+                                                   v-text="'Xử lý yêu cầu thuê trọ (' + userInfo.requestNumber + ')'"></a>
+                                            </li>
+                                            <li><a th:href="@{/nap-tien}" v-on:click="getTaskPage(8)"
+                                                   v-show="userInfo.role == 'LANDLORD'">Nạp tiền</a></li>
 
 
-                                                <!-- DROPDOWN ADMIN -->
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)" v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)" v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)" v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)" v-show="userInfo.role == 'ADMIN'">Quản lý gói</a></li>
-                                                <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(20)" v-show="userInfo.role == 'ADMIN'">Nạp tiền cho chủ trọ</a></li>
-                                                <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
-                                            </ul>
-                                        </li>
-                                        <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">
-                                            <div class="bell-container">
-                                                <div class="bell-wrapper" id="bell-wrapper" v-on:click.prevent="showNotifications">
-                                                    <div v-show="notificationNumber > 0" class="notification-number" v-text="notificationNumber"></div>
-                                                    <i class="fas fa-bell" data-toggle="tooltip" data-html="true" title="Thông báo"></i>
-                                                    <i class="fas fa-caret-up" v-if="isShowNotification"></i>
+                                            <!-- DROPDOWN ADMIN -->
+                                            <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(9)"
+                                                   v-show="userInfo.role == 'ADMIN'">Quản lý người dùng</a></li>
+                                            <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(10)"
+                                                   v-show="userInfo.role == 'ADMIN'">Quản lý bài đăng</a></li>
+                                            <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(11)"
+                                                   v-show="userInfo.role == 'ADMIN'">Danh sách báo cáo</a></li>
+                                            <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(19)"
+                                                   v-show="userInfo.role == 'ADMIN'">Quản lý gói</a></li>
+                                            <li><a th:href="@{/quan-ly-he-thong}" v-on:click="getTaskPage(20)"
+                                                   v-show="userInfo.role == 'ADMIN'">Nạp tiền cho chủ trọ</a></li>
+                                            <li><a th:href="@{/}" v-on:click="logout()"> Đăng xuất</a></li>
+                                        </ul>
+                                    </li>
+                                    <li v-if="authenticated && userInfo.role != 'ADMIN'" class="">
+                                        <div class="bell-container">
+                                            <div class="bell-wrapper" id="bell-wrapper"
+                                                 v-on:click.prevent="showNotifications">
+                                                <div v-show="notificationNumber > 0" class="notification-number"
+                                                     v-text="notificationNumber"></div>
+                                                <i class="fas fa-bell" data-toggle="tooltip" data-html="true"
+                                                   title="Thông báo"></i>
+                                                <i class="fas fa-caret-up" v-if="isShowNotification"></i>
+                                            </div>
+
+
+                                            <div class="notification-container" id="notification-container"
+                                                 v-if="isShowNotification">
+
+                                                <div class="notification-header">
+                                                    <span>Thông báo</span>
                                                 </div>
-
-
-                                                <div class="notification-container" id="notification-container" v-if="isShowNotification">
-
-                                                    <div class="notification-header">
-                                                        <span>Thông báo</span>
+                                                <div class="notification-body">
+                                                    <div class="no-notification" v-if="listNotification.length == 0">
+                                                        Không có thông báo
                                                     </div>
-                                                    <div class="notification-body">
-                                                        <div class="no-notification" v-if="listNotification.length == 0">Không có thông báo</div>
-                                                        <ul v-else class="notification-list">
-                                                            <li v-for="(notification, index) in listNotification" v-on:click="handleClickNotification(notification, index)" v-bind:class="notification.seen ? 'seen-notification' : ''">
-                                                                <div class="notify-content">
-                                                                    <a v-html="notification.content"></a>
-                                                                </div>
-                                                                <div class="notify-date">
-                                                                    <span v-text="notification.displayDate"></span>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
+                                                    <ul v-else class="notification-list">
+                                                        <li v-for="(notification, index) in listNotification"
+                                                            v-on:click="handleClickNotification(notification, index)"
+                                                            v-bind:class="notification.seen ? 'seen-notification' : ''">
+                                                            <div class="notify-content">
+                                                                <a v-html="notification.content"></a>
+                                                            </div>
+                                                            <div class="notify-date">
+                                                                <span v-text="notification.displayDate"></span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div v-if="!isLastPageNotify">
+                                                        <a v-on:click.prevent="getListNotification()" href="">Xem thêm</a>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
+                    </div>
 
-                        <!-- Mobile Menu -->
-                        <div class="col-12">
-                            <div class="mobile_menu d-block d-lg-none"></div>
-                        </div>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Header End -->
-    </header>
+    </div>
+    <!-- Header End -->
+</header>
 <!--    <header th:fragment="header">-->
 <!--        &lt;!&ndash; Header Start &ndash;&gt;-->
 <!--        <div class="header-area header-sticky">-->
@@ -298,56 +328,62 @@
 <!--        </div>-->
 <!--        &lt;!&ndash; Header End &ndash;&gt;-->
 <!--    </header>-->
-    <footer th:fragment="footer">
-        <!-- Footer Start-->
-        <div class="footer-area black-bg footer-padding">
+<footer th:fragment="footer">
+    <!-- Footer Start-->
+    <div class="footer-area black-bg footer-padding">
 
-            <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-footer-caption mb-30">
-                            <!-- logo -->
-                            <div class="footer-logo">
-                                <a th:href="@{/}"><img th:src="@{assets/img/hero/logoft.png}" alt=""></a>
-
-                            </div>
-                            <div class="footer-social footer-social2">
-                                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="#"><i class="fas fa-globe"></i></a>
-                                <a href="#"><i class="fab fa-behance"></i></a>
-                            </div>
+        <div class="container">
+            <div class="row d-flex justify-content-between">
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                    <div class="single-footer-caption mb-30">
+                        <!-- logo -->
+                        <div class="footer-logo">
+                            <a th:href="@{/}"><img th:src="@{assets/img/hero/logoft.png}" alt=""></a>
 
                         </div>
-                    </div>
+                        <div class="footer-social footer-social2">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-globe"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                        </div>
 
-                    <div class="col-xl-3 col-lg-3 col-md-4  col-sm-5">
-                        <div class="single-footer-caption mb-30">
-                            <div class="footer-tittle">
-                                <h4>LIÊN HỆ</h4>
-                                <ul>
-                                    <li><i class="ti-mobile">
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-3 col-md-4  col-sm-5">
+                    <div class="single-footer-caption mb-30">
+                        <div class="footer-tittle">
+                            <h4>LIÊN HỆ</h4>
+                            <ul>
+                                <li><i class="ti-mobile">
                                         <span>
                                             Điện thoại: 0236.000.999
                                         </span>
-                                    </i></li>
-                                    <li><i class="ti-email">
+                                </i></li>
+                                <li><i class="ti-email">
                                         <span>
                                             Email: FFM@gmail.com
                                         </span>
-                                    </i></li>
-                                </ul>
-                                <!-- Form -->
-                                <div class="footer-form">
-                                    <div id="mc_embed_signup">
-                                        <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get" class="subscribe_form relative mail_part">
-                                            <input type="email" name="email" id="newsletter-form-email" placeholder="Email Address" class="placeholder hide-on-focus" onfocus="this.placeholder = ''" onblur="this.placeholder = ' Email Address '">
-                                            <div class="form-icon">
-                                                <button type="submit" name="submit" id="newsletter-submit" class="email_icon newsletter-submit button-contactForm"><img src="assets/img/logo/form-iocn.jpg" alt=""></button>
-                                            </div>
-                                            <div class="mt-10 info"></div>
-                                        </form>
-                                    </div>
+                                </i></li>
+                            </ul>
+                            <!-- Form -->
+                            <div class="footer-form">
+                                <div id="mc_embed_signup">
+                                    <form target="_blank"
+                                          action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
+                                          method="get" class="subscribe_form relative mail_part">
+                                        <input type="email" name="email" id="newsletter-form-email"
+                                               placeholder="Email Address" class="placeholder hide-on-focus"
+                                               onfocus="this.placeholder = ''"
+                                               onblur="this.placeholder = ' Email Address '">
+                                        <div class="form-icon">
+                                            <button type="submit" name="submit" id="newsletter-submit"
+                                                    class="email_icon newsletter-submit button-contactForm"><img
+                                                    src="assets/img/logo/form-iocn.jpg" alt=""></button>
+                                        </div>
+                                        <div class="mt-10 info"></div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -355,437 +391,483 @@
                 </div>
             </div>
         </div>
-        <!-- Footer End-->
-    </footer>
-
-    <div th:fragment="js-fragment">
-        <!-- JS here -->
-
-        <!-- All JS Custom Plugins Link Here here -->
-        <script th:src="@{/assets/js/vendor/modernizr-3.5.0.min.js}"></script>
-
-        <!-- Jquery, Popper, Bootstrap -->
-        <script th:src="@{/assets/js/bootstrap.min.js}"></script>
-        <script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
-        <!-- Jquery Mobile Menu -->
-        <script th:src="@{/assets/js/jquery.slicknav.min.js}"></script>
-
-        <!-- Jquery Slick , Owl-Carousel Plugins -->
-        <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
-        <script th:src="@{/assets/js/slick.min.js}"></script>
-
-        <!-- Scrollup, nice-select, sticky -->
-        <script th:src="@{/assets/js/jquery.scrollUp.min.js}"></script>
-        <script th:src="@{/assets/js/jquery.nice-select.min.js}"></script>
-
-
-        <!-- Jquery Plugins, main Jquery -->
-        <script th:src="@{/assets/js/plugins.js}"></script>
-        <script th:src="@{/assets/js/main.js}"></script>
-
-
-        <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
-                src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
-        <script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
-        <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
     </div>
+    <!-- Footer End-->
+</footer>
+
+<div th:fragment="js-fragment">
+    <!-- JS here -->
+
+    <!-- All JS Custom Plugins Link Here here -->
+    <script th:src="@{/assets/js/vendor/modernizr-3.5.0.min.js}"></script>
+
+    <!-- Jquery, Popper, Bootstrap -->
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+    <!-- Jquery Mobile Menu -->
+    <script th:src="@{/assets/js/jquery.slicknav.min.js}"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/assets/js/slick.min.js}"></script>
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script th:src="@{/assets/js/jquery.scrollUp.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.nice-select.min.js}"></script>
+
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script th:src="@{/assets/js/plugins.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+
+
+    <script th:src="@{/custom-assets/vue-js/vue.js}" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-cookies.js}"
+            src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+    <script th:src="@{/custom-assets/vue-js/vue-router.js}" src="https://unpkg.com/vue-router"></script>
+    <script type="text/javascript" th:src="@{/custom-assets/vue-js/get-authentication.js}"></script>
+</div>
 
 <!--    Profile-user-->
-    <div th:fragment="profile-user" id="profile-user-form" v-if="task == 0">
-        <div class="title">
-            <h1 class="title-name uppercase">Thông tin tài khoản</h1>
-        </div>
-        <div class="information-detail">
-            <div class="error-line">
-                <div class="col-3">
-                </div>
-                <div class="col-9">
-                    <div class="msg-notification">
-                        <span v-if="showMsg"  v-html="validateMessage">
+<div th:fragment="profile-user" id="profile-user-form" v-if="task == 0">
+    <div class="title">
+        <h1 class="title-name uppercase">Thông tin tài khoản</h1>
+    </div>
+    <div class="information-detail">
+        <div class="error-line">
+            <div class="col-3">
+            </div>
+            <div class="col-9">
+                <div class="msg-notification">
+                        <span v-if="showMsg" v-html="validateMessage">
                         </span>
+                </div>
+            </div>
+        </div>
+        <div class="detail row">
+            <div class="col-lg-3">
+                <p class="label">Tên đăng nhập</p>
+            </div>
+            <div class="col-lg-6">
+                <input id="username" v-model="userInfo.username" class="textfiled rounded-pill border-0 shadow-sm"
+                       type="text" disabled/>
+            </div>
+            <div class="col-lg-3">
+            </div>
+        </div>
+        <div class="detail-2 row">
+            <div class="col-lg-3">
+                <p class="label">Tên hiển thị</p>
+            </div>
+            <div class="col-lg-6">
+                <input id="display-name" v-model="userInfo.displayName"
+                       class="textfiled rounded-pill border-0 shadow-sm" type="text"/>
+            </div>
+            <div class="col-lg-3">
+            </div>
+
+        </div>
+        <div class="detail-2 row ">
+            <div class="col-lg-3">
+                <p class="label">Số điện thoại</p>
+            </div>
+            <div class="col-lg-6">
+                <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm"
+                       type="tel" maxlength="10" disabled/>
+            </div>
+            <div class="col-lg-3">
+                <button v-on:click="showModalChangePhone()" type="button" id="myBtn-phone" class="btn-hover change">Thay
+                    đổi
+                </button>
+            </div>
+
+
+            <div id="my-modal-phone" class="modal">
+                <!-- Modal content -->
+                <div id="forgot-pwd-form" class="modal-content">
+                    <div class="modal-header">
+                        <h2>Thay đổi số điện thoại</h2>
+                        <span class="close">&times;</span>
                     </div>
-                </div>
-            </div>
-            <div class="detail row">
-                <div class="col-lg-3">
-                    <p class="label">Tên đăng nhập</p>
-                </div>
-                <div class="col-lg-6">
-                    <input id="username" v-model="userInfo.username" class="textfiled rounded-pill border-0 shadow-sm" type="text" disabled/>
-                </div>
-                <div class="col-lg-3">
-                </div>
-            </div>
-            <div class="detail-2 row">
-                <div class="col-lg-3">
-                    <p class="label">Tên hiển thị</p>
-                </div>
-                <div class="col-lg-6">
-                    <input id="display-name" v-model="userInfo.displayName" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
-                </div>
-                <div class="col-lg-3">
-                </div>
-
-            </div>
-            <div class="detail-2 row ">
-                <div class="col-lg-3">
-                    <p class="label">Số điện thoại</p>
-                </div>
-                <div class="col-lg-6">
-                    <input id="phone" v-model="userInfo.phoneNumber" class="textfiled rounded-pill border-0 shadow-sm" type="tel" maxlength="10" disabled/>
-                </div>
-                <div class="col-lg-3">
-                    <button v-on:click="showModalChangePhone()" type="button"  id="myBtn-phone" class="btn-hover change">Thay đổi</button>
-                </div>
-
-
-                <div id="my-modal-phone" class="modal">
-                    <!-- Modal content -->
-                    <div id="forgot-pwd-form" class="modal-content">
-                        <div class="modal-header">
-                            <h2>Thay đổi số điện thoại</h2>
-                            <span class="close">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <div class="change-phone-area">
-                                <div class="error-line">
-                                    <div class="col-3">
-                                    </div>
-                                    <div class="col-9">
-                                        <div class="msg-notification">
-                                            <span v-if="showMsg"  v-html="message">
+                    <div class="modal-body">
+                        <div class="change-phone-area">
+                            <div class="error-line">
+                                <div class="col-3">
+                                </div>
+                                <div class="col-9">
+                                    <div class="msg-notification">
+                                            <span v-if="showMsg" v-html="message">
                                             </span>
-                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="phone-number">
-                                    <div class="col-3 title-phone-modal">
-                                        <h4 class="">Số điện thoại<span class="require-text">*</span></h4>
-                                    </div>
-                                    <div class="col-6">
-                                        <input @keyup="clearTimer" v-bind:disabled="disableInputPhone" v-model="inputPhoneNum" type="text" maxlength="10" class="change-phone rounded-pill border-0 shadow-sm" />
-                                    </div>
-                                    <div class="col-3 pl-0">
-                                        <button v-on:click="sendOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
-                                    </div>
-
-
-
-                                </div>
-                                <div class="confirm-otp">
-                                    <div class="col-3 title-phone-modal">
-                                        <h4 class="">Mã xác nhận<span class="require-text">*</span></h4>
-                                    </div>
-                                    <div class="col-6">
-                                        <input v-model="inputOtp" type="text" maxlength="6" class="confirm-otp-phone rounded-pill border-0 shadow-sm" />
-                                    </div>
-                                    <div class="col-3 pl-0">
-                                    </div>
-                                </div>
-                                <div class="msg-notification">
-                                    <span class="text-timer" v-if="displayTimer != null" v-html="displayTimer" >
-                                    </span>
                                 </div>
                             </div>
+
+                            <div class="phone-number">
+                                <div class="col-3 title-phone-modal">
+                                    <h4 class="">Số điện thoại<span class="require-text">*</span></h4>
+                                </div>
+                                <div class="col-6">
+                                    <input @keyup="clearTimer" v-bind:disabled="disableInputPhone"
+                                           v-model="inputPhoneNum" type="text" maxlength="10"
+                                           class="change-phone rounded-pill border-0 shadow-sm"/>
+                                </div>
+                                <div class="col-3 pl-0">
+                                    <button v-on:click="sendOTP()" class="btn-hover btn-default-otp">Gửi mã</button>
+                                </div>
+
+
+                            </div>
+                            <div class="confirm-otp">
+                                <div class="col-3 title-phone-modal">
+                                    <h4 class="">Mã xác nhận<span class="require-text">*</span></h4>
+                                </div>
+                                <div class="col-6">
+                                    <input v-model="inputOtp" type="text" maxlength="6"
+                                           class="confirm-otp-phone rounded-pill border-0 shadow-sm"/>
+                                </div>
+                                <div class="col-3 pl-0">
+                                </div>
+                            </div>
+                            <div class="msg-notification">
+                                    <span class="text-timer" v-if="displayTimer != null" v-html="displayTimer">
+                                    </span>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button v-on:click="validateOTP()" class="btn-hover btn-default">Xác Nhận</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button v-on:click="validateOTP()" class="btn-hover btn-default">Xác Nhận</button>
                     </div>
                 </div>
-            </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
-                <div class="col-lg-3">
-                    <p class="label">Ngày sinh</p>
-                </div>
-                <div class="col-lg-6">
-                    <input id="birthdate" @change="validateDate(userInfo.dob)" v-model="userInfo.dob" class="textfiled rounded-pill border-0 shadow-sm" type="date" />
-                </div>
-                <div class="col-lg-3">
-                </div>
-
-            </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
-                <div class="col-lg-3">
-                    <p class="label">Nghề nghiệp</p>
-                </div>
-                <div class="col-lg-6">
-                    <input id="career" v-model="userInfo.career" class="textfiled rounded-pill border-0 shadow-sm" type="text" />
-                </div>
-                <div class="col-lg-3">
-                </div>
-
-            </div>
-            <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
-                <div class="col-lg-3">
-                    <p class="label">Giới tính</p>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-check-inline f-left">
-                        <label class="radio-container">Nam
-                            <input v-model="gender" type="radio" name="gender" value="1">
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                    <div class="form-check-inline">
-                        <label class="radio-container">Nữ
-                            <input v-model="gender" type="radio" name="gender" value="0">
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                </div>
-
-            </div>
-            <div class="detail-2 row">
-                <div class="col-lg-3">
-                </div>
-                <div class="col-lg-6">
-                    <button v-on:click="saveUserInfo()" class="btn-hover save">Lưu thay đổi</button>
-                </div>
-                <div class="col-lg-3">
-                </div>
-
             </div>
         </div>
+        <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+            <div class="col-lg-3">
+                <p class="label">Ngày sinh</p>
+            </div>
+            <div class="col-lg-6">
+                <input id="birthdate" @change="validateDate(userInfo.dob)" v-model="userInfo.dob"
+                       class="textfiled rounded-pill border-0 shadow-sm" type="date"/>
+            </div>
+            <div class="col-lg-3">
+            </div>
+
+        </div>
+        <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+            <div class="col-lg-3">
+                <p class="label">Nghề nghiệp</p>
+            </div>
+            <div class="col-lg-6">
+                <input id="career" v-model="userInfo.career" class="textfiled rounded-pill border-0 shadow-sm"
+                       type="text"/>
+            </div>
+            <div class="col-lg-3">
+            </div>
+
+        </div>
+        <div v-if="userInfo.role == 'RENTER'" class="detail-2 row">
+            <div class="col-lg-3">
+                <p class="label">Giới tính</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-check-inline f-left">
+                    <label class="radio-container">Nam
+                        <input v-model="gender" type="radio" name="gender" value="1">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="radio-container">Nữ
+                        <input v-model="gender" type="radio" name="gender" value="0">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-3">
+            </div>
+
+        </div>
+        <div class="detail-2 row">
+            <div class="col-lg-3">
+            </div>
+            <div class="col-lg-6">
+                <button v-on:click="saveUserInfo()" class="btn-hover save">Lưu thay đổi</button>
+            </div>
+            <div class="col-lg-3">
+            </div>
+
+        </div>
     </div>
-    <div th:fragment="user-task" class="information" id="user-task">
-        <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information"><img src="assets/img/logo/infor.png" class="logo-button">Thông tin tài khoản</button>
-        <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img src="assets/img/logo/key.png" class="logo-button">{{userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'}}</button>
-<!--        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>-->
-        <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích</button>
-        <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2 || task == 18}" v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Quản lý yêu cầu</button>
+</div>
+<div th:fragment="user-task" class="information" id="user-task">
+    <button v-on:click="activeBtn(0)" v-bind:class="{active : task == 0}" class="button-information"><img
+            src="assets/img/logo/infor.png" class="logo-button">Thông tin tài khoản
+    </button>
+    <button v-on:click="activeBtn(1)" v-bind:class="{active : task == 1}" class="button-information"><img
+            src="assets/img/logo/key.png" class="logo-button">{{userInfo.havePassword ? 'Đổi mật khẩu' : 'Thêm mật khẩu'}}
+    </button>
+    <!--        <button v-on:click="activeBtn(13)" v-bind:class="{active : task == 13}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/upload1.png" class="logo-button">Đăng tin</button>-->
+    <button v-on:click="activeBtn(3)" v-bind:class="{active : task == 3}" v-show="userInfo.role == 'RENTER'"
+            class="button-information"><img src="assets/img/logo/wishlist.png" class="logo-button">Danh sách yêu thích
+    </button>
+    <button v-on:click="activeBtn(2)" v-bind:class="{active : task == 2 || task == 18}"
+            v-show="userInfo.role == 'RENTER'" class="button-information"><img src="assets/img/logo/request.png"
+                                                                               class="logo-button">Quản lý yêu cầu
+    </button>
 
-        <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền</button>
-        <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4 || task == 15 || task == 16 || task == 17}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
-        <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán</button>
-        <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ</button>
+    <button v-on:click="activeBtn(6)" v-bind:class="{active : task == 6}" v-show="userInfo.role == 'LANDLORD'"
+            class="button-information"><img src="assets/img/logo/clock.png" class="logo-button">Lịch sử nạp tiền
+    </button>
+    <button v-on:click="activeBtn(4)" v-bind:class="{active : task == 4 || task == 15 || task == 16 || task == 17}"
+            v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/review.png"
+                                                                                 class="logo-button">Quản lý bài đăng
+    </button>
+    <button v-on:click="activeBtn(7)" v-bind:class="{active : task == 7}" v-show="userInfo.role == 'LANDLORD'"
+            class="button-information"><img src="assets/img/logo/payment.png" class="logo-button">Lịch sử thanh toán
+    </button>
+    <button v-on:click="activeBtn(5)" v-bind:class="{active : task == 5}" v-show="userInfo.role == 'LANDLORD'"
+            class="button-information"><img src="assets/img/logo/request.png" class="logo-button">Xử lý yêu cầu thuê trọ
+    </button>
 
 
-<!--        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>-->
-        <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng</button>
-        <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng</button>
-        <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Danh sách báo cáo</button>
-        <button v-on:click="activeBtn(19)" v-bind:class="{active : task == 19}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Quản lý gói</button>
-        <button v-on:click="activeBtn(20)" v-bind:class="{active : task == 20}" v-show="userInfo.role == 'ADMIN'" class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Nạp tiền cho chủ trọ</button>
-        <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img src="assets/img/logo/logout.png" class="logo-button">Đăng xuất</button>
+    <!--        <button v-on:click="activeBtn(8)" v-bind:class="{active : task == 8}" v-show="userInfo.role == 'LANDLORD'" class="button-information"><img src="assets/img/logo/money1.png" class="logo-button">Nạp tiền vào tài khoản</button>-->
+    <button v-on:click="activeBtn(9)" v-bind:class="{active : task == 9}" v-show="userInfo.role == 'ADMIN'"
+            class="button-information"><img src="assets/img/logo/workflow.png" class="logo-button">Quản lý người dùng
+    </button>
+    <button v-on:click="activeBtn(10)" v-bind:class="{active : task == 10}" v-show="userInfo.role == 'ADMIN'"
+            class="button-information"><img src="assets/img/logo/review.png" class="logo-button">Quản lý bài đăng
+    </button>
+    <button v-on:click="activeBtn(11)" v-bind:class="{active : task == 11}" v-show="userInfo.role == 'ADMIN'"
+            class="button-information"><img src="assets/img/logo/health.png" class="logo-button">Danh sách báo cáo
+    </button>
+    <button v-on:click="activeBtn(19)" v-bind:class="{active : task == 19}" v-show="userInfo.role == 'ADMIN'"
+            class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Quản lý gói
+    </button>
+    <button v-on:click="activeBtn(20)" v-bind:class="{active : task == 20}" v-show="userInfo.role == 'ADMIN'"
+            class="button-information"><img src="assets/img/logo/payment-package.png" class="logo-button">Nạp tiền cho
+        chủ trọ
+    </button>
+    <button v-on:click="activeBtn(12)" v-bind:class="{active : task == 12}" class="button-information"><img
+            src="assets/img/logo/logout.png" class="logo-button">Đăng xuất
+    </button>
 
-    </div>
+</div>
 
 <!--    Change Password Tab-->
-    <div th:fragment="change-password" v-else-if="task == 1" id="change-pass">
-        <div class="title">
-            <h1 class="title-name uppercase" v-text="userInfo.havePassword ? 'đổi mật khẩu' : 'Thêm mật khẩu'"></h1>
-        </div>
-        <div class="information-detail">
-            <div class="error-line">
-                <div class="col-3">
-                </div>
-                <div class="col-9">
-                    <div class="msg-notification">
-                        <span v-if="showMsg"  v-html="message">
+<div th:fragment="change-password" v-else-if="task == 1" id="change-pass">
+    <div class="title">
+        <h1 class="title-name uppercase" v-text="userInfo.havePassword ? 'đổi mật khẩu' : 'Thêm mật khẩu'"></h1>
+    </div>
+    <div class="information-detail">
+        <div class="error-line">
+            <div class="col-3">
+            </div>
+            <div class="col-9">
+                <div class="msg-notification">
+                        <span v-if="showMsg" v-html="message">
                         </span>
-                    </div>
                 </div>
             </div>
-            <div class="detail" v-if="userInfo.havePassword">
-                <div class="col-lg-3">
-                    <p class="label">Mật khẩu cũ<span class="require-text">*</span></p>
-                </div>
-                <div class="col-lg-6">
-                    <input @focusout="checkPassword" v-model="oldPassword" id="old-password" class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
-                </div>
-                <div class="col-lg-3"></div>
+        </div>
+        <div class="detail" v-if="userInfo.havePassword">
+            <div class="col-lg-3">
+                <p class="label">Mật khẩu cũ<span class="require-text">*</span></p>
+            </div>
+            <div class="col-lg-6">
+                <input @focusout="checkPassword" v-model="oldPassword" id="old-password"
+                       class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+            </div>
+            <div class="col-lg-3"></div>
 
+        </div>
+        <div class="detail-2">
+            <div class="col-lg-3">
+                <p class="label">Mật khẩu mới<span class="require-text">*</span></p>
             </div>
-            <div class="detail-2">
-                <div class="col-lg-3">
-                    <p class="label">Mật khẩu mới<span class="require-text">*</span></p>
-                </div>
-                <div class="col-lg-6">
-                    <input @focusout="checkPassword" v-model="newPassword" id="new-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
-                </div>
-                <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <input @focusout="checkPassword" v-model="newPassword" id="new-password"
+                       class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
+            </div>
+            <div class="col-lg-3"></div>
 
+        </div>
+        <div class="detail-2">
+            <div class="col-lg-3">
+                <p class="label">Nhập lại mật khẩu<span class="require-text">*</span></p>
             </div>
-            <div class="detail-2">
-                <div class="col-lg-3">
-                    <p class="label">Nhập lại mật khẩu<span class="require-text">*</span></p>
-                </div>
-                <div class="col-lg-6">
-                    <input @focusout="checkPassword" v-model="rePassword" id="re-password" class="textfiled rounded-pill border-0 shadow-sm" type="password" />
-                </div>
-                <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <input @focusout="checkPassword" v-model="rePassword" id="re-password"
+                       class="textfiled rounded-pill border-0 shadow-sm" type="password"/>
             </div>
+            <div class="col-lg-3"></div>
+        </div>
 
-            <div class="detail-2">
-                <div class="col-lg-3"></div>
-                <div class="col-lg-6">
-                    <button v-on:click="changePassword()" class="btn-hover save">Lưu thay đổi</button>
-                </div>
-                <div class="col-lg-3"></div>
-
+        <div class="detail-2">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <button v-on:click="changePassword()" class="btn-hover save">Lưu thay đổi</button>
             </div>
+            <div class="col-lg-3"></div>
+
         </div>
     </div>
+</div>
 
 <!--modal confirm -->
-    <div id="confirm-modal" class="modal" th:fragment="confirm-modal">
-        <!-- Modal content -->
-        <div class="message-confirm">
-            <div class="modal-header">
-                <h2>Xác Nhận</h2>
-                <span @click="closeModal()" class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <label id="confirm-content" v-html="messageConfirm"></label>
-            </div>
-            <div class="modal-footer">
-                <div class="group-btn">
-                    <button @click="yesNoConfirmClick($event)" value="1"
-                            class="btn-hover btn-default-cancel">Đồng ý
-                    </button>
-                    <button @click="yesNoConfirmClick($event)" value="0"
-                            class="btn-hover btn-default-cancel">Hủy bỏ
-                    </button>
-                </div>
+<div id="confirm-modal" class="modal" th:fragment="confirm-modal">
+    <!-- Modal content -->
+    <div class="message-confirm">
+        <div class="modal-header">
+            <h2>Xác Nhận</h2>
+            <span @click="closeModal()" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <label id="confirm-content" v-html="messageConfirm"></label>
+        </div>
+        <div class="modal-footer">
+            <div class="group-btn">
+                <button @click="yesNoConfirmClick($event)" value="1"
+                        class="btn-hover btn-default-cancel">Đồng ý
+                </button>
+                <button @click="yesNoConfirmClick($event)" value="0"
+                        class="btn-hover btn-default-cancel">Hủy bỏ
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!--   Modal extend -->
-    <div th:fragment="message-modal" id="message-modal" class="modal">
-        <!-- Modal content -->
-        <div class="view-information">
-            <div class="modal-header">
-                <h2 v-text="title"></h2>
-                <span @click="closeModal()" class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="notification-content" v-html="message"></div>
-            </div>
-            <div class="modal-footer">
-                <button @click="closeModal()" class="btn-hover btn-default">Xác Nhận</button>
-            </div>
+<!--   Modal extend -->
+<div th:fragment="message-modal" id="message-modal" class="modal">
+    <!-- Modal content -->
+    <div class="view-information">
+        <div class="modal-header">
+            <h2 v-text="title"></h2>
+            <span @click="closeModal()" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="notification-content" v-html="message"></div>
+        </div>
+        <div class="modal-footer">
+            <button @click="closeModal()" class="btn-hover btn-default">Xác Nhận</button>
         </div>
     </div>
+</div>
 
 <!--    basic user information-->
-    <div id="basic-user-info" th:fragment="basic-user-infor">
-        <div class="user-infor">
-            <div class="user-avatar">
-                <img class="avatar" src="assets/img/logo/ava.png" />
-            </div>
-            <div class="user-meta">
-                <div class="inner">
-                    <div class="user-name" v-text="userInfo.displayName" data-toggle="tooltip" data-html="true" v-bind:title="userInfo.displayName"></div>
-                    <div class="user-verify" v-text="userInfo.phoneNumber"></div>
-                </div>
-            </div>
+<div id="basic-user-info" th:fragment="basic-user-infor">
+    <div class="user-infor">
+        <div class="user-avatar">
+            <img class="avatar" src="assets/img/logo/ava.png"/>
         </div>
-        <ul v-if="userInfo.role == 'LANDLORD'">
-            <li>
-                <span>Số dư: </span>
-                <span style="font-weight: 700" v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></span>
-            </li>
-        </ul>
-        <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePayment()" class="btn-payment mr-2">Nạp tiền</a>
-        <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
-    </div>
-
-    <!--Modal rental request detail-->
-    <div th:fragment="modal-request-detail" id="modalRequestDetail" class="modal">
-        <!-- Modal content -->
-        <div class="view-information">
-            <div class="modal-header">
-                <h2>Thông tin yêu cầu thuê phòng</h2>
-                <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
-            </div>
-            <div class="modal-body" v-if="selectedRequest != null && selectedRoom != null && selectedRoom.postRoom != null">
-                <div class="infor-modal">
-                    <p class="left-modal">Bài đăng</p>
-                    <input :value="selectedRoom.postRoom.title"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Tên phòng</p>
-                    <input :value="selectedRoom.name"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-
-                <div class="infor-modal">
-                    <p class="left-modal">Ngày yêu cầu</p>
-                    <input :value="formatDate(selectedRequest.requestDate)"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <div class="infor-modal">
-                    <p class="left-modal">Ngày bắt đầu</p>
-                    <input :value="formatDate(selectedRequest.startDate, true)"
-                           class="right-modal rounded-pill border-0 shadow-sm"
-                           type="text" disabled/>
-                </div>
-                <label>Người thuê</label>
-                <div class="renter-information-area">
-                    <div class="infor-modal">
-                        <p class="left-modal">Tên đăng nhập</p>
-                        <input :value="renterInfo.username"
-                               class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" disabled/>
-                    </div>
-                    <div class="infor-modal">
-                        <p class="left-modal">Tên hiển thị</p>
-                        <input :value="renterInfo.displayName"
-                               class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" disabled/>
-                    </div>
-                    <div class="infor-modal">
-                        <p class="left-modal">Số điện thoại</p>
-                        <input :value="renterInfo.phoneNumber"
-                               class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" disabled/>
-                    </div>
-                    <div class="infor-modal">
-                        <p class="left-modal">Ngày sinh</p>
-                        <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" disabled/>
-                    </div>
-                    <div class="infor-modal">
-                        <p class="left-modal">Nghề nghiệp</p>
-                        <input class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" :value="renterInfo.career" disabled/>
-                    </div>
-                    <div class="infor-modal">
-                        <p class="left-modal">Giới tính</p>
-                        <input class="right-modal rounded-pill border-0 shadow-sm"
-                               type="text" :value="renterInfo.gender ? 'Nam' : 'Nữ'" disabled/>
-                    </div>
-                </div>
-
-                <div class="message-container" v-html="message">
-
-                </div>
-                <div class="fill-information col-lg-12 px-40px">
-                    <div class="title">
-                        <h4 style="color: #000000">Lời nhắn cuối cho người thuê</h4>
-                    </div>
-                    <div class="input-information message-box">
-                        <textarea v-model="expireMessage" class="rounded-pill border-0 shadow-sm"></textarea>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Đồng ý</button>
-                <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
+        <div class="user-meta">
+            <div class="inner">
+                <div class="user-name" v-text="userInfo.displayName" data-toggle="tooltip" data-html="true"
+                     v-bind:title="userInfo.displayName"></div>
+                <div class="user-verify" v-text="userInfo.phoneNumber"></div>
             </div>
         </div>
     </div>
+    <ul v-if="userInfo.role == 'LANDLORD'">
+        <li>
+            <span>Số dư: </span>
+            <span style="font-weight: 700"
+                  v-text="authenticationInstance.formatNumberToDisplay(userInfo.amount) + ' VNĐ'"></span>
+        </li>
+    </ul>
+    <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePayment()" class="btn-payment mr-2">Nạp tiền</a>
+    <a v-if="userInfo.role == 'LANDLORD'" v-on:click="handlePostNewRoom()" class="btn-post-profile ">Đăng tin</a>
+</div>
+
+<!--Modal rental request detail-->
+<div th:fragment="modal-request-detail" id="modalRequestDetail" class="modal">
+    <!-- Modal content -->
+    <div class="view-information">
+        <div class="modal-header">
+            <h2>Thông tin yêu cầu thuê phòng</h2>
+            <span id="closeModalRequestDetail" @click="closeModalRequestDetail" class="close">&times;</span>
+        </div>
+        <div class="modal-body" v-if="selectedRequest != null && selectedRoom != null && selectedRoom.postRoom != null">
+            <div class="infor-modal">
+                <p class="left-modal">Bài đăng</p>
+                <input :value="selectedRoom.postRoom.title"
+                       class="right-modal rounded-pill border-0 shadow-sm"
+                       type="text" disabled/>
+            </div>
+            <div class="infor-modal">
+                <p class="left-modal">Tên phòng</p>
+                <input :value="selectedRoom.name"
+                       class="right-modal rounded-pill border-0 shadow-sm"
+                       type="text" disabled/>
+            </div>
+
+            <div class="infor-modal">
+                <p class="left-modal">Ngày yêu cầu</p>
+                <input :value="formatDate(selectedRequest.requestDate)"
+                       class="right-modal rounded-pill border-0 shadow-sm"
+                       type="text" disabled/>
+            </div>
+            <div class="infor-modal">
+                <p class="left-modal">Ngày bắt đầu</p>
+                <input :value="formatDate(selectedRequest.startDate, true)"
+                       class="right-modal rounded-pill border-0 shadow-sm"
+                       type="text" disabled/>
+            </div>
+            <label>Người thuê</label>
+            <div class="renter-information-area">
+                <div class="infor-modal">
+                    <p class="left-modal">Tên đăng nhập</p>
+                    <input :value="renterInfo.username"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Tên hiển thị</p>
+                    <input :value="renterInfo.displayName"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Số điện thoại</p>
+                    <input :value="renterInfo.phoneNumber"
+                           class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Ngày sinh</p>
+                    <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Nghề nghiệp</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.career" disabled/>
+                </div>
+                <div class="infor-modal">
+                    <p class="left-modal">Giới tính</p>
+                    <input class="right-modal rounded-pill border-0 shadow-sm"
+                           type="text" :value="renterInfo.gender ? 'Nam' : 'Nữ'" disabled/>
+                </div>
+            </div>
+
+            <div class="message-container" v-html="message">
+
+            </div>
+            <div class="fill-information col-lg-12 px-40px">
+                <div class="title">
+                    <h4 style="color: #000000">Lời nhắn cuối cho người thuê</h4>
+                </div>
+                <div class="input-information message-box">
+                    <textarea v-model="expireMessage" class="rounded-pill border-0 shadow-sm"></textarea>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn-hover btn-default" @click="confirmModalRequestDetail">Đồng ý</button>
+            <button class="btn-hover btn-default" @click="closeModalRequestDetail">Hủy bỏ</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

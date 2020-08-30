@@ -501,7 +501,7 @@ var landlordInstance = new Vue({
                 console.log(error);
             })
         },
-        getRenterInfo(renterUsername){
+        getRenterInfo(renterUsername, openModal){
             let request = {
                 'renterUsername' : renterUsername
             }
@@ -518,7 +518,9 @@ var landlordInstance = new Vue({
                     console.log(data);
                     if(data != null && data.code == '000'){
                         this.renterInfo = data.data
-                        this.showRenterInfo()
+                        if(openModal != null && openModal){
+                            this.showRenterInfo()
+                        }
                     }
                 }).catch(error => {
                 console.log(error);
@@ -788,29 +790,79 @@ var landlordInstance = new Vue({
                 sessionStorage.setItem("confirmAction", "change-status-room")
                 modalConfirmInstance.showModal()
             }else {
-                let stayRentalRequest = null
                 if(room.listRentalRequest != null){
-                    for (let request of room.listRentalRequest) {
-                        if(request.rentalStatus.id == 9){
-                            stayRentalRequest = request
-                            break
+                    let stayRentalRequest = null
+                    if(room.listRentalRequest != null){
+                        for (let request of room.listRentalRequest) {
+                            if(request.rentalStatus.id == 9){
+                                stayRentalRequest = request
+                                break
+                            }
                         }
                     }
-                }
-                if (stayRentalRequest == null){
-                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.name + '</b> thành <b>Còn trống</b> không?';
-                    sessionStorage.setItem("confirmAction", "change-status-room")
-                    modalConfirmInstance.showModal()
+                    if (stayRentalRequest == null){
+                        modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.name + '</b> thành <b>Còn trống</b> không?';
+                        sessionStorage.setItem("confirmAction", "change-status-room")
+                        modalConfirmInstance.showModal()
+                    }else {
+                        this.selectedRequest = stayRentalRequest
+                        this.getRenterInfo(stayRentalRequest.rentalRenter.username)
+                        this.selectedRoom = room
+                        this.message = "<p style='font-size: 20px; font-weight: 500'>Bạn có muốn làm mới phòng này?</p>" +
+                            "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
+                            "<p>Người thuê <b>" + stayRentalRequest.rentalRenter.username + "</b> sẽ kết thúc thuê phòng tại phòng này</p>"
+                        document.body.setAttribute("class", "loading-hidden-screen")
+                        document.getElementById("modalRequestDetail").style.display = 'block';
+                    }
                 }else {
-                    this.selectedRequest = stayRentalRequest
-                    this.getRenterInfo(stayRentalRequest.rentalRenter.username)
-                    this.selectedRoom = room
-                    this.message = "<p style='font-size: 20px; font-weight: 500'>Bạn có muốn làm mới phòng này?</p>" +
-                        "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
-                        "<p>Người thuê <b>" + stayRentalRequest.rentalRenter.username + "</b> sẽ kết thúc thuê phòng tại phòng này</p>"
-                    document.body.setAttribute("class", "loading-hidden-screen")
-                    document.getElementById("modalRequestDetail").style.display = 'block';
+                    let request = {
+                        'roomId' : room.id,
+                        'statusId' : null,
+                        'id' : null,
+                    }
+                    let options = {
+                        method: 'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(request)
+                    }
+                    fetch("/api-get-requests-by-room", options)
+                        .then(response => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            if(data != null && data.code == '000'){
+                                room.listRentalRequest = data.data
+                                this.$set(this.listRoomRequest, index, room)
+                                let stayRentalRequest = null
+                                if(room.listRentalRequest != null){
+                                    for (let request of room.listRentalRequest) {
+                                        if(request.rentalStatus.id == 9){
+                                            stayRentalRequest = request
+                                            break
+                                        }
+                                    }
+                                }
+                                if (stayRentalRequest == null){
+                                    modalConfirmInstance.messageConfirm = 'Bạn có muốn thay đổi trạng thái <b>' +room.name + '</b> thành <b>Còn trống</b> không?';
+                                    sessionStorage.setItem("confirmAction", "change-status-room")
+                                    modalConfirmInstance.showModal()
+                                }else {
+                                    this.selectedRequest = stayRentalRequest
+                                    this.getRenterInfo(stayRentalRequest.rentalRenter.username)
+                                    this.selectedRoom = room
+                                    this.message = "<p style='font-size: 20px; font-weight: 500'>Bạn có muốn làm mới phòng này?</p>" +
+                                        "<p>Trạng thái của phòng sẽ được thay đổi thành <b>Còn Trống</b></p>" +
+                                        "<p>Người thuê <b>" + stayRentalRequest.rentalRenter.username + "</b> sẽ kết thúc thuê phòng tại phòng này</p>"
+                                    document.body.setAttribute("class", "loading-hidden-screen")
+                                    document.getElementById("modalRequestDetail").style.display = 'block';
+                                }
+                            }
+                        }).catch(error => {
+                        console.log(error);
+                    })
                 }
+
             }
 
         },

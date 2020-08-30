@@ -583,7 +583,7 @@
                                             <tr v-for="(request, index) in room.listRentalRequest">
                                                 <td v-text="index + 1"></td>
                                                 <td>
-                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
+                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username, true)" v-text="request.rentalRenter.username"></a>
                                                 </td>
                                                 <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
                                                 <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>

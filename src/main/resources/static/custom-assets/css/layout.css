@@ -221,7 +221,7 @@ main{
     max-height: 420px;
     overflow: auto;
 }
-.notification-body ul.notification-list>li{
+.notification-body ul.notification-list>li:not(:last-child){
     display: block;
     padding-bottom: 5px;
     border-bottom: 1px solid #e9ecef;
@@ -305,9 +305,20 @@ button:disabled{
     padding-right: 40px;
 }
 
-.read-more a{
-    margin: 5px 180px;
-}
 .read-more:hover{
     background-color: white !important;
+    color: #dca73a!important;
+}
+.read-more{
+    padding-top: 4px;
+    padding-bottom: 4px!important;
+    display: block!important;
+}
+.read-more-text{
+    margin: auto;
+    width: fit-content;
+    cursor: pointer;
+}
+.notification-body ul.notification-list>li.read-more a:hover{
+    color: #dca73a!important;
 }

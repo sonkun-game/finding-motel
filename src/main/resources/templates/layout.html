@@ -200,7 +200,9 @@
                                                             </div>
                                                         </li>
                                                         <li v-if="!isLastPageNotify" class="read-more">
-                                                            <a v-on:click.prevent="getListNotification()" href="">Xem thêm</a>
+                                                            <div class="read-more-text">
+                                                                <a v-on:click.prevent="getListNotification()" href="">Xem thêm</a>
+                                                            </div>
                                                         </li>
                                                     </ul>
 <!--                                                    <div v-if="!isLastPageNotify">-->
@@ -805,13 +807,13 @@
 
             <div class="infor-modal">
                 <p class="left-modal">Ngày yêu cầu</p>
-                <input :value="formatDate(selectedRequest.requestDate)"
+                <input :value="authenticationInstance.formatDate(selectedRequest.requestDate)"
                        class="right-modal rounded-pill border-0 shadow-sm"
                        type="text" disabled/>
             </div>
             <div class="infor-modal">
                 <p class="left-modal">Ngày bắt đầu</p>
-                <input :value="formatDate(selectedRequest.startDate, true)"
+                <input :value="authenticationInstance.formatDate(selectedRequest.startDate, true)"
                        class="right-modal rounded-pill border-0 shadow-sm"
                        type="text" disabled/>
             </div>
@@ -837,7 +839,7 @@
                 </div>
                 <div class="infor-modal">
                     <p class="left-modal">Ngày sinh</p>
-                    <input :value="formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
+                    <input :value="authenticationInstance.formatDate(renterInfo.dob, true)" class="right-modal rounded-pill border-0 shadow-sm"
                            type="text" disabled/>
                 </div>
                 <div class="infor-modal">

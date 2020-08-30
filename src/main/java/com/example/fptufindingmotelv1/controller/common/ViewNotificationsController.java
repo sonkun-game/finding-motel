@@ -5,13 +5,20 @@ import com.example.fptufindingmotelv1.model.NotificationModel;
 import com.example.fptufindingmotelv1.service.common.viewnotifications.ViewNotificationsService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ViewNotificationsController {
@@ -19,24 +26,37 @@ public class ViewNotificationsController {
     @Autowired
     private ViewNotificationsService viewNotificationsService;
 
+    @Autowired
+    Environment env;
+
     @ResponseBody
     @PostMapping("/api-get-notifications")
-    public JSONObject getNotifications(@RequestBody NotificationDTO request){
+    public JSONObject getNotifications(@RequestBody NotificationDTO request, @RequestParam Optional<Integer> currentPage){
         JSONObject response = new JSONObject();
-        if(request.getUsername() == null || request.getUsername().isEmpty()){
+        try{
+            Integer pageSize = new Integer(env.getProperty("ffm.pagination.pageSize"));
+            Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
+            if(request.getUsername() == null || request.getUsername().isEmpty()){
+                response.put("msgCode", "notify001");
+                response.put("message", "Tên người dùng không tồn tại");
+                return response;
+            }
+            List<NotificationDTO> notificationDTOS = new ArrayList<>();
+            Slice<NotificationModel> notificationModels = viewNotificationsService.getListNotificationPaging(request, pageable);
+            for (NotificationModel ntf:
+                    notificationModels.getContent()) {
+                notificationDTOS.add(new NotificationDTO(ntf));
+            }
+            response.put("msgCode", "notify000");
+            response.put("listNotification", notificationDTOS);
+            response.put("isLastPage", notificationModels.isLast());
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
             response.put("msgCode", "notify001");
-            response.put("message", "Tên người dùng không tồn tại");
+            response.put("message", "Lỗi hệ thống");
             return response;
         }
-        List<NotificationDTO> notificationDTOS = new ArrayList<>();
-        List<NotificationModel> notificationModels = viewNotificationsService.getListNotification(request);
-        for (NotificationModel ntf:
-             notificationModels) {
-            notificationDTOS.add(new NotificationDTO(ntf));
-        }
-        response.put("msgCode", "notify000");
-        response.put("listNotification", notificationDTOS);
-        return response;
     }
 
     @ResponseBody

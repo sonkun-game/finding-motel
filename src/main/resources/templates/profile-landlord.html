@@ -954,7 +954,7 @@
                                     </div>
 
                                     <div class="input-information">
-                                        <input @focusout="" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
                                                class="form-input-information rounded-pill border-0 shadow-sm">
                                     </div>
                                 </div>

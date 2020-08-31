@@ -89,6 +89,9 @@ public class PostModel implements Serializable{
     @Transient
     private boolean banAvailable;
 
+    @Transient
+    private boolean outOfRoom;
+
     public PostModel() {
     }
 
@@ -121,7 +124,7 @@ public class PostModel implements Serializable{
 
     public PostModel(String id, double price, double distance, double square,
                      String description, String title, String address,
-                     String imageId) {
+                     String imageId, long roomFreeNumber) {
         this.id = id;
         this.price = price;
         this.distance = distance;
@@ -131,12 +134,13 @@ public class PostModel implements Serializable{
         this.address = address;
         this.images = new ArrayList<>();
         this.images.add(new ImageModel(imageId));
+        this.outOfRoom = roomFreeNumber == 0;
     }
 
     public PostModel(String id, double price, double distance, double square, int roomNumber,
                      String description, String title, String address, boolean visible, boolean banned,
                      String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
-                     String landlordUsername, String landlordDisplayName, String landlordPhone
+                     String landlordUsername, String landlordDisplayName, String landlordPhone, long roomFreeNumber
                      ) {
         this.id = id;
         this.price = price;
@@ -158,12 +162,13 @@ public class PostModel implements Serializable{
         this.landlord.setUsername(landlordUsername);
         this.landlord.setDisplayName(landlordDisplayName);
         this.landlord.setPhoneNumber(landlordPhone);
+        this.outOfRoom = roomFreeNumber == 0L;
     }
 
     public PostModel(String id, double price, double distance, double square, int roomNumber,
                      String description, String title, String address, boolean visible, boolean banned,
                      String mapLocation, Date createDate, Date expireDate, Long typeId, String typeName,
-                     String landlordUsername, String landlordDisplayName, String landlordPhone, long reportNumber
+                     String landlordUsername, String landlordDisplayName, long reportNumber
     ) {
         this.id = id;
         this.price = price;
@@ -182,8 +187,18 @@ public class PostModel implements Serializable{
         this.landlord = new LandlordModel();
         this.landlord.setUsername(landlordUsername);
         this.landlord.setDisplayName(landlordDisplayName);
-        this.landlord.setPhoneNumber(landlordPhone);
         this.reportNumber = reportNumber;
         this.banAvailable = reportNumber >= Constant.NUMBER_OF_BAN_DATE_POST;
+    }
+    public PostModel(String id, int roomNumber, String title, boolean visible, boolean banned,
+                     Date createDate, Date expireDate
+    ) {
+        this.id = id;
+        this.roomNumber = roomNumber;
+        this.title = title;
+        this.visible = visible;
+        this.banned = banned;
+        this.createDate = createDate;
+        this.expireDate = expireDate;
     }
 }

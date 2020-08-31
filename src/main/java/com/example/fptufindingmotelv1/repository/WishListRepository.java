@@ -34,8 +34,10 @@ public interface WishListRepository extends JpaRepository<WishListModel, String>
     @Query(value = "select new WishListModel(wl.id, wl.createdDate, wl.wishListPost.id, wl.wishListPost.price, " +
             "wl.wishListPost.distance, wl.wishListPost.square, " +
             "wl.wishListPost.description, wl.wishListPost.title, " +
-            "wl.wishListPost.address, MAX (im.id)) from WishListModel wl " +
+            "wl.wishListPost.address, MAX (im.id), " +
+            "sum(case when (r.status.id = 1) then 1 else 0 end)) from WishListModel wl " +
             "join ImageModel im on wl.wishListPost.id = im.post.id " +
+            "left outer join RoomModel r on r.postRoom.id = wl.wishListPost.id " +
             "where (:renterId is null or wl.wishListRenter.username = :renterId)" +
             "and (:isVisible is null or wl.wishListPost.visible = :isVisible)" +
             "and (:banned is null or wl.wishListPost.banned = :banned)" +

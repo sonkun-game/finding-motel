@@ -108,6 +108,11 @@ var postDetailInstance = new Vue({
                 window.location.href = "/dang-nhap"
                 return
             }
+            if(this.post.outOfRoom != null && this.post.outOfRoom){
+                modalMessageInstance.message = "Tất cả phòng của bài đăng đã được cho thuê"
+                modalMessageInstance.showModal()
+                return
+            }
             if(this.listRoomOfPost == null || this.listRoomOfPost.length == 0){
                 this.getListRoom(this.post)
             }

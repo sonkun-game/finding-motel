@@ -32,6 +32,7 @@ public class PostDTO {
     private String wishListId;
     private String address;
     private String mapLocation;
+    private boolean outOfRoom;
 
     public PostDTO() {
     }
@@ -54,6 +55,7 @@ public class PostDTO {
         this.title = postModel.getTitle();
         this.address = postModel.getAddress();
         this.mapLocation = postModel.getMapLocation();
+        this.outOfRoom = postModel.isOutOfRoom();
         this.images = new ArrayList<>();
         for (ImageModel image:
                 postModel.getImages()) {
@@ -78,6 +80,7 @@ public class PostDTO {
         this.description = postModel.getDescription();
         this.title = postModel.getTitle();
         this.address = postModel.getAddress();
+        this.outOfRoom = postModel.isOutOfRoom();
         this.images = new ArrayList<>();
         String imageUrl = "data:image/"+ postModel.getImages().get(0).getFileType()+";base64,"
                 + Base64.getEncoder().encodeToString(postModel.getImages().get(0).getFileContent());

@@ -531,3 +531,22 @@ main{
 #myModal_chooseRoom .view-information{
     width: 45%;
 }
+
+.het-phong-detail{
+    position: absolute;
+    top: 32px;
+    left: -43px;
+    width: 190px;
+    height: 40px;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background: #e11b1e;
+    border: solid 1px #e11b1e;
+    line-height: 15px;
+    transform: rotateZ(-45deg);
+    z-index: 9999;
+}

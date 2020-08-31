@@ -132,9 +132,12 @@
                             <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
                                 <div class="img-post-wishlist">
                                     <img v-bind:src="itemWishList.post.images[0]" alt=""/>
+                                    <div class="het-phong">
+                                        <span class="text-het-phong">Hết phòng</span>
+                                    </div>
                                 </div>
-                                <div class="title-post-wishlist">
 
+                                <div class="title-post-wishlist">
                                     <h4><a v-bind:href="'/post-detail?id=' + itemWishList.post.id"
                                            v-text="itemWishList.post.title" target="_blank"></a></h4>
                                     <div class="per-night">

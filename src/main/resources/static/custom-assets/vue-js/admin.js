@@ -351,7 +351,7 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Đã khóa bài đăng", 2000);
-                        this.$set(this.listPost, this.postIndex, data.data)
+                        this.searchPost(0)
                     } else {
                         modalMessageInstance.message = data.message;
                         modalMessageInstance.showModal()

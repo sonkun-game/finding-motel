@@ -5,8 +5,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -61,25 +63,25 @@ public class OtpModel implements OtpService{
     @Override
     public JSONObject sendSms(String phoneNumber, char[] otp) {
         try {
-//            String content = "Ma OTP cua ban la: " + String.valueOf(otp);
-//            JSONObject request = new JSONObject();
-//            request.put("ApiKey", apiKey);
-//            request.put("SecretKey", secretKey);
-//            request.put("SmsType", smsType);
-//            request.put("Brandname", brandName);
-//            request.put("Phone", phoneNumber);
-//            request.put("Content", content);
-//
-//            RestTemplate restTemplate = new RestTemplate();
-//            String response = restTemplate.postForObject(eSmsUrl, request, String.class);
-//            JSONParser parser = new JSONParser();
-//            return (JSONObject) parser.parse(response);
+            String content = "Ma OTP cua ban la: " + String.valueOf(otp);
+            JSONObject request = new JSONObject();
+            request.put("ApiKey", apiKey);
+            request.put("SecretKey", secretKey);
+            request.put("SmsType", smsType);
+            request.put("Brandname", brandName);
+            request.put("Phone", phoneNumber);
+            request.put("Content", content);
+
+            RestTemplate restTemplate = new RestTemplate();
+            String response = restTemplate.postForObject(eSmsUrl, request, String.class);
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(response);
 
             // test send sms success
-            JSONObject response = new JSONObject();
-            response.put("CodeResult", "100");
-            response.put("otp", String.valueOf(otp));
-            return response;
+//            JSONObject response = new JSONObject();
+//            response.put("CodeResult", "100");
+//            response.put("otp", String.valueOf(otp));
+//            return response;
         }catch (Exception e){
             e.printStackTrace();
             return null;

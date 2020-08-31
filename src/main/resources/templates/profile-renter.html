@@ -132,7 +132,7 @@
                             <a v-bind:href="'/post-detail?id=' + itemWishList.post.id">
                                 <div class="img-post-wishlist">
                                     <img v-bind:src="itemWishList.post.images[0]" alt=""/>
-                                    <div class="het-phong">
+                                    <div class="het-phong" v-if="itemWishList.post.outOfRoom">
                                         <span class="text-het-phong">Hết phòng</span>
                                     </div>
                                 </div>

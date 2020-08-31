@@ -37,7 +37,7 @@
                                     <img v-bind:src="image"/>
                                 </li>
                             </ul>
-                            <div class="het-phong-detail">
+                            <div class="het-phong-detail" v-if="post.outOfRoom">
                                 <span class="text-het-phong">Hết phòng</span>
                             </div>
                         </div>

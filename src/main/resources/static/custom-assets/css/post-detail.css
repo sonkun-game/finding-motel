@@ -528,3 +528,6 @@ main{
 .img-marker{
     width: 40px;
 }
+#myModal_chooseRoom .view-information{
+    width: 45%;
+}

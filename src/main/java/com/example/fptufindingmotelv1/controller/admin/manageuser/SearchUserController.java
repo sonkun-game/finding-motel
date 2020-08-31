@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin.manageuser;
 
 import com.example.fptufindingmotelv1.dto.UserDTO;
 import com.example.fptufindingmotelv1.service.admin.manageuser.SearchUserService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -31,15 +32,8 @@ public class SearchUserController {
             Pageable pageable = PageRequest.of(currentPage.orElse(0), pageSize);
             return searchUserService.searchUsers(userDTO, pageable);
         } catch (Exception e) {
-            return responseMsg("999", "Lỗi hệ thống!", null);
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
-    }
 }

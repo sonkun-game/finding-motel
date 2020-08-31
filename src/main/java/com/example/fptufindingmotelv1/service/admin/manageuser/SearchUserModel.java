@@ -23,14 +23,6 @@ public class SearchUserModel implements SearchUserService {
     @Autowired
     PostRepository postRepository;
 
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
-    }
-
     public JSONObject paginationModel(Page page) {
         JSONObject msg = new JSONObject();
         msg.put("totalPages", page.getTotalPages());
@@ -45,7 +37,6 @@ public class SearchUserModel implements SearchUserService {
     @Override
     public JSONObject searchUsers(UserDTO userDTO, Pageable pageable) {
         try {
-            List<UserDTO> users = new ArrayList<>();
             Long reportNumber = 0L;
             Page<UserModel> userModels = userRepository.searchUser(userDTO.getUsername(), userDTO.getRoleId(), pageable);
             for (UserModel u : userModels.getContent()) {
@@ -53,16 +44,16 @@ public class SearchUserModel implements SearchUserService {
                 if(u.getRole().getId() == 2){
                     reportNumber = postRepository.getReportNumberOfLandlord(u.getUsername());
                     u.getLandlordModel().setReportNumber(reportNumber != null ? reportNumber : 0);
-                    u.getLandlordModel().setBanAvailable(reportNumber != null ? reportNumber > Constant.NUMBER_OF_BAN_DATE_USER : false);
+                    u.getLandlordModel().setBanAvailable(reportNumber != null ? reportNumber >= Constant.NUMBER_OF_BAN_DATE_USER : false);
                 }
             }
             JSONObject pagination = paginationModel(userModels);
-            JSONObject resposnse = responseMsg("000", "Success", userModels);
+            JSONObject resposnse = Constant.responseMsg("000", "Success", userModels);
             resposnse.put("pagination", pagination);
             return resposnse;
         } catch (Exception e) {
             e.printStackTrace();
-            return responseMsg("777", "Lỗi dữ liệu!", null);
+            return Constant.responseMsg("777", "Lỗi dữ liệu!", null);
         }
     }
 }

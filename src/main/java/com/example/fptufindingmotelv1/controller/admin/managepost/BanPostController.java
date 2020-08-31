@@ -29,7 +29,7 @@ public class BanPostController {
         try {
             PostModel postModel = banPostService.banPost(postId);
             return postModel != null
-                    ? responseMsg("000", "Success!", new PostResponseDTO(postModel))
+                    ? responseMsg("000", "Success!", null)
                     : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {
             e.printStackTrace();

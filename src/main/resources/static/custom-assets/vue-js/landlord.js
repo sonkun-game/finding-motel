@@ -361,6 +361,7 @@ var landlordInstance = new Vue({
             })
         },
         changeStatusPost(){
+            processingLoaderInstance.showLoader()
             let request = {
                 'postId' : this.selectedPost.id,
                 'isVisible' : !this.selectedPost.visible
@@ -374,7 +375,7 @@ var landlordInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => {
@@ -579,6 +580,7 @@ var landlordInstance = new Vue({
             })
         },
         editPost(){
+            processingLoaderInstance.showLoader()
             let request = {
                 'postId' : this.postId,
                 'typeId' : this.typeOfPost,
@@ -602,7 +604,7 @@ var landlordInstance = new Vue({
             fetch("/api-edit-post", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() =>
@@ -645,6 +647,7 @@ var landlordInstance = new Vue({
                 this.showMsgModal = true
                 return
             }
+            processingLoaderInstance.showLoader()
             let request = {
                 'postId' : this.postId,
                 'paymentPackageId' : this.duration,
@@ -660,7 +663,7 @@ var landlordInstance = new Vue({
             fetch("/api-extend-time-of-post", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Gia hạn thành công", 2000)
                         setTimeout(() => {
@@ -685,6 +688,7 @@ var landlordInstance = new Vue({
             })
         },
         deletePost(){
+            processingLoaderInstance.showLoader()
             let request = {
                 'postId' : this.postId,
             }
@@ -698,7 +702,7 @@ var landlordInstance = new Vue({
             fetch("/api-delete-post", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng", 2000)
                         setTimeout(() => this.viewListPost(), 2000);
@@ -711,9 +715,14 @@ var landlordInstance = new Vue({
             })
         },
         acceptRentalRequest(){
+            processingLoaderInstance.showLoader()
             let request = {
                 'id' : this.selectedRequest.id,
                 'roomId' : this.selectedRoom.id,
+                "renterUsername" : this.selectedRequest.rentalRenter.username,
+                "postTitle" : this.selectedRoom.postRoom.title,
+                "roomName" : this.selectedRoom.name,
+                "landlordUsername" : this.userInfo.username,
             }
             let options = {
                 method: 'POST',
@@ -725,7 +734,7 @@ var landlordInstance = new Vue({
             fetch("/api-accept-request", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         if(this.task == 5){
@@ -743,8 +752,14 @@ var landlordInstance = new Vue({
             })
         },
         rejectRentalRequest(){
+            processingLoaderInstance.showLoader()
             let request = {
                 'id' : this.selectedRequest.id,
+                'roomId' : this.selectedRoom.id,
+                "renterUsername" : this.selectedRequest.rentalRenter.username,
+                "postTitle" : this.selectedRoom.postRoom.title,
+                "roomName" : this.selectedRoom.name,
+                "landlordUsername" : this.userInfo.username,
             }
             let options = {
                 method: 'POST',
@@ -756,7 +771,7 @@ var landlordInstance = new Vue({
             fetch("/api-reject-request", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         if(this.task == 5){
@@ -896,9 +911,14 @@ var landlordInstance = new Vue({
             document.getElementById("modalUserDetail").style.display = 'none';
         },
         changeRoomStatus(){
+            processingLoaderInstance.showLoader()
             let request = {
                 "expireMessage" : this.expireMessage,
                 "roomId" : this.selectedRoom.id,
+                "postTitle" : this.selectedRoom.postRoom.title,
+                "roomName" : this.selectedRoom.name,
+                "landlordUsername" : this.userInfo.username,
+                "statusId" : this.selectedRoom.status.id,
             }
             let options = {
                 method: 'POST',
@@ -910,7 +930,7 @@ var landlordInstance = new Vue({
             fetch("/api-change-room-status", options)
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == '000'){
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         if(this.task == 5){
@@ -1083,7 +1103,9 @@ var landlordInstance = new Vue({
                     // let duration = response.rows[0].elements[0].duration;
                     let distance_in_kilo = distance.value / 1000; // the kilo meter
                     // let distance_in_mile = distance.value / 1609.34; // the mile
-                    this.distance = distance_in_kilo
+                    let num = Number(distance_in_kilo)
+                    let roundedString = num.toFixed(1)
+                    this.distance = Number(roundedString)
                 }
             }
         },

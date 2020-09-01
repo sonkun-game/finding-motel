@@ -268,17 +268,17 @@ var postDetailInstance = new Vue({
                 window.location.href = "/dang-nhap"
             }else {
                 if(this.listPostOfRenter.some(p => p.id == post.id)){
-                     this.removeFromWishList(post.id, this.userInfo.username)
+                     this.removeFromWishList(post, this.userInfo.username)
                 }else {
                     this.addWishlist(post, this.userInfo.username)
 
                 }
             }
         },
-        removeFromWishList(postId, username){
+        removeFromWishList(post, username){
             processingLoaderInstance.showLoader()
             let request = {
-                "postId" : postId,
+                "postId" : post.id,
                 "renterUsername" : username,
                 "wishListScreen" : false,
             }
@@ -294,7 +294,8 @@ var postDetailInstance = new Vue({
                     processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
-                        this.getWishListOfRenter()
+                        this.listPostOfRenter.splice(this.listPostOfRenter.findIndex(p => p.id == post.id), 1)
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(this.listPostOfRenter))
                     }
                 }).catch(error => {
                 console.log(error);
@@ -320,7 +321,8 @@ var postDetailInstance = new Vue({
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.code == "000"){
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
-                        this.getWishListOfRenter()
+                        this.listPostOfRenter.push(post)
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(this.listPostOfRenter))
                     }else {
                         modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()

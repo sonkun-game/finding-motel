@@ -23,6 +23,7 @@ var authenticationInstance = new Vue({
                     console.log(data)
                     if(data != null && data.code === "000"){
                         sessionStorage.removeItem("userInfo")
+                        sessionStorage.removeItem("listPostOfRenter")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
                         window.location.href = "/"

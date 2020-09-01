@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SendSendRentalRequestModel implements SendRentalRequestService {
@@ -58,14 +59,14 @@ public class SendSendRentalRequestModel implements SendRentalRequestService {
             if (message != null && !message.equals("000")) {
                 return Constant.responseMsg("111", message, null);
             }else if(message != null && message.equals("000")){
-                RentalRequestModel rentalRequestModel = new RentalRequestModel();
-                RoomModel roomModel = roomRepository.getRoomById(rentalRequestDTO.getRoomId());
-                RenterModel renterModel = new RenterModel(rentalRequestDTO.getRenterUsername());
-                StatusModel statusModel = new StatusModel(rentalRequestDTO.getStatusId());
-                rentalRequestModel.setId(rentalRequestDTO.getId());
-                rentalRequestModel.setRentalRoom(roomModel);
-                rentalRequestModel.setRentalRenter(renterModel);
-                rentalRequestModel.setRentalStatus(statusModel);
+//                RentalRequestModel rentalRequestModel = new RentalRequestModel();
+//                RoomModel roomModel = new RoomModel(rentalRequestDTO.getRoomId());
+//                RenterModel renterModel = new RenterModel(rentalRequestDTO.getRenterUsername());
+//                StatusModel statusModel = new StatusModel(7L);
+//                rentalRequestModel.setId(rentalRequestDTO.getId());
+//                rentalRequestModel.setRentalRoom(roomModel);
+//                rentalRequestModel.setRentalRenter(renterModel);
+//                rentalRequestModel.setRentalStatus(statusModel);
 
                 Date date = new Date();
                 Date createdDate = new Timestamp(date.getTime());
@@ -74,15 +75,18 @@ public class SendSendRentalRequestModel implements SendRentalRequestService {
                     return Constant.responseMsg("001", "Vui lòng chọn ngày bắt đầu sau ngày " + sdf.format(createdDate), null);
                 }
                 //set start date
-                rentalRequestModel.setStartDate(rentalRequestDTO.getStartDate());
-                rentalRequestModel.setRequestDate(createdDate);
-
-                rentalRequestModel = rentalRequestRepository.save(rentalRequestModel);
+//                rentalRequestModel.setStartDate(rentalRequestDTO.getStartDate());
+//                rentalRequestModel.setRequestDate(createdDate);
+//
+//                rentalRequestModel = rentalRequestRepository.save(rentalRequestModel);
+                String id = UUID.randomUUID().toString();
+                rentalRequestRepository.insertRentalRequest(id, rentalRequestDTO.getRenterUsername(),
+                        rentalRequestDTO.getRoomId(), createdDate, rentalRequestDTO.getStartDate(), 7L);
                 // send notification to Landlord
-                String notificationContent = "Tài khoản <b>" + rentalRequestModel.getRentalRenter().getUsername() +
-                        "</b> đã gửi một yêu cầu thuê trọ vào <b>" + rentalRequestModel.getRentalRoom().getName() +
-                        "</b> - <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getTitle() + "</b>";
-                sendNotification(rentalRequestModel, notificationContent, rentalRequestDTO.getLandlordUsername());
+                String notificationContent = "Tài khoản <b>" + rentalRequestDTO.getRenterUsername() +
+                        "</b> đã gửi một yêu cầu thuê trọ vào <b>" + rentalRequestDTO.getRoomName() +
+                        "</b> - <b>" + rentalRequestDTO.getPostTitle() + "</b>";
+                sendNotification(rentalRequestDTO, notificationContent, id);
                 return Constant.responseMsg("000", "Cập nhật thành công!", null);
             }
             return Constant.responseMsg("999", "Cập nhật không thành công!", null);
@@ -92,11 +96,12 @@ public class SendSendRentalRequestModel implements SendRentalRequestService {
         }
     }
 
-    private NotificationModel sendNotification(RentalRequestModel requestModel, String content, String landlordUsername){
+    private NotificationModel sendNotification(RentalRequestDTO rentalRequestDTO, String content, String requestId){
         try {
             // send notification to Landlord
             NotificationModel notificationModel = new NotificationModel();
-            LandlordModel landlordModel = new LandlordModel(landlordUsername);
+            UserModel landlordModel = new UserModel(rentalRequestDTO.getLandlordUsername());
+            RentalRequestModel rentalRequestModel = new RentalRequestModel(requestId);
 
             StatusModel statusNotification = new StatusModel(12L);
 
@@ -107,7 +112,7 @@ public class SendSendRentalRequestModel implements SendRentalRequestService {
             notificationModel.setContent(content);
             notificationModel.setStatusNotification(statusNotification);
             notificationModel.setCreatedDate(createdDate);
-            notificationModel.setRentalRequestNotification(requestModel);
+            notificationModel.setRentalRequestNotification(rentalRequestModel);
             return notificationRepository.save(notificationModel);
         }catch (Exception e){
             e.printStackTrace();

@@ -46,8 +46,7 @@ public class RoomModel implements Serializable {
     public RoomModel(String id, String name, Long statusId) {
         this.id = id;
         this.name = name;
-        this.status = new StatusModel();
-        this.status.setId(statusId);
+        this.status = new StatusModel(statusId);
     }
     public RoomModel(String id, String name, String postId, String postTitle,
                      Long statusId, String statusNm, long requestNumber) {
@@ -66,5 +65,11 @@ public class RoomModel implements Serializable {
         this.id = id;
         this.name = name;
         this.postRoom = new PostModel(postId, postTitle);
+    }
+
+    public RoomModel(String id, String name, String postId, String postTitle, String landlordUsername) {
+        this.id = id;
+        this.name = name;
+        this.postRoom = new PostModel(postId, postTitle, landlordUsername);
     }
 }

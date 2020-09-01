@@ -55,14 +55,9 @@ public class ViewInformationOfPostController {
     @PostMapping(value = "/api-get-list-room-of-post")
     public JSONObject getListRoomOfPost(@PathParam("postId") String postId){
         JSONObject response = new JSONObject();
-        List<RoomDTO> roomDTOS = new ArrayList<>();
         List<RoomModel> listRoomOfPost = viewInformationOfPostService.getListRoomOfPost(postId);
-        for (RoomModel r:
-                listRoomOfPost) {
-            roomDTOS.add(new RoomDTO(r));
-        }
         response.put("code", listRoomOfPost != null ? "000" : "999");
-        response.put("data", roomDTOS);
+        response.put("data", listRoomOfPost);
         return response;
     }
 

@@ -35,11 +35,11 @@ public class WishListModel implements Serializable {
     public WishListModel() {
     }
 
-    public WishListModel(String id, Date createdDate, String postId,
-                         double price, double distance, double square,
-                         String description, String postTitle, String address, String imageId) {
+    public WishListModel(String id, Date createdDate, String postId, double price,
+                         double distance, double square, String description,
+                         String postTitle, String address, String imageId, long roomFreeNumber) {
         this.id = id;
         this.createdDate = createdDate;
-        this.wishListPost = new PostModel(postId, price, distance, square, description, postTitle, address, imageId);
+        this.wishListPost = new PostModel(postId, price, distance, square, description, postTitle, address, imageId, roomFreeNumber);
     }
 }

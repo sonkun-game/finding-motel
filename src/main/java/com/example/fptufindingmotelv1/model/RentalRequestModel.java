@@ -54,6 +54,10 @@ public class RentalRequestModel implements Serializable {
     public RentalRequestModel() {
     }
 
+    public RentalRequestModel(String id) {
+        this.id = id;
+    }
+
     public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
                               String renterUsername, Long statusId, String statusNm) {
         this.id = id;
@@ -65,7 +69,7 @@ public class RentalRequestModel implements Serializable {
         this.rentalStatus = new StatusModel(statusId, statusNm);
     }
     public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
-                              String postId, String postTitle, String roomId, String roomName,
+                              String postId, String postTitle, String landlordUsername, String roomId, String roomName,
                               Long statusId, String statusNm) {
         this.id = id;
         this.requestDate = requestDate;
@@ -73,6 +77,6 @@ public class RentalRequestModel implements Serializable {
         this.cancelDate = cancelDate;
         this.expireMessage = expireMessage;
         this.rentalStatus = new StatusModel(statusId, statusNm);
-        this.rentalRoom = new RoomModel(roomId, roomName, postId, postTitle);
+        this.rentalRoom = new RoomModel(roomId, roomName, postId, postTitle, landlordUsername);
     }
 }

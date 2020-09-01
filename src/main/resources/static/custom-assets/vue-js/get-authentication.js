@@ -260,6 +260,7 @@ var authenticationInstance = new Vue({
                     }
                 }else {
                     sessionStorage.removeItem("userInfo")
+                    sessionStorage.removeItem("listPostOfRenter")
                 }
             }).catch(error => {
             console.log(error);

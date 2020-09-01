@@ -24,9 +24,9 @@ public class AddMoneyToLandlordModel implements AddMoneyToLandlordService {
     @Override
     public LandlordModel addMoneyForLandlord(PaymentDTO paymentDTO) {
         PaymentModel paymentModel = new PaymentModel();
-        LandlordModel landlordModel = landlordRepository.findByUsername(paymentDTO.getLandlord());
-        landlordModel.setAmount(landlordModel.getAmount() + paymentDTO.getAmount());
-        landlordModel = landlordRepository.save(landlordModel);
+        LandlordModel landlordModel = landlordRepository.getLandlordById(paymentDTO.getLandlord());
+        landlordRepository.updateAmountLandlord(landlordModel.getAmount() + paymentDTO.getAmount(),
+                landlordModel.getUsername());
 
         Date date = new Date();
         Date payDate = new Timestamp(date.getTime());

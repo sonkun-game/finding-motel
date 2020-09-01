@@ -716,8 +716,9 @@ var admin = new Vue({
                 .then((data) => {
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
+                        this.inputRole = 2
+                        this.searchUser(0)
                         setTimeout(() => {
-                            this.$set(this.listUser, this.userIndex, data.data)
                             this.closeModalAddMoney()
                         }, 2000);
                     } else {

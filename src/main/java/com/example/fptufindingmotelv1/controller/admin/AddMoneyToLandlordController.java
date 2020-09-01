@@ -32,9 +32,10 @@ public class AddMoneyToLandlordController {
             LandlordModel landlordModel = addMoneyForLandlordService.addMoneyForLandlord(paymentDTO);
 
             return landlordModel != null
-                    ? responseMsg("000", "Success!", new UserDTO(landlordModel))
+                    ? responseMsg("000", "Success!", null)
                     : responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         } catch (Exception e) {
+            e.printStackTrace();
             return responseMsg("999", "Lỗi hệ thống. Nạp tiền không thành công!", null);
         }
     }

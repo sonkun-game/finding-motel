@@ -33,6 +33,9 @@
 <!--    include notification modal-->
 <div th:replace="layout :: notification"></div>
 
+<!--    inlude processing loader screen-->
+<div th:replace="layout :: processing-loader"></div>
+
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
@@ -197,7 +200,7 @@
                                     </h4>
                                 </div>
                                 <div class="input-information">
-                                    <input type="text" maxlength="2" @keypress="removeDot(distance, 'float', $event)" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
+                                    <input type="text" maxlength="4" @keypress="removeDot(distance, 'float', $event)" v-model="distance" class="form-input-information width-80-pct rounded-pill border-0 shadow-sm">
                                     <div class="input-group-append">
                                         <span>KM</span>
                                     </div>
@@ -557,7 +560,7 @@
                                     <td v-text="room.name"></td>
                                     <td v-text="room.status.status"></td>
                                     <td>
-                                        <label class="switch">
+                                        <label class="switch" data-toggle="tooltip" data-html="true" title="Thay đổi trạng thái">
                                             <input type="checkbox" v-on:click.prevent="handleChangeRoomStatus(room, index)" v-model="room.status.id == 1">
                                             <span class="slider round"></span>
                                         </label>
@@ -583,7 +586,7 @@
                                             <tr v-for="(request, index) in room.listRentalRequest">
                                                 <td v-text="index + 1"></td>
                                                 <td>
-                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
+                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username, true)" v-text="request.rentalRenter.username"></a>
                                                 </td>
                                                 <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
                                                 <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
@@ -954,7 +957,7 @@
                                     </div>
 
                                     <div class="input-information">
-                                        <input @focusout="" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
                                                class="form-input-information rounded-pill border-0 shadow-sm">
                                     </div>
                                 </div>

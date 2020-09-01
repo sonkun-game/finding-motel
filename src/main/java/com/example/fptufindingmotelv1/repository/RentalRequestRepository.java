@@ -32,7 +32,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
 
 
     @Query(value = "select new RentalRequestModel(rr.id, rr.requestDate, rr.startDate, " +
-            "rr.cancelDate, rr.expireMessage, p.id, p.title, r.id, r.name, s.id, s.status) from RentalRequestModel rr " +
+            "rr.cancelDate, rr.expireMessage, p.id, p.title, p.landlord.username, r.id, r.name, s.id, s.status) from RentalRequestModel rr " +
             "join RoomModel r on rr.rentalRoom.id = r.id " +
             "join PostModel p on r.postRoom.id = p.id " +
             "join StatusModel s on rr.rentalStatus.id = s.id " +
@@ -76,4 +76,55 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
     Boolean existsByRentalRenterAndRentalRoomAndRentalStatus(RenterModel renter, RoomModel room, StatusModel status);
 
     Boolean existsByRentalRenterAndRentalStatus(RenterModel renter, StatusModel status);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update RentalRequestModel r " +
+            "set r.cancelDate = :cancelDate, " +
+            "r.rentalStatus.id = :statusId " +
+            "where r.id = :requestId")
+    void updateCancelStatus(String requestId, Date cancelDate, Long statusId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update RentalRequestModel r " +
+            "set r.expireMessage = :expireMessage, " +
+            "r.rentalStatus.id = :statusUpdate " +
+            "where 1 = 1 " +
+            "and (:requestId is null or r.id = :requestId)" +
+            "and (:roomId is null or r.rentalRoom.id = :roomId)" +
+            "and (:statusId is null or r.rentalStatus.id = :statusId)")
+    void updateExpireStatus(String requestId, String expireMessage, Long statusUpdate, String roomId, Long statusId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update RentalRequestModel r " +
+            "set r.cancelDate = :cancelDate, " +
+            "r.rentalStatus.id = :statusId " +
+            "where r.rentalRenter.username = :renterUsername")
+    void updateCancelStatusByRenter(String renterUsername, Date cancelDate, Long statusId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into RENTAL_REQUEST (ID, RENTER_ID, ROOM_ID, REQUEST_DATE, " +
+            "START_DATE, STATUS_ID) " +
+            "values (:id, :renterUsername, :roomId, :requestDate, :startDate, :statusId)", nativeQuery = true)
+    void insertRentalRequest(String id, String renterUsername, String roomId, Date requestDate,
+                             Date startDate, Long statusId);
+
+    @Query(value = "select new RentalRequestModel(rq.id, rq.rentalRenter.username) from RentalRequestModel rq " +
+            "where (:roomId is null or rq.rentalRoom.id = :roomId)" +
+            "and (:statusId is null or rq.rentalStatus.id = :statusId)" +
+            "")
+    List<RentalRequestModel> getListRequestIdByRoom(String roomId, Long statusId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update RentalRequestModel r " +
+            "set r.rentalStatus.id = :statusUpdate " +
+            "where 1 = 1 " +
+            "and (:requestId is null or r.id = :requestId)" +
+            "and (:roomId is null or r.rentalRoom.id = :roomId)" +
+            "and (:statusId is null or r.rentalStatus.id = :statusId)")
+    void updateStatus(String requestId, Long statusUpdate, String roomId, Long statusId);
 }

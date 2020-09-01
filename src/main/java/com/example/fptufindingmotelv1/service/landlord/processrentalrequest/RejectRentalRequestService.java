@@ -5,6 +5,6 @@ import com.example.fptufindingmotelv1.model.RentalRequestModel;
 
 public interface RejectRentalRequestService {
 
-    RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO);
+    boolean rejectRentalRequest(RentalRequestDTO rentalRequestDTO);
 
 }

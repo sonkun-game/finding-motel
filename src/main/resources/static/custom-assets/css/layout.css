@@ -130,6 +130,7 @@ p{
     padding: 2px 10px;
 }
 .single-room .room-img{
+    position: relative;
     overflow: hidden;
     height: 250px;
     background-color: beige;
@@ -221,7 +222,7 @@ main{
     max-height: 420px;
     overflow: auto;
 }
-.notification-body ul.notification-list>li{
+.notification-body ul.notification-list>li:not(:last-child){
     display: block;
     padding-bottom: 5px;
     border-bottom: 1px solid #e9ecef;
@@ -303,4 +304,40 @@ button:disabled{
 .px-40px{
     padding-left: 40px;
     padding-right: 40px;
+}
+
+.read-more:hover{
+    background-color: white !important;
+    color: #dca73a!important;
+}
+.read-more{
+    padding-top: 4px;
+    padding-bottom: 4px!important;
+    display: block!important;
+}
+.read-more-text{
+    margin: auto;
+    width: fit-content;
+    cursor: pointer;
+}
+.notification-body ul.notification-list>li.read-more a:hover{
+    color: #dca73a!important;
+}
+
+.het-phong{
+    position: absolute;
+    top: 18px;
+    left: -29px;
+    width: 126px;
+    height: 32px;
+    text-align: center;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: #e11b1e;
+    border: solid 1px #e11b1e;
+    line-height: 15px;
+    transform: rotateZ(-45deg);
 }

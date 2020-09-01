@@ -5,6 +5,8 @@ import com.example.fptufindingmotelv1.model.NotificationModel;
 import com.example.fptufindingmotelv1.model.StatusModel;
 import com.example.fptufindingmotelv1.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +46,18 @@ public class ViewNotificationsModel implements ViewNotificationsService {
             StatusModel statusNotificationSeen = new StatusModel(13L);
             notificationModel.setStatusNotification(statusNotificationSeen);
             return notificationRepository.save(notificationModel);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Slice<NotificationModel> getListNotificationPaging(NotificationDTO notificationDTO, Pageable pageable) {
+        try {
+            Slice<NotificationModel> notificationModels =
+                    notificationRepository.getAllByUsernamePaging(notificationDTO.getUsername(), pageable);
+            return notificationModels;
         }catch (Exception e){
             e.printStackTrace();
             return null;

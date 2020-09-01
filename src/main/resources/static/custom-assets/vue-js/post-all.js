@@ -75,9 +75,8 @@ var postInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
-                        processingLoaderInstance.hideLoader()
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
                         filterPostInstance.getWishListOfRenter()
                     }
@@ -143,6 +142,8 @@ var filterPostInstance = new Vue({
             }
         },
         handleSearchClick(){
+            processingLoaderInstance.displayText = "Tìm Kiếm"
+            processingLoaderInstance.showLoader()
             this.getPageFromQuery()
             let typeId = ""
             let filterPriceId = $("#select2").val()
@@ -182,6 +183,7 @@ var filterPostInstance = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
                         postInstance.pageSize = data.pageSize;
                         //  this.pages=data;

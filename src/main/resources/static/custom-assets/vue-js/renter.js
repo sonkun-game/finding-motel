@@ -7,7 +7,7 @@ var renterInstance = new Vue({
         //init
         listRentalRq: [],
         confirmAction: null,
-        selectedRentalRequestId: null,
+        selectedRentalRequest: null,
         message: "",
         expireMessage: "",
         pagination: []
@@ -52,6 +52,7 @@ var renterInstance = new Vue({
             })
         },
         removeFromWishList(wishListId, username) {
+            processingLoaderInstance.showLoader()
             let request = {
                 "id": wishListId,
                 "renterUsername": username,
@@ -66,7 +67,7 @@ var renterInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         this.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích");
                         sessionStorage.removeItem("listPostOfRenter")
@@ -76,11 +77,11 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
-        showModalConfirmChangeStatusRequest(rentalRequestId, action, event) {
+        showModalConfirmChangeStatusRequest(rentalRequest, action, event) {
             if (event.target.className.indexOf("disable") != -1) {
                 return;
             }
-            this.selectedRentalRequestId = rentalRequestId;
+            this.selectedRentalRequest = rentalRequest;
             this.confirmAction = this.changeRequestStatus;
             //show modal
             if (action == "cancel") {
@@ -101,7 +102,7 @@ var renterInstance = new Vue({
         },
         confirmModalEndRequest() {
             this.closeModalEndRequest()
-            this.confirmAction(this.selectedRentalRequestId);
+            this.confirmAction(this.selectedRentalRequest);
         },
         closeModalConfirmChangeStatusRequest() {
             //close modal
@@ -111,7 +112,7 @@ var renterInstance = new Vue({
         executeConfirm(yesNo) {
             this.closeModalConfirmChangeStatusRequest();
             if (yesNo == true) {
-                this.confirmAction(this.selectedRentalRequestId);
+                this.confirmAction(this.selectedRentalRequest);
                 this.confirmAction = null;
             } else {
                 return;
@@ -158,19 +159,36 @@ var renterInstance = new Vue({
                 console.log(error);
             })
         },
-        changeRequestStatus(rentalId) {
-            let rentalRequest = {
-                "expireMessage": this.expireMessage,
-                "id": rentalId,
+        changeRequestStatus(rentalRequest) {
+            processingLoaderInstance.showLoader()
+            let request = {}
+            if(rentalRequest.rentalStatus.id == 7){
+                request = {
+                    "id": rentalRequest.id,
+                    "statusId" : rentalRequest.rentalStatus.id,
+                }
+            }else if(rentalRequest.rentalStatus.id == 9){
+                request = {
+                    "expireMessage": this.expireMessage,
+                    "id": rentalRequest.id,
+                    "statusId" : rentalRequest.rentalStatus.id,
+                    "renterUsername" : this.userInfo.username,
+                    "landlordUsername" : rentalRequest.rentalRoom.postRoom.landlord.username,
+                    "postTitle" : rentalRequest.rentalRoom.postRoom.title,
+                    "roomName" : rentalRequest.rentalRoom.name,
+                    "roomId" : rentalRequest.rentalRoom.id
+                }
             }
+
             fetch("/change-rental-request-status", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(rentalRequest),
+                body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((responseMsg) => {
+                    processingLoaderInstance.hideLoader()
                     if (responseMsg.status == 403) {
                         window.location.href = "dang-nhap";
                     } else {

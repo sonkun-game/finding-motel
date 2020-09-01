@@ -225,9 +225,9 @@
                                         <div class="choose-room clearfix col-8">
                                             <ul class="list-select-room" v-for="room in listRoomOfPost">
                                                 <li class="select-room"
-                                                    v-bind:class="{disable : room.statusId == 2, selected: room.roomId == roomIdRental}"
-                                                    @click="setRoomIdRental(room.roomId, $event)">
-                                                    {{room.roomName}}
+                                                    v-bind:class="{disable : room.status.id == 2, selected: room.id == roomIdRental}"
+                                                    @click="setRoomIdRental(room, $event)">
+                                                    {{room.name}}
                                                 </li>
                                             </ul>
                                         </div>

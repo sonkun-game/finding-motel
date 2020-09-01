@@ -27,8 +27,8 @@ public class ReportPostModel implements ReportPostService {
     public void sendReport(ReportRequestDTO reportRequestDTO) {
         try {
             ReportModel reportModel = null;
-            PostModel postModel = postRepository.getOne(reportRequestDTO.getPostId());
-            RenterModel renterModel = renterRepository.getOne(reportRequestDTO.getRenterId());
+            PostModel postModel = new PostModel(reportRequestDTO.getPostId());
+            RenterModel renterModel = new RenterModel(reportRequestDTO.getRenterId());
             StatusModel statusModel = new StatusModel(3L);
             reportModel = new ReportModel(renterModel, postModel, statusModel, reportRequestDTO);
             reportRepository.save(reportModel);

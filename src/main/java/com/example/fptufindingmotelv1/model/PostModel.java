@@ -114,6 +114,12 @@ public class PostModel implements Serializable{
         this.title = title;
     }
 
+    public PostModel(String id, String title, String landlordUsername) {
+        this.id = id;
+        this.title = title;
+        this.landlord = new LandlordModel(landlordUsername);
+    }
+
     public PostModel(String id, double price, String title, String imageId) {
         this.id = id;
         this.price = price;

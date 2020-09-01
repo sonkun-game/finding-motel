@@ -71,11 +71,11 @@
                                 <td>
                                     <button v-if="rentalRequest.rentalStatus.id == 7"
                                             v-bind:class="{disable : rentalRequest.rentalStatus.id == 8}"
-                                            @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'cancel', $event)"
+                                            @click="showModalConfirmChangeStatusRequest(rentalRequest, 'cancel', $event)"
                                             class="table-button">Hủy
                                     </button>
                                     <button v-if="rentalRequest.rentalStatus.id == 9"
-                                            @click="showModalConfirmChangeStatusRequest(rentalRequest.id, 'expire', $event)"
+                                            @click="showModalConfirmChangeStatusRequest(rentalRequest, 'expire', $event)"
                                             data-toggle="tooltip" data-html="true" title="Kết thúc thuê trọ"
                                             class="table-button">Kết thúc
                                     </button>

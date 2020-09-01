@@ -7,6 +7,8 @@ import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import com.example.fptufindingmotelv1.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -24,61 +26,43 @@ public class AcceptRentalRequestModel implements AcceptRentalRequestService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO) {
-        try {
-            RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
-            RoomModel roomModel = roomRepository.findById(rentalRequestDTO.getRoomId()).get();
-            StatusModel statusAccept = new StatusModel(9L);
-            StatusModel statusReject = new StatusModel(10L);
-            for (RentalRequestModel request:
-                 roomModel.getRoomRentals()) {
-                if(!request.getId().equals(rentalRequestModel.getId())
-                        && request.getRentalStatus().getId() == 7){
-                    request.setRentalStatus(statusReject);
-                    String notificationContent = "Chủ trọ <b>" + roomModel.getPostRoom().getLandlord().getUsername() +
-                            "</b> đã từ chối yêu cầu thuê trọ vào <b>" + request.getRentalRoom().getName() +
-                            "</b> - <b>" + request.getRentalRoom().getPostRoom().getTitle() + "</b>";
-                    // send notification to Renter
-                    sendNotification(request, notificationContent);
-                }else if(request.getId().equals(rentalRequestModel.getId()) ){
-                    request.setRentalStatus(statusAccept);
-                    String notificationContent = "Chủ trọ <b>" + roomModel.getPostRoom().getLandlord().getUsername() +
-                            "</b> đã chấp nhận yêu cầu thuê trọ vào <b>" + request.getRentalRoom().getName() +
-                            "</b> - <b>" + request.getRentalRoom().getPostRoom().getTitle() + "</b>";
-                    // send notification to Renter
-                    sendNotification(request, notificationContent);
-                }
+    public boolean acceptRentalRequest(RentalRequestDTO rentalRequestDTO) {
+        List<RentalRequestModel> listRequestOfRoom =
+                rentalRequestRepository.getListRequestIdByRoom(rentalRequestDTO.getRoomId(), 7L);
+        for (RentalRequestModel request:
+                listRequestOfRoom) {
+            if(!request.getId().equals(rentalRequestDTO.getId())){
+                String notificationContent = "Chủ trọ <b>" + rentalRequestDTO.getLandlordUsername() +
+                        "</b> đã từ chối yêu cầu thuê trọ vào <b>" + rentalRequestDTO.getRoomName() +
+                        "</b> - <b>" + rentalRequestDTO.getPostTitle() + "</b>";
+                // send notification to Renter
+                sendNotification(request, notificationContent);
+            }else if(request.getId().equals(rentalRequestDTO.getId()) ){
+                String notificationContent = "Chủ trọ <b>" + rentalRequestDTO.getLandlordUsername() +
+                        "</b> đã chấp nhận yêu cầu thuê trọ vào <b>" + rentalRequestDTO.getRoomName() +
+                        "</b> - <b>" + rentalRequestDTO.getPostTitle() + "</b>";
+                // send notification to Renter
+                sendNotification(request, notificationContent);
             }
-            Date date = new Date();
-            Date cancelDate = new Timestamp(date.getTime());
-            StatusModel statusCancel = new StatusModel(8L);
-            RenterModel renter = rentalRequestModel.getRentalRenter();
-            for (RentalRequestModel request:
-                 renter.getRenterRentals()) {
-                if(!request.getId().equals(rentalRequestModel.getId())
-                        && request.getRentalStatus().getId() == 7){
-                    request.setRentalStatus(statusCancel);
-                    request.setCancelDate(cancelDate);
-                }
-            }
-            StatusModel statusRoom = new StatusModel(2L);
-            roomModel.setStatus(statusRoom);
-            rentalRequestRepository.saveAll(renter.getRenterRentals());
-            roomRepository.save(roomModel);
-            List<RentalRequestModel> response = rentalRequestRepository.saveAll(roomModel.getRoomRentals());
-            return response;
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
         }
+        Date date = new Date();
+        Date cancelDate = new Timestamp(date.getTime());
+        rentalRequestRepository.updateCancelStatusByRenter(rentalRequestDTO.getRenterUsername(), cancelDate, 8L);
+
+        roomRepository.updateStatusRoom(rentalRequestDTO.getRoomId(), 2L);
+
+        rentalRequestRepository.updateStatus(rentalRequestDTO.getId(), 9L, null, null);
+        rentalRequestRepository.updateStatus(null, 10L, rentalRequestDTO.getRoomId(), 7L);
+        return true;
     }
 
     private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
         try {
             // send notification to Renter
             NotificationModel notificationModel = new NotificationModel();
-            RenterModel renterModel = requestModel.getRentalRenter();
+            UserModel renterModel = new UserModel(requestModel.getRentalRenter().getUsername());
 
             StatusModel statusNotification = new StatusModel(12L);
 

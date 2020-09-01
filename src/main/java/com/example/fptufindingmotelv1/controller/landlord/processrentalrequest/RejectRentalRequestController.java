@@ -20,10 +20,15 @@ public class RejectRentalRequestController {
     @ResponseBody
     @PostMapping("/api-reject-request")
     public JSONObject rejectRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        RentalRequestModel rentalRequestModel = rejectRentalRequestService.rejectRentalRequest(rentalRequestDTO);
+        try {
+            boolean isSuccess = rejectRentalRequestService.rejectRentalRequest(rentalRequestDTO);
 
-        return rentalRequestModel != null
-                ? Constant.responseMsg("000", "Success", null)
-                : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+            return isSuccess
+                    ? Constant.responseMsg("000", "Success", null)
+                    : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 }

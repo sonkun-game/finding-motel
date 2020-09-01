@@ -5,6 +5,6 @@ import com.example.fptufindingmotelv1.model.RoomModel;
 
 public interface ChangeRoomStatusService {
 
-    RoomModel changeRoomStatus(RentalRequestDTO rentalRequestDTO);
+    boolean changeRoomStatus(RentalRequestDTO rentalRequestDTO);
 
 }

@@ -34,7 +34,7 @@ public class CancelRentalRequestModel implements CancelRentalRequestService {
             }else if (rentalRequestDTO.getStatusId() == 9){
                 roomRepository.updateStatusRoom(rentalRequestDTO.getRoomId(), 1L);
                 rentalRequestRepository.updateExpireStatus(rentalRequestDTO.getId(),
-                        rentalRequestDTO.getExpireMessage(), 11L);
+                        rentalRequestDTO.getExpireMessage(), 11L, null, null);
                 // send notification to Landlord
                 String notificationContent = "Tài khoản <b>" + rentalRequestDTO.getRenterUsername() +
                         "</b> đã kết thúc thuê phòng tại <b>" + rentalRequestDTO.getRoomName() +

@@ -20,10 +20,15 @@ public class ChangeRoomStatusController {
     @ResponseBody
     @PostMapping("/api-change-room-status")
     public JSONObject changeRoomStatus(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        RoomModel roomModel = changeRoomStatusService.changeRoomStatus(rentalRequestDTO);
+        try {
+            boolean isSuccess = changeRoomStatusService.changeRoomStatus(rentalRequestDTO);
 
-        return roomModel != null
-                ? Constant.responseMsg("000", "Success", null)
-                : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+            return isSuccess
+                    ? Constant.responseMsg("000", "Success", null)
+                    : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 }

@@ -58,6 +58,11 @@ public class RentalRequestModel implements Serializable {
         this.id = id;
     }
 
+    public RentalRequestModel(String id, String renterUsername) {
+        this.id = id;
+        this.rentalRenter = new RenterModel(renterUsername);
+    }
+
     public RentalRequestModel(String id, Date requestDate, Date startDate, Date cancelDate, String expireMessage,
                               String renterUsername, Long statusId, String statusNm) {
         this.id = id;

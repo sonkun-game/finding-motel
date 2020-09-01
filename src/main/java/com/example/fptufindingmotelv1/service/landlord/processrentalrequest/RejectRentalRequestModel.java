@@ -1,14 +1,13 @@
 package com.example.fptufindingmotelv1.service.landlord.processrentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.model.NotificationModel;
-import com.example.fptufindingmotelv1.model.RentalRequestModel;
-import com.example.fptufindingmotelv1.model.RenterModel;
-import com.example.fptufindingmotelv1.model.StatusModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.NotificationRepository;
 import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -22,33 +21,27 @@ public class RejectRentalRequestModel implements RejectRentalRequestService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public RentalRequestModel rejectRentalRequest(RentalRequestDTO rentalRequestDTO) {
-        try {
-            RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
-            StatusModel statusReject = new StatusModel(10L);
-            rentalRequestModel.setRentalStatus(statusReject);
-            String notificationContent = "Chủ trọ <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getLandlord().getUsername() +
-                    "</b> đã từ chối yêu cầu thuê trọ vào <b>" + rentalRequestModel.getRentalRoom().getName() +
-                    "</b> - <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getTitle() + "</b>";
-            // send notification to Renter
-            sendNotification(rentalRequestModel, notificationContent);
-            return rentalRequestRepository.save(rentalRequestModel);
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+    public boolean rejectRentalRequest(RentalRequestDTO rentalRequestDTO) {
+        rentalRequestRepository.updateStatus(rentalRequestDTO.getId(), 10L, null, null);
+        String notificationContent = "Chủ trọ <b>" + rentalRequestDTO.getLandlordUsername() +
+                "</b> đã từ chối yêu cầu thuê trọ vào <b>" + rentalRequestDTO.getRoomName() +
+                "</b> - <b>" + rentalRequestDTO.getPostTitle() + "</b>";
+        // send notification to Renter
+        sendNotification(rentalRequestDTO, notificationContent);
+        return true;
     }
 
 
-    private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
+    private NotificationModel sendNotification(RentalRequestDTO rentalRequestDTO, String content){
         try {
             // send notification to Renter
             NotificationModel notificationModel = new NotificationModel();
-            RenterModel renterModel = requestModel.getRentalRenter();
+            UserModel renterModel = new UserModel(rentalRequestDTO.getRenterUsername());
+            RentalRequestModel requestModel = new RentalRequestModel(rentalRequestDTO.getId());
 
             StatusModel statusNotification = new StatusModel(12L);
-
             Date date = new Date();
             Date createdDate = new Timestamp(date.getTime());
 

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AcceptRentalRequestService {
 
-    List<RentalRequestModel> acceptRentalRequest(RentalRequestDTO rentalRequestDTO);
+    boolean acceptRentalRequest(RentalRequestDTO rentalRequestDTO);
 
 }

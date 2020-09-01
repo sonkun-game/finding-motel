@@ -21,9 +21,9 @@ public class HideUnHidePostController {
     @ResponseBody
     @PostMapping("/api-change-post-status")
     public JSONObject changePostStatus(@RequestBody PostRequestDTO postRequestDTO) {
-        PostModel postModel = hideUnHidePostService.changePostStatus(postRequestDTO);
+        boolean isSuccess = hideUnHidePostService.changePostStatus(postRequestDTO);
 
-        return postModel != null ?
+        return isSuccess ?
                 Constant.responseMsg("000", "Success", null) :
                 Constant.responseMsg("999", "Lỗi hệ thống!", null);
     }

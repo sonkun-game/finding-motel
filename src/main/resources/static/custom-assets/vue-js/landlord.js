@@ -532,6 +532,7 @@ var landlordInstance = new Vue({
                 'statusId' : 7,
                 'postId' : null,
                 'roomId' : null,
+                'landlordUsername' : this.userInfo.username,
             }
             this.getListRoom(request)
         },

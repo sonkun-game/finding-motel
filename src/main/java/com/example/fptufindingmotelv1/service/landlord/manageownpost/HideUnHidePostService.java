@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface HideUnHidePostService {
 
-    PostModel changePostStatus(PostRequestDTO postRequestDTO);
+    boolean changePostStatus(PostRequestDTO postRequestDTO);
 }

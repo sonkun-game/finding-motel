@@ -645,6 +645,7 @@ var admin = new Vue({
             processingLoaderInstance.showLoader()
             let request = {
                 "id": paymentPackage.id,
+                "available" : !paymentPackage.available,
             }
             fetch("/api-change-status-package", {
                 method: 'POST',
@@ -656,8 +657,9 @@ var admin = new Vue({
                 .then((data) => {
                     processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
-                        authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
-                        setTimeout(() => this.$set(this.listPaymentPackage, index, data.data), 2000)
+                        paymentPackage.available = !paymentPackage.available
+                        authenticationInstance.showModalNotify("Cập nhật thành công", 1000)
+                        setTimeout(() => this.$set(this.listPaymentPackage, index, paymentPackage), 1000)
 
                     } else {
                         modalMessageInstance.message = data.message;

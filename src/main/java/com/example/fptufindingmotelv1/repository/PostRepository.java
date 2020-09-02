@@ -184,4 +184,11 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "set p.banned = :banned " +
             "where p.id = :postId ")
     void updateBannedPost(Boolean banned, String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update PostModel p " +
+            "set p.visible = :visible " +
+            "where p.landlord.username = :landlordUsername ")
+    void updateVisiblePostByLandlord(Boolean visible, String landlordUsername);
 }

@@ -16,6 +16,15 @@ public class Constant {
     public static final Integer OTP_LENGTH = 6;
     public static final Long RENTER_ID = 1L;
     public static final Long LANDLORD_ID = 2L;
+    public static final int BAN_USER_DATE_NUMBER = 14;
+
+    public static final Long STATUS_ROOM_FREE = 1L;
+    public static final Long STATUS_ROOM_BE_RENTED = 2L;
+
+    public static final Long STATUS_REPORT_PROCESSING = 3L;
+    public static final Long STATUS_REPORT_PROCESSED_POST = 4L;
+    public static final Long STATUS_REPORT_PROCESSED_USER = 5L;
+    public static final Long STATUS_REPORT_PROCESSED_ALL = 6L;
 
     public static JSONObject responseMsg(String code, String message, Object data) {
         JSONObject msg = new JSONObject();

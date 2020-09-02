@@ -5,6 +5,9 @@ import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.model.ReportModel;
 import com.example.fptufindingmotelv1.model.StatusModel;
 import com.example.fptufindingmotelv1.repository.LandlordRepository;
+import com.example.fptufindingmotelv1.repository.PostRepository;
+import com.example.fptufindingmotelv1.repository.ReportRepository;
+import com.example.fptufindingmotelv1.untils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +23,17 @@ public class BanUnbanLandlordModel implements BanUnbanLandlordService{
     @Autowired
     LandlordRepository landlordRepository;
 
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    PostRepository postRepository;
+
     @Override
-    public LandlordModel banLandlord(String username) {
+    public boolean banLandlord(String username) {
         try {
-            LandlordModel landlord = landlordRepository.findByUsername(username);
-            if (landlord == null) {
-                return null;
+            if (username == null && username.isEmpty()) {
+                return false;
             } else {
                 DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
                 dateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Ho_Chi_Minh")));
@@ -34,49 +42,35 @@ public class BanUnbanLandlordModel implements BanUnbanLandlordService{
                 Date date = dateFormat.parse(currentDate);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
-                calendar.add(Calendar.DAY_OF_MONTH, 14);
+                calendar.add(Calendar.DAY_OF_MONTH, Constant.BAN_USER_DATE_NUMBER);
 
-                landlord.setUnBanDate(calendar.getTime());
-                for (PostModel post :
-                        landlord.getPosts()) {
-                    post.setVisible(false);
-                    for (ReportModel report :
-                            post.getReports()) {
-                        if (report.getStatusReport().getId() == 3) {
-                            StatusModel statusModel = new StatusModel(5L);
-                            report.setStatusReport(statusModel);
-                        } else if (report.getStatusReport().getId() == 4) {
-                            StatusModel statusModel = new StatusModel(6L);
-                            report.setStatusReport(statusModel);
-                        }
-                    }
-                }
-                return landlordRepository.save(landlord);
+                landlordRepository.updateUnBanDate(calendar.getTime(), username);
+                postRepository.updateVisiblePostByLandlord(false, username);
+                reportRepository.updateStatusReportByLandlord(username,
+                        Constant.STATUS_REPORT_PROCESSED_USER, Constant.STATUS_REPORT_PROCESSED_ALL);
+
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-
+            return false;
         }
-        return null;
+
     }
 
     @Override
-    public LandlordModel unbanLandlord(String username) {
+    public boolean unbanLandlord(String username) {
         try {
-            LandlordModel landlord = landlordRepository.findByUsername(username);
-            if (landlord == null) {
-                return null;
+            if (username == null && username.isEmpty()) {
+                return false;
             } else {
-                landlord.setUnBanDate(null);
-                for (PostModel post :
-                        landlord.getPosts()) {
-                    post.setVisible(true);
-                }
-                return landlordRepository.save(landlord);
+                landlordRepository.updateUnBanDate(null, username);
+                postRepository.updateVisiblePostByLandlord(true, username);
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return null;
     }
 }

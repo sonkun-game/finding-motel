@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.service.admin.managepost;
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.*;
+import com.example.fptufindingmotelv1.untils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,9 +61,10 @@ public class BanPostModel implements BanPostService{
         if(isExistProcessingRequest || isExistAcceptedRequest){
             rentalRequestRepository.updateStatusByPost(rentalRequestDTO.getPostId(), 10L, 11L);
         }
-        roomRepository.updateStatusRoomByPost(rentalRequestDTO.getPostId(), 1L, 2L);
+        roomRepository.updateStatusRoomByPost(rentalRequestDTO.getPostId(), Constant.STATUS_ROOM_FREE, Constant.STATUS_ROOM_BE_RENTED);
 
-        reportRepository.updateStatusReportByPost(rentalRequestDTO.getPostId(), 4L, 6L);
+        reportRepository.updateStatusReportByPost(rentalRequestDTO.getPostId(),
+                Constant.STATUS_REPORT_PROCESSED_POST, Constant.STATUS_REPORT_PROCESSED_ALL);
 
         postRepository.updateBannedPost(true, rentalRequestDTO.getPostId());
 

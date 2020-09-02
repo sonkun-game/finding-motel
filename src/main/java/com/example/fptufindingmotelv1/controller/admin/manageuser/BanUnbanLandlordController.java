@@ -2,6 +2,7 @@ package com.example.fptufindingmotelv1.controller.admin.manageuser;
 
 import com.example.fptufindingmotelv1.model.LandlordModel;
 import com.example.fptufindingmotelv1.service.admin.manageuser.BanUnbanLandlordService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,14 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BanUnbanLandlordController {
     @Autowired
     BanUnbanLandlordService banUnbanLandlordService;
-
-    public JSONObject responseMsg(String code, String message, Object data) {
-        JSONObject msg = new JSONObject();
-        msg.put("code", code);
-        msg.put("message", message);
-        msg.put("data", data);
-        return msg;
-    }
 
     public JSONObject paginationModel(Page page) {
         JSONObject msg = new JSONObject();
@@ -39,14 +32,15 @@ public class BanUnbanLandlordController {
     public JSONObject banLandlord(@RequestParam(value = "username") String username) {
         try {
             if (username != null && !username.isEmpty()) {
-                LandlordModel landlordModel = banUnbanLandlordService.banLandlord(username);
-                return landlordModel != null
-                        ? responseMsg("000", "Success!", null)
-                        : responseMsg("999", "Lỗi hệ thống!", null);
+                boolean isSuccess = banUnbanLandlordService.banLandlord(username);
+                return isSuccess
+                        ? Constant.responseMsg("000", "Success!", null)
+                        : Constant.responseMsg("999", "Lỗi hệ thống!", null);
             }
-            return responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
+            return Constant.responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
         } catch (Exception e) {
-            return responseMsg("999", "Lỗi hệ thống!", null);
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 
@@ -55,15 +49,16 @@ public class BanUnbanLandlordController {
     public JSONObject unbanLandlord(@RequestParam(value = "username") String username) {
         try {
             if (username != null && !username.isEmpty()) {
-                LandlordModel landlordModel = banUnbanLandlordService.unbanLandlord(username);
-                return landlordModel != null
-                        ? responseMsg("000", "Success!", null)
-                        : responseMsg("999", "Lỗi hệ thống!", null);
+                boolean isSuccess = banUnbanLandlordService.unbanLandlord(username);
+                return isSuccess
+                        ? Constant.responseMsg("000", "Success!", null)
+                        : Constant.responseMsg("999", "Lỗi hệ thống!", null);
             }
 
-            return responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
+            return Constant.responseMsg("001", "Sai tên đăng nhập chủ trọ", null);
         } catch (Exception e) {
-            return responseMsg("999", "Lỗi hệ thống!", null);
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
         }
     }
 }

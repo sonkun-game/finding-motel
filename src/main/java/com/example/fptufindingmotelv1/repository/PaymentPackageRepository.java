@@ -4,7 +4,9 @@ import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,4 +28,12 @@ public interface PaymentPackageRepository extends JpaRepository<PaymentPackageMo
             "p.packageName, p.available) from PaymentPackageModel p " +
             "order by p.duration")
     Page<PaymentPackageModel> getAllPaymentPackage(Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update PaymentPackageModel p " +
+            "set p.available = :available " +
+            "where p.id = :packageId " +
+            "")
+    void updateAvailablePackage(Long packageId, Boolean available);
 }

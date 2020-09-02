@@ -76,13 +76,12 @@
                                 </div>
                             </div>
                             <div class="col-lg-3 d-none d-lg-block"></div>
-                            <div class="col-lg-3 d-none d-lg-block"></div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-6">
                                 <div class="search-container">
                                     <form action="#">
                                         <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
                                                class="input-search"
-                                               placeholder="Tìm kiếm..." name="search">
+                                               placeholder="Tên đăng nhập, Tên hiển thị,..." name="search">
                                         <button @click.prevent="searchUser()" type="submit"><i
                                                 class="fa fa-search"></i></button>
                                     </form>

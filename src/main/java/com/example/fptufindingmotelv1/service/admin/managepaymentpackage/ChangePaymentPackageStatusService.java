@@ -4,5 +4,5 @@ import com.example.fptufindingmotelv1.dto.PaymentPackageDTO;
 import com.example.fptufindingmotelv1.model.PaymentPackageModel;
 
 public interface ChangePaymentPackageStatusService {
-    PaymentPackageModel changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO);
+    boolean changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO);
 }

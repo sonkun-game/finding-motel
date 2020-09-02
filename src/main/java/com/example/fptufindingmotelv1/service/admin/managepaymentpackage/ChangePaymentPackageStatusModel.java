@@ -16,15 +16,13 @@ public class ChangePaymentPackageStatusModel implements ChangePaymentPackageStat
     PaymentPackageRepository paymentPackageRepository;
 
     @Override
-    public PaymentPackageModel changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO) {
+    public boolean changeStatusPaymentPackage(PaymentPackageDTO paymentPackageDTO) {
         try {
-            PaymentPackageModel paymentPackageModel =
-                    paymentPackageRepository.findById(paymentPackageDTO.getId()).get();
-            paymentPackageModel.setAvailable(!paymentPackageModel.isAvailable());
-            return paymentPackageRepository.save(paymentPackageModel);
+            paymentPackageRepository.updateAvailablePackage(paymentPackageDTO.getId(), paymentPackageDTO.isAvailable());
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 }

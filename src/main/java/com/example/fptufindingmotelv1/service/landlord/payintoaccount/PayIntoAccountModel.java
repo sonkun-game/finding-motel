@@ -111,9 +111,10 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                     PaymentModel paymentModel = new PaymentModel();
                     paymentModel.setAmount(vnpayResponseDTO.getVnp_Amount()/100);
                     paymentModel.setLandlordModel(landlordModel);
-                    paymentModel.setPaymentTransaction(vnpayResponseDTO.getVnp_TxnRef());
+                    paymentModel.setPaymentTransaction(vnpayResponseDTO.getVnp_TransactionNo());
                     paymentModel.setPaymentMethod("VnPay");
                     paymentModel.setPayDate(new Date());
+                    paymentModel.setNote(vnpayResponseDTO.getVnp_OrderInfo());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
                     float amount = landlordModel.getAmount();
@@ -214,7 +215,7 @@ public class PayIntoAccountModel implements PayIntoAccountService {
             for (Field field : vnpayResponseDTO.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 String fieldName = field.getName();
-                String fieldValue = field.get(vnpayResponseDTO).toString();
+                String fieldValue = field.get(vnpayResponseDTO) == null ? "" : field.get(vnpayResponseDTO).toString();
                 if ((fieldValue != null) && (fieldValue.length() > 0)) {
                     vnp_Params.put(fieldName, fieldValue);
                 }

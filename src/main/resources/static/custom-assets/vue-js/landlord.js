@@ -62,7 +62,7 @@ var landlordInstance = new Vue({
             sessionStorage.setItem("amount", url.get('amount'))
             sessionStorage.setItem("errorCode", url.get('errorCode'))
             window.location.href = "/nap-tien"
-        } else if(url.get('vnpayCode') !== undefined && url.get('vnpayCode') != null) {
+        } else if(previousUrl.includes("sandbox.vnpayment.vn") && url.get('vnpayCode') !== undefined && url.get('vnpayCode') != null) {
             if (url.get('vnpayCode') == 000) {
                 modalMessageInstance.message = "Nạp tiền thành công";
             } else {

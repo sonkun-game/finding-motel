@@ -181,13 +181,16 @@ var authenticationInstance = new Vue({
         formatDate(rawDate, onlyDate){
             if(rawDate != null){
                 let dateFormatString = rawDate.split(".")[0]
-                let date = new Date(dateFormatString)
+                let date = new Date(rawDate)
                 if(onlyDate != null && onlyDate){
-                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                    return this.getDateNum(date.getDate()) + "/" + this.getDateNum(date.getMonth() + 1) + "/" + date.getFullYear()
                 }
-                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                return this.getDateNum(date.getHours()) + ":" + this.getDateNum(date.getMinutes()) + ":" + this.getDateNum(date.getSeconds())
+                    + " " + this.getDateNum(date.getDate()) + "/" + this.getDateNum(date.getMonth() + 1) + "/" + date.getFullYear()
             }
+        },
+        getDateNum(rawNum){
+            return (rawNum < 10) ? "0" + rawNum : rawNum
         },
         getStatusPost(postVisible, postBanned, expireDate){
             let dateFormatString = expireDate.split(".")[0]

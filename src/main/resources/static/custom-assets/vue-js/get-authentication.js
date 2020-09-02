@@ -259,6 +259,9 @@ var authenticationInstance = new Vue({
                 console.log(data)
                 if(data != null && data.userInfo != null){
                     this.userInfo = data.userInfo
+                    if(window.location.href.includes("nap-tien")){
+                        basicInfoInstance.userInfo = data.userInfo
+                    }
                     sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
                     this.getNotificationNumber()

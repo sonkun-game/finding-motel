@@ -61,7 +61,7 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                 CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                         .getAuthentication().getPrincipal();
                 //Get username of landlord
-                LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
+                LandlordModel landlordModel = landlordRepository.getLandlordById(userDetails.getUsername());
                 if (momoResponseDTO.getErrorCode().equalsIgnoreCase("0")) {
 
                     jsonObject.put("addAmount", momoResponseDTO.getAmount());
@@ -74,10 +74,8 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                     paymentModel.setPayDate(new Date());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
-                    float amount = landlordModel.getAmount();
-                    amount += Float.parseFloat(momoResponseDTO.getAmount());
-                    landlordModel.setAmount(amount);
-                    landlordRepository.save(landlordModel);
+                    landlordRepository.updateAmountLandlord(landlordModel.getAmount() + Float.parseFloat(momoResponseDTO.getAmount()),
+                            landlordModel.getUsername());
                     jsonObject.put("code", "000");
                     jsonObject.put("message", "Nạp tiền thành công");
                     jsonObject.put("landlordAmount", landlordModel.getAmount());
@@ -103,7 +101,7 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                 CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                         .getAuthentication().getPrincipal();
                 //Get username of landlord
-                LandlordModel landlordModel = landlordRepository.findByUsername(userDetails.getUsername());
+                LandlordModel landlordModel = landlordRepository.getLandlordById(userDetails.getUsername());
                 if (vnpayResponseDTO.getVnp_ResponseCode().equalsIgnoreCase("00")) {
 
                     jsonObject.put("addAmount", vnpayResponseDTO.getVnp_Amount());
@@ -117,10 +115,8 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                     paymentModel.setNote(vnpayResponseDTO.getVnp_OrderInfo());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
-                    float amount = landlordModel.getAmount();
-                    amount += vnpayResponseDTO.getVnp_Amount()/100;
-                    landlordModel.setAmount(amount);
-                    landlordRepository.save(landlordModel);
+                    landlordRepository.updateAmountLandlord(landlordModel.getAmount() + vnpayResponseDTO.getVnp_Amount()/100,
+                            landlordModel.getUsername());
                     jsonObject.put("code", "000");
                     jsonObject.put("message", "Nạp tiền thành công");
                     jsonObject.put("landlordAmount", landlordModel.getAmount());

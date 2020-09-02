@@ -48,6 +48,7 @@ var landlordInstance = new Vue({
         vnpayAmount: "",
         vnpayContent: "",
         vnpayBank: "",
+        regexVnpayContent: /^[a-zA-Z0-9.,_\s]*$/,
     },
     created(){
         let previousUrl = document.referrer
@@ -1189,14 +1190,14 @@ var landlordInstance = new Vue({
                 this.requestMomoPayment();
             }
         },
-        checkVnpayAmount() {
-            if (this.vnpayAmount != "" && this.vnpayAmount < 1000 || this.vnpayAmount > 1000000) {
-                document.getElementById("notify_vnPayAmount").innerHTML = "Số tiền phải từ 1.000vnđ -> 1.000.000vnđ.";
+        checkVnpayAmountAndContent() {
+            if (this.vnpayAmount != "" && this.vnpayAmount < 10000 || this.vnpayAmount > 1000000) {
+                document.getElementById("notify_vnPayAmount").innerHTML = "Số tiền phải từ 10.000vnđ -> 1.000.000vnđ.";
             } else {
                 document.getElementById("notify_vnPayAmount").innerHTML = "Bạn phải nhập số tiền muốn nạp.";
             }
             // paymentAmountTxt
-            if (this.vnpayAmount.length == 0 || this.vnpayAmount < 1000 || this.vnpayAmount > 1000000) {
+            if (this.vnpayAmount.length == 0 || this.vnpayAmount < 10000 || this.vnpayAmount > 1000000) {
                 document.getElementById("notify_vnPayAmount").classList.remove("invisible");
                 document.getElementById("vnPayAmountTxt").classList.add("border-error");
             } else {
@@ -1206,12 +1207,15 @@ var landlordInstance = new Vue({
                     document.getElementById("notify_vnPayAmount").innerHTML = "Bạn phải nhập nội dung nạp tiền";
                     document.getElementById("notify_vnPayAmount").classList.remove("invisible");
                     document.getElementById("vnPayContentTxt").classList.add("border-error");
+                } else if (!this.regexVnpayContent.test(this.vnpayContent)) {
+                    document.getElementById("notify_vnPayAmount").innerHTML = "Nội dung nạp tiền chỉ được tiếng việt không dấu, dấu chấm, dấu phẩy và gạch dưới";
+                    document.getElementById("notify_vnPayAmount").classList.remove("invisible");
+                    document.getElementById("vnPayContentTxt").classList.add("border-error");
                 } else {
                     document.getElementById("notify_vnPayAmount").classList.add("invisible");
                     document.getElementById("vnPayContentTxt").classList.remove("border-error");
                     this.requestVnpayPayment();
                 }
-
             }
         },
         requestMomoPayment() {

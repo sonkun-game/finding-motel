@@ -969,6 +969,71 @@
                             </div>
 
                         </div>
+
+                        <div class="row payment-method">
+                            <div class="col-lg-4">
+                                <div>
+                                    <img class="img-logo-payment"
+                                         src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fapps.apple.com%2Fvn%2Fapp%2Fvnpayqr%2Fid1270677646&psig=AOvVaw2v9Pk71LBzpqICiMgqFkVa&ust=1599042628324000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDc1f_fx-sCFQAAAAAdAAAAABAz">
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <p id="notify_vnPayAmount" class="invisible" style="color: #ff0000;">
+
+                                </p>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Số tiền<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="vnPayAmountTxt" @input=" vnpayAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                               class="form-input-information rounded-pill border-0 shadow-sm">
+                                    </div>
+                                    <div class="title">
+                                        <h4>Nội dung</h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <textarea id="vnPayContentTxt" @input=" vnpayContent = $event.target.value" type="" placeholder="nội dung..."
+                                                  class="form-input-information rounded-pill border-0 shadow-sm"></textarea>
+                                    </div>
+                                    <div>
+                                        <label for="bankcode">Ngân hàng</label>
+                                        <select @input="vnpayBank = $event.target.value" name="bankcode" id="bankcode" class="form-control">
+                                            <option value="">Không chọn </option>
+                                            <option value="NCB">  	Ngan hang NCB</option>
+                                            <option value="SACOMBANK">Ngan hang SacomBank  </option>
+                                            <option value="EXIMBANK"> 	Ngan hang EximBank </option>
+                                            <option value="MSBANK"> 	Ngan hang MSBANK </option>
+                                            <option value="NAMABANK"> 	Ngan hang NamABank </option>
+                                            <option value="VISA">  	Thanh toan qua VISA/MASTER</option>
+                                            <option value="VNMART">  	Vi dien tu VnMart</option>
+                                            <option value="VIETINBANK">Ngan hang Vietinbank  </option>
+                                            <option value="VIETCOMBANK"> 	Ngan hang VCB </option>
+                                            <option value="HDBANK">Ngan hang HDBank</option>
+                                            <option value="DONGABANK">  	Ngan hang Dong A</option>
+                                            <option value="TPBANK"> 	Ngân hàng TPBank </option>
+                                            <option value="OJB">  	Ngân hàng OceanBank</option>
+                                            <option value="BIDV"> Ngân hàng BIDV </option>
+                                            <option value="TECHCOMBANK"> 	Ngân hàng Techcombank </option>
+                                            <option value="VPBANK"> 	Ngan hang VPBank </option>
+                                            <option value="AGRIBANK"> 	Ngan hang Agribank </option>
+                                            <option value="MBBANK"> 	Ngan hang MBBank </option>
+                                            <option value="ACB"> Ngan hang ACB </option>
+                                            <option value="OCB"> Ngan hang OCB </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="fill-information">
+                                    <div class="m-auto" style="width: fit-content">
+                                        <button v-on:click="checkVnpayAmount()" class="btn">
+                                            Thanh Toán
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="row payment-method">
                             <div class="col-lg-4">
                                 <div>

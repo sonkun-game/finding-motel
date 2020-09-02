@@ -17,16 +17,14 @@ public class HideUnHidePostModel implements HideUnHidePostService {
     private PostRepository postRepository;
 
     @Override
-    public PostModel changePostStatus(PostRequestDTO postRequestDTO) {
+    public boolean changePostStatus(PostRequestDTO postRequestDTO) {
         try {
-            PostModel postModel = postRepository.findById(postRequestDTO.getPostId()).get();
-            postModel.setVisible(postRequestDTO.getIsVisible());
-            postModel = postRepository.save(postModel);
-            return postModel;
+            postRepository.updateVisiblePost(postRequestDTO.getIsVisible(), postRequestDTO.getPostId());
+            return true;
         }catch (Exception e){
             e.printStackTrace();
+            return false;
         }
-        return null;
     }
 
 }

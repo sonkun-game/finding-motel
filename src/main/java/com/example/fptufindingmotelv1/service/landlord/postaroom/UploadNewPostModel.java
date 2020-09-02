@@ -122,8 +122,6 @@ public class UploadNewPostModel implements UploadNewPostService {
         }
         roomRepository.saveAll(listRoom);
 
-        postRepository.save(newPostCreated);
-
         // save payment post
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setPaymentPackage(packageModel);

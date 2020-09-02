@@ -22,10 +22,15 @@ public class AcceptRentalRequestController {
     @ResponseBody
     @PostMapping("/api-accept-request")
     public JSONObject acceptRentalRequest(@RequestBody RentalRequestDTO rentalRequestDTO) {
-        List<RentalRequestModel> rentalRequestModels = acceptRentalRequestService.acceptRentalRequest(rentalRequestDTO);
+        try {
+            boolean isSuccess = acceptRentalRequestService.acceptRentalRequest(rentalRequestDTO);
 
-        return rentalRequestModels != null
-                ? Constant.responseMsg("000", "Success", null)
-                : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+            return isSuccess
+                    ? Constant.responseMsg("000", "Success", null)
+                    : Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Constant.responseMsg("999", "Lỗi hệ thống!", null);
+        }
     }
 }

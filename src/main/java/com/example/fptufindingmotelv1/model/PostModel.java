@@ -114,6 +114,12 @@ public class PostModel implements Serializable{
         this.title = title;
     }
 
+    public PostModel(String id, String title, String landlordUsername) {
+        this.id = id;
+        this.title = title;
+        this.landlord = new LandlordModel(landlordUsername);
+    }
+
     public PostModel(String id, double price, String title, String imageId) {
         this.id = id;
         this.price = price;
@@ -190,15 +196,23 @@ public class PostModel implements Serializable{
         this.reportNumber = reportNumber;
         this.banAvailable = reportNumber >= Constant.NUMBER_OF_BAN_DATE_POST;
     }
-    public PostModel(String id, int roomNumber, String title, boolean visible, boolean banned,
-                     Date createDate, Date expireDate
+    public PostModel(String id, double price, double distance, double square, int roomNumber,
+                     String description, String title, String address, boolean visible, boolean banned,
+                     String mapLocation, Date createDate, Date expireDate, Long typeId, String typeNm
     ) {
         this.id = id;
+        this.price = price;
+        this.distance = distance;
+        this.square = square;
         this.roomNumber = roomNumber;
+        this.description = description;
         this.title = title;
+        this.address = address;
         this.visible = visible;
         this.banned = banned;
+        this.mapLocation = mapLocation;
         this.createDate = createDate;
         this.expireDate = expireDate;
+        this.type = new TypeModel(typeId, typeNm);
     }
 }

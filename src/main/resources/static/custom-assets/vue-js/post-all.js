@@ -31,12 +31,13 @@ var postInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "403"){
                         window.location.href = "/dang-nhap"
                     }else if(data != null && data.code == "000"){
-                        processingLoaderInstance.hideLoader()
                         authenticationInstance.showModalNotify("Đã thêm vào danh sách yêu thích", 1000)
-                        filterPostInstance.getWishListOfRenter()
+                        this.listPostOfRenter.push(post)
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(this.listPostOfRenter))
                     }else {
                         modalMessageInstance.message = data.message
                         modalMessageInstance.showModal()
@@ -52,17 +53,17 @@ var postInstance = new Vue({
                 window.location.href = "/dang-nhap"
             }else {
                 if(this.listPostOfRenter.some(p => p.id == post.id)){
-                    this.removeFromWishList(post.id, this.userInfo.username)
+                    this.removeFromWishList(post, this.userInfo.username)
                 }else {
                     this.addWishlist(post, this.userInfo.username)
 
                 }
             }
         },
-        removeFromWishList(postId, username){
+        removeFromWishList(post, username){
             processingLoaderInstance.showLoader()
             let request = {
-                "postId" : postId,
+                "postId" : post.id,
                 "renterUsername" : username,
                 "wishListScreen" : false,
             }
@@ -75,11 +76,11 @@ var postInstance = new Vue({
 
             }).then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
-                        processingLoaderInstance.hideLoader()
                         authenticationInstance.showModalNotify("Đã xóa bài đăng khỏi danh sách yêu thích", 1000);
-                        filterPostInstance.getWishListOfRenter()
+                        this.listPostOfRenter.splice(this.listPostOfRenter.findIndex(p => p.id == post.id), 1)
+                        sessionStorage.setItem("listPostOfRenter", JSON.stringify(this.listPostOfRenter))
                     }
                 }).catch(error => {
                 console.log(error);
@@ -143,6 +144,8 @@ var filterPostInstance = new Vue({
             }
         },
         handleSearchClick(){
+            processingLoaderInstance.displayText = "Tìm Kiếm"
+            processingLoaderInstance.showLoader()
             this.getPageFromQuery()
             let typeId = ""
             let filterPriceId = $("#select2").val()
@@ -182,6 +185,7 @@ var filterPostInstance = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if(data != null && data.code == "000"){
                         postInstance.pageSize = data.pageSize;
                         //  this.pages=data;
@@ -256,6 +260,8 @@ var filterPostInstance = new Vue({
             }else {
                 this.getWishListOfRenter()
             }
+        }else {
+            sessionStorage.removeItem("listPostOfRenter")
         }
     },
     mounted(){

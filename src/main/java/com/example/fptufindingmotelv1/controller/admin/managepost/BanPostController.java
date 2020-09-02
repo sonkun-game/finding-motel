@@ -1,11 +1,13 @@
 package com.example.fptufindingmotelv1.controller.admin.managepost;
 
 import com.example.fptufindingmotelv1.dto.PostResponseDTO;
+import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
 import com.example.fptufindingmotelv1.model.PostModel;
 import com.example.fptufindingmotelv1.service.admin.managepost.BanPostService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,10 +27,10 @@ public class BanPostController {
 
     @ResponseBody
     @RequestMapping(value = "/ban-post")
-    public JSONObject banPost(@RequestParam String postId) {
+    public JSONObject banPost(@RequestBody RentalRequestDTO rentalRequestDTO) {
         try {
-            PostModel postModel = banPostService.banPost(postId);
-            return postModel != null
+            boolean isSuccess = banPostService.banPost(rentalRequestDTO);
+            return isSuccess
                     ? responseMsg("000", "Success!", null)
                     : responseMsg("999", "Lỗi hệ thống!", null);
         } catch (Exception e) {

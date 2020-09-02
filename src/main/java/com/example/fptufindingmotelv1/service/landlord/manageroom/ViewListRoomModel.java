@@ -19,7 +19,8 @@ public class ViewListRoomModel implements ViewListRoomService {
     @Override
     public Page<RoomModel> getListRoomPaging(RentalRequestDTO rentalRequestDTO, Pageable pageable) {
         try {
-            return roomRepository.getRooms(rentalRequestDTO.getRoomId(), rentalRequestDTO.getPostId(), rentalRequestDTO.getStatusId(), pageable);
+            return roomRepository.getRooms(rentalRequestDTO.getRoomId(), rentalRequestDTO.getPostId(),
+                    rentalRequestDTO.getStatusId(), rentalRequestDTO.getLandlordUsername(), pageable);
         }catch (Exception e){
             e.printStackTrace();
             return null;

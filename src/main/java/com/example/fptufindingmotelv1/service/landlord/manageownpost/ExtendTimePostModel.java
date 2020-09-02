@@ -32,21 +32,6 @@ public class ExtendTimePostModel implements ExtendTimePostService {
     @Autowired
     private PaymentPostRepository paymentPostRepository;
 
-    @Autowired
-    private ImageRepository imageRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private ReportRepository reportRepository;
-
-    @Autowired
-    private RentalRequestRepository rentalRequestRepository;
-
-    @Autowired
-    private WishListRepository wishListRepository;
-
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public JSONObject extendTimeOfPost(PostRequestDTO postRequestDTO) {

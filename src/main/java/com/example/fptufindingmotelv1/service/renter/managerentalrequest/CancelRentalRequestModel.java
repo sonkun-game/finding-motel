@@ -1,10 +1,7 @@
 package com.example.fptufindingmotelv1.service.renter.managerentalrequest;
 
 import com.example.fptufindingmotelv1.dto.RentalRequestDTO;
-import com.example.fptufindingmotelv1.model.LandlordModel;
-import com.example.fptufindingmotelv1.model.NotificationModel;
-import com.example.fptufindingmotelv1.model.RentalRequestModel;
-import com.example.fptufindingmotelv1.model.StatusModel;
+import com.example.fptufindingmotelv1.model.*;
 import com.example.fptufindingmotelv1.repository.NotificationRepository;
 import com.example.fptufindingmotelv1.repository.RentalRequestRepository;
 import com.example.fptufindingmotelv1.repository.RoomRepository;
@@ -30,27 +27,19 @@ public class CancelRentalRequestModel implements CancelRentalRequestService {
     @Override
     public JSONObject changeStatus(RentalRequestDTO rentalRequestDTO) {
         try {
-            RentalRequestModel rentalRequestModel = rentalRequestRepository.findById(rentalRequestDTO.getId()).get();
-            if(rentalRequestModel.getRentalStatus().getId() == 7){
+            if(rentalRequestDTO.getStatusId() == 7){
                 Date date = new Date();
                 Date cancelDate = new Timestamp(date.getTime());
-                StatusModel statusCancel = new StatusModel(8L);
-                rentalRequestModel.setRentalStatus(statusCancel);
-                rentalRequestModel.setCancelDate(cancelDate);
-                rentalRequestRepository.save(rentalRequestModel);
-            }else if (rentalRequestModel.getRentalStatus().getId() == 9){
-                StatusModel statusRoom = new StatusModel(1L);
-                rentalRequestModel.getRentalRoom().setStatus(statusRoom);
-                roomRepository.save(rentalRequestModel.getRentalRoom());
-                StatusModel statusExpire = new StatusModel(11L);
-                rentalRequestModel.setRentalStatus(statusExpire);
-                rentalRequestModel.setExpireMessage(rentalRequestDTO.getExpireMessage());
-                rentalRequestModel = rentalRequestRepository.save(rentalRequestModel);
+                rentalRequestRepository.updateCancelStatus(rentalRequestDTO.getId(), cancelDate, 8L);
+            }else if (rentalRequestDTO.getStatusId() == 9){
+                roomRepository.updateStatusRoom(rentalRequestDTO.getRoomId(), 1L);
+                rentalRequestRepository.updateExpireStatus(rentalRequestDTO.getId(),
+                        rentalRequestDTO.getExpireMessage(), 11L, null, null);
                 // send notification to Landlord
-                String notificationContent = "Tài khoản <b>" + rentalRequestModel.getRentalRenter().getUsername() +
-                        "</b> đã kết thúc thuê phòng tại <b>" + rentalRequestModel.getRentalRoom().getName() +
-                        "</b> - <b>" + rentalRequestModel.getRentalRoom().getPostRoom().getTitle() + "</b>";
-                sendNotification(rentalRequestModel, notificationContent);
+                String notificationContent = "Tài khoản <b>" + rentalRequestDTO.getRenterUsername() +
+                        "</b> đã kết thúc thuê phòng tại <b>" + rentalRequestDTO.getRoomName() +
+                        "</b> - <b>" + rentalRequestDTO.getPostTitle() + "</b>";
+                sendNotification(rentalRequestDTO, notificationContent);
 
             }
             return Constant.responseMsg("000", "Cập nhật thành công!", null);
@@ -60,22 +49,23 @@ public class CancelRentalRequestModel implements CancelRentalRequestService {
         }
     }
 
-    private NotificationModel sendNotification(RentalRequestModel requestModel, String content){
+    private NotificationModel sendNotification(RentalRequestDTO rentalRequestDTO, String content){
         try {
             // send notification to Landlord
             NotificationModel notificationModel = new NotificationModel();
-            LandlordModel landlordModel = requestModel.getRentalRoom().getPostRoom().getLandlord();
+            UserModel userModel = new UserModel(rentalRequestDTO.getLandlordUsername());
+            RentalRequestModel rentalRequestModel = new RentalRequestModel(rentalRequestDTO.getId());
 
             StatusModel statusNotification = new StatusModel(12L);
 
             Date date = new Date();
             Date createdDate = new Timestamp(date.getTime());
 
-            notificationModel.setUserNotification(landlordModel);
+            notificationModel.setUserNotification(userModel);
             notificationModel.setContent(content);
             notificationModel.setStatusNotification(statusNotification);
             notificationModel.setCreatedDate(createdDate);
-            notificationModel.setRentalRequestNotification(requestModel);
+            notificationModel.setRentalRequestNotification(rentalRequestModel);
             return notificationRepository.save(notificationModel);
         }catch (Exception e){
             e.printStackTrace();

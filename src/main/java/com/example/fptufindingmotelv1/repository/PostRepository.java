@@ -82,9 +82,11 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "")
     PostModel getPostById(String postId);
 
-    @Query(value = "select new PostModel(p.id, p.roomNumber, " +
-            "p.title, p.visible, p.banned, " +
-            "p.createDate, p.expireDate) from PostModel p " +
+    @Query(value = "select new PostModel(p.id, p.price, p.distance, p.square, p.roomNumber, " +
+            "p.description, p.title, p.address, p.visible, p.banned, " +
+            "p.mapLocation, p.createDate, p.expireDate, " +
+            "t.id, t.name) from PostModel p " +
+            "join TypeModel t on p.type.id = t.id " +
             "where (:landlordId is null or p.landlord.username = :landlordId)" +
             "")
     Page<PostModel> getPostsByLandlord(String landlordId, Pageable pageable);
@@ -175,4 +177,11 @@ public interface PostRepository extends JpaRepository<PostModel, String> {
             "where p.LANDLORD_ID = :landlordUsername " +
             "group by p.ID) as pr", nativeQuery = true)
     Long getReportNumberOfLandlord(String landlordUsername);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update PostModel p " +
+            "set p.banned = :banned " +
+            "where p.id = :postId ")
+    void updateBannedPost(Boolean banned, String postId);
 }

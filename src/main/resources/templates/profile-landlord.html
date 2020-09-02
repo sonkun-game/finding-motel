@@ -989,41 +989,21 @@
                                         <h4>Số tiền<span class="require-text">*</span></h4>
                                     </div>
                                     <div class="input-information">
-                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="vnPayAmountTxt" @input=" vnpayAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="vnPayAmountTxt" v-model="vnpayAmount" type="text" placeholder="10.000 vnđ"
                                                class="form-input-information rounded-pill border-0 shadow-sm">
                                     </div>
                                     <div class="title">
-                                        <h4>Nội dung</h4>
+                                        <h4>Nội dung<span class="require-text">*</span></h4>
                                     </div>
                                     <div class="input-information">
-                                        <textarea id="vnPayContentTxt" @input=" vnpayContent = $event.target.value" type="" placeholder="nội dung..."
+                                        <textarea id="vnPayContentTxt" v-model="vnpayContent" type="" placeholder="nội dung..."
                                                   class="form-input-information rounded-pill border-0 shadow-sm"></textarea>
                                     </div>
-                                    <div>
-                                        <label for="bankcode">Ngân hàng</label>
-                                        <select @input="vnpayBank = $event.target.value" name="bankcode" id="bankcode" class="form-control">
-                                            <option value="">Không chọn </option>
-                                            <option value="NCB">  	Ngan hang NCB</option>
-                                            <option value="SACOMBANK">Ngan hang SacomBank  </option>
-                                            <option value="EXIMBANK"> 	Ngan hang EximBank </option>
-                                            <option value="MSBANK"> 	Ngan hang MSBANK </option>
-                                            <option value="NAMABANK"> 	Ngan hang NamABank </option>
-                                            <option value="VISA">  	Thanh toan qua VISA/MASTER</option>
-                                            <option value="VNMART">  	Vi dien tu VnMart</option>
-                                            <option value="VIETINBANK">Ngan hang Vietinbank  </option>
-                                            <option value="VIETCOMBANK"> 	Ngan hang VCB </option>
-                                            <option value="HDBANK">Ngan hang HDBank</option>
-                                            <option value="DONGABANK">  	Ngan hang Dong A</option>
-                                            <option value="TPBANK"> 	Ngân hàng TPBank </option>
-                                            <option value="OJB">  	Ngân hàng OceanBank</option>
-                                            <option value="BIDV"> Ngân hàng BIDV </option>
-                                            <option value="TECHCOMBANK"> 	Ngân hàng Techcombank </option>
-                                            <option value="VPBANK"> 	Ngan hang VPBank </option>
-                                            <option value="AGRIBANK"> 	Ngan hang Agribank </option>
-                                            <option value="MBBANK"> 	Ngan hang MBBank </option>
-                                            <option value="ACB"> Ngan hang ACB </option>
-                                            <option value="OCB"> Ngan hang OCB </option>
-                                        </select>
+                                    <div class="input-information">
+                                        <p>
+                                            Lưu ý: Nên ghi rõ nội dung với cú pháp "Tên + Số điện thoại + nạp tài khoản" để được dễ dàng xử lý khi phát sinh lỗi.
+                                            <br>Ví dụ: "Nguyen Van A + 0912345678 + nạp tài khoản"
+                                        </p>
                                     </div>
                                 </div>
 

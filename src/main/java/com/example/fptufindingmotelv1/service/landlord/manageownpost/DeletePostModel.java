@@ -33,6 +33,9 @@ public class DeletePostModel implements DeletePostService {
     @Autowired
     private WishListRepository wishListRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
@@ -45,6 +48,9 @@ public class DeletePostModel implements DeletePostService {
 
         // delete images of post
         imageRepository.deleteImagesByPost(postRequestDTO.getPostId());
+
+        // delete notifications of requests of rooms of post
+        notificationRepository.deleteNotificationsByPost(postRequestDTO.getPostId());
 
         // delete rental requests of room of post
         rentalRequestRepository.deleteRentalRequestsByPost(postRequestDTO.getPostId());

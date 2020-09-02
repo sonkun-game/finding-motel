@@ -352,7 +352,7 @@
                                 <th>Ngày giao dịch</th>
                                 <th>Số tiền</th>
                                 <th>Phương thức thanh toán</th>
-                                <th>Momo ID</th>
+                                <th>Số giao dịch VNPAY</th>
                                 <th>Ghi chú</th>
                             </tr>
                             </thead>
@@ -361,7 +361,7 @@
                                 <td v-text="authenticationInstance.formatDate(payment.payDate)"></td>
                                 <td v-text="authenticationInstance.formatNumberToDisplay(payment.amount) + ' VNĐ'"></td>
                                 <td v-text="payment.paymentMethod"></td>
-                                <td v-text="payment.momoId"></td>
+                                <td v-text="payment.paymentTransaction"></td>
                                 <td v-text="payment.note"></td>
                             </tr>
                             </tbody>
@@ -703,7 +703,7 @@
                                             <tr v-for="(request, index) in room.listRentalRequest">
                                                 <td v-text="index + 1"></td>
                                                 <td>
-                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username)" v-text="request.rentalRenter.username"></a>
+                                                    <a class="pointer-enable" v-on:click="getRenterInfo(request.rentalRenter.username, true)" v-text="request.rentalRenter.username"></a>
                                                 </td>
                                                 <td v-text="authenticationInstance.formatDate(request.requestDate)"></td>
                                                 <td v-text="authenticationInstance.formatDate(request.startDate, true)"></td>
@@ -940,31 +940,81 @@
                         <h1 class="title-name uppercase">Nạp tiền</h1>
                     </div>
                     <div class="container payment-container">
+<!--                        <div class="row payment-method">-->
+<!--                            <div class="col-lg-4">-->
+<!--                                <div>-->
+<!--                                    <img class="img-logo-payment"-->
+<!--                                         src="/assets/img/logo/logo-momo.jpg">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-lg-8">-->
+<!--                                <p id="notify_paymentAmount" class="invisible" style="color: red;">-->
+
+<!--                                </p>-->
+<!--                                <div class="fill-information">-->
+<!--                                    <div class="title">-->
+<!--                                        <h4>Số tiền<span class="require-text">*</span></h4>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="input-information">-->
+<!--                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"-->
+<!--                                               class="form-input-information rounded-pill border-0 shadow-sm">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                                <div class="fill-information">-->
+<!--                                    <div class="m-auto" style="width: fit-content">-->
+<!--                                        <button v-on:click="checkPaymentAmount" class="btn">-->
+<!--                                            Thanh Toán-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                        </div>-->
+
                         <div class="row payment-method">
                             <div class="col-lg-4">
                                 <div>
                                     <img class="img-logo-payment"
-                                         src="/assets/img/logo/logo-momo.jpg">
+                                         src="/assets/img/logo/VNPAY.png">
                                 </div>
                             </div>
                             <div class="col-lg-8">
-                                <p id="notify_paymentAmount" class="invisible" style="color: red;">
+                                <p id="notify_vnPayAmount" class="invisible" style="color: #ff0000;">
 
                                 </p>
                                 <div class="fill-information">
                                     <div class="title">
                                         <h4>Số tiền<span class="require-text">*</span></h4>
                                     </div>
-
                                     <div class="input-information">
-                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="paymentAmountTxt" @input="paymentAmount = $event.target.value" type="text" placeholder="10.000 vnđ"
+                                        <input @keypress="removeDot(paymentAmount, 'float', $event)" id="vnPayAmountTxt" v-model="vnpayAmount" type="text" placeholder="10.000 vnđ"
                                                class="form-input-information rounded-pill border-0 shadow-sm">
                                     </div>
+
+                                </div>
+                                <div class="fill-information">
+                                    <div class="title">
+                                        <h4>Nội dung<span class="require-text">*</span></h4>
+                                    </div>
+                                    <div class="input-information">
+                                        <textarea id="vnPayContentTxt" v-model="vnpayContent" type="" placeholder="nội dung..."
+                                                  class="form-input-information rounded-pill border-0 shadow-sm"></textarea>
+                                    </div>
+
+                                </div>
+
+                                <div class="input-information">
+                                    <p>
+                                        Lưu ý: Nên ghi rõ nội dung với cú pháp "Tên_Số điện thoại_Nap Tien Tai Khoan" để được dễ dàng xử lý khi phát sinh lỗi.
+                                        <br>Ví dụ: "Nguyen Van A_0912345678_Nap Tien Tai Khoan"
+                                    </p>
                                 </div>
 
                                 <div class="fill-information">
                                     <div class="m-auto" style="width: fit-content">
-                                        <button v-on:click="checkPaymentAmount" class="btn">
+                                        <button v-on:click="checkVnpayAmount()" class="btn">
                                             Thanh Toán
                                         </button>
                                     </div>

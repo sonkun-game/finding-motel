@@ -11,6 +11,6 @@ public class DeleteReportModel implements DeleteReportService{
 
     @Override
     public void deleteReport(String id) {
-        reportRepository.deleteById(id);
+        reportRepository.deleteReportById(id);
     }
 }

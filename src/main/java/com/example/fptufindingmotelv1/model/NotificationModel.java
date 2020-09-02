@@ -36,4 +36,17 @@ public class NotificationModel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "REQUEST_ID")
     private RentalRequestModel rentalRequestNotification;
+
+    public NotificationModel() {
+    }
+
+    public NotificationModel(String id, String content, Date createdDate, Long statusId,
+                             String requestId, String roomId) {
+        this.id = id;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.statusNotification = new StatusModel(statusId);
+        this.rentalRequestNotification = new RentalRequestModel(requestId);
+        this.rentalRequestNotification.setRentalRoom(new RoomModel(roomId));
+    }
 }

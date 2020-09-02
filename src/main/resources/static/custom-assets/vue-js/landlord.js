@@ -44,12 +44,16 @@ var landlordInstance = new Vue({
         showMsg : false,
         showMsgModal : false,
         pagination: [],
+
+        vnpayAmount: "",
+        vnpayContent: "",
+        vnpayBank: "",
     },
     created(){
         let previousUrl = document.referrer
+        let query = window.location.search;
+        let url = new URLSearchParams(query);
         if(previousUrl.includes("test-payment.momo.vn") && previousUrl.includes("errorCode=0")){
-            let query = window.location.search;
-            let url = new URLSearchParams(query);
             sessionStorage.setItem("momo-check", "1")
             sessionStorage.setItem("partnerCode", url.get('partnerCode'))
             sessionStorage.setItem("accessKey", url.get('accessKey'))
@@ -58,6 +62,15 @@ var landlordInstance = new Vue({
             sessionStorage.setItem("amount", url.get('amount'))
             sessionStorage.setItem("errorCode", url.get('errorCode'))
             window.location.href = "/nap-tien"
+        } else if(previousUrl.includes("sandbox.vnpayment.vn") && url.get('vnpayCode') !== undefined && url.get('vnpayCode') != null) {
+            if (url.get('vnpayCode') == 000) {
+                modalMessageInstance.message = "Nạp tiền thành công";
+            } else {
+                modalMessageInstance.message = "Nạp tiền không thành công";
+            }
+            modalMessageInstance.title = "Thông báo"
+            modalMessageInstance.showModal()
+            url.delete("vnpayCode")
         }
     },
     beforeMount(){
@@ -99,7 +112,7 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             let notification = JSON.parse(sessionStorage.getItem("notification"))
-            this.getRoomById(notification.roomId)
+            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
         }
         else if(this.task == 16){
             let profileUser = document.getElementById("user-manager-content")
@@ -495,7 +508,7 @@ var landlordInstance = new Vue({
                         this.pagination = data.pagination
                         if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.requestId)
+                            this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.rentalRequestNotification.id)
                         }
                     }
                 }).catch(error => {
@@ -532,6 +545,7 @@ var landlordInstance = new Vue({
                 'statusId' : 7,
                 'postId' : null,
                 'roomId' : null,
+                'landlordUsername' : this.userInfo.username,
             }
             this.getListRoom(request)
         },
@@ -743,7 +757,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
 
                     }
@@ -780,7 +794,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
                     }
                 }).catch(error => {
@@ -939,7 +953,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
                     }
                 }).catch(error => {
@@ -1175,15 +1189,58 @@ var landlordInstance = new Vue({
                 this.requestMomoPayment();
             }
         },
+        checkVnpayAmount() {
+            if (this.vnpayAmount != "" && this.vnpayAmount < 1000 || this.vnpayAmount > 1000000) {
+                document.getElementById("notify_vnPayAmount").innerHTML = "Số tiền phải từ 1.000vnđ -> 1.000.000vnđ.";
+            } else {
+                document.getElementById("notify_vnPayAmount").innerHTML = "Bạn phải nhập số tiền muốn nạp.";
+            }
+            // paymentAmountTxt
+            if (this.vnpayAmount.length == 0 || this.vnpayAmount < 1000 || this.vnpayAmount > 1000000) {
+                document.getElementById("notify_vnPayAmount").classList.remove("invisible");
+                document.getElementById("vnPayAmountTxt").classList.add("border-error");
+            } else {
+                document.getElementById("notify_vnPayAmount").classList.add("invisible");
+                document.getElementById("vnPayAmountTxt").classList.remove("border-error");
+                if (this.vnpayContent == null || this.vnpayContent.length == 0) {
+                    document.getElementById("notify_vnPayAmount").innerHTML = "Bạn phải nhập nội dung nạp tiền";
+                    document.getElementById("notify_vnPayAmount").classList.remove("invisible");
+                    document.getElementById("vnPayContentTxt").classList.add("border-error");
+                } else {
+                    document.getElementById("notify_vnPayAmount").classList.add("invisible");
+                    document.getElementById("vnPayContentTxt").classList.remove("border-error");
+                    this.requestVnpayPayment();
+                }
+
+            }
+        },
         requestMomoPayment() {
             fetch("/request-momo-payment", {
                 method: 'POST',
                 body: this.paymentAmount
-            })
-                .then(response => response.json())
+            }).then(response => response.json())
                 .then((data) => {
                     if (data.code == "000") {
                         window.location.href = data.momoPayUrl;
+                    }
+                })
+        },
+        requestVnpayPayment() {
+            let vnpayRequestBody = {
+                'vnpayAmount': this.vnpayAmount,
+                'vnpayContent': this.vnpayContent,
+                'vnpayBank': this.vnpayBank
+            }
+            fetch("/api-request-vnpay-payment", {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(vnpayRequestBody),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data.code == "000") {
+                        window.location.href = data.vnpayUrl;
                     }
                 })
         },

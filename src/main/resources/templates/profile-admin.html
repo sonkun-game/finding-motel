@@ -15,6 +15,9 @@
 <!--    include confirm modal-->
 <div th:replace="layout :: confirm-modal"></div>
 
+<!--    inlude processing loader screen-->
+<div th:replace="layout :: processing-loader"></div>
+
 <!--    inlude loading screen-->
 <div th:replace="layout :: loader"></div>
 
@@ -73,13 +76,12 @@
                                 </div>
                             </div>
                             <div class="col-lg-3 d-none d-lg-block"></div>
-                            <div class="col-lg-3 d-none d-lg-block"></div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-6">
                                 <div class="search-container">
                                     <form action="#">
                                         <input @focusout="searchUser()" v-model="inputSearchUser" type="text"
                                                class="input-search"
-                                               placeholder="Tìm kiếm..." name="search">
+                                               placeholder="Tên đăng nhập, Tên hiển thị,..." name="search">
                                         <button @click.prevent="searchUser()" type="submit"><i
                                                 class="fa fa-search"></i></button>
                                     </form>
@@ -117,14 +119,14 @@
                                        id="myIcon-view" data-toggle="tooltip" data-html="true" title="Xem chi tiết"></i>
                                     <i v-if="user.role.roleName == 'LANDLORD'"
                                        v-bind:class="{invisible: user.landlordModel.unBanDate != null, disable : !user.landlordModel.banAvailable}"
-                                       @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, $event)"
+                                       @click="showModalConfirmBan(user.username, 'landlord', 'ban', index, user, $event)"
                                        class="fas fa-lock" data-toggle="tooltip" data-html="true"
                                        v-bind:title="user.landlordModel.banAvailable ? 'Khóa tài khoản' : ''">
                                         {{user.landlordModel.unBanDate}}
                                     </i>
                                     <i v-if="user.role.roleName == 'LANDLORD'"
                                        v-bind:class="{invisible: user.landlordModel.unBanDate == null}"
-                                       @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, $event)"
+                                       @click="showModalConfirmBan(user.username,'landlord' ,'unban', index, user, $event)"
                                        :aria-disabled="true"
                                        class="fas fa-unlock" data-toggle="tooltip" data-html="true"
                                        title="Mở khóa tài khoản">
@@ -407,7 +409,7 @@
                                 <td class="col-first" scope="row">{{listPost.indexOf(post) + 1}}</td>
                                 <td>
                                     <i v-bind:class="{disable : !post.banAvailable}"
-                                       @click="showModalConfirmBan(post.id, 'post','ban', index, $event)"
+                                       @click="showModalConfirmBan(post.id, 'post','ban', index, post, $event)"
                                        class="fas fa-lock" data-toggle="tooltip" data-html="true"
                                        v-bind:title="post.banAvailable ? 'Khóa bài đăng' : ''"
                                        id="lockPostIcon"></i>

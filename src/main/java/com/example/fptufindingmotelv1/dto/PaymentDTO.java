@@ -21,7 +21,7 @@ public class PaymentDTO {
         this.id = paymentModel.getId();
         this.amount = paymentModel.getAmount();
         this.payDate = sdf.format(paymentModel.getPayDate());
-        this.momoId = paymentModel.getMomoId();
+        this.momoId = paymentModel.getPaymentTransaction();
         this.landlord = paymentModel.getLandlordModel().getUsername();
         this.paymentMethod = paymentModel.getPaymentMethod();
         this.note = paymentModel.getNote();

@@ -23,6 +23,7 @@ var authenticationInstance = new Vue({
                     console.log(data)
                     if(data != null && data.code === "000"){
                         sessionStorage.removeItem("userInfo")
+                        sessionStorage.removeItem("listPostOfRenter")
                         this.$cookies.remove("access_token")
                         this.$cookies.remove("token_provider")
                         window.location.href = "/"
@@ -113,6 +114,25 @@ var authenticationInstance = new Vue({
                 console.log(error);
             })
         },
+        removeNotifications(){
+            let request = {
+                "username": this.userInfo.username,
+            }
+            fetch("/api-remove-notification", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }).then(response => response.json())
+                .then((data) => {
+                    if (data != null && data.code == "000") {
+                        console.log(data.message)
+                    }
+                }).catch(error => {
+                console.log(error);
+            })
+        },
         getListNotification(){
             let request = {
                 "username": this.userInfo.username,
@@ -142,7 +162,7 @@ var authenticationInstance = new Vue({
             }
         },
         handleClickNotification(notification, index){
-            if(!notification.seen){
+            if(notification.statusNotification.id != 13){
                 this.changeNotificationStatus(notification.id, index)
             }
             if(this.userInfo.role == 'LANDLORD'){
@@ -180,13 +200,16 @@ var authenticationInstance = new Vue({
         formatDate(rawDate, onlyDate){
             if(rawDate != null){
                 let dateFormatString = rawDate.split(".")[0]
-                let date = new Date(dateFormatString)
+                let date = new Date(rawDate)
                 if(onlyDate != null && onlyDate){
-                    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                    return this.getDateNum(date.getDate()) + "/" + this.getDateNum(date.getMonth() + 1) + "/" + date.getFullYear()
                 }
-                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-                    + " " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+                return this.getDateNum(date.getHours()) + ":" + this.getDateNum(date.getMinutes()) + ":" + this.getDateNum(date.getSeconds())
+                    + " " + this.getDateNum(date.getDate()) + "/" + this.getDateNum(date.getMonth() + 1) + "/" + date.getFullYear()
             }
+        },
+        getDateNum(rawNum){
+            return (rawNum < 10) ? "0" + rawNum : rawNum
         },
         getStatusPost(postVisible, postBanned, expireDate){
             let dateFormatString = expireDate.split(".")[0]
@@ -217,13 +240,9 @@ var authenticationInstance = new Vue({
     created(){
         // if(sessionStorage.getItem("userInfo")){
         //     this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-        //     if(this.userInfo.role == "RENTER"){
-        //         this.authenticationNum = 1;
-        //     }else if(this.userInfo.role == "LANDLORD"){
-        //         this.authenticationNum = 2;
-        //     }else{
-        //         this.authenticationNum = 3;
-        //     }
+        //     this.authenticated = true
+        //     this.getNotificationNumber()
+        //     this.removeNotifications()
         //     return
         // }
         let accessToken = this.$cookies.get("access_token")
@@ -240,9 +259,13 @@ var authenticationInstance = new Vue({
                 console.log(data)
                 if(data != null && data.userInfo != null){
                     this.userInfo = data.userInfo
+                    if(window.location.href.includes("nap-tien")){
+                        basicInfoInstance.userInfo = data.userInfo
+                    }
                     sessionStorage.setItem("userInfo", JSON.stringify(data.userInfo))
                     this.authenticated = true
                     this.getNotificationNumber()
+                    this.removeNotifications()
 
                     if(window.location.href.includes("/dang-nhap")){
                         window.location.href = "/"
@@ -259,6 +282,7 @@ var authenticationInstance = new Vue({
                     }
                 }else {
                     sessionStorage.removeItem("userInfo")
+                    sessionStorage.removeItem("listPostOfRenter")
                 }
             }).catch(error => {
             console.log(error);

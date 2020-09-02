@@ -15,4 +15,6 @@ public interface ViewNotificationsService {
     NotificationModel changeStatusNotification(NotificationDTO request);
 
     Slice<NotificationModel> getListNotificationPaging(NotificationDTO notificationDTO, Pageable pageable);
+
+    boolean removeNotifications(NotificationDTO request);
 }

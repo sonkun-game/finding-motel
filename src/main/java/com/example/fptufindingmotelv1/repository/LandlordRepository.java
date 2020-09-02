@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 public interface LandlordRepository extends JpaRepository<LandlordModel, String> {
     LandlordModel findByUsername(String username);
 
@@ -26,4 +28,11 @@ public interface LandlordRepository extends JpaRepository<LandlordModel, String>
             "join RoleModel r on r.id = ll.role.id " +
             "where ll.username = :username")
     LandlordModel getLandlordByUsername(String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update LandlordModel ll " +
+            "set ll.unBanDate = :unBanDate " +
+            "where ll.username = :landlordUsername ")
+    void updateUnBanDate(Date unBanDate, String landlordUsername);
 }

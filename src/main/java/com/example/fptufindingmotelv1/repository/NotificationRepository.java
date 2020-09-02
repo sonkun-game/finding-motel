@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<NotificationModel, String> {
@@ -21,15 +22,26 @@ public interface NotificationRepository extends JpaRepository<NotificationModel,
             "order by ntf.createdDate desc ")
     List<NotificationModel> getAllByUsername(String username);
 
-    @Query(value = "select ntf from NotificationModel ntf " +
+    @Query(value = "select new NotificationModel(ntf.id, ntf.content, ntf.createdDate, " +
+            "ntf.statusNotification.id, rq.id, rq.rentalRoom.id) from NotificationModel ntf " +
+            "join RentalRequestModel rq on ntf.rentalRequestNotification.id = rq.id " +
             "where (ntf.userNotification.username = :username)" +
             "order by ntf.createdDate desc ")
     Slice<NotificationModel> getAllByUsernamePaging(String username, Pageable pageable);
 
     @Transactional
     @Modifying
-    @Query(value = "delete from NotificationModel n " +
-            "where n.rentalRequestNotification.rentalRoom.postRoom.id = :postId " +
-            "")
-    void removeNotificationByPost(String postId);
+    @Query(value = "delete n from NOTIFICATION n " +
+            "where n.CREATED_DATE < :createDateExpire " +
+            "and n.STATUS_ID = :statusId " +
+            "and n.USER_ID = :username", nativeQuery = true)
+    void removeNotifications(Date createDateExpire, Long statusId, String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete n from NOTIFICATION n " +
+            "inner join RENTAL_REQUEST rq on rq.ID = n.REQUEST_ID " +
+            "inner join ROOM r on rq.ROOM_ID = r.ID " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteNotificationsByPost(String postId);
 }

@@ -28,4 +28,36 @@ public interface ReportRepository extends JpaRepository<ReportModel, String> {
             "where r.POST_ID = :postId ", nativeQuery = true)
     void deleteReportsByPost(String postId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "delete r from REPORT r " +
+            "where r.ID = :reportId ", nativeQuery = true)
+    void deleteReportById(String reportId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update ReportModel rp " +
+            "set rp.statusReport.id = case rp.statusReport.id " +
+            "when 3 then :statusReportPost " +
+            "else :statusReportAll " +
+            "end " +
+            "where rp.postReport.id = :postId " +
+            "and (rp.statusReport.id = 3 or rp.statusReport.id = 5)" +
+            "")
+    void updateStatusReportByPost(String postId, Long statusReportPost, Long statusReportAll);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update rp " +
+            "set rp.STATUS_ID = case rp.STATUS_ID " +
+            "when 3 then :statusReportUser " +
+            "else :statusReportAll " +
+            "end " +
+            "from REPORT rp " +
+            "join POST p on p.ID = rp.POST_ID " +
+            "where p.LANDLORD_ID = :landlordUsername " +
+            "and (rp.STATUS_ID = 3 or rp.STATUS_ID = 4)" +
+            "", nativeQuery = true)
+    void updateStatusReportByLandlord(String landlordUsername, Long statusReportUser, Long statusReportAll);
+
 }

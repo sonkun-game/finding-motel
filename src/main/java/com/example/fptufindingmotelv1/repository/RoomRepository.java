@@ -66,4 +66,12 @@ public interface RoomRepository extends JpaRepository<RoomModel, String> {
             "where r.id = :roomId")
     void updateStatusRoom(String roomId, Long statusId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update RoomModel r " +
+            "set r.status.id = :statusUpdate " +
+            "where r.postRoom.id = :postId " +
+            "and r.status.id = :statusId")
+    void updateStatusRoomByPost(String postId, Long statusUpdate, Long statusId);
+
 }

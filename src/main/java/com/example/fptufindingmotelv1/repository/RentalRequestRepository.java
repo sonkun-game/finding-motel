@@ -20,17 +20,6 @@ import java.util.List;
 @Repository
 public interface RentalRequestRepository extends JpaRepository<RentalRequestModel, String> {
 
-    List<RentalRequestModel> findByRentalRenterAndRentalRoom(RenterModel renterModel, RoomModel roomModel);
-    @Query(value = "select r from RentalRequestModel r " +
-            "where 1 = 1 " +
-            "and (:landlordId is null or r.rentalRoom.postRoom.landlord.username = :landlordId)" +
-            "and (:statusId is null or r.rentalStatus.id = :statusId)" +
-            "and (:renterId is null or r.rentalRenter.username = :renterId)" +
-            "and (:roomId is null or r.rentalRoom.id = :roomId)" +
-            "")
-    List<RentalRequestModel> getListRequest(String landlordId, Long statusId, String renterId, String roomId);
-
-
     @Query(value = "select new RentalRequestModel(rr.id, rr.requestDate, rr.startDate, " +
             "rr.cancelDate, rr.expireMessage, p.id, p.title, p.landlord.username, r.id, r.name, s.id, s.status) from RentalRequestModel rr " +
             "join RoomModel r on rr.rentalRoom.id = r.id " +
@@ -118,6 +107,13 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "")
     List<RentalRequestModel> getListRequestIdByRoom(String roomId, Long statusId);
 
+    @Query(value = "select new RentalRequestModel(rq.id, rq.rentalRenter.username, r.id, r.name, rq.rentalStatus.id) from RentalRequestModel rq " +
+            "join RoomModel r on rq.rentalRoom.id = r.id " +
+            "where (:postId is null or rq.rentalRoom.postRoom.id = :postId)" +
+            "and (rq.rentalStatus.id = :statusProcess or rq.rentalStatus.id = :statusAccept)" +
+            "")
+    List<RentalRequestModel> getListRequestIdByPost(String postId, Long statusProcess, Long statusAccept);
+
     @Transactional
     @Modifying
     @Query(value = "update RentalRequestModel r " +
@@ -127,4 +123,19 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequestMode
             "and (:roomId is null or r.rentalRoom.id = :roomId)" +
             "and (:statusId is null or r.rentalStatus.id = :statusId)")
     void updateStatus(String requestId, Long statusUpdate, String roomId, Long statusId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update rq " +
+            "set rq.STATUS_ID = case rq.STATUS_ID " +
+            "when 7 then :statusReject " +
+            "else :statusExpire " +
+            "end " +
+            "from RENTAL_REQUEST rq " +
+            "join ROOM r on rq.ROOM_ID = r.ID " +
+            "where 1 = 1 " +
+            "and (:postId is null or r.POST_ID = :postId)" +
+            "and (rq.STATUS_ID = 7 or rq.STATUS_ID = 9)" +
+            "", nativeQuery = true)
+    void updateStatusByPost(String postId, Long statusReject, Long statusExpire);
 }

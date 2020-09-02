@@ -28,4 +28,15 @@ public interface ReportRepository extends JpaRepository<ReportModel, String> {
             "where r.POST_ID = :postId ", nativeQuery = true)
     void deleteReportsByPost(String postId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update ReportModel rp " +
+            "set rp.statusReport.id = case rp.statusReport.id " +
+            "when 3 then :statusReportPost " +
+            "when 4 then :statusReportAll " +
+            "else rp.statusReport.id end " +
+            "where rp.postReport.id = :postId " +
+            "")
+    void updateStatusReportByPost(String postId, Long statusReportPost, Long statusReportAll);
+
 }

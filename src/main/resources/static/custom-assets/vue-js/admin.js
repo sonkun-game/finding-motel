@@ -52,6 +52,8 @@ var admin = new Vue({
         listFilterPrice: [],
         listFilterSquare: [],
         listFilterDistance: [],
+        selectedPost : null,
+        selectedUser : null,
     },
     beforeMount() {
         this.task = sessionStorage.getItem("task")
@@ -141,7 +143,7 @@ var admin = new Vue({
             }
 
         },
-        showModalConfirmBan(id, dataType, action, index, event) {
+        showModalConfirmBan(id, dataType, action, index, selectedObject, event) {
             this.modalBanDataId = id;
             this.modalBanDataType = dataType;
             this.modalBanAction = action;
@@ -150,6 +152,7 @@ var admin = new Vue({
             }
             if (dataType == 'post') {
                 this.postIndex = index
+                this.selectedPost = selectedObject
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa bài đăng này không?';
                 } else if (action == 'unban') {
@@ -157,6 +160,7 @@ var admin = new Vue({
                 }
             } else if (dataType == 'landlord') {
                 this.userIndex = index
+                this.selectedUser = selectedObject
                 if (action == 'ban') {
                     document.getElementById("modalBanContent").innerHTML = 'Bạn có muốn khóa tài khoản này không?';
                 } else if (action == 'unban') {
@@ -209,6 +213,7 @@ var admin = new Vue({
             })
         },
         banLanlord(username) {
+            processingLoaderInstance.showLoader()
             fetch("/ban-landlord?username=" + username, {
                 method: 'POST',
                 headers: {
@@ -216,6 +221,7 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Đã khóa 1 tài khoản", 2000);
                         this.searchUser();
@@ -228,6 +234,7 @@ var admin = new Vue({
             })
         },
         unbanLanlord(username) {
+            processingLoaderInstance.showLoader()
             fetch("/unban-landlord?username=" + username, {
                 method: 'POST',
                 headers: {
@@ -235,6 +242,7 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Đã mở khóa 1 tài khoản", 2000);
                         this.searchUser();
@@ -248,6 +256,7 @@ var admin = new Vue({
         },
 
         deleteReport(id) {
+            processingLoaderInstance.showLoader()
             fetch("/delete-report?reportId=" + id, {
                 method: 'POST',
                 headers: {
@@ -255,6 +264,7 @@ var admin = new Vue({
                 },
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == '000') {
                         authenticationInstance.showModalNotify("Đã xóa 1 báo cáo", 2000);
                         this.searchReport();
@@ -342,13 +352,21 @@ var admin = new Vue({
             })
         },
         banPost(id) {
-            fetch("ban-post?postId=" + id, {
+            processingLoaderInstance.showLoader()
+            let request = {
+                'postId' : this.selectedPost.id,
+                'postTitle' : this.selectedPost.title,
+            }
+            fetch("/ban-post", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(request)
+
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Đã khóa bài đăng", 2000);
                         this.searchPost(0)
@@ -593,6 +611,7 @@ var admin = new Vue({
                 "packageName": this.inputPackageName,
             }
             if (this.validatePackageInputName() && this.validatePackageInputDurationAndAmount()) {
+                processingLoaderInstance.showLoader()
                 fetch("/api-save-payment-package", {
                     method: 'POST',
                     headers: {
@@ -601,6 +620,7 @@ var admin = new Vue({
                     body: JSON.stringify(request),
                 }).then(response => response.json())
                     .then((data) => {
+                        processingLoaderInstance.hideLoader()
                         if (data != null && data.code == "000") {
                             authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                             setTimeout(() => {
@@ -622,6 +642,7 @@ var admin = new Vue({
             }
         },
         changeStatusPackage(paymentPackage, index) {
+            processingLoaderInstance.showLoader()
             let request = {
                 "id": paymentPackage.id,
             }
@@ -633,6 +654,7 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         setTimeout(() => this.$set(this.listPaymentPackage, index, data.data), 2000)
@@ -700,6 +722,7 @@ var admin = new Vue({
             }
         },
         addMoneyForLandlord() {
+            processingLoaderInstance.showLoader()
             let request = {
                 "landlord": this.selectedLandlord.username,
                 "amount": this.inputAmount,
@@ -714,6 +737,7 @@ var admin = new Vue({
                 body: JSON.stringify(request),
             }).then(response => response.json())
                 .then((data) => {
+                    processingLoaderInstance.hideLoader()
                     if (data != null && data.code == "000") {
                         authenticationInstance.showModalNotify("Cập nhật thành công", 2000)
                         this.inputRole = 2

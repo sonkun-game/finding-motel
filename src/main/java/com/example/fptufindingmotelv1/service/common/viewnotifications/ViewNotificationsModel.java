@@ -17,6 +17,7 @@ public class ViewNotificationsModel implements ViewNotificationsService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+
     @Override
     public List<NotificationModel> getListNotification(NotificationDTO notificationDTO) {
         try {

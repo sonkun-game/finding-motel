@@ -3,6 +3,7 @@ package com.example.fptufindingmotelv1.controller.common;
 import com.example.fptufindingmotelv1.dto.NotificationDTO;
 import com.example.fptufindingmotelv1.model.NotificationModel;
 import com.example.fptufindingmotelv1.service.common.viewnotifications.ViewNotificationsService;
+import com.example.fptufindingmotelv1.untils.Constant;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -41,14 +42,10 @@ public class ViewNotificationsController {
                 response.put("message", "Tên người dùng không tồn tại");
                 return response;
             }
-            List<NotificationDTO> notificationDTOS = new ArrayList<>();
             Slice<NotificationModel> notificationModels = viewNotificationsService.getListNotificationPaging(request, pageable);
-            for (NotificationModel ntf:
-                    notificationModels.getContent()) {
-                notificationDTOS.add(new NotificationDTO(ntf));
-            }
+
             response.put("msgCode", "notify000");
-            response.put("listNotification", notificationDTOS);
+            response.put("listNotification", notificationModels.getContent());
             response.put("isLastPage", notificationModels.isLast());
             return response;
         } catch (Exception e) {
@@ -89,5 +86,15 @@ public class ViewNotificationsController {
         response.put("msgCode", notificationModel != null ? "notify000" : "sys999");
         response.put("notification", new NotificationDTO(notificationModel));
         return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/api-remove-notification")
+    public JSONObject removeNotification(@RequestBody NotificationDTO request){
+        boolean isSuccess = viewNotificationsService.removeNotifications(request);
+
+        return isSuccess ?
+                Constant.responseMsg("000", "Success", null)
+                : Constant.responseMsg("999", "Lỗi hệ thống", null);
     }
 }

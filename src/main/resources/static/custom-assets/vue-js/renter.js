@@ -29,7 +29,7 @@ var renterInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             let notification = JSON.parse(sessionStorage.getItem("notification"))
-            this.searchRentalRequest(notification.requestId);
+            this.searchRentalRequest(notification.rentalRequestNotification.id);
         }
     },
     methods: {

@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -62,6 +64,22 @@ public class ViewNotificationsModel implements ViewNotificationsService {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public boolean removeNotifications(NotificationDTO request) {
+        try {
+            Date date = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DAY_OF_MONTH, -30);
+            Date createDateExpire = c.getTime();
+            notificationRepository.removeNotifications(createDateExpire, 13L, request.getUsername());
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
     }
 }

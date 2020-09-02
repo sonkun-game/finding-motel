@@ -191,12 +191,12 @@
                                                     <ul v-else class="notification-list">
                                                         <li v-for="(notification, index) in listNotification"
                                                             v-on:click="handleClickNotification(notification, index)"
-                                                            v-bind:class="notification.seen ? 'seen-notification' : ''">
+                                                            v-bind:class="notification.statusNotification.id == 13 ? 'seen-notification' : ''">
                                                             <div class="notify-content">
                                                                 <a v-html="notification.content"></a>
                                                             </div>
                                                             <div class="notify-date">
-                                                                <span v-text="notification.displayDate"></span>
+                                                                <span v-text="authenticationInstance.formatDate(notification.createdDate)"></span>
                                                             </div>
                                                         </li>
                                                         <li v-if="!isLastPageNotify" class="read-more">

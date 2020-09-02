@@ -1,5 +1,6 @@
 package com.example.fptufindingmotelv1.service.login;
 
+import com.example.fptufindingmotelv1.model.CustomUserDetails;
 import com.example.fptufindingmotelv1.model.GooglePojo;
 import com.example.fptufindingmotelv1.model.UserModel;
 import com.example.fptufindingmotelv1.repository.UserRepository;
@@ -36,31 +37,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = getJwtFromRequest(httpServletRequest);
-            String tokenProvider = httpServletRequest.getHeader("Token-Provider");
-            if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
-                String username = jwtTokenProvider.getUsernameFromJWT(token);
-                UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication = new
-                        UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }else if(StringUtils.hasText(token) && tokenProvider.equals("google")){
-                GooglePojo googlePojo = loginService.getGgUserInfo(token);
-                UserModel userModel = userRepository.getUserById(null, null, googlePojo.getId());
-                UserDetails userDetails = loginService.buildUser(userModel);
-                UsernamePasswordAuthenticationToken authentication = new
-                        UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }else if(StringUtils.hasText(token) && tokenProvider.equals("facebook")){
-                User fbUser = loginService.getFbUserInfo(token);
-                UserModel userModel = userRepository.getUserById(null, fbUser.getId(), null);
-                UserDetails userDetails = loginService.buildUser(userModel);
-                UsernamePasswordAuthenticationToken authentication = new
-                        UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if(!(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken)){
+                String token = getJwtFromRequest(httpServletRequest);
+                String tokenProvider = httpServletRequest.getHeader("Token-Provider");
+                if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+                    String username = jwtTokenProvider.getUsernameFromJWT(token);
+                    UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authentication = new
+                            UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }else if(StringUtils.hasText(token) && tokenProvider.equals("google")){
+                    GooglePojo googlePojo = loginService.getGgUserInfo(token);
+                    UserModel userModel = userRepository.getUserById(null, null, googlePojo.getId());
+                    UserDetails userDetails = loginService.buildUser(userModel);
+                    UsernamePasswordAuthenticationToken authentication = new
+                            UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }else if(StringUtils.hasText(token) && tokenProvider.equals("facebook")){
+                    User fbUser = loginService.getFbUserInfo(token);
+                    UserModel userModel = userRepository.getUserById(null, fbUser.getId(), null);
+                    UserDetails userDetails = loginService.buildUser(userModel);
+                    UsernamePasswordAuthenticationToken authentication = new
+                            UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }catch (Exception ex){
             log.error("failed on set user authentication", ex);

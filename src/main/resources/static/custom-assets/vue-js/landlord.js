@@ -103,7 +103,7 @@ var landlordInstance = new Vue({
             let profileUser = document.getElementById("user-manager-content")
             profileUser.classList.add("invisible")
             let notification = JSON.parse(sessionStorage.getItem("notification"))
-            this.getRoomById(notification.roomId)
+            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
         }
         else if(this.task == 16){
             let profileUser = document.getElementById("user-manager-content")
@@ -499,7 +499,7 @@ var landlordInstance = new Vue({
                         this.pagination = data.pagination
                         if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.requestId)
+                            this.getListRequestByRoom(this.listRoomRequest[0], 0, null, notification.rentalRequestNotification.id)
                         }
                     }
                 }).catch(error => {
@@ -748,7 +748,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
 
                     }
@@ -785,7 +785,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
                     }
                 }).catch(error => {
@@ -944,7 +944,7 @@ var landlordInstance = new Vue({
                             this.getListRoomByPost(this.selectedPost.id)
                         }else if(this.task == 17){
                             let notification = JSON.parse(sessionStorage.getItem("notification"))
-                            this.getRoomById(notification.roomId)
+                            this.getRoomById(notification.rentalRequestNotification.rentalRoom.id)
                         }
                     }
                 }).catch(error => {

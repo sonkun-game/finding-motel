@@ -69,7 +69,7 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                     PaymentModel paymentModel = new PaymentModel();
                     paymentModel.setAmount(Float.parseFloat(momoResponseDTO.getAmount()));
                     paymentModel.setLandlordModel(landlordModel);
-                    paymentModel.setMomoId(momoResponseDTO.getOrderId());
+                    paymentModel.setPaymentTransaction(momoResponseDTO.getOrderId());
                     paymentModel.setPaymentMethod("Momo");
                     paymentModel.setPayDate(new Date());
                     paymentRepository.save(paymentModel);
@@ -109,15 +109,15 @@ public class PayIntoAccountModel implements PayIntoAccountService {
                     jsonObject.put("addAmount", vnpayResponseDTO.getVnp_Amount());
                     //save payment
                     PaymentModel paymentModel = new PaymentModel();
-                    paymentModel.setAmount(vnpayResponseDTO.getVnp_Amount());
+                    paymentModel.setAmount(vnpayResponseDTO.getVnp_Amount()/100);
                     paymentModel.setLandlordModel(landlordModel);
-                    paymentModel.setMomoId(vnpayResponseDTO.getVnp_TxnRef());
+                    paymentModel.setPaymentTransaction(vnpayResponseDTO.getVnp_TxnRef());
                     paymentModel.setPaymentMethod("VnPay");
                     paymentModel.setPayDate(new Date());
                     paymentRepository.save(paymentModel);
                     //update landlord amount
                     float amount = landlordModel.getAmount();
-                    amount += vnpayResponseDTO.getVnp_Amount();
+                    amount += vnpayResponseDTO.getVnp_Amount()/100;
                     landlordModel.setAmount(amount);
                     landlordRepository.save(landlordModel);
                     jsonObject.put("code", "000");

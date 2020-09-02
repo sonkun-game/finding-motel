@@ -8,6 +8,7 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -46,9 +47,9 @@ public class PayIntoAccountController {
             , @RequestParam(required = false) String vnp_BankCode, @RequestParam(required = false) String vnp_BankTranNo, @RequestParam(required = false) String vnp_CardType
             , @RequestParam(required = false) String vnp_PayDate, @RequestParam(required = false) String vnp_OrderInfo
             , @RequestParam(required = false) String vnp_TransactionNo, @RequestParam(required = false) String vnp_ResponseCode, @RequestParam(required = false) String vnp_TxnRef
-            , @RequestParam(required = false) String vnp_SecureHashType, @RequestParam(required = false) String vnp_SecureHash) {
-        VnpayResponseDTO vnpayResponseDTO = new VnpayResponseDTO(vnp_TmnCode, vnp_Amount,vnp_BankCode,vnp_BankTranNo,vnp_CardType,vnp_PayDate,vnp_OrderInfo,vnp_TransactionNo,vnp_ResponseCode,vnp_TxnRef,vnp_SecureHashType,vnp_SecureHash);
-         payIntoAccountService.validateAndSaveVnpayPayment(vnpayResponseDTO);
-        return "profile-landlord";
+            , @RequestParam(required = false) String vnp_SecureHashType, @RequestParam(required = false) String vnp_SecureHash, Model model) {
+        VnpayResponseDTO vnpayResponseDTO = new VnpayResponseDTO(vnp_TmnCode, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_PayDate, vnp_OrderInfo, vnp_TransactionNo, vnp_ResponseCode, vnp_TxnRef, vnp_SecureHashType, vnp_SecureHash);
+        JSONObject jsonObject = payIntoAccountService.validateAndSaveVnpayPayment(vnpayResponseDTO);
+        return "redirect:/nap-tien?vnpayCode=" + jsonObject.get("code");
     }
 }

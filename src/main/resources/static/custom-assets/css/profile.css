@@ -935,7 +935,7 @@ a:hover {
     height: 30px;
 }
 .border-error{
-    border-color: red;
+    border-color: red !important;
 }
 
 /* Normal desktop :1200px. */

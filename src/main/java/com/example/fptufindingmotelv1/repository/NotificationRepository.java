@@ -36,4 +36,12 @@ public interface NotificationRepository extends JpaRepository<NotificationModel,
             "and n.STATUS_ID = :statusId " +
             "and n.USER_ID = :username", nativeQuery = true)
     void removeNotifications(Date createDateExpire, Long statusId, String username);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete n from NOTIFICATION n " +
+            "inner join RENTAL_REQUEST rq on rq.ID = n.REQUEST_ID " +
+            "inner join ROOM r on rq.ROOM_ID = r.ID " +
+            "where r.POST_ID = :postId ", nativeQuery = true)
+    void deleteNotificationsByPost(String postId);
 }

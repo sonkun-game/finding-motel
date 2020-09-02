@@ -26,8 +26,8 @@ public class PaymentModel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date payDate;
 
-    @Column(name = "MOMO_ID")
-    private String momoId;
+    @Column(name = "PAYMENT_TRANSACTION")
+    private String paymentTransaction;
 
     @Column(name = "PAYMENT_METHOD")
     private String paymentMethod;
@@ -41,12 +41,12 @@ public class PaymentModel implements Serializable {
 
     public PaymentModel() {
     }
-    public PaymentModel(String id, float amount, Date payDate, String momoId,
+    public PaymentModel(String id, float amount, Date payDate, String paymentTransaction,
                         String paymentMethod, String note) {
         this.id = id;
         this.amount = amount;
         this.payDate = payDate;
-        this.momoId = momoId;
+        this.paymentTransaction = paymentTransaction;
         this.paymentMethod = paymentMethod;
         this.note = note;
     }

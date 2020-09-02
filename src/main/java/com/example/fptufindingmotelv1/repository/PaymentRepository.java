@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<PaymentModel, String> {
-    @Query(value = "select new PaymentModel (p.id, p.amount, p.payDate, p.momoId, " +
+    @Query(value = "select new PaymentModel (p.id, p.amount, p.payDate, p.paymentTransaction, " +
             "p.paymentMethod, p.note) from PaymentModel p" +
             " where (1 = 1)" +
             "and (:landlordId is null or p.landlordModel.username = :landlordId)")

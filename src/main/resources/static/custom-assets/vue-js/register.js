@@ -191,7 +191,8 @@ var registerVue = new Vue({
                 milliseconds = duration % 60000;
                 seconds = ((milliseconds - milliseconds % 1000) / 1000 < 10) ? "0" + (milliseconds - milliseconds % 1000) / 1000 : (milliseconds - milliseconds % 1000) / 1000 + "";
 
-                this.displayTimer = 'Đã gửi một mã xác thực đến số điện thoại của bạn, mã hết hiệu lực sau <b>' + minutes + ":" + seconds + '</b>';
+                this.displayTimer = 'Đã gửi một mã xác thực, mã hết hiệu lực sau <b>' + seconds + '</b> giây';
+                // this.displayTimer = seconds + 's'
                 requestAnimationFrame(this.countDown)
                 if (duration <= 0) {
                     clearTimeout(this.intervalID)

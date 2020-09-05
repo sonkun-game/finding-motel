@@ -22,6 +22,8 @@ var authenticationInstance = new Vue({
                 .then((data) => {
                     console.log(data)
                     if(data != null && data.code === "000"){
+                        this.userInfo = null
+                        this.authenticated = false
                         sessionStorage.removeItem("userInfo")
                         sessionStorage.removeItem("listPostOfRenter")
                         this.$cookies.remove("access_token")

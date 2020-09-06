@@ -75,7 +75,9 @@ public class OtpModel implements OtpService{
             RestTemplate restTemplate = new RestTemplate();
             String response = restTemplate.postForObject(eSmsUrl, request, String.class);
             JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(response);
+            JSONObject resp = (JSONObject) parser.parse(response);
+            resp.put("otp", String.valueOf(otp));
+            return resp;
 
             // test send sms success
 //            JSONObject response = new JSONObject();

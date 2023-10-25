@@ -37,6 +37,7 @@ public class LoginController {
 
     @GetMapping("/dang-nhap")
     public String getLogin(){
+        System.out.println("Hello");
         if(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken){
             return "redirect:/";
         }
